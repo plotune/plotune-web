@@ -251,6 +251,7 @@ const PlotuneNetworks = () => {
       
       const response = await streamApi.post('/network/auth/status', 
         {
+          network_name: networkName,
           user_email: userEmail,
           enabled: newStatus
         },
