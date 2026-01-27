@@ -39,7 +39,7 @@ const PackageMirror = () => {
     //  name: 'plotune-stream-gateway',
     //  displayName: 'Stream Gateway',
     //  status: 'active',
-    //  source: 'ghcr.io/baksi-org/plotune-stream-gateway',
+    //  source: 'ghcr.io/plotune/plotune-stream-gateway',
     //  tag: 'latest',
     //  lastSynced: '2024-01-15T10:30:00Z',
     //  size: '245MB',
@@ -246,7 +246,7 @@ const PackageMirror = () => {
             type="text"
             value={formData.packageUrl}
             onChange={(e) => setFormData({ ...formData, packageUrl: e.target.value })}
-            placeholder="https://github.com/orgs/baksi-org/packages/container/package/plotune-stream-gateway"
+            placeholder="https://github.com/orgs/plotune/packages/container/package/plotune-stream-gateway"
             className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
             required
           />

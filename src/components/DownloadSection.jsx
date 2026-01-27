@@ -28,7 +28,7 @@ const DownloadSection = () => {
     const fetchLatestRelease = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://api.github.com/repos/baksi-org/plotune-dl/releases/latest');
+        const response = await fetch('https://api.github.com/repos/plotune/plotune-dl/releases/latest');
         
         if (!response.ok) {
           throw new Error(`GitHub API responded with status: ${response.status}`);
@@ -58,7 +58,7 @@ const DownloadSection = () => {
 
   // Get download URL for Windows
   const getWindowsDownloadUrl = () => {
-    if (!latestRelease) return 'https://github.com/baksi-org/plotune-dl/releases/latest';
+    if (!latestRelease) return 'https://github.com/plotune/plotune-dl/releases/latest';
     
     // Look for Windows-specific asset
     const windowsAsset = findAsset('plotune-windows') || findAsset('windows');
@@ -70,7 +70,7 @@ const DownloadSection = () => {
 
   // Get download URL for Linux
   const getLinuxDownloadUrl = (type) => {
-    if (!latestRelease) return 'https://github.com/baksi-org/plotune-dl/releases/latest';
+    if (!latestRelease) return 'https://github.com/plotune/plotune-dl/releases/latest';
     
     switch(type) {
       case 'deb':
@@ -177,10 +177,10 @@ const DownloadSection = () => {
           version: latestRelease ? latestRelease.tag_name : 'Latest',
           size: getAssetSize('plotune-linux') || '~88 MB',
           type: 'binary',
-          getDownloadUrl: () => "https://github.com/baksi-org/plotune-dl/tree/main",
+          getDownloadUrl: () => "https://github.com/plotune/plotune-dl/tree/main",
           command: './plotune',
           instructions: [
-            'wget https://github.com/baksi-org/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz',
+            'wget https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz',
             'Extract: tar -xzf plotune-linux-x86_64.tar.gz',
             'cd plotune-linux-x86_64',
             'Run: chmod +x plotune && ./plotune'
@@ -232,7 +232,7 @@ const DownloadSection = () => {
             <i className="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
             <p className="text-gray-text mb-6">{error}</p>
             <a
-              href="https://github.com/baksi-org/plotune-dl/releases"
+              href="https://github.com/plotune/plotune-dl/releases"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark transition-colors"
@@ -410,7 +410,7 @@ const DownloadSection = () => {
 
               <div className="max-w-md mx-auto mb-8">
                 <a
-                  href="https://github.com/baksi-org/plotune-dl/releases"
+                  href="https://github.com/plotune/plotune-dl/releases"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-xl hover:border-primary hover:text-primary transition-all duration-300 group"

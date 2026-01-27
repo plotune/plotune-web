@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="baksi-org/plotune-dl"
+REPO="plotune/plotune-dl"
 PKG_NAME="plotune"
 ARCH="x86_64"
 

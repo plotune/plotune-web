@@ -77,9 +77,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/extensions" element={<Extensions />} />
-              <Route path="/blog" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
-              <Route path="/community" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
-              <Route path="/tutorials" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
+              <Route path="/blog" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
+              <Route path="/community" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
+              <Route path="/tutorials" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
               <Route path="/download" element={<Download />} />
               <Route path="/about" element={<About />} />
               <Route path="/careers" element={<Careers />} />
