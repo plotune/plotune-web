@@ -29,6 +29,7 @@ import PartnerApplication from './pages/PartnerApplication';
 import PartnerPortal from './pages/PartnerPortal';
 import StorageManager from './pages/StorageManager';
 import PackageMirror from './pages/PackageMirror';
+import Embeddings from './pages/Embeddings';
 import StreamOverviewPage from './components/streams/StreamOverviewPage';
 
 const ScrollToTop = () => {
@@ -100,6 +101,7 @@ function App() {
               <Route path="/partners/apply" element={<PartnerApplication />} />
               <Route path="/storage" element={<StorageManager />} />
               <Route path="/mirror" element={<PackageMirror />} />
+              <Route path="/embed" element={<Embeddings />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
             </Routes>
           </NavigationWrapper>
