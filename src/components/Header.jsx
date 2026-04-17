@@ -31,6 +31,7 @@ const Header = () => {
   // Navigation items for non-logged-in users
   const guestNavItems = [
     { to: '/', label: 'Home' },
+    { to: '/nexus', label: 'Nexus' },
     { to: '/extensions', label: 'Extensions' },
     { to: '/download', label: 'Download' },
     { to: '/about', label: 'About' },
