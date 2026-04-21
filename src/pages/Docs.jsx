@@ -14,6 +14,8 @@ import ServerIcon from "../assets/icons/api.svg";
 // ── Lazy-load every page component ─────────────────────────────────────
 const pageMap = {
   general: lazy(() => import("./docs_pages/General.jsx")),
+  nexus: lazy(() => import("./docs_pages/Nexus.jsx")),
+  "nexus-remote-routing": lazy(() => import("./docs_pages/NexusRemoteRouting.jsx")),
 
   // Components
   "components-oscilloscope": lazy(() => import("./docs_pages/Components/Oscilloscope.jsx")),
@@ -40,6 +42,15 @@ const pageMap = {
 // ── Tab definition (order matters) ─────────────────────────────────────
 const tabs = [
   { id: "general", label: "General", Icon: OverviewIcon },
+  {
+    id: "nexus",
+    label: "Nexus",
+    Icon: ServerIcon,
+    sub: [
+      { id: "nexus", label: "Quick start" },
+      { id: "nexus-remote-routing", label: "Remote routing" },
+    ],
+  },
 
   {
     id: "components",
