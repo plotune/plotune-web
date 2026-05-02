@@ -1,69 +1,54 @@
 import React from 'react';
-import { FiArrowRight, FiCpu, FiRadio, FiDatabase } from 'react-icons/fi';
+import { FiClock, FiCpu, FiMapPin, FiShield } from 'react-icons/fi';
+
+const pillars = [
+  {
+    title: 'Anywhere Access',
+    body: 'Work from the lab, your office, or directly at the vehicle. Your test system is always reachable.',
+    icon: FiMapPin,
+  },
+  {
+    title: 'Secure & Reliable',
+    body: 'Enterprise-grade protection for your test data and configurations.',
+    icon: FiShield,
+  },
+  {
+    title: 'Faster Execution',
+    body: 'Automate repetitive tasks and reduce manual steps across your validation workflow.',
+    icon: FiClock,
+  },
+  {
+    title: 'Smarter Decisions',
+    body: 'Use AI-powered context to accelerate engineering judgments, with over 500 automotive-specific skills built in.',
+    icon: FiCpu,
+  },
+];
 
 const NexusSpotlight = () => {
   return (
-    <section className="py-4 bg-dark-card/30">
+    <section className="bg-dark-card/30 py-14">
       <div className="container mx-auto px-5">
-        <div className="mx-auto max-w-6xl rounded-[2rem] bg-dark-card p-8 shadow-custom md:p-10">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <p className="font-mono text-sm uppercase tracking-[0.28em] text-primary">New Project</p>
-              <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
-                Plotune Nexus is our new MCP gateway for DAQ and machine-facing workflows
-              </h2>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-gray-text">
-                Nexus is being shaped as a device-side gateway for acquisition, control, and artifact collection near
-                the hardware. If this matches your environment, the dedicated page now opens pre-order conversations.
-              </p>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Plotune Nexus</p>
+          <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
+            Control your validation workflow from one place.
+          </h2>
+        </div>
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="#/nexus"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
-                >
-                  View Nexus
-                  <FiArrowRight className="text-lg" />
-                </a>
-                <a
-                  href="mailto:contact@plotune.net?subject=Plotune%20Nexus%20Pre-order%20Inquiry"
-                  className="inline-flex items-center justify-center rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300 hover:bg-primary/10"
-                >
-                  Pre-order by email
-                </a>
-              </div>
-            </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {pillars.map((pillar) => {
+            const Icon = pillar.icon;
 
-            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-              <div className="rounded-2xl bg-dark-surface p-5">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-                  <FiCpu className="text-xl" />
+            return (
+              <article key={pillar.title} className="rounded-2xl bg-dark-card p-6 shadow-custom">
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+                  <Icon className="text-xl" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-light-text">Device-side control</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-text">
-                  Run tools and jobs near the interfaces instead of tunneling everything through a remote layer.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-dark-surface p-5">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-                  <FiRadio className="text-xl" />
-                </div>
-                <h3 className="mt-4 text-lg font-semibold text-light-text">Remote-ready path</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-text">
-                  Add claim flow, reachability, and managed routing when remote operations actually matter.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-dark-surface p-5">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-                  <FiDatabase className="text-xl" />
-                </div>
-                <h3 className="mt-4 text-lg font-semibold text-light-text">Storage-aware design</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-text">
-                  Large artifacts are meant to move into customer-controlled object storage for later analysis.
-                </p>
-              </div>
-            </div>
-          </div>
+                <h3 className="text-xl font-semibold text-light-text">{pillar.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-gray-text">{pillar.body}</p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

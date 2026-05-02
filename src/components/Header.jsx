@@ -31,7 +31,14 @@ const Header = () => {
   // Navigation items for non-logged-in users
   const guestNavItems = [
     { to: '/', label: 'Home' },
-    { to: '/nexus', label: 'Nexus' },
+    {
+      to: '/nexus',
+      label: 'Nexus',
+      children: [
+        { to: '/nexus/connectivity', label: 'Connectivity' },
+        { to: '/nexus/stream', label: 'Stream' },
+      ],
+    },
     { to: '/extensions', label: 'Extensions' },
     { to: '/download', label: 'Download' },
     { to: '/about', label: 'About' },
@@ -51,7 +58,7 @@ const Header = () => {
   const navItems = isLoggedIn ? userNavItems : guestNavItems;
 
   const renderNavLink = (item) => {
-    const isActive = location.pathname === item.to;
+    const isActive = location.pathname === item.to || item.children?.some((child) => location.pathname === child.to);
     const linkClass = `text-dark-text font-medium text-base hover:text-primary relative transition-colors duration-300 ${
       isActive 
         ? 'text-primary after:w-full after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0' 
@@ -70,6 +77,48 @@ const Header = () => {
           {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
           {item.label}
         </a>
+      );
+    }
+
+    if (item.children) {
+      return (
+        <div className="group relative">
+          <Link
+            to={item.to}
+            className={`flex items-center gap-2 ${linkClass}`}
+          >
+            {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
+            {item.label}
+          </Link>
+          <div className="hidden min-w-48 rounded-xl border border-white/10 bg-dark-surface p-3 shadow-custom md:absolute md:left-0 md:top-8 md:group-hover:block">
+            {item.children.map((child) => (
+              <Link
+                key={child.to}
+                to={child.to}
+                className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary ${
+                  location.pathname === child.to ? 'text-primary' : 'text-dark-text'
+                }`}
+              >
+                {child.label}
+              </Link>
+            ))}
+          </div>
+          {isMobileMenuOpen && (
+            <div className="mt-2 space-y-2 pl-4 md:hidden">
+              {item.children.map((child) => (
+                <Link
+                  key={child.to}
+                  to={child.to}
+                  className={`block text-sm font-medium transition-colors duration-300 hover:text-primary ${
+                    location.pathname === child.to ? 'text-primary' : 'text-gray-text'
+                  }`}
+                >
+                  {child.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       );
     }
 

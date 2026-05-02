@@ -31,6 +31,8 @@ import StorageManager from './pages/StorageManager';
 import PackageMirror from './pages/PackageMirror';
 import Embeddings from './pages/Embeddings';
 import Nexus from './pages/Nexus';
+import NexusConnectivity from './pages/NexusConnectivity';
+import NexusStream from './pages/NexusStream';
 import StreamOverviewPage from './components/streams/StreamOverviewPage';
 
 const ScrollToTop = () => {
@@ -104,6 +106,8 @@ function App() {
               <Route path="/mirror" element={<PackageMirror />} />
               <Route path="/embed" element={<Embeddings />} />
               <Route path="/nexus" element={<Nexus />} />
+              <Route path="/nexus/connectivity" element={<NexusConnectivity />} />
+              <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
             </Routes>
           </NavigationWrapper>
