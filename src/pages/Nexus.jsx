@@ -203,13 +203,21 @@ const Nexus = () => {
               <h3 className="text-2xl font-semibold text-light-text">Ready to connect your test environment?</h3>
               <p className="mt-2 text-gray-text">See how Plotune Nexus fits your bench, vehicle, or validation team.</p>
             </div>
-            <Link
-              to="/contact"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
-            >
-              Request a Demo
-              <FiArrowRight />
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                to="/nexus/use-cases"
+                className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
+              >
+                View Use Cases
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
+              >
+                Request a Demo
+                <FiArrowRight />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

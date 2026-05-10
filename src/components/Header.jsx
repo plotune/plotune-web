@@ -37,6 +37,7 @@ const Header = () => {
       children: [
         { to: '/nexus/connectivity', label: 'Connectivity' },
         { to: '/nexus/stream', label: 'Stream' },
+        { to: '/nexus/use-cases', label: 'Use Cases' },
       ],
     },
     { to: '/extensions', label: 'Extensions' },

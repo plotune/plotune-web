@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 250" fill="none">
+  <style>
+    .bg { fill: #121417; }
+    .panel { fill: #171a1f; }
+    .doc-back { fill: #11161b; }
+    .doc-front { fill: #1b2229; }
+    .row {
+      transform-box: fill-box;
+      transform-origin: left center;
+      animation: row 4.5s ease-in-out infinite;
+    }
+    .row-delay { animation-delay: 0.32s; }
+    .row-delay-2 { animation-delay: 0.64s; }
+    .stamp { animation: stamp 4.5s ease-in-out infinite; }
+    .bar {
+      transform-box: fill-box;
+      transform-origin: left center;
+      animation: bar 4.5s ease-in-out infinite;
+    }
+    .label { fill: #8f9ba8; font: 11px Inter, Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+    .value { fill: #f5f5f5; font: 600 12px Inter, Arial, sans-serif; }
+    .key { fill: #26A69A; font: 600 12px Inter, Arial, sans-serif; }
+    @keyframes row {
+      0%, 14% { transform: scaleX(0.2); opacity: 0.35; }
+      32%, 100% { transform: scaleX(1); opacity: 1; }
+    }
+    @keyframes bar {
+      0%, 22% { transform: scaleX(0.16); }
+      42%, 100% { transform: scaleX(0.92); }
+    }
+    @keyframes stamp {
+      0%, 48% { opacity: 0; transform: scale(0.78) rotate(-8deg); }
+      60%, 100% { opacity: 1; transform: scale(1) rotate(-8deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .row, .row-delay, .row-delay-2, .stamp, .bar { animation: none !important; transform: none !important; opacity: 1 !important; }
+    }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="480" height="250" rx="22"/>
+  <rect class="panel" x="18" y="18" width="286" height="146" rx="18"/>
+  <rect class="panel" x="320" y="18" width="142" height="146" rx="18"/>
+  <rect class="panel" x="18" y="180" width="444" height="52" rx="18"/>
+
+  <rect class="doc-back" x="68" y="46" width="132" height="92" rx="16"/>
+  <rect class="doc-front" x="92" y="34" width="132" height="92" rx="16"/>
+  <rect class="row" x="114" y="56" width="88" height="8" rx="4" fill="#26A69A"/>
+  <rect class="row row-delay" x="114" y="74" width="78" height="8" rx="4" fill="#3f51b5"/>
+  <rect class="row row-delay-2" x="114" y="92" width="68" height="8" rx="4" fill="#64748b"/>
+  <g class="stamp">
+    <rect x="160" y="88" width="70" height="24" rx="12" fill="#26A69A" opacity="0.14"/>
+    <text class="key" x="174" y="104">READY</text>
+  </g>
+
+  <text class="label" x="338" y="44">Evidence Pack</text>
+  <text class="label" x="338" y="74">Recorded</text>
+  <rect x="338" y="86" width="106" height="12" rx="6" fill="#222933"/>
+  <rect class="bar" x="338" y="86" width="106" height="12" rx="6" fill="#26A69A"/>
+  <text class="value" x="338" y="116">Gap closed</text>
+  <text class="label" x="338" y="144">Deliverable</text>
+  <text class="value" x="338" y="162">PDF published</text>
+
+  <circle cx="42" cy="206" r="5" fill="#26A69A"/>
+  <text class="value" x="56" y="210">Checklist</text>
+  <text class="value" x="170" y="210">Calibration note</text>
+  <text class="key" x="332" y="210">Service handoff</text>
+</svg>

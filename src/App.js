@@ -33,6 +33,7 @@ import Embeddings from './pages/Embeddings';
 import Nexus from './pages/Nexus';
 import NexusConnectivity from './pages/NexusConnectivity';
 import NexusStream from './pages/NexusStream';
+import NexusUseCases from './pages/NexusUseCases';
 import StreamOverviewPage from './components/streams/StreamOverviewPage';
 
 const ScrollToTop = () => {
@@ -108,6 +109,7 @@ function App() {
               <Route path="/nexus" element={<Nexus />} />
               <Route path="/nexus/connectivity" element={<NexusConnectivity />} />
               <Route path="/nexus/stream" element={<NexusStream />} />
+              <Route path="/nexus/use-cases" element={<NexusUseCases />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
             </Routes>
           </NavigationWrapper>
