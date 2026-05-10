@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Use Cases — Plotune Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="claude-code-terminal.css">
+</head>
+<body class="claude-code-shell">
+<div class="window window-followup">
+  <div class="titlebar">
+    <div class="titlebar-center">~ : claude</div>
+  </div>
+  <div class="term" id="term"></div>
+  <div class="bottombar">
+    <button class="stab active" data-title="~ : claude" data-directory="hil-fw-gate-pr319" onclick="sel(0)">1  HIL firmware gate</button>
+    <button class="stab" data-title="~ : claude" data-directory="gw-regression-0503" onclick="sel(1)">2  Gateway regression</button>
+    <button class="stab" data-title="~ : claude" data-directory="bms-field-triage-v72" onclick="sel(2)">3  BMS field triage</button>
+    <button class="stab" data-title="~ : claude" data-directory="doip-multinode-r07" onclick="sel(3)">4  Multi-ECU handshake</button>
+    <button class="breplay" onclick="replay()">Replay</button>
+  </div>
+</div>
+<script src="claude-code-runtime.js"></script>
+<script src="claude-code-scenarios.js"></script>
+</body>
+</html>

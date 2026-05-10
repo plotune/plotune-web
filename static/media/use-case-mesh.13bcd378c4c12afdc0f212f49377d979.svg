@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 250" fill="none">
+  <style>
+    .bg { fill: #121417; }
+    .panel { fill: #171a1f; }
+    .link { stroke: rgba(143,155,168,0.28); stroke-width: 2; }
+    .node { fill: #1f252d; stroke: rgba(38,166,154,0.24); stroke-width: 1.5; }
+    .pulse-a { animation: pulseA 4.8s ease-in-out infinite; }
+    .pulse-b { animation: pulseB 4.8s ease-in-out infinite; }
+    .pulse-c { animation: pulseC 4.8s ease-in-out infinite; }
+    .pulse-d { animation: pulseD 4.8s ease-in-out infinite; }
+    .beam {
+      stroke: #26A69A;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 150;
+      stroke-dashoffset: 150;
+      animation: beam 4.8s ease-in-out infinite;
+    }
+    .beam-delay { animation-delay: 0.4s; }
+    .dot { animation: dot 1.6s ease-in-out infinite; }
+    .label { fill: #8f9ba8; font: 11px Inter, Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+    .value { fill: #f5f5f5; font: 600 12px Inter, Arial, sans-serif; }
+    .key { fill: #26A69A; font: 600 12px Inter, Arial, sans-serif; }
+    @keyframes pulseA { 0%,100% { fill: #1f252d; } 16%,30% { fill: #26A69A; } }
+    @keyframes pulseB { 0%,100% { fill: #1f252d; } 30%,44% { fill: #26A69A; } }
+    @keyframes pulseC { 0%,100% { fill: #1f252d; } 44%,58% { fill: #26A69A; } }
+    @keyframes pulseD { 0%,100% { fill: #1f252d; } 58%,72% { fill: #26A69A; } }
+    @keyframes beam {
+      0%, 14% { stroke-dashoffset: 150; opacity: 0; }
+      28%, 72% { stroke-dashoffset: 0; opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 0.25; }
+    }
+    @keyframes dot { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-a, .pulse-b, .pulse-c, .pulse-d, .beam, .beam-delay, .dot { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0; }
+    }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="480" height="250" rx="22"/>
+  <rect class="panel" x="18" y="18" width="286" height="146" rx="18"/>
+  <rect class="panel" x="320" y="18" width="142" height="146" rx="18"/>
+  <rect class="panel" x="18" y="180" width="444" height="52" rx="18"/>
+
+  <line class="link" x1="110" y1="76" x2="210" y2="76"/>
+  <line class="link" x1="110" y1="122" x2="210" y2="122"/>
+  <line class="link" x1="110" y1="76" x2="110" y2="122"/>
+  <line class="link" x1="210" y1="76" x2="210" y2="122"/>
+  <path class="beam" d="M110 76 H210 V122"/>
+  <path class="beam beam-delay" d="M110 122 H210 V76"/>
+  <circle class="node pulse-a" cx="110" cy="76" r="22"/>
+  <circle class="node pulse-b" cx="210" cy="76" r="22"/>
+  <circle class="node pulse-c" cx="110" cy="122" r="22"/>
+  <circle class="node pulse-d" cx="210" cy="122" r="22"/>
+  <text class="value" x="97" y="80">GW</text>
+  <text class="value" x="194" y="80">PT</text>
+  <text class="value" x="90" y="126">TH</text>
+  <text class="value" x="194" y="126">BMS</text>
+  <text class="label" x="38" y="44">ECU Mesh</text>
+
+  <text class="label" x="338" y="44">Checks</text>
+  <circle class="dot" cx="346" cy="78" r="5" fill="#26A69A"/>
+  <text class="value" x="360" y="82">12 UDS</text>
+  <circle class="dot" cx="346" cy="112" r="5" fill="#26A69A"/>
+  <text class="value" x="360" y="116">4 VINs</text>
+  <circle class="dot" cx="346" cy="146" r="5" fill="#26A69A"/>
+  <text class="value" x="360" y="150">0 DTC</text>
+
+  <circle class="dot" cx="42" cy="206" r="5" fill="#26A69A"/>
+  <text class="value" x="56" y="210">Discovery complete</text>
+  <text class="key" x="226" y="210">sign-off trace docked</text>
+</svg>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 250" fill="none">
+  <style>
+    .bg { fill: #121417; }
+    .panel { fill: #171a1f; }
+    .line { stroke: #293038; stroke-width: 2; }
+    .bus { stroke: #64748b; stroke-width: 4; stroke-linecap: round; }
+    .gate { fill: #1e242b; stroke: rgba(38,166,154,0.35); stroke-width: 1.5; }
+    .packet-a { animation: packetA 3.8s linear infinite; }
+    .packet-b { animation: packetB 3.8s linear infinite 0.8s; }
+    .counter-a, .counter-b {
+      transform-box: fill-box;
+      transform-origin: left center;
+    }
+    .counter-a { animation: growA 4.2s ease-in-out infinite; }
+    .counter-b { animation: growB 4.2s ease-in-out infinite; }
+    .pulse { animation: pulse 1.8s ease-in-out infinite; }
+    .label { fill: #8f9ba8; font: 11px Inter, Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+    .value { fill: #f5f5f5; font: 600 12px Inter, Arial, sans-serif; }
+    .key { fill: #26A69A; font: 600 12px Inter, Arial, sans-serif; }
+    @keyframes packetA {
+      0% { transform: translateX(-120px); opacity: 0; }
+      10% { opacity: 1; }
+      48% { transform: translateX(182px); opacity: 1; }
+      55% { transform: translateX(182px); opacity: 0; }
+      100% { transform: translateX(182px); opacity: 0; }
+    }
+    @keyframes packetB {
+      0% { transform: translateX(-140px); opacity: 0; }
+      14% { opacity: 1; }
+      54% { transform: translateX(206px); opacity: 1; }
+      62% { transform: translateX(206px); opacity: 0; }
+      100% { transform: translateX(206px); opacity: 0; }
+    }
+    @keyframes growA {
+      0%, 18% { transform: scaleX(0.22); }
+      38%, 100% { transform: scaleX(0.94); }
+    }
+    @keyframes growB {
+      0%, 20% { transform: scaleX(0.1); }
+      42%, 100% { transform: scaleX(0.48); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .packet-a, .packet-b, .counter-a, .counter-b, .pulse { animation: none !important; }
+    }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="480" height="250" rx="22"/>
+  <rect class="panel" x="18" y="18" width="286" height="146" rx="18"/>
+  <rect class="panel" x="320" y="18" width="142" height="146" rx="18"/>
+  <rect class="panel" x="18" y="180" width="444" height="52" rx="18"/>
+
+  <line class="line" x1="36" y1="72" x2="286" y2="72"/>
+  <line class="line" x1="36" y1="118" x2="286" y2="118"/>
+  <line class="bus" x1="54" y1="88" x2="252" y2="88"/>
+  <line class="bus" x1="54" y1="134" x2="252" y2="134"/>
+  <rect class="gate" x="188" y="60" width="58" height="102" rx="16"/>
+  <rect x="202" y="76" width="30" height="8" rx="4" fill="#26A69A" opacity="0.85"/>
+  <rect x="202" y="99" width="30" height="8" rx="4" fill="#3f51b5" opacity="0.8"/>
+  <rect x="202" y="122" width="30" height="8" rx="4" fill="#26A69A" opacity="0.65"/>
+
+  <g class="packet-a">
+    <rect x="62" y="81" width="12" height="14" rx="4" fill="#26A69A"/>
+    <rect x="84" y="81" width="12" height="14" rx="4" fill="#7dd3c7"/>
+  </g>
+  <g class="packet-b">
+    <rect x="62" y="127" width="12" height="14" rx="4" fill="#3f51b5"/>
+    <rect x="84" y="127" width="12" height="14" rx="4" fill="#8fa0ea"/>
+  </g>
+
+  <text class="label" x="38" y="46">Bus Gate</text>
+  <text class="value" x="54" y="72">can0</text>
+  <text class="value" x="54" y="118">vcan0</text>
+  <text class="label" x="196" y="152">allowlist</text>
+
+  <text class="label" x="338" y="46">Forwarded</text>
+  <rect x="338" y="72" width="106" height="12" rx="6" fill="#222933"/>
+  <rect class="counter-a" x="338" y="72" width="106" height="12" rx="6" fill="#26A69A"/>
+  <text class="value" x="338" y="102">22,104 frames</text>
+
+  <text class="label" x="338" y="126">Dropped</text>
+  <rect x="338" y="142" width="106" height="12" rx="6" fill="#222933"/>
+  <rect class="counter-b" x="338" y="142" width="106" height="12" rx="6" fill="#3f51b5"/>
+  <text class="value" x="338" y="170">0 unexpected</text>
+
+  <circle class="pulse" cx="42" cy="206" r="5" fill="#26A69A"/>
+  <text class="key" x="56" y="210">Trace pair ready</text>
+  <text class="value" x="196" y="210">Gateway counters saved</text>
+  <text class="value" x="352" y="210">Policy stayed narrow</text>
+</svg>
