@@ -7,6 +7,7 @@ import NexusSpotlight from '../components/NexusSpotlight';
 import NexusShowcase from '../components/NexusShowcase';
 import NexusUseCasesTeaser from '../components/NexusUseCasesTeaser';
 import MoreFromPlotune from '../components/MoreFromPlotune';
+import Seo from '../components/Seo';
 
 const ClosingCta = () => (
   <section className="py-16 md:py-24 bg-dark-bg">
@@ -39,6 +40,11 @@ const ClosingCta = () => (
 const Home = () => {
   return (
     <>
+      <Seo
+        title="Plotune: DataOps Platform & AI-Ready Test Systems"
+        description="Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware."
+        path="/"
+      />
       <Hero />
       <NexusSpotlight />
       <NexusShowcase />

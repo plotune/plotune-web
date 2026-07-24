@@ -100,7 +100,7 @@ const Mission = () => {
               Ready to transform your data operations with a partner who shares your vision?
             </p>
             <a
-              href="#/contact"
+              href="/contact"
               className="inline-flex items-center px-8 py-3 bg-primary text-white rounded-full hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 font-semibold"
             >
               Start Your DataOps Journey

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 import {
   FiActivity,
   FiArrowRight,
@@ -57,6 +58,11 @@ const outcomes = [
 const Nexus = () => {
   return (
     <main className="overflow-hidden bg-dark-bg text-dark-text">
+      <Seo
+        title="Plotune Nexus: Local-First Appliance for AI-Ready Test Systems"
+        description="Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours."
+        path="/nexus"
+      />
       <section className="relative pt-32 pb-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.22),transparent_38%),radial-gradient(circle_at_82%_18%,rgba(63,81,181,0.16),transparent_24%),linear-gradient(180deg,#101112_0%,#121212_55%,#151719_100%)]" />
         <div className="relative container mx-auto px-5">

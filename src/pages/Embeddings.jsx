@@ -32,7 +32,7 @@ const Embeddings = () => {
 
             <div className="pt-4 flex gap-4 flex-wrap">
               <a
-                href="#/login"
+                href="/login"
                 className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 font-semibold"
               >
                 Get API Key
@@ -41,7 +41,7 @@ const Embeddings = () => {
                 </svg>
               </a>
               <a
-                href="#/docs"
+                href="/docs"
                 className="inline-flex items-center px-6 py-3 border-2 border-primary text-primary rounded-full hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 font-semibold"
               >
                 API Reference

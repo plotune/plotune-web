@@ -1,5 +1,6 @@
 import React, { useLayoutEffect } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
@@ -74,7 +75,8 @@ const NavigationWrapper = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
       <Router>
         <div className="app">
           <ScrollToTop />
@@ -116,7 +118,8 @@ function App() {
         </div>
         <ToastContainer position="bottom-right" autoClose={3000} />
       </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 

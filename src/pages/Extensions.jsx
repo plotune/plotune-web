@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import MarketplaceHero from '../components/MarketplaceHero';
 import MarketplaceControls from '../components/MarketplaceControls';
 import ExtensionsGrid from '../components/ExtensionsGrid';
+import Seo from '../components/Seo';
 
 const Extensions = () => {
   const [extensions, setExtensions] = useState([]);
@@ -429,6 +430,11 @@ const Extensions = () => {
 
   return (
     <>
+      <Seo
+        title="Plotune Extensions Marketplace"
+        description="Extend Plotune with a growing marketplace of integrations and tools for data sources, processing, and export."
+        path="/extensions"
+      />
       <MarketplaceHero />
       <MarketplaceControls
         currentFilter={currentFilter}

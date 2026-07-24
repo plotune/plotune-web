@@ -509,8 +509,8 @@ const handleUpload = async (file) => {
                     <h4 className="text-light-text font-medium">Do you need more management ? </h4>
                     <p className="text-gray-text text-sm mt-1">
                       Consider using, {' '}
-                      <a href="#/extensions" className="text-primary hover:underline">Extensions</a> or{' '}
-                      <a href="#/extensions" className="text-primary hover:underline">Stream Nodes</a> for better performance.
+                      <a href="/extensions" className="text-primary hover:underline">Extensions</a> or{' '}
+                      <a href="/extensions" className="text-primary hover:underline">Stream Nodes</a> for better performance.
                     </p>
                   </div>
                 </div>

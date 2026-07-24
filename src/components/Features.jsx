@@ -100,7 +100,7 @@ const Features = () => {
             Ready to modernize your data operations? See how the integrated platform can work for your team.
           </p>
           <a
-            href="#/contact"
+            href="/contact"
             className="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 inline-block"
           >
             Schedule a Demo

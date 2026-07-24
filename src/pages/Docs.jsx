@@ -2,6 +2,7 @@
 import React, { lazy, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
 import clsx from "clsx";
+import Seo from "../components/Seo";
 
 // ── SVG icons (same ones you use in Dashboard) ───────────────────────
 import OverviewIcon from "../assets/icons/overview.svg";
@@ -144,6 +145,11 @@ export default function Docs() {
 
   return (
     <div className="min-h-screen bg-dark-bg">
+      <Seo
+        title="Plotune Documentation"
+        description="Documentation for Plotune and Plotune Nexus: components, extensions, calculations, and workflows."
+        path="/docs"
+      />
       {/* ── HERO ── */}
       <section className="min-h-[40vh] flex flex-col justify-center py-16 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
         <div className="container mx-auto px-5">

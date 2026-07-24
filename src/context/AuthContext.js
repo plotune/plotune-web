@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }) => {
     });
     
     Cookies.remove('auth_token');
-    window.location.href = '#/login';
+    window.location.href = '/login';
   };
 
   const getAuthHeader = () => {

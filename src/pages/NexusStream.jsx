@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 import {
   FiArrowRight,
   FiBarChart2,
@@ -57,6 +58,11 @@ const FlowArrow = () => <div className="py-2 text-center text-3xl text-primary">
 const NexusStream = () => {
   return (
     <main className="overflow-hidden bg-dark-bg text-dark-text">
+      <Seo
+        title="Plotune Stream: Live Validation as Your Tests Run"
+        description="Plotune Stream monitors live signals and validates requirements continuously, close to your hardware, so teams get results the moment something happens."
+        path="/nexus/stream"
+      />
       <section className="relative pt-32 pb-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(38,166,154,0.22),transparent_38%),radial-gradient(circle_at_82%_18%,rgba(63,81,181,0.18),transparent_28%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
         <div className="relative container mx-auto px-5">

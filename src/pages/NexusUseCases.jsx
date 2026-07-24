@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FiArrowRight, FiChevronDown } from 'react-icons/fi';
+import Seo from '../components/Seo';
 import { ReactComponent as BusGateSvg } from '../assets/use-case-bus-gate.svg';
 import { ReactComponent as DiffSvg } from '../assets/use-case-diff.svg';
 import { ReactComponent as TimelineSvg } from '../assets/use-case-timeline.svg';
@@ -1053,6 +1054,11 @@ const NexusUseCases = () => {
 
   return (
     <main className="overflow-hidden bg-dark-bg text-dark-text">
+      <Seo
+        title="Plotune Nexus Use Cases: Automotive, Robotics & ROS 2"
+        description="See how Plotune Nexus runs bounded, AI-ready workflows across automotive validation, robotics, ROS 2 / DDS supervision, ECU and gateway integration, field diagnostics, and HIL automation."
+        path="/nexus/use-cases"
+      />
       <style>{motionCss}</style>
 
       <section className="relative pt-32 pb-16">

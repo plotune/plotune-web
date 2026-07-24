@@ -140,7 +140,7 @@ const Header = () => {
   return (
     <header className="bg-white/5 backdrop-blur-xl fixed w-full top-0 z-50 shadow-custom py-4">
       <div className="container mx-auto px-5 flex justify-between items-center">
-          <Link  to="/#">
+          <Link  to="/">
         <div className="flex items-center gap-3">
           <img src={logo} alt="Plotune Logo" className="h-10 w-auto" />
           <span className="text-2xl font-bold text-light-text bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">

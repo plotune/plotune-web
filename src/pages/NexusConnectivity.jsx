@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 import {
   FiArrowRight,
   FiCloud,
@@ -121,6 +122,11 @@ const ConnectivityArt = () => {
 const NexusConnectivity = () => {
   return (
     <main className="overflow-hidden bg-dark-bg text-dark-text">
+      <Seo
+        title="Plotune Nexus Connectivity: CAN, UART, XCP, ROS 2 / DDS"
+        description="Connect Plotune Nexus to the test systems your team already uses: CAN, UART, XCP on CAN and Ethernet, ROS 2 / DDS over CycloneDDS, and raw UDS and DoIP."
+        path="/nexus/connectivity"
+      />
       <section className="relative pt-32 pb-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.22),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
         <div className="relative container mx-auto px-5">

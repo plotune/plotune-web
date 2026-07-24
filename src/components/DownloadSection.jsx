@@ -424,7 +424,7 @@ const DownloadSection = () => {
               <div className="mt-12 text-sm text-gray-text max-w-2xl mx-auto">
                 <p className="mb-4">
                   <strong>Need help?</strong> Check out our{' '}
-                  <a href="#/docs" className="text-primary hover:underline">documentation</a>{' '}
+                  <a href="/docs" className="text-primary hover:underline">documentation</a>{' '}
                   or join our{' '}
                   <a href="https://discord.gg/plotune" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
                     community Discord

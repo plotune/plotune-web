@@ -327,7 +327,7 @@ export default function Oscilloscope() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <a href="#/docs?page=components-scatter" className="group">
+          <a href="/docs?page=components-scatter" className="group">
             <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-chart-scatter text-primary"></i>
@@ -341,7 +341,7 @@ export default function Oscilloscope() {
             </div>
           </a>
 
-          <a href="#/docs?page=extensions-online" className="group">
+          <a href="/docs?page=extensions-online" className="group">
             <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-satellite-dish text-primary"></i>
@@ -355,7 +355,7 @@ export default function Oscilloscope() {
             </div>
           </a>
 
-          <a href="#/docs?page=sdk" className="group">
+          <a href="/docs?page=sdk" className="group">
             <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-code text-primary"></i>

@@ -394,7 +394,7 @@ export default function Plotunex() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <a href="#/docs?page=components-recorder" className="group">
+          <a href="/docs?page=components-recorder" className="group">
             <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-record-vinyl text-primary"></i>
@@ -408,7 +408,7 @@ export default function Plotunex() {
             </div>
           </a>
 
-          <a href="#/docs?page=extensions-offline" className="group">
+          <a href="/docs?page=extensions-offline" className="group">
             <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-file-import text-primary"></i>
@@ -422,7 +422,7 @@ export default function Plotunex() {
             </div>
           </a>
 
-          <a href="#/docs?page=components-oscilloscope" className="group">
+          <a href="/docs?page=components-oscilloscope" className="group">
             <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-wave-square text-primary"></i>

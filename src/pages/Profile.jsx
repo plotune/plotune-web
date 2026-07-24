@@ -322,7 +322,7 @@ useEffect(() => {
                   <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Password</h3>
                     <p className="text-gray-text mb-4">Change your password to keep your account secure.</p>
-                    <a href='#/reset-password'>
+                    <a href='/reset-password'>
                     <button className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium">
                       Change Password
                     </button>

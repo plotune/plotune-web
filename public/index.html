@@ -4,27 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Single Page Apps for GitHub Pages: restore the real path after the 404.html redirect. -->
+  <script type="text/javascript">
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+      }
+    }(window.location));
+  </script>
+
+  <!--
+    Per-route <title>, description, canonical, and og:title/description/url are
+    supplied at runtime by react-helmet-async (see src/components/Seo.jsx), so
+    they are intentionally NOT duplicated here. This file keeps only the global,
+    non-varying tags plus a homepage-default title fallback for non-JS crawlers.
+  -->
   <title>Plotune: DataOps Platform &amp; AI-Ready Test Systems</title>
-  <meta name="description" content="Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.">
   <meta name="keywords" content="Plotune, DataOps platform, data orchestration, data governance, Plotune Nexus, test automation, hardware-in-the-loop, MCP, AI workflows">
   <meta name="author" content="Plotune">
   <meta name="theme-color" content="#26A69A">
-  <link rel="canonical" href="https://www.plotune.net/">
 
-  <!-- Open Graph -->
+  <!-- Open Graph (global, non-varying) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Plotune">
-  <meta property="og:title" content="Plotune: DataOps Platform &amp; AI-Ready Test Systems">
-  <meta property="og:description" content="A DataOps platform for orchestrating and governing data, plus Plotune Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.">
-  <meta property="og:url" content="https://www.plotune.net/">
   <meta property="og:image" content="https://www.plotune.net/logo512.png">
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
 
-  <!-- Twitter -->
+  <!-- Twitter (global, non-varying) -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Plotune: DataOps Platform &amp; AI-Ready Test Systems">
-  <meta name="twitter:description" content="A DataOps platform for orchestrating and governing data, plus Plotune Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.">
   <meta name="twitter:image" content="https://www.plotune.net/logo512.png">
 
   <link rel="icon" href="%PUBLIC_URL%/assets/favicon.ico" type="image/x-icon">
@@ -67,7 +78,7 @@
         "@type": "Product",
         "name": "Plotune Nexus",
         "brand": { "@id": "https://www.plotune.net/#organization" },
-        "url": "https://www.plotune.net/#/nexus",
+        "url": "https://www.plotune.net/nexus",
         "description": "Plotune Nexus is a managed, local-first appliance on Plotune-defined hardware that connects to real test systems and exposes bounded, AI-ready actions over a standard MCP surface. Captured data and artifacts stay local until the team chooses where to send them."
       },
       {

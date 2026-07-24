@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Seo from '../components/Seo';
 
 const ContactPage = () => {
   useEffect(() => {
@@ -19,7 +20,7 @@ const ContactPage = () => {
           // Initialize Zammad form
           if (window.jQuery && window.jQuery.fn.ZammadForm) {
             $('#zammad-support-form').ZammadForm({
-              agreementMessage: 'I accept the <a href="https://www.plotune.net/#/legal" target="_blank">Data Privacy Policy & Acceptable Use Policy</a>',
+              agreementMessage: 'I accept the <a href="https://www.plotune.net/legal" target="_blank">Data Privacy Policy & Acceptable Use Policy</a>',
               messageTitle: 'Support Request',
               messageSubmit: 'Submit',
               messageThankYou: 'Thank you for your inquiry (#%s)! We\'ll contact you as soon as possible.',
@@ -74,6 +75,11 @@ const ContactPage = () => {
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-900 via-dark-surface to-black relative overflow-hidden">
+      <Seo
+        title="Contact Plotune"
+        description="Get in touch with the Plotune team or request a demo of the DataOps platform and Plotune Nexus."
+        path="/contact"
+      />
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,198,0.3),transparent_50%)]"></div>
