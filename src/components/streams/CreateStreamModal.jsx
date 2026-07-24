@@ -77,20 +77,13 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
             />
           </div>
 
-          {/* Plan Limits Display */}
+          {/* Stream Limits Display */}
           <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
-            <h4 className="text-light-text font-medium mb-2">
-              {user?.premium ? 'Premium Plan Limits' : 'Free Plan Limits'}
-            </h4>
+            <h4 className="text-light-text font-medium mb-2">Stream Limits</h4>
             <div className="text-sm text-gray-text space-y-1">
               <p>• {user?.premium ? '100' : '5'} messages/second</p>
               <p>• {user?.premium ? '10KB' : '1KB'} max message size</p>
               <p>• {user?.premium ? '10,000' : '1,000'} messages retention</p>
-              {!user?.premium && (
-                <p className="text-primary text-xs mt-2">
-                  Upgrade to premium for higher limits
-                </p>
-              )}
             </div>
           </div>
 

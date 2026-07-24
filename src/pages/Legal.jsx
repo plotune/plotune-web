@@ -141,7 +141,7 @@ const Legal = () => {
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-crown text-primary"></i> Pro Edition
                 </h4>
-                <p className="text-gray-text">Subscription-based license ($5/month) for individual professionals. Includes all features and priority support.</p>
+                <p className="text-gray-text">Subscription-based license for individual professionals. Includes all features and priority support.</p>
               </div>
               <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">

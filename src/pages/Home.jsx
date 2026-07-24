@@ -4,7 +4,6 @@ import Features from '../components/Features';
 import BusinessImpact from '../components/BusinessImpact';
 import NexusSpotlight from '../components/NexusSpotlight';
 import TechStack from '../components/TechStack';
-import Pricing from '../components/Pricing';
 
 const Home = () => {
   return (
@@ -13,7 +12,6 @@ const Home = () => {
       <NexusSpotlight />
       <Features />
       <BusinessImpact/>
-      <Pricing />
     </>
   );
 };

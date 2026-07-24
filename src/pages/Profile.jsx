@@ -87,10 +87,6 @@ useEffect(() => {
     toast.success('Copied to clipboard!');
   };
 
-  const handleUpgradePremium = () => {
-    toast.info('Premium payment not available');
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center">
@@ -136,7 +132,6 @@ useEffect(() => {
                 {[
                   { id: 'profile', label: 'Profile Information', icon: '👤' },
                   { id: 'api', label: 'API Access', icon: '🔑' },
-                  { id: 'billing', label: 'Billing & Plans', icon: '💳' },
                   { id: 'security', label: 'Security', icon: '🔒' },
                 ].map((item) => (
                   <button
@@ -314,86 +309,6 @@ useEffect(() => {
                   <button className="px-6 py-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition font-medium">
                     View API Docs
                   </button>
-                </div>
-              </div>
-            )}
-
-            {/* Billing & Plans */}
-            {activeSection === 'billing' && (
-              <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
-                <h2 className="text-xl font-semibold text-light-text mb-6">Billing & Plans</h2>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Current Plan */}
-                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
-                    <h3 className="text-lg font-medium text-light-text mb-4">Current Plan</h3>
-                    <div className={`p-4 rounded-lg mb-4 ${
-                      premiumStatus 
-                        ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30' 
-                        : 'bg-gray-500/20 border border-gray-500/30'
-                    }`}>
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h4 className="text-light-text font-semibold text-lg">
-                            {premiumStatus ? 'Premium Plan' : 'Free Plan'}
-                          </h4>
-                          <p className="text-gray-text">
-                            {premiumStatus ? 'All features unlocked' : 'Basic features'}
-                          </p>
-                        </div>
-                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          premiumStatus ? 'bg-purple-500 text-white' : 'bg-gray-600 text-gray-300'
-                        }`}>
-                          {premiumStatus ? 'Active' : 'Current'}
-                        </div>
-                      </div>
-                    </div>
-
-                    {!premiumStatus && (
-                      <button
-                        onClick={handleUpgradePremium}
-                        className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-medium"
-                      >
-                        Upgrade to Premium
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Plan Features */}
-                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
-                    <h3 className="text-lg font-medium text-light-text mb-4">Plan Features</h3>
-                    <div className="space-y-3">
-                      {[
-                        { feature: 'All Basic Extensions', free: true, premium: true },
-                        { feature: 'Premium Extensions', free: false, premium: true },
-                        { feature: 'API Access', free: true, premium: true },
-                        { feature: 'Priority Support', free: false, premium: true },
-                        { feature: 'Advanced Analytics', free: false, premium: true },
-                        { feature: 'Custom Integrations', free: false, premium: true },
-                        { feature: 'Plotune Streams', free: true, premium: true },
-                      ].map((item, index) => (
-                        <div key={index} className="flex items-center justify-between py-2">
-                          <span className="text-light-text">{item.feature}</span>
-                          <div className="flex space-x-4">
-                            <span className={`w-6 h-6 rounded flex items-center justify-center ${
-                              item.free ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                            }`}>
-                              {item.free ? '✓' : '✗'}
-                            </span>
-                            <span className={`w-6 h-6 rounded flex items-center justify-center ${
-                              item.premium ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                            }`}>
-                              {item.premium ? '✓' : '✗'}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex text-sm text-gray-text mt-4">
-                      <span className="w-1/2 text-center">Free</span>
-                      <span className="w-1/2 text-center">Premium</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}

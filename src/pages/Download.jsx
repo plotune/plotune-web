@@ -1,6 +1,5 @@
 import React from 'react';
 import DownloadSection from '../components/DownloadSection';
-import Pricing from '../components/Pricing';
 import FaqSection from '../components/FaqSection';
 
 const Download = () => {
@@ -15,7 +14,6 @@ const Download = () => {
         </div>
       </section>
       <DownloadSection />
-      <Pricing />
       <FaqSection />
     </>
   );

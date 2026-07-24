@@ -12,7 +12,6 @@ const PARTNER_STATS = {
   activeStreams: 0,//12,
   totalClients: 0,//8,
   storageUsed: '0 M',//'45.2 GB',
-  monthlyUsage: '₺0',//'$1,240.50',
   complianceScore: '-'//92
 };
 
@@ -264,7 +263,7 @@ const PartnerPortal = () => {
 // ======================
 
 const StatsOverview = ({ partnerData }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     <StatCard 
       label="Active Streams" 
       value={partnerData.activeStreams} 
@@ -283,14 +282,8 @@ const StatsOverview = ({ partnerData }) => (
       icon="database" 
       color="blue-500" 
     />
-    <StatCard 
-      label="Monthly Usage" 
-      value={partnerData.monthlyUsage} 
-      icon="chart-pie" 
-      color="purple-500" 
-    />
-    <StatCard 
-      label="Compliance Score" 
+    <StatCard
+      label="Compliance Score"
       value={`${partnerData.complianceScore}%`} 
       icon="shield-alt" 
       color="green-500" 
