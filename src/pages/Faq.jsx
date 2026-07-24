@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { FiArrowRight } from 'react-icons/fi';
 import Seo from '../components/Seo';
 
 // Vetted, guardrail-checked Q&A (Nexus-weighted). Answers lead with the answer,
@@ -120,53 +121,64 @@ const Faq = () => (
       <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
     </Helmet>
 
-    <section className="px-5 pt-32 pb-14">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">FAQ</p>
-        <h1 className="mt-4 text-4xl font-bold text-light-text md:text-5xl">
-          Questions about Plotune and Nexus.
-        </h1>
-        <p className="mt-5 text-lg leading-8 text-gray-text">
-          How teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware, keep
-          their data local, and orchestrate data operations with the Plotune platform.
-        </p>
+    <section className="relative pt-32 pb-16">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.22),transparent_38%),radial-gradient(circle_at_82%_18%,rgba(63,81,181,0.16),transparent_24%),linear-gradient(180deg,#101112_0%,#121212_55%,#151719_100%)]" />
+      <div className="relative container mx-auto px-5">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Frequently Asked Questions</p>
+          <h1 className="mt-5 text-4xl font-semibold text-light-text md:text-6xl">
+            Questions about Plotune and Nexus.
+          </h1>
+          <p className="mt-6 text-lg leading-8 text-gray-text">
+            How teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware, keep
+            their data local, and orchestrate data operations with the Plotune platform.
+          </p>
+        </div>
       </div>
     </section>
 
-    <section className="px-5 pb-24">
-      <div className="mx-auto max-w-3xl space-y-14">
-        {sections.map((section) => (
-          <div key={section.id}>
-            <h2 className="text-2xl font-semibold text-light-text">{section.title}</h2>
-            <div className="mt-6 space-y-5">
-              {section.items.map((item) => (
-                <article key={item.q} className="rounded-[1.5rem] bg-dark-card/80 p-6 shadow-custom md:p-7">
-                  <h3 className="text-lg font-semibold text-light-text">{item.q}</h3>
-                  <p className="mt-3 text-sm leading-7 text-gray-text md:text-base">{item.a}</p>
-                </article>
-              ))}
+    <section className="py-16 md:py-20">
+      <div className="container mx-auto px-5">
+        <div className="mx-auto max-w-3xl space-y-16">
+          {sections.map((section) => (
+            <div key={section.id}>
+              <h2 className="text-2xl font-semibold text-light-text md:text-3xl">{section.title}</h2>
+              <div className="mt-8 space-y-5">
+                {section.items.map((item) => (
+                  <article key={item.q} className="rounded-2xl bg-dark-card/80 p-6 shadow-custom md:p-7">
+                    <h3 className="text-lg font-semibold text-light-text md:text-xl">{item.q}</h3>
+                    <p className="mt-4 text-sm leading-7 text-gray-text md:text-base">{item.a}</p>
+                  </article>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+    </section>
 
-        <div className="rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(38,166,154,0.04))] p-8 text-center shadow-custom md:p-10">
-          <h2 className="text-2xl font-bold text-light-text md:text-3xl">Still have a question?</h2>
-          <p className="mx-auto mt-3 max-w-xl text-gray-text">
-            Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow
-            would fit your setup.
-          </p>
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
-            >
-              Request a Demo
-            </Link>
+    <section className="pb-24">
+      <div className="container mx-auto px-5">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.12))] p-8 text-center shadow-custom md:flex-row md:justify-between md:text-left">
+          <div>
+            <h2 className="text-2xl font-semibold text-light-text">Still have a question?</h2>
+            <p className="mt-2 text-gray-text">
+              Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow would fit your setup.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               to="/nexus"
-              className="inline-flex items-center justify-center rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300 hover:-translate-y-1 hover:bg-primary/10"
+              className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
             >
               Explore Nexus
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
+            >
+              Request a Demo
+              <FiArrowRight />
             </Link>
           </div>
         </div>
