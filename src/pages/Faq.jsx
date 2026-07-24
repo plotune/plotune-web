@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiChevronDown } from 'react-icons/fi';
 import Seo from '../components/Seo';
 
 // Vetted, guardrail-checked Q&A (Nexus-weighted). Answers lead with the answer,
 // then position naturally. Visible text and FAQPage schema are generated from the
-// same source so they always match.
+// same source so they always match. Answers stay mounted in the DOM (collapsed via
+// CSS) so AI crawlers can read them even when a group is closed.
 const sections = [
+  {
+    id: 'about-plotune',
+    title: 'About Plotune',
+    items: [
+      {
+        q: 'What is a DataOps platform?',
+        a: 'A DataOps platform gives teams one repeatable, auditable way to move, process, and govern data across their tools, instead of stitching together one-off scripts. Plotune is a DataOps platform (Core, Stream, and Cloud) for orchestrating, processing, and governing data, and it extends the same controlled, AI-ready approach to real test hardware through its Plotune Nexus appliance.',
+      },
+      {
+        q: 'What is a local-first data acquisition appliance?',
+        a: 'A local-first acquisition appliance captures and stores data next to the hardware by default, rather than streaming it into a vendor cloud first. Plotune Nexus is a managed local-first appliance on Plotune-defined hardware: captures and artifacts stay on the device, and the team chooses where outputs go, whether local files, SFTP, Google Drive, or OneDrive and SharePoint.',
+      },
+    ],
+  },
   {
     id: 'ai-on-hardware',
     title: 'AI-assisted work on real hardware',
@@ -82,20 +97,6 @@ const sections = [
       },
     ],
   },
-  {
-    id: 'about-plotune',
-    title: 'About Plotune',
-    items: [
-      {
-        q: 'What is a local-first data acquisition appliance?',
-        a: 'A local-first acquisition appliance captures and stores data next to the hardware by default, rather than streaming it into a vendor cloud first. Plotune Nexus is a managed local-first appliance on Plotune-defined hardware: captures and artifacts stay on the device, and the team chooses where outputs go, whether local files, SFTP, Google Drive, or OneDrive and SharePoint.',
-      },
-      {
-        q: 'What is a DataOps platform?',
-        a: 'A DataOps platform gives teams one repeatable, auditable way to move, process, and govern data across their tools, instead of stitching together one-off scripts. Plotune is a DataOps platform (Core, Stream, and Cloud) for orchestrating, processing, and governing data, and it extends the same controlled, AI-ready approach to real test hardware through its Plotune Nexus appliance.',
-      },
-    ],
-  },
 ];
 
 const faqSchema = {
@@ -108,6 +109,36 @@ const faqSchema = {
       acceptedAnswer: { '@type': 'Answer', text: item.a },
     }))
   ),
+};
+
+const FaqItem = ({ item, defaultOpen = false }) => {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <article className="overflow-hidden rounded-2xl bg-dark-card/80 shadow-custom">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-white/[0.03] md:px-7"
+      >
+        <h3 className="text-lg font-semibold text-light-text md:text-xl">{item.q}</h3>
+        <FiChevronDown
+          className={`shrink-0 text-xl text-primary transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {/* grid-rows collapse keeps the answer mounted (crawlable) while animating open/closed */}
+      <div
+        className={`grid transition-all duration-300 ease-in-out ${
+          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <p className="px-6 pb-6 text-sm leading-7 text-gray-text md:px-7 md:text-base">{item.a}</p>
+        </div>
+      </div>
+    </article>
+  );
 };
 
 const Faq = () => (
@@ -143,12 +174,9 @@ const Faq = () => (
           {sections.map((section) => (
             <div key={section.id}>
               <h2 className="text-2xl font-semibold text-light-text md:text-3xl">{section.title}</h2>
-              <div className="mt-8 space-y-5">
-                {section.items.map((item) => (
-                  <article key={item.q} className="rounded-2xl bg-dark-card/80 p-6 shadow-custom md:p-7">
-                    <h3 className="text-lg font-semibold text-light-text md:text-xl">{item.q}</h3>
-                    <p className="mt-4 text-sm leading-7 text-gray-text md:text-base">{item.a}</p>
-                  </article>
+              <div className="mt-8 space-y-4">
+                {section.items.map((item, index) => (
+                  <FaqItem key={item.q} item={item} defaultOpen={index === 0} />
                 ))}
               </div>
             </div>

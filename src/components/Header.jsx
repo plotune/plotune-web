@@ -43,8 +43,13 @@ const Header = () => {
     { to: '/extensions', label: 'Extensions' },
     { to: '/download', label: 'Download' },
     { to: '/about', label: 'About' },
-    { to: '/docs', label: 'Docs' },
-    { to: '/faq', label: 'FAQ' },
+    {
+      to: '/docs',
+      label: 'Docs',
+      children: [
+        { to: '/faq', label: 'FAQ' },
+      ],
+    },
   ];
 
   // Navigation items for logged-in users with Material Icons
@@ -92,18 +97,22 @@ const Header = () => {
             {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
             {item.label}
           </Link>
-          <div className="hidden min-w-48 rounded-xl border border-white/10 bg-dark-surface p-3 shadow-custom md:absolute md:left-0 md:top-8 md:group-hover:block">
-            {item.children.map((child) => (
-              <Link
-                key={child.to}
-                to={child.to}
-                className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary ${
-                  location.pathname === child.to ? 'text-primary' : 'text-dark-text'
-                }`}
-              >
-                {child.label}
-              </Link>
-            ))}
+          {/* Positioner carries a transparent top padding so the hover area
+              bridges the gap between the parent and the menu (no dead zone). */}
+          <div className="hidden md:absolute md:left-0 md:top-full md:pt-3 md:group-hover:block">
+            <div className="min-w-48 rounded-xl border border-white/10 bg-dark-surface p-3 shadow-custom">
+              {item.children.map((child) => (
+                <Link
+                  key={child.to}
+                  to={child.to}
+                  className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary ${
+                    location.pathname === child.to ? 'text-primary' : 'text-dark-text'
+                  }`}
+                >
+                  {child.label}
+                </Link>
+              ))}
+            </div>
           </div>
           {isMobileMenuOpen && (
             <div className="mt-2 space-y-2 pl-4 md:hidden">
