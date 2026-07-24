@@ -13,7 +13,7 @@ const runs = [
     source: 'Claude · ROS 2',
     title: 'DDS requirement gate, 15 for 15',
     status: 'Gate passed',
-    copy: 'Gated a requirement on live DDS telemetry across a reliability soak — every run matched, no flakes.',
+    copy: 'Gated a requirement on live robot telemetry across a reliability soak, and every run matched with no flakes.',
     chips: ['15/15 PASS', '0 flakes', '~0.3 s match'],
     Svg: BusGateSvg,
   },
@@ -80,13 +80,13 @@ const Chip = ({ value }) => (
 );
 
 const NexusShowcase = () => (
-  <section className="bg-dark-bg py-20">
+  <section className="bg-dark-bg py-16 md:py-20">
     <style>{motionCss}</style>
     <div className="container mx-auto px-5">
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Claude &amp; Codex, on the bench</p>
         <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
-          Watch an agent run the bounded workflow — and leave the proof.
+          Watch an agent run the bounded workflow and leave the proof.
         </h2>
         <p className="mt-4 text-base leading-8 text-gray-text">
           Real example runs on Plotune Nexus. The agent acquires the interface, runs the procedure,
@@ -94,7 +94,7 @@ const NexusShowcase = () => (
         </p>
       </div>
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-10 grid gap-5 sm:grid-cols-2 md:mt-12 xl:grid-cols-3">
         {runs.map((run) => {
           const Svg = run.Svg;
 

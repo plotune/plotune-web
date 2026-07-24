@@ -29,22 +29,22 @@ const Features = () => {
       icon: 'fa-cloud',
       title: 'Plotune Cloud',
       subtitle: 'Storage & Handoff',
-      desc: 'Move artifacts to the storage you choose — local-first, customer-controlled, never defaulted into a vendor archive.',
+      desc: 'Move artifacts to the storage you choose. Local-first and customer-controlled, never defaulted into a vendor archive.',
       features: ['Customer-owned Storage', 'Artifact Handoff', 'Configured Drives', 'Local-first Data Path']
     },
   ];
 
   return (
-    <section id="features" className="py-24 bg-dark-card/30" ref={ref}>
+    <section id="features" className="py-16 md:py-24 bg-dark-card/30" ref={ref}>
       <div className="container mx-auto px-5">
 
-        <div className="text-center mb-16 max-w-2xl mx-auto">
+        <div className="text-center mb-10 md:mb-16 max-w-2xl mx-auto">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">The platform behind Nexus</p>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold text-light-text">
             What powers the appliance.
           </h2>
           <p className="mt-4 text-gray-text text-lg">
-            Nexus runs on the Plotune platform — the control, execution, and storage layers that keep
+            Nexus runs on the Plotune platform. Its control, execution, and storage layers keep
             hardware-facing work orchestrated, fast, and local-first.
           </p>
         </div>

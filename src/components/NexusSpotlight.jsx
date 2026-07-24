@@ -9,7 +9,7 @@ const pillars = [
   },
   {
     title: 'Bounded, not raw',
-    body: 'AI-assisted work runs through a narrow set of MCP actions — acquire, capture, wait, send only approved frames, stop, package — instead of direct hardware access.',
+    body: 'AI-assisted work runs through a narrow set of safe, approved actions instead of direct hardware access, so you always know what an agent can and cannot do.',
     icon: FiShield,
   },
   {
@@ -18,8 +18,8 @@ const pillars = [
     icon: FiClock,
   },
   {
-    title: 'Real protocol coverage',
-    body: 'Classic CAN, UART (incl. RS-485), XCP on CAN and Ethernet, and ROS 2 / DDS over CycloneDDS — shipped today.',
+    title: 'Works with your setup',
+    body: 'Connects to the real test systems your benches, vehicles, and rigs already use, with broad support that ships today.',
     icon: FiCpu,
   },
 ];

@@ -8,9 +8,9 @@ import NexusShowcase from '../components/NexusShowcase';
 import NexusUseCasesTeaser from '../components/NexusUseCasesTeaser';
 
 const ClosingCta = () => (
-  <section className="py-24 bg-dark-bg">
+  <section className="py-16 md:py-24 bg-dark-bg">
     <div className="container mx-auto px-5">
-      <div className="mx-auto max-w-4xl rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(38,166,154,0.04))] p-10 text-center shadow-custom md:p-14">
+      <div className="mx-auto max-w-4xl rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(38,166,154,0.04))] p-8 text-center shadow-custom md:p-14">
         <h2 className="text-3xl font-bold text-light-text md:text-4xl">Start with one real workflow.</h2>
         <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-gray-text">
           Put Plotune Nexus on one bench and see the bounded workflow, the live gate, and the packaged

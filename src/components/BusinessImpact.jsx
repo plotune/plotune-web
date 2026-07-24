@@ -19,19 +19,19 @@ const BusinessImpact = () => {
     {
       icon: 'fa-shield-alt',
       title: 'Approvable AI-assisted work',
-      desc: 'A narrower execution layer than raw shell or one-off scripts, so AI-assisted workflows are easier to approve — with the data path staying customer-controlled.'
+      desc: 'A narrower, more predictable layer than raw scripts or direct access, so AI-assisted workflows are easier to approve, and the data path stays customer-controlled.'
     },
   ];
 
   return (
-    <section className="py-24 bg-dark-surface backdrop-blur-xl" ref={ref}>
+    <section className="py-16 md:py-24 bg-dark-surface backdrop-blur-xl" ref={ref}>
       <div className="container mx-auto px-5">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
             Why teams put Nexus on the bench.
           </h2>
           <p className="text-gray-text max-w-2xl mx-auto text-lg">
-            Start with one real workflow — not a platform migration.
+            Start with one real workflow, not a platform migration.
           </p>
         </div>
         

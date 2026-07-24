@@ -5,7 +5,7 @@ import { FiArrowRight } from 'react-icons/fi';
 const industries = [
   'Automotive & Mobility',
   'Robotics',
-  'ROS 2 & Autonomous',
+  'Autonomous Systems',
   'ECU & Gateway',
   'Field Diagnostics',
   'HIL & Test Automation',
@@ -14,18 +14,18 @@ const industries = [
 const subpages = [
   {
     label: 'Connectivity',
-    copy: 'CAN, UART, XCP, and ROS 2 / DDS — one connection point for your test environment.',
+    copy: 'One connection point for the test systems and tools your team already uses.',
     to: '/nexus/connectivity',
   },
   {
     label: 'Stream',
-    copy: 'Monitor live signals and validate requirements as your tests run — continuously.',
+    copy: 'Monitor live signals and validate requirements continuously, as your tests run.',
     to: '/nexus/stream',
   },
 ];
 
 const NexusUseCasesTeaser = () => (
-  <section className="bg-dark-card/30 py-20">
+  <section className="bg-dark-card/30 py-16 md:py-20">
     <div className="container mx-auto px-5">
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Scenarios by industry</p>
@@ -33,9 +33,9 @@ const NexusUseCasesTeaser = () => (
           See how Plotune Nexus works in your world.
         </h2>
         <p className="mt-4 text-base leading-8 text-gray-text">
-          Automotive validation, robotics, ROS 2 / DDS supervision, ECU &amp; gateway integration,
-          field diagnostics, and HIL automation — each with the bounded workflows Nexus runs on real
-          hardware and the evidence each one leaves behind.
+          From automotive validation and autonomous robotics to ECU integration, field diagnostics,
+          and test automation, each scenario shows the workflows Nexus runs on real hardware and the
+          evidence each one leaves behind.
         </p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-2">
@@ -58,7 +58,7 @@ const NexusUseCasesTeaser = () => (
         </Link>
       </div>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-2">
+      <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-2">
         {subpages.map((page) => (
           <Link
             key={page.to}
