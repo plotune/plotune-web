@@ -7,14 +7,15 @@ const Hero = () => {
       <div className="container mx-auto px-5">
         <div className="relative z-10 mx-auto max-w-2xl text-center xl:mx-0 xl:text-left">
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">
-            Plotune Nexus
+            Plotune
           </p>
           <h2 className="mb-6 text-4xl font-bold text-light-text md:text-6xl">
-            Turn bench and vehicle interfaces into controlled AI workflows.
+            One platform for your data operations and your test systems.
           </h2>
           <p className="mb-9 text-lg text-gray-text md:text-xl">
-            A managed appliance that lets your team run and validate real test systems with AI
-            assistance, while your data stays local until you decide where it goes.
+            Plotune helps teams orchestrate, process, and govern their data. And Plotune Nexus,
+            our flagship appliance, brings the same controlled, AI-ready workflows to real hardware
+            and test benches.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center xl:justify-start">
             <Link
@@ -38,7 +39,7 @@ const Hero = () => {
           <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
             <h3 className="text-lg font-semibold text-light-text">Plotune Nexus</h3>
             <span className="rounded-full bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
-              Managed appliance
+              Flagship
             </span>
           </div>
 

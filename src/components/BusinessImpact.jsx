@@ -8,18 +8,18 @@ const BusinessImpact = () => {
   const benefits = [
     {
       icon: 'fa-chart-line',
-      title: 'Faster triage',
-      desc: 'Inspect interfaces, capture bounded traces, and share evidence without stitching local tools together by hand each time.'
+      title: 'Accelerate Time to Insight',
+      desc: 'Go from raw data to actionable insights in hours, not weeks. Streamline your entire data operations pipeline.'
     },
     {
       icon: 'fa-cogs',
-      title: 'Repeatable validation',
-      desc: 'Move recurring capture and stimulation from ad-hoc operator steps into reusable jobs and test sequences.'
+      title: 'Simplify Complex Workflows',
+      desc: 'Orchestrate multiple data sources and processes through a unified interface that your team can actually use.'
     },
     {
       icon: 'fa-shield-alt',
-      title: 'Approvable AI-assisted work',
-      desc: 'A narrower, more predictable layer than raw scripts or direct access, so AI-assisted workflows are easier to approve, and the data path stays customer-controlled.'
+      title: 'Enterprise-Grade Governance',
+      desc: 'Maintain compliance and data quality while scaling your operations with built-in governance and security.'
     },
   ];
 
@@ -28,10 +28,10 @@ const BusinessImpact = () => {
       <div className="container mx-auto px-5">
         <div className="text-center mb-10 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
-            Why teams put Nexus on the bench.
+            Transform Your Data Operations
           </h2>
           <p className="text-gray-text max-w-2xl mx-auto text-lg">
-            Start with one real workflow, not a platform migration.
+            Join forward-thinking companies that use Plotune to modernize their data infrastructure and drive better business outcomes.
           </p>
         </div>
         

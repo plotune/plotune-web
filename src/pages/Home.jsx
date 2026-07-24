@@ -6,15 +6,16 @@ import BusinessImpact from '../components/BusinessImpact';
 import NexusSpotlight from '../components/NexusSpotlight';
 import NexusShowcase from '../components/NexusShowcase';
 import NexusUseCasesTeaser from '../components/NexusUseCasesTeaser';
+import MoreFromPlotune from '../components/MoreFromPlotune';
 
 const ClosingCta = () => (
   <section className="py-16 md:py-24 bg-dark-bg">
     <div className="container mx-auto px-5">
       <div className="mx-auto max-w-4xl rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(38,166,154,0.04))] p-8 text-center shadow-custom md:p-14">
-        <h2 className="text-3xl font-bold text-light-text md:text-4xl">Start with one real workflow.</h2>
+        <h2 className="text-3xl font-bold text-light-text md:text-4xl">See what Plotune can do for your team.</h2>
         <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-gray-text">
-          Put Plotune Nexus on one bench and see the bounded workflow, the live gate, and the packaged
-          evidence for yourself.
+          From data operations to the test bench, start with one real workflow and see the platform,
+          and our flagship Nexus appliance, work for you.
         </p>
         <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Link
@@ -44,6 +45,7 @@ const Home = () => {
       <NexusUseCasesTeaser />
       <Features />
       <BusinessImpact />
+      <MoreFromPlotune />
       <ClosingCta />
     </>
   );

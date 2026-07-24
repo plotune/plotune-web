@@ -15,22 +15,22 @@ const Features = () => {
       icon: 'fa-cogs',
       title: 'Plotune Core',
       subtitle: 'Control Plane',
-      desc: 'Orchestrate, monitor, and manage your Nexus appliances and workflows from one interface.',
-      features: ['Appliance Orchestration', 'Unified UI/UX', 'Real-time Monitoring', 'Workflow Management']
+      desc: 'Orchestrate, monitor, and manage your entire data ecosystem through a unified interface. The brain of your data operations.',
+      features: ['Data Orchestration', 'Unified UI/UX', 'Real-time Monitoring', 'Workflow Management']
     },
     {
       icon: 'fa-bolt',
       title: 'Plotune Stream',
       subtitle: 'Execution Plane',
-      desc: 'Run bounded capture, recording, and live validation close to the hardware, as your tests run.',
-      features: ['Bounded Capture', 'Live Validation', 'Async Recording Jobs', 'Low-latency Execution']
+      desc: 'Real-time ETL and event operations with lightning-fast data processing. Transform and move data as it happens.',
+      features: ['Real-time ETL', 'Event Operations', 'Stream Processing', 'Low-latency Execution']
     },
     {
       icon: 'fa-cloud',
       title: 'Plotune Cloud',
-      subtitle: 'Storage & Handoff',
-      desc: 'Move artifacts to the storage you choose. Local-first and customer-controlled, never defaulted into a vendor archive.',
-      features: ['Customer-owned Storage', 'Artifact Handoff', 'Configured Drives', 'Local-first Data Path']
+      subtitle: 'Data Governance Plane',
+      desc: 'Scalable storage, comprehensive metadata management, and enterprise-grade data governance policies.',
+      features: ['Data Storage', 'Metadata Management', 'Policy Enforcement', 'Scalable Infrastructure']
     },
   ];
 
@@ -39,13 +39,13 @@ const Features = () => {
       <div className="container mx-auto px-5">
 
         <div className="text-center mb-10 md:mb-16 max-w-2xl mx-auto">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">The platform behind Nexus</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">The Plotune platform</p>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold text-light-text">
-            What powers the appliance.
+            A complete DataOps platform.
           </h2>
           <p className="mt-4 text-gray-text text-lg">
-            Nexus runs on the Plotune platform. Its control, execution, and storage layers keep
-            hardware-facing work orchestrated, fast, and local-first.
+            Beyond the bench, Plotune helps teams orchestrate, process, and govern their data across
+            three planes that work together as one.
           </p>
         </div>
 
@@ -97,13 +97,13 @@ const Features = () => {
           transition={{ delay: 0.6 }}
         >
           <p className="text-gray-text mb-6 max-w-2xl mx-auto">
-            See how the platform and the Nexus appliance work together on your bench.
+            Ready to modernize your data operations? See how the integrated platform can work for your team.
           </p>
           <a
-            href="#/nexus"
+            href="#/contact"
             className="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 inline-block"
           >
-            Explore Nexus
+            Schedule a Demo
           </a>
         </motion.div>
       </div>

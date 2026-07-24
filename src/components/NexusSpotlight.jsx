@@ -29,7 +29,7 @@ const NexusSpotlight = () => {
     <section className="bg-dark-card/30 py-14">
       <div className="container mx-auto px-5">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Plotune Nexus</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Our flagship · Plotune Nexus</p>
           <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
             One controlled surface for hardware-facing work.
           </h2>
