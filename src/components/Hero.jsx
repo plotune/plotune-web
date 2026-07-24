@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section className="relative flex min-h-[88vh] items-start overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(38,166,154,0.14),transparent_62%),linear-gradient(180deg,#101112_0%,#121212_100%)] pt-28 pb-16 md:min-h-screen md:items-center md:py-24">
+    <section className="relative flex min-h-[88vh] items-start overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(38,166,154,0.14),transparent_62%),linear-gradient(180deg,#101112_0%,#121212_100%)] pt-28 pb-16 md:min-h-[640px] md:items-center md:py-24 xl:min-h-screen">
       <div className="container mx-auto px-5">
-        <div className="relative z-10 max-w-2xl text-center md:text-left">
+        <div className="relative z-10 mx-auto max-w-2xl text-center xl:mx-0 xl:text-left">
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">
             Plotune Nexus
           </p>
@@ -16,7 +16,7 @@ const Hero = () => {
             A managed appliance that lets your team run and validate real test systems with AI
             assistance, while your data stays local until you decide where it goes.
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center xl:justify-start">
             <Link
               to="/contact"
               className="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
@@ -33,7 +33,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute right-0 top-1/2 hidden w-1/2 max-w-2xl -translate-y-1/2 pr-8 md:block">
+      <div className="absolute right-0 top-1/2 hidden w-1/2 max-w-2xl -translate-y-1/2 pr-8 xl:block">
         <div className="ml-auto max-w-lg rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-sm">
           <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
             <h3 className="text-lg font-semibold text-light-text">Plotune Nexus</h3>
