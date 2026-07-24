@@ -5,12 +5,12 @@ import { FiArrowRight } from 'react-icons/fi';
 const items = [
   {
     label: 'Plotune Desktop App',
-    copy: 'Bring Plotune to your machine. Available for Windows and Linux.',
+    copy: 'Run it locally on your own machine. Available for Windows and Linux.',
     to: '/download',
   },
   {
     label: 'Extensions',
-    copy: 'Extend Plotune with a growing marketplace of integrations and tools.',
+    copy: 'Add capabilities from a growing marketplace of integrations and tools.',
     to: '/extensions',
   },
 ];

@@ -143,9 +143,9 @@ const Header = () => {
           <Link  to="/#">
         <div className="flex items-center gap-3">
           <img src={logo} alt="Plotune Logo" className="h-10 w-auto" />
-          <h1 className="text-2xl font-bold text-light-text bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <span className="text-2xl font-bold text-light-text bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Plotune
-          </h1>
+          </span>
         </div>
           </Link>
         <nav className="flex items-center">

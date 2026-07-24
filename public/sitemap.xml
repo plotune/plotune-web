@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The site is a single-page app served from one URL. Client-side routing uses
+  hash fragments (e.g. /#/nexus), which crawlers strip, so the homepage is the
+  one canonical, indexable URL. If routing moves to clean paths, expand this
+  sitemap with a <url> entry per route.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.plotune.net/</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

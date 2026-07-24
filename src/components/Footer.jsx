@@ -10,7 +10,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-3">
               <img src={logo} alt="Plotune Logo" className="h-9 w-auto" />
-              <h1 className="text-2xl font-bold text-light-text">Plotune</h1>
+              <span className="text-2xl font-bold text-light-text">Plotune</span>
             </div>
             <p className="mt-5 text-gray-text max-w-xs">
               Empowering engineers, analysts, and researchers with real-time data visualization tools.

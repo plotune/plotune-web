@@ -9,13 +9,13 @@ const Hero = () => {
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">
             Plotune
           </p>
-          <h2 className="mb-6 text-4xl font-bold text-light-text md:text-6xl">
-            One platform for your data operations and your test systems.
-          </h2>
+          <h1 className="mb-6 text-4xl font-bold text-light-text md:text-6xl">
+            One platform to run your data and connect to your test systems.
+          </h1>
           <p className="mb-9 text-lg text-gray-text md:text-xl">
-            Plotune helps teams orchestrate, process, and govern their data. And Plotune Nexus,
-            our flagship appliance, brings the same controlled, AI-ready workflows to real hardware
-            and test benches.
+            Teams use Plotune to orchestrate, process, and govern data across their tools. Nexus,
+            our flagship appliance, extends that same controlled, AI-ready approach to real hardware
+            and test benches, so automation runs on your equipment while your data stays yours.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center xl:justify-start">
             <Link

@@ -1,7 +1,7 @@
 {
   "short_name": "Plotune",
-  "name": "Plotune – Real-Time Data Visualization Platform",
-  "description": "Plotune is a Linux-first, real-time data visualization and analysis platform for engineers, students, and researchers. Supports UART, Bluetooth, TCP/WebSocket data sources with extensible plugins.",
+  "name": "Plotune: DataOps Platform and AI-Ready Test Systems",
+  "description": "Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -24,9 +24,9 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "landscape",
-  "theme_color": "#0f172a",
-  "background_color": "#020617",
+  "orientation": "any",
+  "theme_color": "#121212",
+  "background_color": "#121212",
   "categories": [
     "productivity",
     "education",
