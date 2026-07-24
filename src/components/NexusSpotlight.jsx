@@ -3,23 +3,23 @@ import { FiClock, FiCpu, FiMapPin, FiShield } from 'react-icons/fi';
 
 const pillars = [
   {
-    title: 'Anywhere Access',
-    body: 'Work from the lab, your office, or directly at the vehicle. Your test system is always reachable.',
+    title: 'Local-first by design',
+    body: 'Runs on Plotune-defined hardware. Raw artifacts stay on the device and move only to storage you already control.',
     icon: FiMapPin,
   },
   {
-    title: 'Secure & Reliable',
-    body: 'Enterprise-grade protection for your test data and configurations.',
+    title: 'Bounded, not raw',
+    body: 'AI-assisted work runs through a narrow set of MCP actions — acquire, capture, wait, send only approved frames, stop, package — instead of direct hardware access.',
     icon: FiShield,
   },
   {
-    title: 'Faster Execution',
-    body: 'Automate repetitive tasks and reduce manual steps across your validation workflow.',
+    title: 'Repeatable evidence',
+    body: 'Recurring capture and stimulation move from operator memory into reusable jobs and test sequences that leave a packaged artifact behind.',
     icon: FiClock,
   },
   {
-    title: 'Smarter Decisions',
-    body: 'Use AI-powered context to accelerate engineering judgments, with over 500 automotive-specific skills built in.',
+    title: 'Real protocol coverage',
+    body: 'Classic CAN, UART (incl. RS-485), XCP on CAN and Ethernet, and ROS 2 / DDS over CycloneDDS — shipped today.',
     icon: FiCpu,
   },
 ];
@@ -31,7 +31,7 @@ const NexusSpotlight = () => {
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Plotune Nexus</p>
           <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
-            Control your validation workflow from one place.
+            One controlled surface for hardware-facing work.
           </h2>
         </div>
 

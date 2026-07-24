@@ -6,14 +6,15 @@ const Hero = () => {
     <section className="relative flex min-h-screen items-center overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(38,166,154,0.14),transparent_62%),linear-gradient(180deg,#101112_0%,#121212_100%)] py-24">
       <div className="container mx-auto px-5">
         <div className="relative z-10 max-w-2xl text-center md:text-left">
-          <p className="mb-5 text-lg font-semibold text-primary md:text-xl">
-            Execute, validate, and adapt anywhere.
+          <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            Plotune Nexus
           </p>
           <h2 className="mb-6 text-4xl font-bold text-light-text md:text-6xl">
-            Talk to your test systems.
+            Turn bench and vehicle interfaces into controlled AI workflows.
           </h2>
-          <p className="mb-9 text-xl font-semibold text-gray-text md:text-2xl">
-            Connected. Intelligent. Automated.
+          <p className="mb-9 text-lg text-gray-text md:text-xl">
+            A managed, local-first appliance that turns CAN, UART, XCP, and ROS 2 / DDS tasks into
+            bounded, AI-ready workflows — with artifacts that stay local until you choose where they go.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
             <Link
@@ -26,7 +27,7 @@ const Hero = () => {
               to="/nexus"
               className="inline-flex items-center justify-center rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300 hover:-translate-y-1 hover:bg-primary/10"
             >
-              Learn More
+              Explore Nexus
             </Link>
           </div>
         </div>
@@ -37,15 +38,15 @@ const Hero = () => {
           <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
             <h3 className="text-lg font-semibold text-light-text">Plotune Nexus</h3>
             <span className="rounded-full bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
-              Live
+              Managed appliance
             </span>
           </div>
 
           <div className="space-y-4">
             {[
-              ['CAN / XCP', 'Read signals and trigger measurements'],
-              ['Remote Tests', 'Run validation from any location'],
-              ['AI Context', 'Turn requirements into test actions'],
+              ['CAN · UART · XCP', 'Capture, send, wait, and calibrate over real interfaces'],
+              ['ROS 2 / DDS', "Join the robot's DDS domain — no ROS install on the appliance"],
+              ['Bounded AI actions', 'Agents act through a narrow MCP surface, not raw shell'],
             ].map(([title, copy]) => (
               <div key={title} className="rounded-lg border-l-4 border-primary bg-primary/10 p-4">
                 <p className="font-semibold text-light-text">{title}</p>

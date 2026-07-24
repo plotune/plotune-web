@@ -6,20 +6,20 @@ const BusinessImpact = () => {
   const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   const benefits = [
-    { 
-      icon: 'fa-chart-line', 
-      title: 'Accelerate Time to Insight', 
-      desc: 'Go from raw data to actionable insights in hours, not weeks. Streamline your entire data operations pipeline.' 
+    {
+      icon: 'fa-chart-line',
+      title: 'Faster triage',
+      desc: 'Inspect interfaces, capture bounded traces, and share evidence without stitching local tools together by hand each time.'
     },
-    { 
-      icon: 'fa-cogs', 
-      title: 'Simplify Complex Workflows', 
-      desc: 'Orchestrate multiple data sources and processes through a unified interface that your team can actually use.' 
+    {
+      icon: 'fa-cogs',
+      title: 'Repeatable validation',
+      desc: 'Move recurring capture and stimulation from ad-hoc operator steps into reusable jobs and test sequences.'
     },
-    { 
-      icon: 'fa-shield-alt', 
-      title: 'Enterprise-Grade Governance', 
-      desc: 'Maintain compliance and data quality while scaling your operations with built-in governance and security.' 
+    {
+      icon: 'fa-shield-alt',
+      title: 'Approvable AI-assisted work',
+      desc: 'A narrower execution layer than raw shell or one-off scripts, so AI-assisted workflows are easier to approve — with the data path staying customer-controlled.'
     },
   ];
 
@@ -28,10 +28,10 @@ const BusinessImpact = () => {
       <div className="container mx-auto px-5">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
-            Transform Your Data Operations
+            Why teams put Nexus on the bench.
           </h2>
           <p className="text-gray-text max-w-2xl mx-auto text-lg">
-            Join forward-thinking companies that use Plotune to modernize their data infrastructure and drive better business outcomes.
+            Start with one real workflow — not a platform migration.
           </p>
         </div>
         

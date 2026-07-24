@@ -11,7 +11,11 @@
     }
     .row-delay { animation-delay: 0.32s; }
     .row-delay-2 { animation-delay: 0.64s; }
-    .stamp { animation: stamp 4.5s ease-in-out infinite; }
+    .stamp {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: stamp 4.5s ease-in-out infinite;
+    }
     .bar {
       transform-box: fill-box;
       transform-origin: left center;
