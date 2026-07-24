@@ -44,6 +44,7 @@ const Header = () => {
     { to: '/download', label: 'Download' },
     { to: '/about', label: 'About' },
     { to: '/docs', label: 'Docs' },
+    { to: '/faq', label: 'FAQ' },
   ];
 
   // Navigation items for logged-in users with Material Icons

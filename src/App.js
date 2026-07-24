@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
+import Faq from './pages/Faq';
 import Extensions from './pages/Extensions';
 import RedirectPage from './pages/RedirectPage';
 import Download from './pages/Download';
@@ -83,6 +84,7 @@ function App() {
           <NavigationWrapper>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/faq" element={<Faq />} />
               <Route path="/extensions" element={<Extensions />} />
               <Route path="/blog" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
               <Route path="/community" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
