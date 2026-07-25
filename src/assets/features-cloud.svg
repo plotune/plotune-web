@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" fill="none" role="img" aria-label="Governance plane stacking records and applying a policy shield">
+  <style>
+    .flRow { will-change: transform, opacity; animation: flRowIn 5s ease-in-out infinite; }
+    .flR0 { animation-delay: 0s; } .flR1 { animation-delay: 0.3s; } .flR2 { animation-delay: 0.6s; }
+    .flShield { will-change: opacity; animation: flShieldStamp 5s ease-in-out infinite; }
+    .flTick { stroke-dasharray: 22; stroke-dashoffset: 22; animation: flTickDraw 5s ease-in-out infinite; }
+
+    @keyframes flRowIn { 0%, 6% { opacity: 0; transform: translateX(-10px); } 24%, 100% { opacity: 1; transform: translateX(0); } }
+    @keyframes flShieldStamp { 0%, 26% { opacity: 0; } 42%, 100% { opacity: 1; } }
+    @keyframes flTickDraw { 0%, 44% { stroke-dashoffset: 22; } 58%, 100% { stroke-dashoffset: 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .flRow { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .flShield { animation: none !important; opacity: 1 !important; }
+      .flTick { animation: none !important; stroke-dashoffset: 0 !important; }
+    }
+  </style>
+
+  <g class="flRow flR0"><rect x="34" y="30" width="150" height="16" rx="6" fill="#171a1f" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><circle cx="46" cy="38" r="3.5" fill="#26A69A"/><rect x="58" y="36" width="78" height="4" rx="2" fill="rgba(143,155,168,0.32)"/></g>
+  <g class="flRow flR1"><rect x="34" y="54" width="150" height="16" rx="6" fill="#171a1f" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><circle cx="46" cy="62" r="3.5" fill="#26A69A"/><rect x="58" y="60" width="64" height="4" rx="2" fill="rgba(143,155,168,0.32)"/></g>
+  <g class="flRow flR2"><rect x="34" y="78" width="150" height="16" rx="6" fill="#171a1f" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><circle cx="46" cy="86" r="3.5" fill="#26A69A"/><rect x="58" y="84" width="72" height="4" rx="2" fill="rgba(143,155,168,0.32)"/></g>
+
+  <g class="flShield">
+    <path d="M250 34 L280 44 L280 64 C280 78 266 86 250 92 C234 86 220 78 220 64 L220 44 Z"
+          fill="rgba(38,166,154,0.12)" stroke="#26A69A" stroke-width="2"/>
+    <path class="flTick" d="M240 62 l7 8 l14 -16" stroke="#26A69A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

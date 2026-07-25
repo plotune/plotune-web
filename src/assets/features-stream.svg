@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" fill="none" role="img" aria-label="Execution plane moving data packets through a pipe into a live throughput meter">
+  <style>
+    .fsWall { stroke: rgba(143,155,168,0.22); stroke-width: 2; }
+    .fsFlowline { stroke: rgba(38,166,154,0.30); stroke-width: 2; stroke-dasharray: 2 10; animation: fsMarch 1.1s linear infinite; }
+    .fsEndNode { fill: #171a1f; stroke: rgba(38,166,154,0.35); stroke-width: 1.5; }
+    .fsPkt { will-change: transform; animation: fsFlow 3s linear infinite; }
+    .fsP1 { animation-delay: 0s; } .fsP2 { animation-delay: -1s; } .fsP3 { animation-delay: -2s; }
+    .fsEq { transform-box: fill-box; transform-origin: bottom; }
+    .fsE1 { animation: fsEq1 1.4s ease-in-out infinite; }
+    .fsE2 { animation: fsEq2 1.7s ease-in-out infinite; }
+    .fsE3 { animation: fsEq3 1.2s ease-in-out infinite; }
+
+    @keyframes fsFlow { from { transform: translateX(0); } to { transform: translateX(214px); } }
+    @keyframes fsMarch { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -12; } }
+    @keyframes fsEq1 { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+    @keyframes fsEq2 { 0%, 100% { transform: scaleY(0.85); } 40% { transform: scaleY(0.35); } 72% { transform: scaleY(1); } }
+    @keyframes fsEq3 { 0%, 100% { transform: scaleY(0.5); } 30% { transform: scaleY(1); } 64% { transform: scaleY(0.4); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fsFlowline { animation: none !important; }
+      .fsPkt { animation: none !important; opacity: 0 !important; }
+      .fsEq { animation: none !important; transform: scaleY(0.7) !important; }
+    }
+  </style>
+
+  <line class="fsWall" x1="30" y1="44" x2="262" y2="44"/>
+  <line class="fsWall" x1="30" y1="76" x2="262" y2="76"/>
+  <line class="fsFlowline" x1="30" y1="60" x2="262" y2="60"/>
+
+  <g class="fsPkt fsP1"><rect x="26" y="56" width="16" height="8" rx="4" fill="#26A69A" opacity="0.28"/><circle cx="46" cy="60" r="5" fill="#26A69A"/></g>
+  <g class="fsPkt fsP2"><rect x="26" y="56" width="16" height="8" rx="4" fill="#26A69A" opacity="0.2"/><circle cx="46" cy="60" r="4.5" fill="#26A69A" opacity="0.75"/></g>
+  <g class="fsPkt fsP3"><rect x="26" y="56" width="16" height="8" rx="4" fill="#f5f5f5" opacity="0.16"/><circle cx="46" cy="60" r="4" fill="#f5f5f5" opacity="0.6"/></g>
+
+  <rect class="fsEndNode" x="266" y="40" width="40" height="40" rx="12"/>
+  <g class="fsEq fsE1"><rect x="278" y="56" width="4" height="16" rx="2" fill="#26A69A"/></g>
+  <g class="fsEq fsE2"><rect x="284" y="56" width="4" height="16" rx="2" fill="#26A69A"/></g>
+  <g class="fsEq fsE3"><rect x="290" y="56" width="4" height="16" rx="2" fill="#26A69A"/></g>
+</svg>

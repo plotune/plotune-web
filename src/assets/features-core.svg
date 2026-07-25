@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" fill="none" role="img" aria-label="Control plane orchestrating connected nodes">
+  <style>
+    .fcConn { stroke: rgba(143,155,168,0.22); stroke-width: 2; }
+    .fcSat { animation: fcSatLight 4.5s ease-in-out infinite; }
+    .fcPkt { will-change: transform, opacity; }
+    .fcPA { animation: fcPcA 4.5s ease-in-out infinite; }
+    .fcPB { animation: fcPcB 4.5s ease-in-out infinite; }
+    .fcPC { animation: fcPcC 4.5s ease-in-out infinite; }
+    .fcPD { animation: fcPcD 4.5s ease-in-out infinite; }
+    .fcFlow { stroke: #26A69A; stroke-width: 2; fill: none; stroke-linecap: round; stroke-dasharray: 2 9; opacity: 0; animation: fcMarch 1.1s linear infinite, fcFlowOn 4.5s ease-in-out infinite; }
+    .fcD0 { animation-delay: 0s; } .fcD1 { animation-delay: 0.25s; } .fcD2 { animation-delay: 0.5s; } .fcD3 { animation-delay: 0.75s; }
+
+    @keyframes fcSatLight { 0%, 16% { fill: #33404a; } 34%, 100% { fill: #26A69A; } }
+    @keyframes fcMarch { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -11; } }
+    @keyframes fcFlowOn { 0%, 34% { opacity: 0; } 46%, 100% { opacity: 0.65; } }
+    @keyframes fcPcA { 0%, 12% { opacity: 0; transform: translate(0,0); } 20% { opacity: 1; } 40% { opacity: 1; transform: translate(-104px,-28px); } 48%, 100% { opacity: 0; transform: translate(-104px,-28px); } }
+    @keyframes fcPcB { 0%, 12% { opacity: 0; transform: translate(0,0); } 20% { opacity: 1; } 40% { opacity: 1; transform: translate(104px,-28px); } 48%, 100% { opacity: 0; transform: translate(104px,-28px); } }
+    @keyframes fcPcC { 0%, 12% { opacity: 0; transform: translate(0,0); } 20% { opacity: 1; } 40% { opacity: 1; transform: translate(-104px,28px); } 48%, 100% { opacity: 0; transform: translate(-104px,28px); } }
+    @keyframes fcPcD { 0%, 12% { opacity: 0; transform: translate(0,0); } 20% { opacity: 1; } 40% { opacity: 1; transform: translate(104px,28px); } 48%, 100% { opacity: 0; transform: translate(104px,28px); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fcSat { animation: none !important; fill: #26A69A !important; }
+      .fcPkt { animation: none !important; opacity: 0 !important; }
+      .fcFlow { animation: none !important; opacity: 0.35 !important; }
+    }
+  </style>
+
+  <line class="fcConn" x1="160" y1="60" x2="56" y2="32"/>
+  <line class="fcConn" x1="160" y1="60" x2="264" y2="32"/>
+  <line class="fcConn" x1="160" y1="60" x2="56" y2="88"/>
+  <line class="fcConn" x1="160" y1="60" x2="264" y2="88"/>
+
+  <path class="fcFlow fcD0" d="M160 60 L56 32"/>
+  <path class="fcFlow fcD1" d="M160 60 L264 32"/>
+  <path class="fcFlow fcD2" d="M160 60 L56 88"/>
+  <path class="fcFlow fcD3" d="M160 60 L264 88"/>
+
+  <circle class="fcSat fcD0" cx="56" cy="32" r="6" fill="#33404a"/>
+  <circle class="fcSat fcD1" cx="264" cy="32" r="6" fill="#33404a"/>
+  <circle class="fcSat fcD2" cx="56" cy="88" r="6" fill="#33404a"/>
+  <circle class="fcSat fcD3" cx="264" cy="88" r="6" fill="#33404a"/>
+
+  <rect x="140" y="44" width="40" height="32" rx="10" fill="#171a1f" stroke="rgba(38,166,154,0.35)" stroke-width="1.5"/>
+  <circle cx="160" cy="60" r="5" fill="#26A69A"/>
+
+  <circle class="fcPkt fcPA fcD0" cx="160" cy="60" r="4" fill="#f5f5f5"/>
+  <circle class="fcPkt fcPB fcD1" cx="160" cy="60" r="4" fill="#f5f5f5"/>
+  <circle class="fcPkt fcPC fcD2" cx="160" cy="60" r="4" fill="#f5f5f5"/>
+  <circle class="fcPkt fcPD fcD3" cx="160" cy="60" r="4" fill="#f5f5f5"/>
+</svg>

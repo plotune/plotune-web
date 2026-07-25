@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" fill="none" role="img" aria-label="Scattered raw data points resolve into a clean rising trend and a result">
+  <style>
+    .biAxis { stroke: rgba(143,155,168,0.20); stroke-width: 2; }
+    .biGrid { stroke: rgba(143,155,168,0.10); stroke-width: 1; }
+    .biScatter { will-change: opacity; animation: biScatterOut 5s ease-in-out infinite; }
+    .biTrend { stroke: #26A69A; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 315; stroke-dashoffset: 315; animation: biTrendDraw 5s ease-in-out infinite; }
+    .biNode { will-change: opacity; animation: biNodeIn 5s ease-in-out infinite; }
+    .biVerdict { will-change: opacity, transform; animation: biVerdictIn 5s ease-in-out infinite; }
+    .biSweep { stroke: #f5f5f5; stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 12 330; opacity: 0; animation: biSweepMove 2.4s linear infinite, biSweepOn 5s ease-in-out infinite; }
+    .biN0 { animation-delay: 0s; } .biN1 { animation-delay: 0.12s; } .biN2 { animation-delay: 0.24s; }
+    .biN3 { animation-delay: 0.36s; } .biN4 { animation-delay: 0.48s; } .biN5 { animation-delay: 0.6s; }
+
+    @keyframes biScatterOut { 0%, 26% { opacity: 0.9; } 44%, 100% { opacity: 0; } }
+    @keyframes biTrendDraw { 0%, 28% { stroke-dashoffset: 315; } 54%, 100% { stroke-dashoffset: 0; } }
+    @keyframes biNodeIn { 0%, 34% { opacity: 0; } 52%, 100% { opacity: 1; } }
+    @keyframes biVerdictIn { 0%, 56% { opacity: 0; transform: translateX(-6px); } 70%, 100% { opacity: 1; transform: translateX(0); } }
+    @keyframes biSweepMove { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -342; } }
+    @keyframes biSweepOn { 0%, 54% { opacity: 0; } 62%, 100% { opacity: 0.65; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .biScatter { animation: none !important; opacity: 0 !important; }
+      .biTrend { animation: none !important; stroke-dashoffset: 0 !important; }
+      .biNode { animation: none !important; opacity: 1 !important; }
+      .biVerdict { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .biSweep { animation: none !important; opacity: 0 !important; }
+    }
+  </style>
+
+  <line class="biGrid" x1="40" y1="52" x2="360" y2="52"/>
+  <line class="biGrid" x1="40" y1="86" x2="360" y2="86"/>
+  <line class="biGrid" x1="40" y1="120" x2="360" y2="120"/>
+  <line class="biAxis" x1="40" y1="132" x2="360" y2="132"/>
+
+  <g fill="#64748b">
+    <circle class="biScatter" cx="70" cy="60" r="4"/>
+    <circle class="biScatter" cx="112" cy="98" r="4"/>
+    <circle class="biScatter" cx="152" cy="44" r="4"/>
+    <circle class="biScatter" cx="196" cy="112" r="4"/>
+    <circle class="biScatter" cx="234" cy="70" r="4"/>
+    <circle class="biScatter" cx="276" cy="102" r="4"/>
+    <circle class="biScatter" cx="316" cy="52" r="4"/>
+  </g>
+
+  <path class="biTrend" d="M50 118 L110 104 L170 96 L230 78 L290 64 L350 44"/>
+  <path class="biSweep" d="M50 118 L110 104 L170 96 L230 78 L290 64 L350 44"/>
+  <circle class="biNode biN0" cx="50" cy="118" r="4.5" fill="#26A69A"/>
+  <circle class="biNode biN1" cx="110" cy="104" r="4.5" fill="#26A69A"/>
+  <circle class="biNode biN2" cx="170" cy="96" r="4.5" fill="#26A69A"/>
+  <circle class="biNode biN3" cx="230" cy="78" r="4.5" fill="#26A69A"/>
+  <circle class="biNode biN4" cx="290" cy="64" r="4.5" fill="#26A69A"/>
+  <circle class="biNode biN5" cx="350" cy="44" r="4.5" fill="#26A69A"/>
+
+  <g class="biVerdict">
+    <rect x="392" y="52" width="60" height="52" rx="14" fill="#171a1f" stroke="rgba(38,166,154,0.32)" stroke-width="1.5"/>
+    <path d="M422 66 L436 84 L428 84 L428 92 L416 92 L416 84 L408 84 Z" fill="#26A69A"/>
+  </g>
+</svg>

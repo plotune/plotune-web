@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 190" fill="none" role="img" aria-labelledby="streamTitle streamDesc">
+  <title id="streamTitle">Always-on validation pipeline</title>
+  <desc id="streamDesc">A live signal flows continuously through stream, monitor, trigger, analyze, and notify stages. When a threshold is crossed at the trigger stage it flashes, and the notify stage confirms with a check.</desc>
+  <style>
+    .spNode { fill: #171a1f; stroke: rgba(38,166,154,0.25); stroke-width: 1.5; }
+    .spRail { stroke: rgba(143,155,168,0.22); stroke-width: 2; }
+    .spRailLive { stroke: rgba(38,166,154,0.30); stroke-width: 2; stroke-dasharray: 2 10; animation: spRailMarch 1.1s linear infinite; }
+    .spLbl { fill: #8f9ba8; font: 10px Inter, Arial, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-anchor: middle; }
+    .spThr { stroke: #f59e0b; stroke-width: 2; }
+
+    .spPkt { will-change: transform; animation: spFlow 3s linear infinite; }
+    .spP1 { animation-delay: 0s; } .spP2 { animation-delay: -1s; } .spP3 { animation-delay: -2s; }
+    .spTrigDot { animation: spTrigFlash 3s ease-in-out infinite; }
+    .spTrigRing { animation: spTrigRing 3s ease-in-out infinite; }
+    .spNotifyCheck { transform-box: fill-box; transform-origin: center; will-change: transform, opacity; animation: spNotifyPop 3s ease-in-out infinite; }
+    .spEq { transform-box: fill-box; transform-origin: bottom; }
+    .spE1 { animation: spEq1 1.4s ease-in-out infinite; }
+    .spE2 { animation: spEq2 1.7s ease-in-out infinite; }
+    .spE3 { animation: spEq3 1.2s ease-in-out infinite; }
+
+    @keyframes spFlow { from { transform: translateX(0); } to { transform: translateX(352px); } }
+    @keyframes spRailMarch { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -12; } }
+    @keyframes spTrigFlash { 0%, 42% { fill: #26A69A; } 50% { fill: #f59e0b; } 60%, 100% { fill: #26A69A; } }
+    @keyframes spTrigRing { 0%, 42% { stroke: rgba(38,166,154,0.25); } 50% { stroke: rgba(245,158,11,0.85); } 62%, 100% { stroke: rgba(38,166,154,0.25); } }
+    @keyframes spNotifyPop { 0%, 82% { opacity: 0; transform: scale(0.6); } 92% { opacity: 1; transform: scale(1); } 100% { opacity: 0.95; transform: scale(1); } }
+    @keyframes spEq1 { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+    @keyframes spEq2 { 0%, 100% { transform: scaleY(0.85); } 40% { transform: scaleY(0.35); } 72% { transform: scaleY(1); } }
+    @keyframes spEq3 { 0%, 100% { transform: scaleY(0.5); } 30% { transform: scaleY(1); } 64% { transform: scaleY(0.4); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spRailLive { animation: none !important; }
+      .spPkt { animation: none !important; opacity: 0 !important; }
+      .spTrigDot { animation: none !important; fill: #26A69A !important; }
+      .spTrigRing { animation: none !important; stroke: rgba(38,166,154,0.25) !important; }
+      .spNotifyCheck { animation: none !important; opacity: 0.95 !important; transform: none !important; }
+      .spEq { animation: none !important; transform: scaleY(0.7) !important; }
+    }
+  </style>
+
+  <line class="spRail" x1="64" y1="86" x2="416" y2="86"/>
+  <line class="spRailLive" x1="64" y1="86" x2="416" y2="86"/>
+
+  <line class="spThr" x1="228" y1="52" x2="252" y2="52" stroke-dasharray="4 4"/>
+  <line x1="240" y1="52" x2="240" y2="66" stroke="#f59e0b" stroke-width="1.5" opacity="0.7"/>
+
+  <g>
+    <rect class="spNode" x="44" y="66" width="40" height="40" rx="12"/>
+    <circle cx="64" cy="86" r="4" fill="#26A69A"/>
+    <text class="spLbl" x="64" y="126">Stream</text>
+  </g>
+  <g>
+    <rect class="spNode" x="132" y="66" width="40" height="40" rx="12"/>
+    <circle cx="152" cy="86" r="4" fill="#26A69A"/>
+    <text class="spLbl" x="152" y="126">Monitor</text>
+  </g>
+  <g>
+    <rect class="spNode spTrigRing" x="220" y="66" width="40" height="40" rx="12"/>
+    <circle class="spTrigDot" cx="240" cy="86" r="4" fill="#26A69A"/>
+    <text class="spLbl" x="240" y="126">Trigger</text>
+  </g>
+  <g>
+    <rect class="spNode" x="308" y="66" width="40" height="40" rx="12"/>
+    <g class="spEq spE1"><rect x="320" y="82" width="4" height="18" rx="2" fill="#26A69A"/></g>
+    <g class="spEq spE2"><rect x="326" y="82" width="4" height="18" rx="2" fill="#26A69A"/></g>
+    <g class="spEq spE3"><rect x="332" y="82" width="4" height="18" rx="2" fill="#26A69A"/></g>
+    <text class="spLbl" x="328" y="126">Analyze</text>
+  </g>
+  <g>
+    <rect class="spNode" x="396" y="66" width="40" height="40" rx="12"/>
+    <path class="spNotifyCheck" d="M406 86 l4 4 l7 -8" stroke="#26A69A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text class="spLbl" x="416" y="126">Notify</text>
+  </g>
+
+  <g class="spPkt spP1"><rect x="30" y="82" width="18" height="8" rx="4" fill="#26A69A" opacity="0.28"/><circle cx="52" cy="86" r="4.5" fill="#f5f5f5"/></g>
+  <g class="spPkt spP2"><rect x="30" y="82" width="18" height="8" rx="4" fill="#26A69A" opacity="0.22"/><circle cx="52" cy="86" r="4" fill="#f5f5f5" opacity="0.85"/></g>
+  <g class="spPkt spP3"><rect x="30" y="82" width="18" height="8" rx="4" fill="#26A69A" opacity="0.18"/><circle cx="52" cy="86" r="4" fill="#f5f5f5" opacity="0.7"/></g>
+</svg>

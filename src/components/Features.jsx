@@ -1,5 +1,8 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { ReactComponent as CoreVisual } from '../assets/features-core.svg';
+import { ReactComponent as StreamVisual } from '../assets/features-stream.svg';
+import { ReactComponent as CloudVisual } from '../assets/features-cloud.svg';
 
 const Features = () => {
   const ref = useRef(null);
@@ -12,21 +15,21 @@ const Features = () => {
 
   const services = [
     {
-      icon: 'fa-cogs',
+      Visual: CoreVisual,
       title: 'Plotune Core',
       subtitle: 'Control Plane',
       desc: 'Orchestrate, monitor, and manage your entire data ecosystem through a unified interface. The brain of your data operations.',
       features: ['Data Orchestration', 'Unified UI/UX', 'Real-time Monitoring', 'Workflow Management']
     },
     {
-      icon: 'fa-bolt',
+      Visual: StreamVisual,
       title: 'Plotune Stream',
       subtitle: 'Execution Plane',
       desc: 'Real-time ETL and event operations with lightning-fast data processing. Transform and move data as it happens.',
       features: ['Real-time ETL', 'Event Operations', 'Stream Processing', 'Low-latency Execution']
     },
     {
-      icon: 'fa-cloud',
+      Visual: CloudVisual,
       title: 'Plotune Cloud',
       subtitle: 'Data Governance Plane',
       desc: 'Scalable storage, comprehensive metadata management, and enterprise-grade data governance policies.',
@@ -59,10 +62,10 @@ const Features = () => {
               animate={isInView ? 'visible' : 'hidden'}
               transition={{ delay: index * 0.2 }}
             >
-              <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className={`fas ${service.icon} text-white text-2xl`}></i>
+              <div className="mb-6 rounded-2xl bg-dark-bg/50 p-4 ring-1 ring-white/5">
+                <service.Visual className="h-auto w-full" />
               </div>
-              
+
               <div className="mb-4">
                 <h3 className="text-2xl font-bold text-light-text mb-1">
                   {service.title}

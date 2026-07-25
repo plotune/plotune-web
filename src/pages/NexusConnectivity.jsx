@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
+import { ReactComponent as ConnectivityHub } from '../assets/connectivity-hub.svg';
 import {
   FiArrowRight,
   FiCloud,
@@ -47,73 +48,10 @@ const ConnectivityArt = () => {
   return (
     <div className="hidden lg:block">
       <div className="relative h-[31rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#0f1012]/85 shadow-2xl backdrop-blur-xl">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_26%_20%,rgba(38,166,154,0.28),transparent_30%),radial-gradient(circle_at_78%_72%,rgba(63,81,181,0.22),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]" />
-        <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:32px_32px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_26%_20%,rgba(38,166,154,0.20),transparent_34%),radial-gradient(circle_at_78%_72%,rgba(63,81,181,0.16),transparent_38%),linear-gradient(145deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))]" />
+        <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:32px_32px]" />
 
-        <div className="absolute left-8 top-8 h-28 w-44 rounded-[1.5rem] border border-white/10 bg-white/[0.05] shadow-2xl backdrop-blur-md" />
-        <div className="absolute bottom-10 right-8 h-32 w-48 rounded-[1.5rem] border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur-md" />
-        <div className="absolute right-16 top-14 h-20 w-20 rounded-full border border-primary/30 bg-primary/10 blur-[1px]" />
-
-        <svg viewBox="0 0 520 420" className="absolute inset-0 h-full w-full" role="img" aria-label="Abstract connectivity artwork">
-          <defs>
-            <linearGradient id="artLineA" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0%" stopColor="#26A69A" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#3f51b5" stopOpacity="0.8" />
-            </linearGradient>
-            <linearGradient id="artLineB" x1="1" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="#f5f5f5" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#26A69A" stopOpacity="0.75" />
-            </linearGradient>
-            <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          <path d="M92 92 C176 42, 262 82, 292 170 S386 300, 462 216" fill="none" stroke="url(#artLineA)" strokeWidth="3" strokeLinecap="round" filter="url(#softGlow)" />
-          <path d="M64 304 C154 252, 190 320, 256 236 S366 76, 454 112" fill="none" stroke="url(#artLineB)" strokeWidth="2.5" strokeLinecap="round" filter="url(#softGlow)" />
-          <path d="M112 210 C176 166, 208 168, 254 210 S348 266, 422 326" fill="none" stroke="#26A69A" strokeOpacity="0.42" strokeWidth="2" strokeDasharray="8 12" strokeLinecap="round" />
-          <path d="M122 348 C184 288, 290 314, 336 240 S390 124, 474 70" fill="none" stroke="#3f51b5" strokeOpacity="0.38" strokeWidth="2" strokeDasharray="6 10" strokeLinecap="round" />
-
-          <g filter="url(#softGlow)">
-            {[
-              [92, 92, 9],
-              [64, 304, 8],
-              [112, 210, 7],
-              [454, 112, 9],
-              [462, 216, 8],
-              [422, 326, 7],
-              [474, 70, 6],
-            ].map(([cx, cy, r]) => (
-              <g key={`${cx}-${cy}`}>
-                <circle cx={cx} cy={cy} r={r + 8} fill="#26A69A" opacity="0.08" />
-                <circle cx={cx} cy={cy} r={r} fill="#26A69A" opacity="0.9" />
-                <circle cx={cx} cy={cy} r={r / 2} fill="#f5f5f5" opacity="0.72" />
-              </g>
-            ))}
-          </g>
-
-          <g transform="translate(188 142)">
-            <rect x="0" y="0" width="148" height="118" rx="26" fill="#111315" stroke="#ffffff" strokeOpacity="0.12" />
-            <rect x="18" y="18" width="112" height="82" rx="18" fill="#1e1e1e" stroke="#26A69A" strokeOpacity="0.38" />
-            <circle cx="48" cy="58" r="16" fill="#26A69A" opacity="0.95" filter="url(#softGlow)" />
-            <rect x="72" y="44" width="36" height="28" rx="8" fill="#f5f5f5" opacity="0.9" />
-            <path d="M36 18 V4 M74 18 V4 M112 18 V4 M36 114 V100 M74 114 V100 M112 114 V100" stroke="#26A69A" strokeOpacity="0.72" strokeWidth="3" strokeLinecap="round" />
-            <path d="M0 36 H-18 M0 60 H-18 M0 84 H-18 M148 36 H166 M148 60 H166 M148 84 H166" stroke="#3f51b5" strokeOpacity="0.7" strokeWidth="3" strokeLinecap="round" />
-          </g>
-        </svg>
-
-        <div className="absolute inset-x-8 bottom-8 grid grid-cols-4 gap-3">
-          {[0, 1, 2, 3].map((item) => (
-            <div key={item} className="h-16 rounded-2xl border border-white/10 bg-white/[0.045] shadow-lg backdrop-blur-md">
-              <div className="mx-auto mt-4 h-2 w-10 rounded-full bg-primary/70" />
-              <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-white/10" />
-            </div>
-          ))}
-        </div>
+        <ConnectivityHub className="absolute inset-0 h-full w-full p-4" />
       </div>
     </div>
   );

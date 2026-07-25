@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { ReactComponent as ImpactTrend } from '../assets/businessimpact-trend.svg';
 
 const BusinessImpact = () => {
   const ref = useRef(null);
@@ -34,7 +35,11 @@ const BusinessImpact = () => {
             Join forward-thinking companies that use Plotune to modernize their data infrastructure and drive better business outcomes.
           </p>
         </div>
-        
+
+        <div className="mx-auto mb-12 max-w-2xl rounded-[2rem] bg-dark-card/60 p-6 shadow-custom ring-1 ring-white/5 md:mb-16">
+          <ImpactTrend className="h-auto w-full" />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           {benefits.map((benefit, index) => (
             <motion.div

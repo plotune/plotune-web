@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
+import { ReactComponent as StreamPipeline } from '../assets/stream-pipeline.svg';
 import {
   FiArrowRight,
   FiBarChart2,
   FiBell,
   FiCheckCircle,
-  FiClock,
   FiCloud,
   FiDatabase,
   FiFileText,
@@ -92,12 +92,23 @@ const NexusStream = () => {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-primary/25 bg-primary/10 p-8 shadow-custom">
-              <FiClock className="text-3xl text-primary" />
-              <p className="mt-5 text-2xl font-semibold text-light-text">
-                Always-on validation logic in the cloud.
+            <div className="rounded-[2rem] border border-primary/25 bg-primary/10 p-6 shadow-custom md:p-7">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Always-on</p>
+                <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                  <span className="nexus-stream-live inline-block h-2 w-2 rounded-full bg-primary" />
+                  Live
+                </span>
+              </div>
+              <StreamPipeline className="mt-4 h-auto w-full" />
+              <p className="mt-4 text-base text-gray-text">
+                Monitor, trigger, and validate as your tests run. Around the clock, close to your data.
               </p>
-              <p className="mt-3 text-lg text-gray-text">Runs close to your data. 24/7.</p>
+              <style>{`
+                .nexus-stream-live { animation: nexusStreamLive 2.4s ease-in-out infinite; }
+                @keyframes nexusStreamLive { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+                @media (prefers-reduced-motion: reduce) { .nexus-stream-live { animation: none !important; opacity: 1 !important; } }
+              `}</style>
             </div>
           </div>
         </div>
