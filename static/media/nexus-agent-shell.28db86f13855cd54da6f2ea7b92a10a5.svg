@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 470" fill="none" role="img" aria-labelledby="agentShellTitle agentShellDesc">
+  <title id="agentShellTitle">An AI agent tuning a controller through Plotune Nexus</title>
+  <desc id="agentShellDesc">A terminal session where an agent reads the workspace, tunes an inverter Iq current loop over bounded XCP-on-CAN actions, records to a local mf4, analyzes the step, compares it against a baseline, and reports the result.</desc>
+  <style>
+    .hx{font-family:"JetBrains Mono","Cascadia Code",ui-monospace,"Courier New",monospace;font-size:12.5px}
+    .hxtitle{fill:#d7d8d2;font-size:11.5px}
+    .hxP{fill:#f0f2ef}.hxA{fill:#c6cad0}.hxCd{fill:#6b6f68}.hxC{fill:#a9aba4}
+    .hxT{fill:#f1845b;font-weight:600}.hxArg{fill:#999c96}
+    .hxG{fill:#5b5f5a}.hxR{fill:#a9aba4}.hxOk{fill:#87d26b}.hxWarn{fill:#dfc466}.hxOut{fill:#8f938d}
+    .hxReport{fill:#9be27f;font-weight:600}.hxDim{fill:#7d817b;font-size:11.5px}.hxTeal{fill:#96c9be}
+    .hxscroll{animation:hxscroll 68s steps(50) infinite}
+    @keyframes hxscroll{from{transform:translateY(0)}to{transform:translateY(-1100px)}}
+    .hxspin{transform-origin:26px 442px;animation:hxspin 0.9s linear infinite}
+    @keyframes hxspin{to{transform:rotate(360deg)}}
+    .hxcur{animation:hxblink 1.1s steps(1) infinite}
+    @keyframes hxblink{0%,50%{opacity:1}51%,100%{opacity:0}}
+    .hxva{animation:hxverb 9s ease-in-out infinite}
+    .hxvb{animation:hxverb 9s ease-in-out infinite;animation-delay:-3s}
+    .hxvc{animation:hxverb 9s ease-in-out infinite;animation-delay:-6s}
+    @keyframes hxverb{0%,28%{opacity:1}34%,94%{opacity:0}100%{opacity:1}}
+    @media (prefers-reduced-motion:reduce){
+      .hxscroll{animation:none!important;transform:translateY(-400px)!important}
+      .hxspin{animation:none!important}.hxcur{animation:none!important;opacity:1!important}
+      .hxva{animation:none!important;opacity:1!important}.hxvb,.hxvc{animation:none!important;opacity:0!important}
+    }
+  </style>
+  <rect x="0" y="0" width="560" height="470" rx="11" fill="#202422" stroke="#2d312f"/>
+  <rect x="1" y="1" width="558" height="30" rx="10" fill="#1b1f1d"/>
+  <circle cx="16" cy="16" r="5" fill="#ff5f57"/><circle cx="34" cy="16" r="5" fill="#febc2e"/><circle cx="52" cy="16" r="5" fill="#28c840"/>
+  <text class="hx hxtitle" x="280" y="20" text-anchor="middle">~ : claude</text>
+  <g clip-path="url(#agentShellClip)"><g class="hxscroll">
+    <g id="agentShellScript" class="hx">
+      <text class="hxP" x="18" y="60">❯ tune the Iq current loop on INV_A, hold overshoot under 6%</text>
+      <text class="hxA" x="20" y="82">Reading the workspace and the current-loop rules.</text>
+      <text x="20" y="104"><tspan class="hxCd">❯ </tspan><tspan class="hxC">rg --files . | rg "a2l|dbc|xlsx|baseline"</tspan></text>
+      <text class="hxOut" x="40" y="126">calibration/INV_Ctrl.a2l</text>
+      <text class="hxOut" x="40" y="148">network/INV_CAN.dbc</text>
+      <text class="hxOut" x="40" y="170">release/Iq_acceptance_matrix.xlsx</text>
+      <text class="hxOut" x="40" y="192">baseline/Iq_run_039_baseline.mf4</text>
+      <text class="hxA" x="20" y="214">Plan: baseline, tune Kp/Ki, diff vs run_039, gate under 6%.</text>
+      <text x="20" y="236"><tspan class="hxCd">❯ </tspan><tspan class="hxC">uv run pytest tests/loop/test_iq_gate.py -q</tspan></text>
+      <text class="hxOut" x="40" y="258">test_overshoot_limit_from_matrix PASSED</text>
+      <text class="hxOut" x="40" y="280">6 passed in 108.2s</text>
+      <text class="hxA" x="20" y="302">Reading bench state and acquiring the bus.</text>
+      <text x="20" y="324"><tspan class="hxT">⏺ acquire_can_interface</tspan><tspan class="hxArg">(can0, session=iq-tune)</tspan></text>
+      <text x="40" y="346"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">acquired  lease-can0-iqtune</tspan></text>
+      <text x="20" y="368"><tspan class="hxT">⏺ xcp_connect</tspan><tspan class="hxArg">(iface=can0, node=INV_A)</tspan></text>
+      <text x="40" y="390"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">connected  Seed+Key unlocked</tspan></text>
+      <text x="20" y="412"><tspan class="hxT">⏺ xcp_cal_read</tspan><tspan class="hxArg">(CurCtl_Kp, CurCtl_Ki)</tspan></text>
+      <text x="40" y="434"><tspan class="hxG">⎿ </tspan><tspan class="hxR">CurCtl_Kp=0.42  CurCtl_Ki=120.0</tspan></text>
+      <text class="hxA" x="20" y="456">Baseline first. Driving a 40 A step and recording.</text>
+      <text x="20" y="478"><tspan class="hxT">⏺ dbc_send</tspan><tspan class="hxArg">(Iq_cmd_step = 40.0 A)</tspan></text>
+      <text x="20" y="500"><tspan class="hxT">⏺ xcp_daq_record</tspan><tspan class="hxArg">(Iq_meas, Iq_set, 200ms)</tspan></text>
+      <text x="40" y="522"><tspan class="hxG">⎿ </tspan><tspan class="hxR">wrote run_041.mf4  (2.1 MB, local)</tspan></text>
+      <text x="20" y="544"><tspan class="hxT">⏺ analyze_step</tspan><tspan class="hxArg">(run_041.mf4)</tspan></text>
+      <text x="40" y="566"><tspan class="hxG">⎿ </tspan><tspan class="hxWarn">overshoot=13.8%  settle=8.2ms  rise=1.9ms</tspan></text>
+      <text class="hxWarn" x="20" y="588">⚠ Overshoot 13.8% over the 6.0% gate.</text>
+      <text class="hxA" x="20" y="610">Too hot. Raising Kp for stiffness, easing Ki to damp.</text>
+      <text x="20" y="632"><tspan class="hxT">⏺ xcp_cal_write</tspan><tspan class="hxArg">(CurCtl_Kp = 0.55)</tspan></text>
+      <text x="20" y="654"><tspan class="hxT">⏺ xcp_cal_write</tspan><tspan class="hxArg">(CurCtl_Ki = 95.0)</tspan></text>
+      <text x="20" y="676"><tspan class="hxT">⏺ xcp_daq_record</tspan><tspan class="hxArg">(Iq_meas, Iq_set, 200ms)</tspan></text>
+      <text x="40" y="698"><tspan class="hxG">⎿ </tspan><tspan class="hxR">wrote run_042.mf4  (2.0 MB, local)</tspan></text>
+      <text x="20" y="720"><tspan class="hxT">⏺ analyze_step</tspan><tspan class="hxArg">(run_042.mf4)</tspan></text>
+      <text x="40" y="742"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">overshoot=5.1%  settle=4.6ms  Tm=41degC</tspan></text>
+      <text class="hxOk" x="20" y="764">✔ Gate PASS. Overshoot 5.1% under 6.0%.</text>
+      <text class="hxA" x="20" y="786">Comparing run_042 against the run_039 baseline.</text>
+      <text x="20" y="808"><tspan class="hxCd">❯ </tspan><tspan class="hxC">python tools/compare_step.py --cand 042 --base 039</tspan></text>
+      <text x="40" y="830"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">overshoot  13.8% → 5.1%   (-8.7 pp)</tspan></text>
+      <text x="40" y="852"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">settle     8.2 → 4.6 ms   (-44%)</tspan></text>
+      <text x="40" y="874"><tspan class="hxG">⎿ </tspan><tspan class="hxR">rise       1.9 → 2.1 ms   (within tol)</tspan></text>
+      <text x="40" y="896"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">result: PASS, margin restored</tspan></text>
+      <text class="hxA" x="20" y="918">Margin thin. Sweeping Kp 0.50-0.60 to center it.</text>
+      <text x="20" y="940"><tspan class="hxT">⏺ test_sequence_run</tspan><tspan class="hxArg">(iq_step_sweep)</tspan></text>
+      <text x="40" y="962"><tspan class="hxG">⎿ </tspan><tspan class="hxR">best Kp=0.53  overshoot=4.4%  settle=4.5ms</tspan></text>
+      <text x="20" y="984"><tspan class="hxT">⏺ xcp_cal_write</tspan><tspan class="hxArg">(CurCtl_Kp = 0.53)</tspan></text>
+      <text class="hxA" x="20" y="1006">Packaging the evidence and handing off.</text>
+      <text x="20" y="1028"><tspan class="hxT">⏺ upload_to_artifact_drive</tspan><tspan class="hxArg">(run_042.mf4)</tspan></text>
+      <text x="40" y="1050"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">uploaded  provider: sharepoint  2.0 MB</tspan></text>
+      <text x="20" y="1072"><tspan class="hxT">⏺ release_can_interface</tspan><tspan class="hxArg">(can0)</tspan></text>
+      <text x="40" y="1094"><tspan class="hxG">⎿ </tspan><tspan class="hxOk">released  can0</tspan></text>
+      <text class="hxReport" x="18" y="1116">✔ Iq loop tuned. Kp 0.42→0.53, overshoot 13.8→4.4%.</text>
+      <text class="hxA" x="20" y="1138">Evidence: run_042.mf4, sweep log, compare diff. Ready.</text>
+    </g>
+    <use href="#agentShellScript" transform="translate(0,1100)"/>
+  </g></g>
+  <line x1="8" y1="400" x2="552" y2="400" stroke="#2d312f"/>
+  <text class="hx hxP" x="18" y="426">❯</text>
+  <rect class="hxcur" x="30" y="416" width="7" height="14" fill="#e8ebf3"/>
+  <g class="hxspin"><path d="M26 436 A6 6 0 1 1 20 442" fill="none" stroke="#f1845b" stroke-width="2" stroke-linecap="round"/></g>
+  <text class="hx hxDim" x="44" y="446"><tspan class="hxva">Measuring the Iq loop  ·  esc to interrupt</tspan></text>
+  <text class="hx hxDim" x="44" y="446"><tspan class="hxvb">Calibrating the Iq loop  ·  esc to interrupt</tspan></text>
+  <text class="hx hxDim" x="44" y="446"><tspan class="hxvc">Comparing to baseline  ·  esc to interrupt</tspan></text>
+  <text class="hx hxTeal" x="544" y="446" text-anchor="end">artifacts: local</text>
+  <defs><clipPath id="agentShellClip"><rect x="8" y="40" width="544" height="358" rx="4"/></clipPath></defs>
+</svg>

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.56e52b89.css",
-    "main.js": "/static/js/main.c405151d.js",
+    "main.css": "/static/css/main.4df3c30a.css",
+    "main.js": "/static/js/main.fd16fa5c.js",
     "static/js/652.89a039b7.chunk.js": "/static/js/652.89a039b7.chunk.js",
     "static/js/241.399cfb52.chunk.js": "/static/js/241.399cfb52.chunk.js",
     "static/js/713.fc6d6a8e.chunk.js": "/static/js/713.fc6d6a8e.chunk.js",
@@ -19,6 +19,7 @@
     "static/js/907.58887562.chunk.js": "/static/js/907.58887562.chunk.js",
     "static/js/212.7381d2d1.chunk.js": "/static/js/212.7381d2d1.chunk.js",
     "static/media/logo.png": "/static/media/logo.68f6b6f816def703f8e0.png",
+    "static/media/nexus-agent-shell.svg": "/static/media/nexus-agent-shell.28db86f13855cd54da6f2ea7b92a10a5.svg",
     "static/media/connectivity-hub.svg": "/static/media/connectivity-hub.9f622fe3eee8a33f08df2355d75102d5.svg",
     "static/media/stream-pipeline.svg": "/static/media/stream-pipeline.fe06c76fbac64ceb52e3a6af3f17ce94.svg",
     "static/media/use-case-bus-gate.svg": "/static/media/use-case-bus-gate.373fcaf31df9f501748e7e22eba52f4d.svg",
@@ -38,8 +39,8 @@
     "static/media/api.svg": "/static/media/api.0a94b2530a273b0a077ad406ca88856c.svg",
     "static/media/overview.svg": "/static/media/overview.656fb8ccdec973c7a6794ecc12c04808.svg",
     "static/media/download.svg": "/static/media/download.168f48f49bb7aaf833cbfd4829f1eeb6.svg",
-    "main.56e52b89.css.map": "/static/css/main.56e52b89.css.map",
-    "main.c405151d.js.map": "/static/js/main.c405151d.js.map",
+    "main.4df3c30a.css.map": "/static/css/main.4df3c30a.css.map",
+    "main.fd16fa5c.js.map": "/static/js/main.fd16fa5c.js.map",
     "652.89a039b7.chunk.js.map": "/static/js/652.89a039b7.chunk.js.map",
     "241.399cfb52.chunk.js.map": "/static/js/241.399cfb52.chunk.js.map",
     "713.fc6d6a8e.chunk.js.map": "/static/js/713.fc6d6a8e.chunk.js.map",
@@ -58,7 +59,7 @@
     "212.7381d2d1.chunk.js.map": "/static/js/212.7381d2d1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.56e52b89.css",
-    "static/js/main.c405151d.js"
+    "static/css/main.4df3c30a.css",
+    "static/js/main.fd16fa5c.js"
   ]
 }
