@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 460" fill="none" role="img" aria-labelledby="connHubTitle connHubDesc">
+  <title id="connHubTitle">One connection point for many buses</title>
+  <desc id="connHubDesc">CAN, UART, XCP, and ROS 2 / DDS lanes connect into Plotune Nexus, which resolves them into one control surface.</desc>
+  <style>
+    .cnPill { fill: #171a1f; stroke: rgba(255,255,255,0.10); stroke-width: 1.5; }
+    .cnHub { fill: #171a1f; stroke: rgba(38,166,154,0.32); stroke-width: 1.5; }
+    .cnLane { stroke: #26A69A; stroke-width: 2; fill: none; stroke-linecap: round; stroke-dasharray: 142; stroke-dashoffset: 142; animation: cnDrawLane 6s ease-in-out infinite; }
+    .cnPillLabel { font: 600 13px Inter, Arial, sans-serif; text-anchor: middle; }
+    .cnHubLabel { fill: #f5f5f5; font: 700 13px Inter, Arial, sans-serif; letter-spacing: 0.14em; text-anchor: middle; }
+    .cnSurfaceLabel { fill: #26A69A; font: 600 12px Inter, Arial, sans-serif; letter-spacing: 0.16em; text-anchor: middle; }
+
+    .cnDot { animation: cnDotLight 6s ease-in-out infinite; }
+    .cnTxt { animation: cnLabelLight 6s ease-in-out infinite; }
+    .cnPkt { will-change: transform, opacity; }
+    .cnPktCAN { animation: cnPktCAN 6s ease-in-out infinite; }
+    .cnPktUART { animation: cnPktUART 6s ease-in-out infinite; }
+    .cnPktXCP { animation: cnPktXCP 6s ease-in-out infinite; }
+    .cnPktROS { animation: cnPktROS 6s ease-in-out infinite; }
+    .cnHubDot { animation: cnHubPulse 6s ease-in-out infinite; }
+    .cnOut { stroke: #26A69A; stroke-width: 2; fill: none; stroke-linecap: round; stroke-dasharray: 126; stroke-dashoffset: 126; animation: cnDrawOut 6s ease-in-out infinite; }
+    .cnSurface, .cnSurfaceTxt { animation: cnSurfaceLight 6s ease-in-out infinite; }
+    .cnFlow { stroke: #26A69A; stroke-width: 2; fill: none; stroke-linecap: round; stroke-dasharray: 2 9; opacity: 0; animation: cnFlowMarch 1.1s linear infinite, cnFlowOn 6s ease-in-out infinite; }
+    .cnOutFlow { stroke: #26A69A; stroke-width: 2; fill: none; stroke-linecap: round; stroke-dasharray: 2 9; opacity: 0; animation: cnFlowMarch 1.1s linear infinite, cnOutFlowOn 6s ease-in-out infinite; }
+
+    .cnD0 { animation-delay: 0s; }
+    .cnD1 { animation-delay: 0.22s; }
+    .cnD2 { animation-delay: 0.44s; }
+    .cnD3 { animation-delay: 0.66s; }
+
+    @keyframes cnDrawLane { 0%, 4% { stroke-dashoffset: 142; } 26%, 100% { stroke-dashoffset: 0; } }
+    @keyframes cnDotLight { 0%, 18% { fill: #33404a; } 30%, 100% { fill: #26A69A; } }
+    @keyframes cnLabelLight { 0%, 18% { fill: #8f9ba8; } 30%, 100% { fill: #26A69A; } }
+    @keyframes cnPktCAN { 0%, 26% { opacity: 0; transform: translate(0,0); } 30% { opacity: 1; } 52% { opacity: 1; transform: translate(93px,104px); } 60%, 100% { opacity: 0; transform: translate(93px,104px); } }
+    @keyframes cnPktUART { 0%, 26% { opacity: 0; transform: translate(0,0); } 30% { opacity: 1; } 52% { opacity: 1; transform: translate(-93px,104px); } 60%, 100% { opacity: 0; transform: translate(-93px,104px); } }
+    @keyframes cnPktXCP { 0%, 26% { opacity: 0; transform: translate(0,0); } 30% { opacity: 1; } 52% { opacity: 1; transform: translate(93px,-104px); } 60%, 100% { opacity: 0; transform: translate(93px,-104px); } }
+    @keyframes cnPktROS { 0%, 26% { opacity: 0; transform: translate(0,0); } 30% { opacity: 1; } 52% { opacity: 1; transform: translate(-93px,-104px); } 60%, 100% { opacity: 0; transform: translate(-93px,-104px); } }
+    @keyframes cnHubPulse { 0%, 50% { opacity: 0.3; } 64% { opacity: 1; } 100% { opacity: 0.9; } }
+    @keyframes cnDrawOut { 0%, 66% { stroke-dashoffset: 126; } 84%, 100% { stroke-dashoffset: 0; } }
+    @keyframes cnSurfaceLight { 0%, 70% { opacity: 0.25; } 86%, 100% { opacity: 1; } }
+    @keyframes cnFlowMarch { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -11; } }
+    @keyframes cnFlowOn { 0%, 40% { opacity: 0; } 50%, 100% { opacity: 0.7; } }
+    @keyframes cnOutFlowOn { 0%, 82% { opacity: 0; } 90%, 100% { opacity: 0.7; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cnLane, .cnOut { animation: none !important; stroke-dashoffset: 0 !important; }
+      .cnDot { animation: none !important; fill: #26A69A !important; }
+      .cnTxt { animation: none !important; fill: #26A69A !important; }
+      .cnPkt { animation: none !important; opacity: 0 !important; }
+      .cnHubDot { animation: none !important; opacity: 0.9 !important; }
+      .cnSurface, .cnSurfaceTxt { animation: none !important; opacity: 1 !important; }
+      .cnFlow, .cnOutFlow { animation: none !important; opacity: 0.35 !important; }
+    }
+  </style>
+
+  <path class="cnLane cnD0" d="M92 74 L185 178"/>
+  <path class="cnLane cnD1" d="M428 74 L335 178"/>
+  <path class="cnLane cnD2" d="M92 386 L185 282"/>
+  <path class="cnLane cnD3" d="M428 386 L335 282"/>
+
+  <path class="cnFlow cnD0" d="M92 74 L185 178"/>
+  <path class="cnFlow cnD1" d="M428 74 L335 178"/>
+  <path class="cnFlow cnD2" d="M92 386 L185 282"/>
+  <path class="cnFlow cnD3" d="M428 386 L335 282"/>
+
+  <path class="cnOut" d="M260 282 L260 408"/>
+  <path class="cnOutFlow" d="M260 282 L260 408"/>
+
+  <rect class="cnHub" x="185" y="178" width="150" height="104" rx="24"/>
+  <circle class="cnHubDot" cx="260" cy="212" r="5" fill="#26A69A"/>
+  <text class="cnHubLabel" x="260" y="244">PLOTUNE NEXUS</text>
+
+  <g>
+    <rect class="cnPill" x="44" y="58" width="96" height="32" rx="11"/>
+    <circle class="cnDot cnD0" cx="60" cy="74" r="4" fill="#33404a"/>
+    <text class="cnPillLabel cnTxt cnD0" x="94" y="79" fill="#8f9ba8">CAN</text>
+  </g>
+  <g>
+    <rect class="cnPill" x="380" y="58" width="96" height="32" rx="11"/>
+    <circle class="cnDot cnD1" cx="396" cy="74" r="4" fill="#33404a"/>
+    <text class="cnPillLabel cnTxt cnD1" x="430" y="79" fill="#8f9ba8">UART</text>
+  </g>
+  <g>
+    <rect class="cnPill" x="44" y="370" width="96" height="32" rx="11"/>
+    <circle class="cnDot cnD2" cx="60" cy="386" r="4" fill="#33404a"/>
+    <text class="cnPillLabel cnTxt cnD2" x="94" y="391" fill="#8f9ba8">XCP</text>
+  </g>
+  <g>
+    <rect class="cnPill" x="360" y="370" width="132" height="32" rx="11"/>
+    <circle class="cnDot cnD3" cx="378" cy="386" r="4" fill="#33404a"/>
+    <text class="cnPillLabel cnTxt cnD3" x="430" y="391" fill="#8f9ba8">ROS 2 / DDS</text>
+  </g>
+
+  <circle class="cnPkt cnPktCAN cnD0" cx="92" cy="74" r="4.5" fill="#f5f5f5"/>
+  <circle class="cnPkt cnPktUART cnD1" cx="428" cy="74" r="4.5" fill="#f5f5f5"/>
+  <circle class="cnPkt cnPktXCP cnD2" cx="92" cy="386" r="4.5" fill="#f5f5f5"/>
+  <circle class="cnPkt cnPktROS cnD3" cx="428" cy="386" r="4.5" fill="#f5f5f5"/>
+
+  <rect class="cnSurface" x="150" y="408" width="220" height="38" rx="13" fill="#171a1f" stroke="rgba(38,166,154,0.28)" stroke-width="1.5" opacity="0.25"/>
+  <text class="cnSurfaceLabel cnSurfaceTxt" x="260" y="432" opacity="0.25">ONE CONTROL SURFACE</text>
+</svg>
