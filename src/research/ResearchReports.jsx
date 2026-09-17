@@ -1,0 +1,7 @@
+﻿import React from 'react';
+import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
+import { publishedResearchArticles } from './content/articles';
+
+const ResearchReports = () => <section className="research-page reports-page"><Seo title="Reports | Plotune Research" description="Monthly reports and reading for Plotune Research." path="/research/reports" /><header className="page-heading"><span className="section-label">Reports</span><h1>Research reports</h1><p>A growing monthly library of benchmark readouts, protocol changes, workflow findings, and detailed studies.</p></header><section className="featured-report"><span className="section-label">Featured reading</span><div><h2>How to read a monthly benchmark release</h2><p>Understand the run configuration, the evidence behind a verdict, and the difference between performance, cost, task duration, and operational reliability.</p><Link to={`/research/articles/${publishedResearchArticles[0].slug}`}>Read the guide</Link></div></section><section className="report-library"><div className="library-heading"><span className="section-label">Library</span><h2>Published reports</h2></div>{publishedResearchArticles.map((article) => <article className="report-row" key={article.slug}><div><span>{article.publishedAt}</span><h3>{article.title}</h3><p>{article.summary}</p></div><Link to={`/research/articles/${article.slug}`}>Read report</Link></article>)}</section></section>;
+export default ResearchReports;

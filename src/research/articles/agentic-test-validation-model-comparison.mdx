@@ -1,0 +1,39 @@
+﻿---
+slug: agentic-test-validation-model-comparison
+title: How to read a monthly benchmark release
+summary: A guide to reading agentic test and validation results through task acceptance, evidence, cost, time, and reliability.
+topic: Agentic Test & Validation
+publishedAt: 2026-09-17
+updatedAt: 2026-09-17
+featured: true
+heroChart: workflow-profile
+---
+
+<Insight eyebrow="Reading guide" title="A benchmark result is a record of a complete task.">
+A useful release makes the task definition, environment, evidence, and acceptance criteria visible alongside its headline metrics.
+</Insight>
+
+## Executive summary
+
+A single score cannot explain whether an agent is useful in an engineering workflow. A monthly release should make four dimensions readable together: task acceptance, operational cost, task duration, and reliability of completion.
+
+<ResearchPlot chart={article.heroChart} title="Example workflow comparison" caption="The interactive figure demonstrates the kind of task-level comparison a monthly release can include." />
+
+## What a release contains
+
+Each report records the task manifest, fixture or environment revision, model and provider configuration, agent settings, tool version, and acceptance checks. These details let a reader distinguish a model change from a task or infrastructure change.
+
+## How tasks are accepted
+
+A task is accepted only when the expected observed effect and its required evidence are both present. The evidence can include captured signals, configuration readback, a trace window, an execution record, and a clean terminal state.
+
+## Reading the measures
+
+- **Performance** measures accepted attempts within a task family.
+- **Cost per task** includes successful, failed, and retried work.
+- **Time per task** includes tool execution, waits, verification, and cleanup.
+- **Reliability** measures whether a scheduled attempt reached a valid terminal result with cleanup; it is separate from correctness.
+
+## Changes between months
+
+A release should name task, harness, tool, and scoring changes before comparing values across months. Only compatible protocol versions should be compared directly.

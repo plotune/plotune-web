@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+﻿import React, { useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
@@ -37,6 +37,14 @@ import NexusConnectivity from './pages/NexusConnectivity';
 import NexusStream from './pages/NexusStream';
 import NexusUseCases from './pages/NexusUseCases';
 import StreamOverviewPage from './components/streams/StreamOverviewPage';
+import ResearchLayout from './research/ResearchLayout';
+import ResearchOverview from './research/ResearchOverview';
+import ResearchTopics from './research/ResearchTopics';
+import ResearchArticle from './research/ResearchArticle';
+import ResearchAnalysis from './research/ResearchAnalysis';
+import ResearchResults from './research/ResearchResults';
+import ResearchReports from './research/ResearchReports';
+import ResearchMethodology from './research/ResearchMethodology';
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
@@ -63,6 +71,10 @@ const NavigationWrapper = ({ children }) => {
   const location = useLocation();
   const hideLayoutPaths = ['/streams/connect'];
   const shouldHide = hideLayoutPaths.includes(location.pathname);
+
+  if (location.pathname.startsWith('/research')) {
+    return <ResearchLayout>{children}</ResearchLayout>;
+  }
 
   return (
     <>
@@ -114,6 +126,13 @@ function App() {
               <Route path="/nexus/connectivity" element={<NexusConnectivity />} />
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />
+              <Route path="/research" element={<ResearchOverview />} />
+              <Route path="/research/topics" element={<ResearchReports />} />
+              <Route path="/research/results" element={<ResearchResults />} />
+              <Route path="/research/reports" element={<ResearchReports />} />
+              <Route path="/research/analysis" element={<ResearchAnalysis />} />
+              <Route path="/research/methodology" element={<ResearchMethodology />} />
+              <Route path="/research/articles/:slug" element={<ResearchArticle />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
             </Routes>
           </NavigationWrapper>
@@ -126,3 +145,6 @@ function App() {
 }
 
 export default App;
+
+
+

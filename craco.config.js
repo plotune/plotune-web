@@ -1,0 +1,2 @@
+const remarkFrontmatter=require('remark-frontmatter').default;module.exports={webpack:{configure:(config)=>{const oneOf=config.module.rules.find((rule)=>Array.isArray(rule.oneOf));oneOf.oneOf.unshift({test:/\.mdx?$/,use:[{loader:require.resolve('babel-loader'),options:{presets:[require.resolve('babel-preset-react-app')]}},{loader:require.resolve('@mdx-js/loader'),options:{providerImportSource:'@mdx-js/react',remarkPlugins:[remarkFrontmatter]}}]});config.resolve.extensions.push('.mdx');return config;}}};
+

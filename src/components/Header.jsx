@@ -50,6 +50,7 @@ const Header = () => {
         { to: '/faq', label: 'FAQ' },
       ],
     },
+    { to: '/research', label: 'Research' },
   ];
 
   // Navigation items for logged-in users with Material Icons
@@ -60,6 +61,7 @@ const Header = () => {
     { to: '/mirror', label: 'Edge', icon: 'account_tree' },
     { to: '/storage', label: 'Storage', icon: 'dns' },
     { to: '/extensions', label: 'Extensions', icon: 'store' },
+    { to: '/research', label: 'Research', icon: 'science' },
   ];
 
   const navItems = isLoggedIn ? userNavItems : guestNavItems;

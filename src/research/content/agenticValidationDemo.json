@@ -1,0 +1,31 @@
+{
+  "label": "Illustrative preview dataset - not validated research",
+  "tasks": ["Industrial data analysis", "Connecting test benches", "Automated validation", "Diagnostics & root cause", "Calibration & software updates", "Real-time stream validation", "AI safety & evidence quality"],
+  "models": [
+    {"name":"Anthropic: Claude Fable 5.1","color":"#d97706","scores":[92,90,88,91,86,82,84]},
+    {"name":"OpenAI: GPT-5.6","color":"#10a37f","scores":[91,89,90,89,88,81,86]},
+    {"name":"Google: Gemini 3.7 Flash","color":"#4285f4","scores":[87,91,84,85,83,88,80]},
+    {"name":"Anthropic: Claude Opus 5","color":"#b45309","scores":[90,87,89,92,85,79,83]},
+    {"name":"OpenAI: GPT-5.6 Mini","color":"#0f766e","scores":[83,85,82,80,81,78,79]},
+    {"name":"Google: Gemini 3 Pro","color":"#2563eb","scores":[88,86,85,87,86,84,82]},
+    {"name":"DeepSeek: V4 Pro","color":"#7c3aed","scores":[82,84,86,79,84,76,88]},
+    {"name":"Qwen: Qwen3.5 397B","color":"#0891b2","scores":[80,83,84,78,82,77,86]},
+    {"name":"Meta: Llama 4 Maverick","color":"#2563eb","scores":[78,80,79,77,81,75,78]},
+    {"name":"Mistral: Large 3","color":"#111827","scores":[76,79,78,75,79,73,76]},
+    {"name":"Z.ai: GLM 5.3","color":"#ef4444","scores":[81,82,85,80,80,79,84]},
+    {"name":"Moonshot: Kimi K2.6","color":"#f97316","scores":[79,81,80,83,78,74,77]},
+    {"name":"Amazon: Nova Micro","color":"#f59e0b","scores":[74,78,76,72,75,80,73]},
+    {"name":"Cohere: Command A","color":"#7c2d12","scores":[73,76,75,74,77,72,74]},
+    {"name":"Microsoft: Phi-4","color":"#2563eb","scores":[70,72,73,69,76,71,75]},
+    {"name":"NVIDIA: Nemotron 3","color":"#76b900","scores":[75,77,79,73,80,76,82]},
+    {"name":"IBM: Granite 4.2","color":"#1f70c1","scores":[68,71,72,67,79,74,76]},
+    {"name":"MiniMax: M2.7","color":"#fb7185","scores":[77,79,78,76,78,75,79]},
+    {"name":"xAI: Grok 4.6","color":"#111111","scores":[84,83,81,86,82,77,80]},
+    {"name":"Alibaba: Qwen3 Coder","color":"#ea580c","scores":[76,82,83,74,80,81,85]},
+    {"name":"OpenAI: gpt-oss-120b","color":"#16a34a","scores":[72,75,77,71,78,76,81]},
+    {"name":"Google: Gemma 4 31B","color":"#1a73e8","scores":[69,73,74,68,76,72,77]},
+    {"name":"Meta: Llama 4 Scout","color":"#155e75","scores":[71,74,75,70,77,73,78]},
+    {"name":"DeepSeek: V4 Flash","color":"#6d28d9","scores":[78,80,82,76,79,78,83]}
+  ]
+}
+
