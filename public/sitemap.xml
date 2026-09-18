@@ -9,6 +9,9 @@
   <url><loc>https://www.plotune.net/research/reports</loc><lastmod>2026-09-18</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/research/methodology</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.plotune.net/research/articles/agentic-test-validation-model-comparison</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/automating-can-ecu-tests-with-ai-agents</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/running-unattended-ros2-hardware-tests</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/test-automation-engineer-in-the-loop</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/nexus/connectivity</loc><lastmod>2026-07-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.plotune.net/nexus/stream</loc><lastmod>2026-07-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.plotune.net/nexus/use-cases</loc><lastmod>2026-07-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>

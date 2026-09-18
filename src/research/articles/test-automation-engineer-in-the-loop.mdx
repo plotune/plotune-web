@@ -1,0 +1,43 @@
+---
+slug: test-automation-engineer-in-the-loop
+title: Why test automation still requires an engineer in the loop
+summary: Automation that stops at "run the script" still needs a person standing next to it — a look at where test automation actually breaks down and what closes the gap.
+topic: Test Automation & Orchestration
+publishedAt: 2026-09-18
+updatedAt: 2026-09-18
+featured: false
+---
+
+<Insight eyebrow="Reframe" title="A script that still needs a babysitter isn't automation. It's a faster way to wait.">
+If a person still has to decide which sequence to run, watch it for faults, and re-run it by hand when a build changes, the bottleneck was never the script.
+</Insight>
+
+## Automation that automates the wrong part
+
+Most test automation stops at "run the script." The test itself — the sequence of steps that exercises a CAN bus, a UART console, an XCP calibration, a DDS topic — gets scripted and can be kicked off with one command instead of typed by hand. That's real progress, and it's also not where the actual bottleneck lives.
+
+The bottleneck is upstream and downstream of the script, not inside it. Upstream: someone still has to decide which sequence applies to this build, this hardware revision, this test session, and kick it off. Downstream: someone has to watch it run, because faults are usually triaged live, in the moment, by whoever happens to be on the bench when something goes wrong. And in between builds, someone has to remember to re-run the regression checks by hand against the new firmware, because nothing does that automatically. Automation that still needs a person standing next to it for all three of those isn't automation in any sense that saves engineering time — it's a faster way to wait.
+
+## Where the hours actually go
+
+Ask a HIL or bench team where their engineering hours go and the honest answer is rarely "writing test scripts." It's babysitting runs that are already scripted. It's the person who has to be present because a long-running sequence might hit a fault three hours in and nobody wants to lose that context. It's the overnight coverage that simply doesn't happen, because nobody automation-adjacent is willing to run an unattended test they can't trust to catch a problem if one occurs. It's the regression check that gets skipped this sprint because re-running it by hand against the new build is a known hour-long chore, and the deadline is tomorrow.
+
+## What closes the gap
+
+Closing that gap doesn't mean removing the engineer — it means moving what requires their attention from "the whole run" to "the moments that actually need a decision."
+
+**Orchestration across the full protocol surface, as one bounded run.** A real test sequence rarely stays inside one protocol. It sends a CAN command, waits on a DBC-decoded signal, reads an XCP calibration value, and checks a UART console line — in order, with each step's success gating the next. Treating that as one orchestrated sequence instead of four separate manual steps is what actually removes the need for someone to sit at the keyboard advancing the test by hand.
+
+**A fault watch that runs as its own bounded job, not a person's attention.** Long-running coverage — the overnight soak, the multi-hour endurance run — is exactly where unattended operation matters most, and exactly where teams trust it least. A bounded watch that's already running when a fault condition appears at 2am captures it with context, instead of the fault happening in a room with no one in it and no record beyond "it failed sometime overnight."
+
+**A baseline diff instead of a memory of what last month's run looked like.** Re-running a validated sequence against a fresh build and diffing the result against a known-good baseline turns "does this still work" from a manual comparison — squinting at two runs and trying to remember what changed — into a direct check.
+
+**A packaged artifact at the end of every run, not a person's notes.** The output of an orchestrated sequence should be something a reviewer can open later and trust, not a summary written from memory after the fact.
+
+## Where the engineer still belongs
+
+None of this is about removing judgment from the process — it's about being precise regarding where judgment is actually needed. An engineer still decides what the sequence should check, what counts as a pass, and what an unusual result means once one shows up. What changes is that they're no longer required to be physically present for the parts of the run that don't need a decision at all — the waiting, the babysitting, the manual re-run against a build that hasn't meaningfully changed. The engineer moves from "in the loop for every step" to "in the loop for the steps that matter," and the hours that used to go to watching get spent on the judgment calls that actually needed a person.
+
+<Insight eyebrow="The actual fix" title="Automate the run. Keep the judgment.">
+Orchestrating the full sequence, watching for faults unattended, diffing against a baseline, and packaging the evidence removes the babysitting — not the engineer who decides what the test should prove.
+</Insight>
