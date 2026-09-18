@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, useLocation, Link, Navigate } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import Seo from '../components/Seo';
-import { getSolutionSegment } from '../content/solutions';
+import { getSolutionSegment, solutionSegmentAliases } from '../content/solutions';
 import { captureFunnelTouch, withFunnelParams } from '../utils/funnel';
 
 const SolutionPage = () => {
   const { segment } = useParams();
+  const location = useLocation();
   const config = getSolutionSegment(segment);
 
   useEffect(() => {
     if (config) captureFunnelTouch({ segment: config.slug, solution: config.slug });
   }, [config]);
 
-  if (!config) return <Navigate to="/nexus" replace />;
+  if (!config) {
+    const renamedTo = solutionSegmentAliases[segment];
+    if (renamedTo) return <Navigate to={`/solutions/${renamedTo}${location.search}`} replace />;
+    return <Navigate to="/nexus" replace />;
+  }
 
   return (
     <main className="bg-dark-bg text-dark-text">

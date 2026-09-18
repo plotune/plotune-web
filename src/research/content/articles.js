@@ -16,7 +16,7 @@ const articles = [{
   summary: 'Why a CAN or ECU test procedure is a lifecycle, not a single frame send, and how an agent-driven workflow keeps that lifecycle bounded and reviewable.',
   topic: 'CAN / ECU Testing',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
-  segment: 'can-testing',
+  segment: 'can-ecu-testing',
   loader: () => import('../articles/automating-can-ecu-tests-with-ai-agents.mdx'),
 }, {
   slug: 'running-unattended-ros2-hardware-tests',
