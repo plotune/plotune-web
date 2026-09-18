@@ -127,7 +127,7 @@ function App() {
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />
               <Route path="/research" element={<ResearchOverview />} />
-              <Route path="/research/topics" element={<ResearchReports />} />
+              <Route path="/research/topics" element={<ResearchTopics />} />
               <Route path="/research/results" element={<ResearchResults />} />
               <Route path="/research/reports" element={<ResearchReports />} />
               <Route path="/research/analysis" element={<ResearchAnalysis />} />
