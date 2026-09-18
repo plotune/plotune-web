@@ -14,6 +14,13 @@
   <url><loc>https://www.plotune.net/research/articles/automating-can-ecu-tests-with-ai-agents</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/research/articles/running-unattended-ros2-hardware-tests</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/research/articles/test-automation-engineer-in-the-loop</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/what-is-agentic-test-development</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/ai-hardware-in-the-loop-testing</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/ai-agents-control-test-benches-with-mcp</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/agentic-ecu-testing-can-to-execution</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/agentic-testing-ros2-dds-systems</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/building-a-24-7-unattended-test-lab</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research/articles/ai-agents-vs-traditional-test-automation</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/nexus/connectivity</loc><lastmod>2026-07-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.plotune.net/nexus/stream</loc><lastmod>2026-07-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.plotune.net/nexus/use-cases</loc><lastmod>2026-07-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>

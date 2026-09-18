@@ -1,4 +1,5 @@
 ﻿import { getResearchArticle, publishedResearchArticles } from './content/articles';
+import { getSolutionSegment } from '../content/solutions';
 
 test('publishes the featured agentic validation study with a stable route', () => {
   const article = getResearchArticle('agentic-test-validation-model-comparison');
@@ -10,25 +11,34 @@ test('publishes the featured agentic validation study with a stable route', () =
     published: true,
   });
   expect(article.summary).toMatch(/task acceptance/i);
-  expect(publishedResearchArticles).toHaveLength(4);
+  expect(publishedResearchArticles).toHaveLength(11);
 });
 
 test('does not expose unknown or unpublished studies', () => {
   expect(getResearchArticle('not-a-study')).toBeUndefined();
 });
 
-test('publishes the three segment-tagged articles with matching solution segments', () => {
-  expect(getResearchArticle('automating-can-ecu-tests-with-ai-agents')).toMatchObject({
-    segment: 'can-testing',
-    published: true,
+test('every segment-tagged article maps to a real solution page', () => {
+  const segmentTagged = publishedResearchArticles.filter((article) => article.segment);
+  expect(segmentTagged.length).toBeGreaterThan(0);
+  segmentTagged.forEach((article) => {
+    expect(getSolutionSegment(article.segment)).toBeDefined();
   });
-  expect(getResearchArticle('running-unattended-ros2-hardware-tests')).toMatchObject({
-    segment: 'ros2-dds-testing',
-    published: true,
+});
+
+test('every explicit-CTA article points to a real internal path', () => {
+  const ctaArticles = publishedResearchArticles.filter((article) => article.cta);
+  expect(ctaArticles.length).toBeGreaterThan(0);
+  ctaArticles.forEach((article) => {
+    expect(article.cta.path).toMatch(/^\//);
+    expect(article.cta.summary).toBeTruthy();
+    expect(article.cta.label).toBeTruthy();
   });
-  expect(getResearchArticle('test-automation-engineer-in-the-loop')).toMatchObject({
-    segment: 'test-orchestration',
-    published: true,
+});
+
+test('every article has exactly one funnel path: a segment, an explicit cta, or neither, never both', () => {
+  publishedResearchArticles.forEach((article) => {
+    expect(article.segment && article.cta).toBeFalsy();
   });
 });
 

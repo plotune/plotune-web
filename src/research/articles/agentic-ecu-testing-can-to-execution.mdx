@@ -1,0 +1,43 @@
+---
+slug: agentic-ecu-testing-can-to-execution
+title: "Agentic ECU Testing: From CAN Signals to Autonomous Test Execution"
+summary: A look at the decode layer underneath CAN test automation — why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy.
+topic: CAN / ECU Testing
+publishedAt: 2026-09-18
+updatedAt: 2026-09-18
+featured: false
+---
+
+<Insight eyebrow="Reframe" title="A byte moving is not a requirement passing.">
+Raw arbitration IDs and hex payloads tell you a frame arrived. They don't tell you whether charge-ready went high, whether pressure stayed in tolerance, or whether anything the test plan actually cares about happened.
+</Insight>
+
+## What a scope trace doesn't tell you
+
+Open a raw CAN trace and you'll see arbitration IDs scrolling past with payloads in hex: `0x18FEF100 # 3A 04 7F 00 FF FF FF FF`. Somewhere in there is the signal an engineer actually wants — coolant temperature, a charge-ready flag, a commanded torque value — but it's buried behind a bit offset, a scale factor, and an endianness convention that only means anything in light of a DBC file. Read the trace without that context and you're not testing an ECU. You're confirming that bytes moved across a wire, which is a necessary condition for a passing test and nowhere close to a sufficient one.
+
+It's easy to lose sight of this when the automation conversation focuses on execution — who presses the button, who watches the run, who writes up the result. Those questions assume the more basic one is already settled: does the system know what the bytes mean? If it doesn't, automating the send-and-watch loop just automates the wrong thing faster.
+
+## The chain a decoded assertion depends on
+
+A real acceptance check reads like a requirement, not a byte pattern: "charge-ready goes high within five seconds of connector insertion." "Commanded and measured pressure stay within tolerance through the ramp." For that sentence to become a pass/fail verdict, several things have to hold, in order, without a gap:
+
+The message that gets sent has to be the one specified — the approved frame from the DBC, at the cycle time the ECU expects, not a hand-typed variant that happens to look close enough. The signal being watched has to be decoded using that same DBC, mapped by the same scale, offset, and bit layout the test was authored against. And the gate that decides "did this pass" has to key off the decoded value — `ChargeReady == 1`, `abs(measured - commanded) < tolerance` — not off elapsed time or frame count, which are proxies that can be satisfied while the real condition never happens at all.
+
+Break any link in that chain and the result stops meaning what it claims. Send the wrong frame and you've tested a message the ECU wasn't built to handle. Decode against a stale or mismatched DBC and a passing signal can read as failing, or vice versa. Gate on a fixed wait instead of the decoded condition and you get a test that reliably reports "passed" a few seconds after start, regardless of what the ECU actually did.
+
+## Where "autonomous" actually bites
+
+This is the part that matters once a human stops sitting at the bench watching the trace scroll by. A person doing this by eye compensates for gaps in the chain without noticing — glancing at the DBC version, eyeballing whether a signal looks plausible, mentally translating "close enough after a few seconds" into a pass. An agent executing the same sequence unattended doesn't get that instinct for free; it only gets what the chain actually gives it.
+
+So the requirement for autonomous execution isn't "can it send a frame and wait" — a script has done that for decades. It's that decode has to use the exact DBC the test was authored against, encode has to be constrained to the approved message rather than anything constructible on the bus, and the sequencing has to be able to block on a decoded signal condition as a first-class step, not a hardcoded pause a human tuned by trial and error. Get those three right and an agent can run a test at 2 a.m. and produce a verdict worth trusting. Get any one wrong and you've built a fast way to generate confident, meaningless results.
+
+There's a related failure mode worth naming: drift between runs. A bus that produces a new, unexpected arbitration ID, or shifts its timing slightly, can be invisible to a test that only checks the one signal it's watching. Comparing a fresh run against a known-good baseline — new IDs, timing drift, whether the signals of interest still line up — catches exactly the regression a single-signal gate is blind to, and it depends on the same decoded, DBC-anchored view of the bus rather than a raw one.
+
+## What this rules in
+
+None of this argues against automation — it argues for building it on the right layer. Bus inspection that lists active arbitration IDs and snapshots state before anything changes gives a starting point grounded in what's actually there, not assumed. A decoded-signal gate — wait on `ChargeReady == 1`, timeout at 5 seconds, proceed the moment it's met — replaces a guessed delay with an assertion that means what it says. And baseline comparison across the classic-CAN, CAN FD, XCP-on-CAN, and UDS surfaces an ECU suite actually touches means new signals or timing drift get flagged before a release build, not after.
+
+<Insight eyebrow="The real dependency" title="Autonomous execution is only as trustworthy as the decode underneath it.">
+Same DBC for decode as the test was written against, encode limited to the approved message, and gates that key off a decoded condition instead of a clock. Get that chain right and CAN test automation produces verdicts worth trusting unattended — get it wrong and it just produces confident-looking noise, faster.
+</Insight>
