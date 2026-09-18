@@ -9,24 +9,32 @@ featured: false
 ---
 
 <Insight eyebrow="The tell" title="If the answer to 'where does this run' is a person's name, it doesn't run unattended.">
-A bench that depends on one engineer's laptop to host the controller or simulator isn't automated yet — it's just scripted in a room that has to stay occupied.
+A bench that depends on one engineer's laptop to host the controller or simulator isn't automated yet. It's just scripted in a room that has to stay occupied.
 </Insight>
 
 ## The mystery machine problem
 
-Every bench team has one: the bench that "just works" as long as a specific person is at their desk. Ask where the controller or simulator actually runs and the honest answer isn't a hostname or a container ID — it's "on Priya's laptop" or "whatever machine was set up for the last integration push." Nobody wrote that down as a design decision. It accumulated, one convenient shortcut at a time, until the bench's brain lived somewhere that couldn't be named without naming a person.
+Every bench team has one: the bench that "just works" as long as a specific person is at their desk. Ask where the controller or simulator actually runs and the honest answer isn't a hostname or a container ID: it's "on Priya's laptop" or "whatever machine was set up for the last integration push." Nobody wrote that down as a design decision. It accumulated, one convenient shortcut at a time, until the bench's brain lived somewhere that couldn't be named without naming a person.
 
 That's the mystery machine problem, and it's the real reason so many benches that are technically scripted still can't run unattended. A script that starts a test sequence is only as portable as the thing it depends on. If the simulator only starts cleanly on one machine, with one set of drivers, one set of environment variables somebody remembers by muscle memory, then the bench's uptime is bounded by that person's calendar. Turning a manual bench into an automated test bench for unattended testing starts with fixing this, not with writing more test scripts.
 
+Getting from that manual bench to a lab that runs itself follows a consistent path:
+
+<FlowDiagram title="From manual bench to unattended lab" steps={["Staged container on a known address", "Virtual CAN + policy gateway", "Async job, not a blocking call", "Fault watch left running", "Baseline diff every run"]} />
+
 ## Give the controller an address, not an owner
 
-The fix is to stop treating the controller or simulator as something that lives on a workstation and start treating it as a service with a known address. In practice that means running it as a staged container on the device, wired to a virtual CAN bus rather than directly to the physical harness. A policy gateway sits between the virtual and real CAN buses so only approved frames actually cross onto hardware — the simulator gets a safe, fully isolated environment to run in, and the physical bus stays protected from anything the container might do while it's being iterated on. Once the controller is a container with a defined boundary instead of a process someone remembers to start, "where does this run" has an actual answer, and that answer doesn't change when someone goes on vacation.
+The fix is to stop treating the controller or simulator as something that lives on a workstation and start treating it as a service with a known address. In practice that means running it as a staged container on the device, wired to a virtual CAN bus rather than directly to the physical harness, with a policy gateway between the virtual and real CAN buses so only approved frames actually cross onto hardware:
+
+<StatFigure title="Controller as a service, not a laptop" stats={[["Controller", "Staged container"], ["Bus", "Virtual CAN"], ["Gateway", "Approved frames only"], ["Physical bus", "Protected"]]} />
+
+The simulator gets a safe, fully isolated environment to run in, and the physical bus stays protected from anything the container might do while it's being iterated on. Once the controller is a container with a defined boundary instead of a process someone remembers to start, **"where does this run" has an actual answer**, and that answer doesn't change when someone goes on vacation.
 
 This is also what makes remote hardware testing viable in the first place. A container behind a known interface can be reached from anywhere a job is allowed to originate. A process running on a laptop under someone's desk can't.
 
-## Long jobs shouldn't block the bench — or the person at it
+## Long jobs shouldn't block the bench, or the person at it
 
-The second piece is how long-running work is invoked. A bench that only knows how to run synchronously — start a recording, wait, get a result — forces whoever kicked it off to sit there for the duration, which defeats the purpose of automating it in the first place. A 45-minute recording should start, hand back a job ID, and let the caller poll for status instead of blocking on it. That's a small mechanical difference, but it's the difference between a job someone has to babysit and a job someone can check on later. Start it before lunch, poll it from your phone, come back to a finished artifact.
+The second piece is how long-running work is invoked. A bench that only knows how to run synchronously (start a recording, wait, get a result) forces whoever kicked it off to sit there for the duration, which defeats the purpose of automating it in the first place. A 45-minute recording should start, hand back a job ID, and let the caller poll for status instead of blocking on it. That's a small mechanical difference, but it's the difference between a job someone has to babysit and a job someone can check on later. Start it before lunch, poll it from your phone, come back to a finished artifact.
 
 <Insight eyebrow="Async by default" title="A job ID is what makes 'unattended' literal, not aspirational.">
 If starting a recording or a sequence blocks until it finishes, nothing downstream of it can run overnight. A returned job ID that gets polled is what actually lets a bench run while no one is watching.
@@ -34,12 +42,12 @@ If starting a recording or a sequence blocks until it finishes, nothing downstre
 
 ## Leave something watching, on purpose
 
-Unattended doesn't mean unmonitored — it means the monitoring doesn't require a person in the room. A bounded fault watch, started before everyone leaves for the night, is what turns a 2am timeout from a mystery ("it failed sometime overnight, no idea when or why") into a captured event with context attached. The watch runs as its own async job alongside whatever sequence is executing, so a fault condition that appears hours into a soak test gets recorded the moment it happens rather than inferred the next morning from a dead log.
+Unattended doesn't mean *unmonitored*: it means the monitoring doesn't require a person in the room. A bounded fault watch, started before everyone leaves for the night, is what turns a 2am timeout from a mystery ("it failed sometime overnight, no idea when or why") into a captured event with context attached. The watch runs as its own async job alongside whatever sequence is executing, so a fault condition that appears hours into a soak test gets recorded the moment it happens rather than inferred the next morning from a dead log.
 
 ## Compare automatically, every time
 
-The last piece is regression checking that doesn't depend on someone remembering what last month's run looked like. Every new run against a given build gets diffed against a validated baseline automatically — the same sequence, the same signals, checked against a known-good reference rather than against a memory. That's what makes it reasonable to run the full regression suite every night instead of once a sprint: nobody has to sit down and manually compare two runs to know whether something drifted.
+The last piece is regression checking that doesn't depend on someone remembering what last month's run looked like. Every new run against a given build gets diffed against a validated baseline automatically: the same sequence, the same signals, checked against a known-good reference rather than against *memory*. That's what makes it reasonable to run the full regression suite every night instead of once a sprint: nobody has to sit down and manually compare two runs to know whether something drifted.
 
 ## What this actually buys a team
 
-None of this is exotic infrastructure. It's a container instead of a laptop, a job ID instead of a blocking call, a watch left running instead of a person left watching, and a diff instead of a memory. Put together, it's the difference between a bench that can run tests and a bench that can run a lab — one that keeps producing packaged, reviewable results at 3am with nobody present, because nothing about how it runs depended on someone being there.
+None of this is exotic infrastructure. It's a container instead of a laptop, a job ID instead of a blocking call, a watch left running instead of a person left watching, and a diff instead of a memory. Put together, it's the difference between a bench that can run tests and **a bench that can run a lab**: one that keeps producing packaged, reviewable results at 3am with nobody present, because nothing about how it runs depended on someone being there.

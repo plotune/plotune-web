@@ -12,27 +12,27 @@ const AgenticTestDevelopmentPage = () => (
 
     <section className="relative pt-32 pb-16">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(38,166,154,0.18),transparent_34%),linear-gradient(180deg,#101112_0%,#121212_58%,#151719_100%)]" />
-      <div className="relative container mx-auto max-w-3xl px-5">
+      <div className="relative container mx-auto px-5">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">{pillar.label}</p>
-        <h1 className="mt-5 text-4xl font-semibold text-light-text md:text-5xl">{pillar.heroTitle}</h1>
-        <p className="mt-6 text-lg leading-8 text-gray-text">{pillar.intro}</p>
+        <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-tight text-light-text md:text-5xl">{pillar.heroTitle}</h1>
+        <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-text">{pillar.intro}</p>
       </div>
     </section>
 
     <section className="pb-16">
-      <div className="container mx-auto max-w-3xl px-5">
-        <h2 className="text-lg font-semibold text-light-text">Traditional automation vs. an agentic workflow</h2>
+      <div className="container mx-auto px-5">
+        <h2 className="text-xl font-semibold text-light-text">Traditional automation vs. an agentic workflow</h2>
       </div>
-      <div className="container mx-auto grid max-w-3xl gap-6 px-5 pt-4 md:grid-cols-2">
-        <div className="rounded-[1.5rem] bg-dark-card/80 p-6 shadow-custom">
-          <h3 className="text-base font-semibold text-light-text">Traditional automation</h3>
-          <ul className="mt-4 space-y-3 text-sm leading-6 text-gray-text">
+      <div className="container mx-auto grid gap-6 px-5 pt-6 lg:grid-cols-2">
+        <div className="rounded-[1.75rem] bg-dark-card/80 p-7 shadow-custom md:p-8">
+          <h3 className="text-lg font-semibold text-light-text">Traditional automation</h3>
+          <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
             {pillar.traditional.map((item) => <li key={item}>{item}</li>)}
           </ul>
         </div>
-        <div className="rounded-[1.5rem] border border-primary/20 bg-dark-card/80 p-6 shadow-custom">
-          <h3 className="text-base font-semibold text-light-text">The agentic approach</h3>
-          <ul className="mt-4 space-y-3 text-sm leading-6 text-gray-text">
+        <div className="rounded-[1.75rem] border border-primary/20 bg-dark-card/80 p-7 shadow-custom md:p-8">
+          <h3 className="text-lg font-semibold text-light-text">The agentic approach</h3>
+          <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
             {pillar.agentic.map((item) => <li key={item}>{item}</li>)}
           </ul>
         </div>
@@ -40,9 +40,9 @@ const AgenticTestDevelopmentPage = () => (
     </section>
 
     <section className="pb-16">
-      <div className="container mx-auto max-w-3xl px-5">
-        <h2 className="text-lg font-semibold text-light-text">Explore by workflow</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+      <div className="container mx-auto px-5">
+        <h2 className="text-xl font-semibold text-light-text">Explore by workflow</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {pillar.segmentSlugs.map((slug) => {
             const segment = solutionSegments[slug];
             if (!segment) return null;
@@ -65,7 +65,7 @@ const AgenticTestDevelopmentPage = () => (
     </section>
 
     <section className="pb-24">
-      <div className="container mx-auto max-w-3xl px-5">
+      <div className="container mx-auto px-5">
         <div className="rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.08))] p-8 md:p-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>

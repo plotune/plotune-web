@@ -1,10 +1,10 @@
 ﻿import { buildModelComparisonChart } from './charts';
 
-// `segment` is optional and maps to a key in src/content/solutions.js — when set, the article
+// `segment` is optional and maps to a key in src/content/solutions.js: when set, the article
 // renders a "see how this workflow can be automated" CTA to /solutions/<segment>. `cta` is an
 // explicit override ({path, summary, label}) for the handful of articles whose natural next step
 // is a page under /solutions/ that isn't a literal solutionSegments key (the
-// /solutions/agentic-test-development pillar page) — see ResearchArticle.jsx's resolveCta. Every
+// /solutions/agentic-test-development pillar page); see ResearchArticle.jsx's resolveCta. Every
 // article's funnel destination stays under /solutions/; none link out to /nexus directly.
 const articles = [{
   slug: 'agentic-test-validation-model-comparison',
@@ -33,7 +33,7 @@ const articles = [{
 }, {
   slug: 'test-automation-engineer-in-the-loop',
   title: 'Why test automation still requires an engineer in the loop',
-  summary: 'Automation that stops at "run the script" still needs a person standing next to it — a look at where test automation actually breaks down and what closes the gap.',
+  summary: 'Automation that stops at "run the script" still needs a person standing next to it: a look at where test automation actually breaks down and what closes the gap.',
   topic: 'Test Automation & Orchestration',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
   segment: 'test-orchestration',
@@ -57,7 +57,7 @@ const articles = [{
 }, {
   slug: 'ai-agents-control-test-benches-with-mcp',
   title: 'How AI Agents Can Control Real Test Benches with MCP',
-  summary: "Why MCP hardware test automation works where raw shell access doesn't — a narrow, typed, authorized set of operations is what makes AI agent hardware control safe to approve.",
+  summary: "Why MCP hardware test automation works where raw shell access doesn't: a narrow, typed, authorized set of operations is what makes AI agent hardware control safe to approve.",
   topic: 'MCP for Hardware Testing',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
   segment: 'hil-testing',
@@ -65,7 +65,7 @@ const articles = [{
 }, {
   slug: 'agentic-ecu-testing-can-to-execution',
   title: 'Agentic ECU Testing: From CAN Signals to Autonomous Test Execution',
-  summary: 'A look at the decode layer underneath CAN test automation — why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy.',
+  summary: 'A look at the decode layer underneath CAN test automation: why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy.',
   topic: 'CAN / ECU Testing',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
   segment: 'can-ecu-testing',
@@ -73,7 +73,7 @@ const articles = [{
 }, {
   slug: 'agentic-testing-ros2-dds-systems',
   title: 'Agentic Testing for ROS 2 & DDS Systems',
-  summary: 'A walkthrough of how an AI agent runs ROS2 test automation end to end — discovering the DDS graph, commanding and gating on telemetry, recording multi-topic evidence, and producing a verdict.',
+  summary: 'A walkthrough of how an AI agent runs ROS2 test automation end to end: discovering the DDS graph, commanding and gating on telemetry, recording multi-topic evidence, and producing a verdict.',
   topic: 'ROS 2 / DDS Testing',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '4 min read',
   segment: 'ros2-dds-testing',

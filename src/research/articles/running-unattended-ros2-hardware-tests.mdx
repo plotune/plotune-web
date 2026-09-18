@@ -16,28 +16,32 @@ Most ROS 2 test workflows are limited by how much a person can watch at once, no
 
 Testing a ROS 2 robot usually starts the same way: SSH into the robot, run `ros2 topic echo` or `ros2 service call` by hand, and eyeball the telemetry scrolling past in a terminal to decide whether a requirement passed. It works, and it's how most teams still validate robotics behavior today. It also doesn't scale past the one person who knows the stack well enough to read that terminal output and judge, in real time, whether what just happened was correct.
 
-That's the real constraint on most ROS 2 test coverage — not compute, not the robot, but how many hours a specific person can spend watching a terminal. Every regression check re-runs the same manual steps. And at the end of it, there's usually no artifact: the "evidence" that a requirement passed is whoever happened to be watching the screen when it did.
+That's the real constraint on most ROS 2 test coverage: not compute, not the robot, but how many hours a specific person can spend watching a terminal. Every regression check re-runs the same manual steps. And at the end of it, there's usually **no artifact**: the "evidence" that a requirement passed is whoever happened to be watching the screen when it did.
 
 ## What "unattended" actually requires
 
 Making a ROS 2 test run without a person watching it isn't just a matter of writing a script that calls the same `ros2` commands non-interactively. Three things have to be true for an unattended run to be trustworthy rather than just unsupervised:
 
-**The test needs to reach the robot without ROS tooling on the test side.** Joining the robot's DDS domain over the network — enumerating participants and topics through the CycloneDDS layer the robot already runs — means the thing driving the test doesn't need a matching ROS environment installed, just network access to the domain and a readiness gate confirming the middleware, clock, and interfaces are actually up before anything is commanded.
+**The test needs to reach the robot without ROS tooling on the test side.** Joining the robot's DDS domain over the network means enumerating participants and topics through the CycloneDDS layer the robot already runs. The thing driving the test doesn't need a matching ROS environment installed, just network access to the domain and a readiness gate confirming the middleware, clock, and interfaces are actually up before anything is commanded.
 
-**The pass/fail decision has to be made on live data, not a fixed wait.** "Send the command, sleep five seconds, check the result" is exactly the pattern that produces flaky tests: too short a wait and the test fails when the robot was simply still working, too long and every run wastes time waiting past the point the answer was already known. Gating the next step on a live telemetry condition — publish a bounded command, then wait for a specific signal on a specific topic to reach the expected value — replaces the guess with a real check.
+**The pass/fail decision has to be made on live data, not a fixed wait.** "Send the command, sleep five seconds, check the result" is exactly the pattern that produces flaky tests: too short a wait and the test fails when the robot was simply still working, too long and every run wastes time waiting past the point the answer was already known. Gating the next step on a live telemetry condition replaces the guess with a real check: publish a bounded command, then wait for a specific signal on a specific topic to reach the expected value.
 
 **The evidence has to be captured while it's still true, not reconstructed afterward.** Recording multiple topics into a single artifact as a bounded, unattended job means the trace exists whether or not anyone was watching when it happened, and a reviewer looking at it a day later sees the same data the operator would have seen live.
 
 ## What a repeatable sequence looks like
 
-Put those three pieces together — join, command-and-gate, record — and a ROS 2 test stops being "one person's terminal session" and becomes a repeatable sequence with a defined start, a defined end, and an ordered verdict: join the domain, publish the command, wait for the telemetry condition, record the window, leave the domain cleanly. That sequence runs the same way whether it's triggered by a person, a CI job, or a schedule, and it produces the same kind of artifact every time — a single recording that covers every topic relevant to the check, not a partial capture assembled from whatever the operator remembered to note down.
+Put those three pieces together, join, command-and-gate, record, and a ROS 2 test stops being "one person's terminal session." It becomes a repeatable sequence with a defined start, a defined end, and an ordered verdict:
 
-This also changes what a regression check costs. Instead of re-running the same manual `ros2` commands and eyeballing new output against old memory, a sequence defined once can be re-run against a new build and diffed against a prior baseline — the same requirement, verified the same way, without requiring the one engineer who knows the stack to sit through it again.
+<FlowDiagram title="One unattended test sequence" steps={["Join the domain", "Publish the command", "Wait for the telemetry condition", "Record the window", "Leave the domain cleanly"]} />
+
+That sequence runs the same way whether it's triggered by a person, a CI job, or a schedule, and it produces the same kind of artifact every time: a single recording that covers every topic relevant to the check, not a partial capture assembled from whatever the operator remembered to note down.
+
+This also changes what a regression check costs. Instead of re-running the same manual `ros2` commands and eyeballing new output against old memory, a sequence defined once can be re-run against a new build and diffed against a prior baseline: the same requirement, verified the same way, without requiring the one engineer who knows the stack to sit through it again.
 
 ## Why the operator still matters
 
-None of this replaces engineering judgment — it changes when that judgment is needed. The engineer still defines what "correct" means: which topic, which condition, which tolerance. What moves is *watching the terminal in real time* to catch the moment a signal crosses that line. That's the part that doesn't need a person present once the requirement is written down as something a machine can check.
+None of this replaces engineering judgment. It changes when that judgment is needed. The engineer still defines what "correct" means: which topic, which condition, which tolerance. What moves is *watching the terminal in real time* to catch the moment a signal crosses that line. That's the part that doesn't need a person present once the requirement is written down as something a machine can check.
 
 <Insight eyebrow="What changes" title="The requirement gets written once. It gets checked every time.">
-Joining the DDS domain, commanding, gating on live telemetry, and recording the evidence turns a terminal session into a sequence — something that can run overnight, on a schedule, or against every new build, without a person re-deriving the steps.
+Joining the DDS domain, commanding, gating on live telemetry, and recording the evidence turns a terminal session into a sequence: something that can run overnight, on a schedule, or against every new build, without a person re-deriving the steps.
 </Insight>
