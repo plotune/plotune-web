@@ -1,5 +1,5 @@
 ﻿import React, { useLayoutEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -45,6 +45,13 @@ import ResearchArticle from './research/ResearchArticle';
 import ResearchResults from './research/ResearchResults';
 import ResearchReports from './research/ResearchReports';
 import ResearchMethodology from './research/ResearchMethodology';
+
+// The pillar page moved from /agentic-test-development to /solutions/agentic-test-development
+// so every funnel destination lives under /solutions/ — this keeps the old URL working.
+const RedirectToSolutionsPillar = () => {
+  const location = useLocation();
+  return <Navigate to={`/solutions/agentic-test-development${location.search}`} replace />;
+};
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
@@ -123,8 +130,9 @@ function App() {
               <Route path="/mirror" element={<PackageMirror />} />
               <Route path="/embed" element={<Embeddings />} />
               <Route path="/nexus" element={<Nexus />} />
+              <Route path="/solutions/agentic-test-development" element={<AgenticTestDevelopmentPage />} />
               <Route path="/solutions/:segment" element={<SolutionPage />} />
-              <Route path="/agentic-test-development" element={<AgenticTestDevelopmentPage />} />
+              <Route path="/agentic-test-development" element={<RedirectToSolutionsPillar />} />
               <Route path="/nexus/connectivity" element={<NexusConnectivity />} />
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />

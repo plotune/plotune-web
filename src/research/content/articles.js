@@ -2,9 +2,10 @@
 
 // `segment` is optional and maps to a key in src/content/solutions.js — when set, the article
 // renders a "see how this workflow can be automated" CTA to /solutions/<segment>. `cta` is an
-// explicit override ({path, summary, label}) for articles whose next step isn't a solution page
-// (e.g. straight to /nexus, or the /agentic-test-development pillar page) — see
-// ResearchArticle.jsx's resolveCta.
+// explicit override ({path, summary, label}) for the handful of articles whose natural next step
+// is a page under /solutions/ that isn't a literal solutionSegments key (the
+// /solutions/agentic-test-development pillar page) — see ResearchArticle.jsx's resolveCta. Every
+// article's funnel destination stays under /solutions/; none link out to /nexus directly.
 const articles = [{
   slug: 'agentic-test-validation-model-comparison',
   title: 'How to read a monthly benchmark release',
@@ -43,7 +44,7 @@ const articles = [{
   summary: 'What "agentic testing" actually means, and how agentic test automation differs from a fixed test script by deciding its next bounded action instead of replaying a fixed one.',
   topic: 'Agentic Test & Development',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
-  cta: { path: '/agentic-test-development', summary: 'Agentic Test & Development: the full comparison, and every workflow it applies to.', label: 'See the full picture' },
+  cta: { path: '/solutions/agentic-test-development', summary: 'Agentic Test & Development: the full comparison, and every workflow it applies to.', label: 'See the full picture' },
   loader: () => import('../articles/what-is-agentic-test-development.mdx'),
 }, {
   slug: 'ai-hardware-in-the-loop-testing',
@@ -59,7 +60,7 @@ const articles = [{
   summary: "Why MCP hardware test automation works where raw shell access doesn't — a narrow, typed, authorized set of operations is what makes AI agent hardware control safe to approve.",
   topic: 'MCP for Hardware Testing',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
-  cta: { path: '/nexus', summary: 'Plotune Nexus is the MCP-based control surface this describes.', label: 'Explore Plotune Nexus' },
+  segment: 'hil-testing',
   loader: () => import('../articles/ai-agents-control-test-benches-with-mcp.mdx'),
 }, {
   slug: 'agentic-ecu-testing-can-to-execution',
@@ -91,7 +92,7 @@ const articles = [{
   summary: 'A framework for AI test automation that scopes autonomous testing by how bounded and reviewable an action is, not by how capable the underlying model happens to be.',
   topic: 'Agentic Test & Development',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
-  cta: { path: '/agentic-test-development', summary: 'Agentic Test & Development: where the line between bounded and autonomous actually sits.', label: 'See the full picture' },
+  cta: { path: '/solutions/agentic-test-development', summary: 'Agentic Test & Development: where the line between bounded and autonomous actually sits.', label: 'See the full picture' },
   loader: () => import('../articles/ai-agents-vs-traditional-test-automation.mdx'),
 }];
 
