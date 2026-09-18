@@ -2,9 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.plotune.net/</loc><lastmod>2026-07-24</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://www.plotune.net/nexus</loc><lastmod>2026-07-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.plotune.net/research</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.plotune.net/research/topics</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.plotune.net/research/reports</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.plotune.net/research</loc><lastmod>2026-09-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.plotune.net/research/reports</loc><lastmod>2026-09-18</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/research/results</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.plotune.net/research/methodology</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.plotune.net/research/articles/agentic-test-validation-model-comparison</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>

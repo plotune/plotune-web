@@ -9,7 +9,7 @@ const ResearchLayout = ({ children }) => {
   const [rssOpen, setRssOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const location = useLocation();
-  const nav = [['/research', 'Benchmark'], ['/research/results', 'Results'], ['/research/reports', 'Reports'], ['/research/methodology', 'Methodology']];
+  const nav = [['/research', 'Benchmark'], ['/research/reports', 'Reports'], ['/research/methodology', 'Methodology']];
   const rssUrl = `${window.location.origin}/research/rss.xml`;
   const copyFeed = async () => {
     if (!navigator.clipboard) return;

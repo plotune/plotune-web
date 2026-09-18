@@ -39,9 +39,7 @@ import NexusUseCases from './pages/NexusUseCases';
 import StreamOverviewPage from './components/streams/StreamOverviewPage';
 import ResearchLayout from './research/ResearchLayout';
 import ResearchOverview from './research/ResearchOverview';
-import ResearchTopics from './research/ResearchTopics';
 import ResearchArticle from './research/ResearchArticle';
-import ResearchAnalysis from './research/ResearchAnalysis';
 import ResearchResults from './research/ResearchResults';
 import ResearchReports from './research/ResearchReports';
 import ResearchMethodology from './research/ResearchMethodology';
@@ -127,10 +125,8 @@ function App() {
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />
               <Route path="/research" element={<ResearchOverview />} />
-              <Route path="/research/topics" element={<ResearchTopics />} />
               <Route path="/research/results" element={<ResearchResults />} />
               <Route path="/research/reports" element={<ResearchReports />} />
-              <Route path="/research/analysis" element={<ResearchAnalysis />} />
               <Route path="/research/methodology" element={<ResearchMethodology />} />
               <Route path="/research/articles/:slug" element={<ResearchArticle />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
