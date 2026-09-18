@@ -9,6 +9,7 @@ export const solutionSegmentAliases = {
 export const solutionSegments = {
   'can-ecu-testing': {
     slug: 'can-ecu-testing',
+    tag: 'can',
     label: 'CAN / ECU Testing',
     heroTitle: 'Automate CAN-based ECU testing without losing the engineer in the loop',
     problem: 'A CAN or ECU test procedure is never just "send a frame." It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day.',
@@ -37,6 +38,7 @@ export const solutionSegments = {
   },
   'ros2-dds-testing': {
     slug: 'ros2-dds-testing',
+    tag: 'ros',
     label: 'ROS 2 / DDS Testing',
     heroTitle: 'Run unattended ROS 2 hardware tests without ROS tooling on your side',
     problem: 'Testing a ROS 2 robot usually means SSHing into the robot, running ros2 CLI commands by hand, and eyeballing topic echoes to decide whether a requirement passed, a process that does not scale past the one person who knows the stack.',
@@ -65,6 +67,7 @@ export const solutionSegments = {
   },
   'test-orchestration': {
     slug: 'test-orchestration',
+    tag: 'orchestration',
     label: 'Test Automation & Orchestration',
     heroTitle: 'Why test automation still requires an engineer in the loop',
     problem: 'Most test automation stops at "run the script." The real bottleneck is upstream: someone still decides which sequence to run, watches it for faults, and re-runs it by hand when a build changes. Automation that still needs a person standing next to it is a faster way to wait, not less waiting.',
@@ -93,6 +96,7 @@ export const solutionSegments = {
   },
   'hil-testing': {
     slug: 'hil-testing',
+    tag: 'hil',
     label: 'AI Hardware-in-the-Loop Testing',
     heroTitle: 'Give AI agents access to real hardware without giving up control of the boundary',
     problem: "Giving an AI agent access to real hardware raises a different question than giving it access to a shell: what happens when it's wrong? Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely.",

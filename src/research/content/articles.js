@@ -6,6 +6,10 @@
 // is a page under /solutions/ that isn't a literal solutionSegments key (the
 // /solutions/agentic-test-development pillar page); see ResearchArticle.jsx's resolveCta. Every
 // article's funnel destination stays under /solutions/; none link out to /nexus directly.
+// `tag` is a short analytics label (matches the linked segment's own `tag` field when one exists,
+// e.g. can/ros/orchestration/hil) exposed on the rendered page for traffic tagging (data
+// attribute, meta tag, and a dataLayer push — see ResearchArticle.jsx). Articles with no segment
+// (the pillar-targeted ones) set it explicitly since there's no segment to derive it from.
 const articles = [{
   slug: 'agentic-test-validation-model-comparison',
   title: 'How to read a monthly benchmark release',
@@ -45,6 +49,7 @@ const articles = [{
   topic: 'Agentic Test & Development',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
   cta: { path: '/solutions/agentic-test-development', summary: 'Agentic Test & Development: the full comparison, and every workflow it applies to.', label: 'See the full picture' },
+  tag: 'agentic-dev',
   loader: () => import('../articles/what-is-agentic-test-development.mdx'),
 }, {
   slug: 'ai-hardware-in-the-loop-testing',
@@ -93,6 +98,7 @@ const articles = [{
   topic: 'Agentic Test & Development',
   publishedAt: '2026-09-18', updatedAt: '2026-09-18', featured: false, published: true, readingTime: '5 min read',
   cta: { path: '/solutions/agentic-test-development', summary: 'Agentic Test & Development: where the line between bounded and autonomous actually sits.', label: 'See the full picture' },
+  tag: 'agentic-dev',
   loader: () => import('../articles/ai-agents-vs-traditional-test-automation.mdx'),
 }];
 

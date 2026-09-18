@@ -10,7 +10,7 @@ const DEFAULT_TITLE = 'Plotune: DataOps Platform & AI-Ready Test Systems';
  * non-varying tags (og:image, og:site_name, twitter:card, etc.) stay static in
  * public/index.html so they are not duplicated.
  */
-const Seo = ({ title, description, path = '/' }) => {
+const Seo = ({ title, description, path = '/', tag }) => {
   const url = `${SITE}${path}`;
   const pageTitle = title || DEFAULT_TITLE;
 
@@ -26,6 +26,10 @@ const Seo = ({ title, description, path = '/' }) => {
 
       <meta name="twitter:title" content={pageTitle} />
       {description && <meta name="twitter:description" content={description} />}
+
+      {/* A page-level analytics tag (e.g. "can", "ros") for traffic-source tools that read
+          meta tags — Cloudflare Zaraz's "Read from HTML" variable type, for one. */}
+      {tag && <meta name="plotune:tag" content={tag} />}
     </Helmet>
   );
 };
