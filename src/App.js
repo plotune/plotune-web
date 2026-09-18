@@ -33,6 +33,7 @@ import StorageManager from './pages/StorageManager';
 import PackageMirror from './pages/PackageMirror';
 import Embeddings from './pages/Embeddings';
 import Nexus from './pages/Nexus';
+import SolutionPage from './pages/SolutionPage';
 import NexusConnectivity from './pages/NexusConnectivity';
 import NexusStream from './pages/NexusStream';
 import NexusUseCases from './pages/NexusUseCases';
@@ -121,6 +122,7 @@ function App() {
               <Route path="/mirror" element={<PackageMirror />} />
               <Route path="/embed" element={<Embeddings />} />
               <Route path="/nexus" element={<Nexus />} />
+              <Route path="/solutions/:segment" element={<SolutionPage />} />
               <Route path="/nexus/connectivity" element={<NexusConnectivity />} />
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />

@@ -1,5 +1,7 @@
 ﻿import { buildModelComparisonChart } from './charts';
 
+// `segment` is optional and maps to a key in src/content/solutions.js — when set, the article
+// renders a "see how this workflow can be automated" CTA to /solutions/<segment>.
 const articles = [{
   slug: 'agentic-test-validation-model-comparison',
   title: 'How to read a monthly benchmark release',
@@ -12,8 +14,3 @@ const articles = [{
 
 export const publishedResearchArticles = articles.filter((article) => article.published);
 export const getResearchArticle = (slug) => publishedResearchArticles.find((article) => article.slug === slug);
-export const researchTopics = [
-  { name: 'Agentic Test & Validation', description: 'Monthly benchmark readouts and workflow studies.', status: 'Active' },
-  { name: 'Model Comparisons', description: 'Versioned results through common task manifests.', status: 'In development' },
-  { name: 'Hardware Comparisons', description: 'Inference hardware performance and operating trade-offs.', status: 'In development' },
-];
