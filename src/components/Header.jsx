@@ -1,7 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShare2, FiServer, FiShoppingBag, FiBookOpen } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
+
+// SVG icons instead of the Material Icons ligature font: that font is an external Google Fonts
+// load, and when it fails (slow network, ad blocker, offline) the ligature falls back to its
+// literal name as visible text (e.g. a login link showing "account_circle").
+const navIconMap = {
+  person: FiUser, dashboard: FiGrid, stream: FiActivity, account_tree: FiShare2,
+  dns: FiServer, store: FiShoppingBag, science: FiBookOpen,
+};
+const NavIcon = ({ name, className }) => {
+  const Icon = navIconMap[name];
+  return Icon ? <Icon className={className} /> : null;
+};
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -83,7 +96,7 @@ const Header = () => {
           className={`flex items-center gap-2 ${linkClass}`}
           onClick={() => setIsMobileMenuOpen(false)} // External link tıklandığında menüyü kapat
         >
-          {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
+          {item.icon && <NavIcon name={item.icon} className="text-lg" />}
           {item.label}
         </a>
       );
@@ -96,7 +109,7 @@ const Header = () => {
             to={item.to}
             className={`flex items-center gap-2 ${linkClass}`}
           >
-            {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
+            {item.icon && <NavIcon name={item.icon} className="text-lg" />}
             {item.label}
           </Link>
           {/* Positioner carries a transparent top padding so the hover area
@@ -143,7 +156,7 @@ const Header = () => {
         // onClick={() => setIsMobileMenuOpen(false)}
         // Ancak useEffect zaten kapatıyor, bu nedenle gerek yok.
       >
-        {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
+        {item.icon && <NavIcon name={item.icon} className="text-lg" />}
         {item.label}
       </Link>
     );
@@ -174,7 +187,7 @@ const Header = () => {
                   onClick={handleLogout}
                   className="flex items-center gap-2 w-full text-left text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
                 >
-                  <span className="material-icons text-lg">logout</span>
+                  <FiLogOut className="text-lg" />
                 </button>
               </li>
             )}
@@ -187,7 +200,7 @@ const Header = () => {
                     className="block text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                <span className="material-icons text-2xl">account_circle</span>
+                <FiUser className="text-2xl" />
                   </Link>
                 </li>
               </>
@@ -202,7 +215,7 @@ const Header = () => {
                 onClick={handleLogout}
                 className="flex items-center gap-2 text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
               >
-                <span className="material-icons text-lg">logout</span>
+                <FiLogOut className="text-lg" />
               </button>
             ) : (
               // Login/Register for non-logged-in users (desktop)
@@ -211,7 +224,7 @@ const Header = () => {
                   to="/login"
                   className="text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
                 >
-                <span className="material-icons text-2xl">account_circle</span>
+                <FiUser className="text-2xl" />
                 </Link>
               </>
             )}
@@ -223,7 +236,7 @@ const Header = () => {
             onClick={toggleMobileMenu} 
             aria-label="Toggle mobile menu"
           >
-            <span className="material-icons">menu</span>
+            <FiMenu />
           </button>
         </nav>
       </div>

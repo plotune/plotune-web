@@ -79,7 +79,7 @@ const SolutionPage = () => {
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div>
                 <h3 className="text-2xl font-semibold text-light-text">See this mapped to your bench.</h3>
-                <p className="mt-2 text-gray-text">Plotune Nexus is one product — this is how it runs against a {config.label.toLowerCase()} workflow.</p>
+                <p className="mt-2 text-gray-text">Plotune Nexus is one product — this is how it runs against {config.label}.</p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link to={withFunnelParams('/nexus', { segment: config.slug, solution: config.slug })} className="inline-flex items-center justify-center gap-2 rounded-full bg-white/[0.06] px-6 py-3 font-semibold text-light-text transition-all duration-300 hover:bg-white/[0.1]">
