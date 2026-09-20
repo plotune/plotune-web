@@ -3,15 +3,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../context/AuthContext';
 import { 
-  FaGithub, 
   FaDocker, 
   FaPlay, 
   FaStop, 
   FaTrash, 
   FaCopy,
   FaSync,
-  FaCheckCircle,
-  FaExternalLinkAlt ,
   FaClock,
   FaEye,
   FaBox,
@@ -27,10 +24,8 @@ const PackageMirror = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [formData, setFormData] = useState({
     packageUrl: '',
-    token: '',
     tag: 'latest'
   });
-  const [showTokenHelp, setShowTokenHelp] = useState(false);
 
   // Mock data for demonstration
   const mockPackages = [
@@ -112,7 +107,7 @@ const PackageMirror = () => {
       };
 
       setPackages([newPackage, ...packages]);
-      toast.success('Package sync started successfully!');
+      toast.success('Demo started — nothing was synced');
       
       // Simulate sync completion
       setTimeout(() => {
@@ -127,7 +122,7 @@ const PackageMirror = () => {
                   'Successfully authenticated',
                   'Pulling latest image from GHCR',
                   'Image verified and ready for Plotune ecosystem',
-                  'Sync completed successfully'
+                  'Demo complete — nothing was synced'
                 ] 
               }
             : pkg
@@ -136,7 +131,6 @@ const PackageMirror = () => {
 
       setFormData({
         packageUrl: '',
-        token: '',
         tag: 'latest'
       });
       setActiveSection('manage');
@@ -145,6 +139,8 @@ const PackageMirror = () => {
   };
 
   const handleAction = async (packageId, action) => {
+    if (action === 'delete' && !window.confirm('Remove this package from your list?')) return;
+
     setPackages(prev => prev.map(pkg => 
       pkg.id === packageId 
         ? { ...pkg, status: 'processing' }
@@ -198,7 +194,7 @@ const PackageMirror = () => {
                 : pkg
             ));
           }, 1500);
-          toast.success('Sync started');
+          toast.success('Demo sync started — nothing was synced');
           break;
       }
     }, 800);
@@ -231,7 +227,12 @@ const PackageMirror = () => {
           <FaBox className="text-primary text-2xl" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-light-text">Sync GitHub Packages</h2>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h2 className="text-xl font-semibold text-light-text">Sync GitHub Packages</h2>
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-400 whitespace-nowrap">
+              Preview — sync runs locally as a demo
+            </span>
+          </div>
           <p className="text-gray-text">Connect your private GitHub packages to Plotune ecosystem</p>
         </div>
       </div>
@@ -255,7 +256,7 @@ const PackageMirror = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
           <div>
             <label className="block text-gray-text mb-2">Tag</label>
             <input
@@ -267,56 +268,7 @@ const PackageMirror = () => {
             />
             <p className="text-gray-text text-xs mt-2">Container tag (default: latest)</p>
           </div>
-          
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-gray-text">
-                GitHub Token (Optional)
-              </label>
-              <button
-                type="button"
-                onClick={() => setShowTokenHelp(!showTokenHelp)}
-                className="text-primary hover:text-primary-dark text-sm transition"
-              >
-                {showTokenHelp ? 'Hide info' : 'Need token?'}
-              </button>
-            </div>
-            <input
-              type="password"
-              value={formData.token}
-              onChange={(e) => setFormData({ ...formData, token: e.target.value })}
-              placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-            <p className="text-gray-text text-xs mt-2">
-              Required only for private packages
-            </p>
-          </div>
         </div>
-
-        {showTokenHelp && (
-          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
-            <h4 className="text-light-text font-medium mb-2 flex items-center">
-              <FaGithub className="mr-2" />
-              GitHub Token Required?
-            </h4>
-            <div className="text-gray-text text-sm space-y-2">
-              <p>Only needed if your package is <strong>private</strong>. Public packages work without token.</p>
-              <div className="flex items-start mt-2">
-                <FaCheckCircle className="text-green-400 mt-1 mr-2 flex-shrink-0" />
-                <span>We only request <code className="bg-dark-surface backdrop-blur-xl px-1 rounded">read:packages</code> permission</span>
-              </div>
-              <a 
-                href="https://github.com/settings/tokens/new?description=Plotune+access+for+private+packages&scopes=read:packages"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-primary hover:text-primary-dark mt-2"
-              >
-                Create GitHub Token <FaExternalLinkAlt className="ml-1" />
-              </a>
-            </div>
-          </div>
-        )}
 
         <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
           <h4 className="text-light-text font-medium mb-3">How it works</h4>
@@ -415,7 +367,8 @@ const PackageMirror = () => {
                             </code>
                             <button
                               onClick={() => copyToClipboard(`docker pull ${pkg.source}:${pkg.tag}`)}
-                              className="text-primary hover:text-primary-dark ml-2 flex-shrink-0"
+                              className="text-primary hover:text-primary-dark ml-2 flex-shrink-0 p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg"
+                              aria-label="Copy package name"
                             >
                               <FaCopy size={14} />
                             </button>
@@ -453,27 +406,30 @@ const PackageMirror = () => {
                       <button
                         onClick={() => handleAction(pkg.id, 'sync')}
                         disabled={pkg.status === 'processing'}
-                        className="p-2 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg transition"
+                        className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg transition"
                         title="Sync with latest version"
+                        aria-label="Sync now"
                       >
                         <FaSync className={pkg.status === 'syncing' ? 'animate-spin' : ''} />
                       </button>
                       <button
                         onClick={() => handleAction(pkg.id, pkg.status === 'active' ? 'stop' : 'start')}
                         disabled={pkg.status === 'processing' || pkg.status === 'syncing'}
-                        className={`p-2 rounded-lg transition ${
+                        className={`p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg transition ${
                           pkg.status === 'active'
                             ? 'text-yellow-400 hover:text-yellow-300 hover:bg-white/5'
                             : 'text-green-400 hover:text-green-300 hover:bg-white/5'
                         }`}
                         title={pkg.status === 'active' ? 'Deactivate' : 'Activate'}
+                        aria-label={pkg.status === 'active' ? 'Stop' : 'Start'}
                       >
                         {pkg.status === 'active' ? <FaStop /> : <FaPlay />}
                       </button>
                       <button
                         onClick={() => handleAction(pkg.id, 'delete')}
-                        className="p-2 text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg transition"
+                        className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg transition"
                         title="Remove Package"
+                        aria-label="Remove package"
                       >
                         <FaTrash />
                       </button>
@@ -520,7 +476,7 @@ const PackageMirror = () => {
 
             <div className="bg-dark-bg rounded-lg border border-white/10 overflow-hidden">
               <div className="px-4 py-3 bg-dark-surface backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
-                <span className="text-light-text font-medium">Live Logs</span>
+                <span className="text-light-text font-medium">Sync Logs</span>
                 <span className="text-gray-text text-sm">Updated: {formatDate(selectedPackage.lastSynced)}</span>
               </div>
               <div className="p-4 font-mono text-sm">

@@ -20,14 +20,19 @@ import {
 } from 'react-icons/fa';
 import { saveAs } from 'file-saver';
 import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom';
+
+// Maximum upload size in megabytes (enforced in handleFileSelect and shown in the dropzone)
+const MAX_FILE_SIZE_MB = 20;
+
 const StorageManager = () => {
   const { token, logout } = useContext(AuthContext);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [totalUsage, setTotalUsage] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef(null);
@@ -73,6 +78,7 @@ const StorageManager = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    setError(false);
     const cachebuster = uuidv4();
     try {
       // Fetch files list
@@ -89,8 +95,12 @@ const StorageManager = () => {
       setFiles(filesResponse.data.files || []);
       setTotalUsage(usageResponse.data.storage || 0);
     } catch (err) {
-      if (err.response?.status === 401) logout();
-      toast.error('Failed to load files');
+      if (err.response?.status === 401) {
+        logout();
+      } else {
+        setError(true);
+        toast.error('Failed to load files');
+      }
     } finally {
       setLoading(false);
     }
@@ -104,9 +114,9 @@ const StorageManager = () => {
     const file = event.target.files[0];
     if (!file) return;
     
-    // Check file size (max 50MB)
-    if (file.size > 20 * 1024 * 1024) {
-      toast.error('File size exceeds 25MB limit');
+    // Check file size (max 20MB)
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      toast.error(`File size exceeds the ${MAX_FILE_SIZE_MB} MB limit`);
       return;
     }
     
@@ -116,7 +126,6 @@ const StorageManager = () => {
 
 const handleUpload = async (file) => {
   setUploading(true);
-  setUploadProgress(0);
   
   try {
     const urlResponse = await api.get('/s3/user/upload_url', {
@@ -143,14 +152,19 @@ const handleUpload = async (file) => {
       setSelectedFile(null);
     } else {
       const errorText = await response.text();
-      throw new Error(errorText);
+      console.error('Upload failed:', response.status, errorText);
+      if (response.status === 403) {
+        toast.error("You don't have permission to upload right now. Contact support if this persists.");
+      } else {
+        toast.error('Upload failed. Please try again.');
+      }
     }
 
   } catch (err) {
-    toast.error(`Upload failed: ${err.message}`);
+    console.error('Upload failed:', err);
+    toast.error('Upload failed. Please try again.');
   } finally {
     setUploading(false);
-    setUploadProgress(0);
   }
 };
   const handleDownload = async (filePath) => {
@@ -261,7 +275,7 @@ const handleUpload = async (file) => {
                 <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-text">Used Space</span>
-                    <span className="text-light-text font-semibold">{totalUsage.toFixed(2)} MB</span>
+                    <span className="text-light-text font-semibold">{totalUsage.toFixed(2)} MB of 1 GB used</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div 
@@ -315,18 +329,15 @@ const handleUpload = async (file) => {
                   {uploading ? (
                     <div className="space-y-2">
                       <p className="text-light-text">Uploading {selectedFile?.name}</p>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${uploadProgress}%` }}
-                        ></div>
-                      </div>
-                      <p className="text-sm text-gray-text">{uploadProgress}%</p>
+                      <p className="text-sm text-gray-text flex items-center justify-center">
+                        <FaSpinner className="animate-spin mr-2" />
+                        Uploading… this may take a moment
+                      </p>
                     </div>
                   ) : (
                     <>
                       <p className="text-light-text mb-2">Click or drag to upload</p>
-                      <p className="text-gray-text text-sm">Max file size: 25MB</p>
+                      <p className="text-gray-text text-sm">Max file size: {MAX_FILE_SIZE_MB} MB</p>
                     </>
                   )}
                 </div>
@@ -382,7 +393,19 @@ const handleUpload = async (file) => {
               </div>
 
               {/* File List Table */}
-              {filteredFiles.length === 0 ? (
+              {error ? (
+                <div className="text-center py-12">
+                  <FaFile className="text-5xl text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-light-text text-lg mb-2">Couldn't load your files.</h3>
+                  <p className="text-gray-text mb-4">Something went wrong while fetching your file list.</p>
+                  <button
+                    onClick={fetchData}
+                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : filteredFiles.length === 0 ? (
                 <div className="text-center py-12">
                   <FaFile className="text-5xl text-gray-600 mx-auto mb-4" />
                   <h3 className="text-light-text text-lg mb-2">No files found</h3>
@@ -413,12 +436,6 @@ const handleUpload = async (file) => {
                           </div>
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-text uppercase tracking-wider">
-                          Type
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-text uppercase tracking-wider">
-                          Path
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-text uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
@@ -431,8 +448,7 @@ const handleUpload = async (file) => {
                         return (
                           <tr 
                             key={index} 
-                            className="hover:bg-white/5 transition-colors cursor-pointer"
-                            onClick={() => handleDownload(filePath)}
+                            className="hover:bg-white/5 transition-colors"
                           >
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
@@ -449,27 +465,21 @@ const handleUpload = async (file) => {
                                 </div>
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-900/30 text-blue-300">
-                                {fileExtension}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-text truncate max-w-xs">
-                              {filePath}
-                            </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                              <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex items-center space-x-2">
                                 <button
                                   onClick={() => handleDownload(filePath)}
-                                  className="text-blue-400 hover:text-blue-300 transition p-2 hover:bg-white/10 rounded-lg"
+                                  className="text-blue-400 hover:text-blue-300 transition p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-white/10 rounded-lg"
                                   title="Download"
+                                  aria-label={`Download ${fileName}`}
                                 >
                                   <FaDownload />
                                 </button>
                                 <button
                                   onClick={() => handleDelete(filePath)}
-                                  className="text-red-400 hover:text-red-300 transition p-2 hover:bg-white/10 rounded-lg"
+                                  className="text-red-400 hover:text-red-300 transition p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-white/10 rounded-lg"
                                   title="Delete"
+                                  aria-label={`Delete ${fileName}`}
                                 >
                                   <FaTrash />
                                 </button>
@@ -509,8 +519,8 @@ const handleUpload = async (file) => {
                     <h4 className="text-light-text font-medium">Do you need more management ? </h4>
                     <p className="text-gray-text text-sm mt-1">
                       Consider using, {' '}
-                      <a href="/extensions" className="text-primary hover:underline">Extensions</a> or{' '}
-                      <a href="/extensions" className="text-primary hover:underline">Stream Nodes</a> for better performance.
+                      <Link to="/extensions" className="text-primary hover:underline">Extensions</Link> or{' '}
+                      <Link to="/streams" className="text-primary hover:underline">Stream Nodes</Link> for better performance.
                     </p>
                   </div>
                 </div>
