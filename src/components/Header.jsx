@@ -39,7 +39,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    setIsDropdownOpen(false);
+    setOpenDropdown(null);
   };
 
   // Navigation items for non-logged-in users
