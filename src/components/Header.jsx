@@ -50,7 +50,8 @@ const Header = () => {
   }, [openDropdown]);
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((current) => !current);
+    setOpenDropdown(null);
   };
 
   const toggleDropdown = (itemPath) => {

@@ -13,33 +13,42 @@ const ContactPage = () => {
     }
 
     // Load Zammad form script
-    const initializeForm = () => {
-      if (!document.getElementById('zammad_form_script')) {
-        const zammadScript = document.createElement('script');
-        zammadScript.id = 'zammad_form_script';
-        zammadScript.src = 'https://support.plotune.net/assets/form/form.js';
-        zammadScript.onload = () => {
-          // Initialize Zammad form
-          if (window.jQuery && window.jQuery.fn.ZammadForm) {
-            $('#zammad-support-form').ZammadForm({
-              agreementMessage: 'I accept the <a href="https://www.plotune.net/legal" target="_blank">Data Privacy Policy & Acceptable Use Policy</a>',
-              messageTitle: 'Support Request',
-              messageSubmit: 'Submit',
-              messageThankYou: 'Thank you for your inquiry (#%s)! We\'ll contact you as soon as possible.',
-              debug: false,
-              showTitle: true,
-              modal: false,
-              noCSS: true,
-              attachmentSupport: true
-            });
-            setFormState('ready');
-          } else {
-            setFormState('error');
-          }
-        };
-        zammadScript.onerror = () => setFormState('error');
-        document.head.appendChild(zammadScript);
+    const initializeWidget = () => {
+      // Initialize Zammad form
+      if (window.jQuery && window.jQuery.fn.ZammadForm) {
+        $('#zammad-support-form').ZammadForm({
+          agreementMessage: 'I accept the <a href="https://www.plotune.net/legal" target="_blank">Data Privacy Policy & Acceptable Use Policy</a>',
+          messageTitle: 'Support Request',
+          messageSubmit: 'Submit',
+          messageThankYou: 'Thank you for your inquiry (#%s)! We\'ll contact you as soon as possible.',
+          debug: false,
+          showTitle: true,
+          modal: false,
+          noCSS: true,
+          attachmentSupport: true
+        });
+        setFormState('ready');
+      } else {
+        setFormState('error');
       }
+    };
+
+    const initializeForm = () => {
+      if (document.getElementById('zammad_form_script')) {
+        // Script already loaded on a previous mount (route re-visit) — the tag
+        // persists across client-side navigation even though this component and
+        // its #zammad-support-form div were unmounted, so re-run the widget
+        // init directly instead of waiting on a load event that will never fire.
+        initializeWidget();
+        return;
+      }
+
+      const zammadScript = document.createElement('script');
+      zammadScript.id = 'zammad_form_script';
+      zammadScript.src = 'https://support.plotune.net/assets/form/form.js';
+      zammadScript.onload = initializeWidget;
+      zammadScript.onerror = () => setFormState('error');
+      document.head.appendChild(zammadScript);
     };
 
     // Wait for jQuery to load
@@ -133,7 +142,7 @@ const ContactPage = () => {
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Plotune Location — Aydınlı Mah., 34485 Tuzla/İstanbul"
+                  title="Plotune Location: Aydınlı Mah., 34485 Tuzla/İstanbul"
                 ></iframe>
               </div>
 
@@ -180,7 +189,7 @@ const ContactPage = () => {
             >
               <p className="font-semibold text-white">We couldn’t load the support form.</p>
               <p className="mt-2 text-sm">
-                Your message still reaches us — email it directly to{' '}
+                Your message still reaches us: email it directly to{' '}
                 <a className="text-primary underline" href="mailto:contact@plotune.net">
                   contact@plotune.net
                 </a>{' '}

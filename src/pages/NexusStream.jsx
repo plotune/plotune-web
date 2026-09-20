@@ -97,7 +97,7 @@ const NexusStream = () => {
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Always-on</p>
                 <span
                   className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary"
-                  title="Illustrative diagram — not a live connection status"
+                  title="Illustrative diagram: not a live connection status"
                 >
                   <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-primary" />
                   Illustrative diagram

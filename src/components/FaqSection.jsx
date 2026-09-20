@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const FaqSection = () => {
   const [activeFaq, setActiveFaq] = useState(null);
@@ -61,9 +62,12 @@ const FaqSection = () => {
       question: 'Where can I get older versions of Plotune?',
       answer: (
         <p>
-          Need an older version of Plotune? Contact us and we&apos;ll help you find the right
-          release for your setup. We recommend always using the latest stable version unless you
-          have specific compatibility requirements.
+          Need an older version of Plotune?{' '}
+          <Link to="/contact" className="text-primary hover:underline">
+            Contact us
+          </Link>{' '}
+          and we&apos;ll help you find the right release for your setup. We recommend always
+          using the latest stable version unless you have specific compatibility requirements.
         </p>
       ),
     },
@@ -82,15 +86,17 @@ const FaqSection = () => {
               key={index}
               className={`bg-dark-card rounded-custom p-4 border border-white/5 ${activeFaq === index ? 'shadow-custom' : ''}`}
             >
-              <button
-                type="button"
-                className="flex w-full min-h-[44px] justify-between items-center cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-                aria-expanded={activeFaq === index}
-                onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-              >
-                <span className="text-lg font-semibold text-light-text">{faq.question}</span>
-                <i className={`fas fa-chevron-down text-primary transition-transform ${activeFaq === index ? 'rotate-180' : ''}`} aria-hidden="true"></i>
-              </button>
+              <h3 className="text-lg font-semibold text-light-text">
+                <button
+                  type="button"
+                  className="flex w-full min-h-[44px] justify-between items-center gap-2 cursor-pointer text-left font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                  aria-expanded={activeFaq === index}
+                  onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                >
+                  <span>{faq.question}</span>
+                  <i className={`fas fa-chevron-down text-primary transition-transform ${activeFaq === index ? 'rotate-180' : ''}`} aria-hidden="true"></i>
+                </button>
+              </h3>
               {activeFaq === index && (
                 <div className="mt-3 text-gray-text">{faq.answer}</div>
               )}

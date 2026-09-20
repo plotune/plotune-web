@@ -180,7 +180,7 @@ const NexusConnectivity = () => {
               Ready to connect your test environment?
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-text">
-              See Plotune Nexus working with your CAN, XCP, and measurement setup — and where connected validation can take your team next.
+              See Plotune Nexus working with your CAN, XCP, and measurement setup, and where connected validation can take your team next.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">

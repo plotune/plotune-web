@@ -39,7 +39,7 @@ const Footer = () => {
                   href="https://github.com/plotune/plotune-web/discussions"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex min-h-[44px] items-center gap-2 text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300 ${location.pathname === '/community' ? 'text-primary' : ''}`}
+                  className="flex min-h-[44px] items-center gap-2 text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
                 >
                   Community
                   <span aria-hidden="true" className="text-xs">↗</span>
