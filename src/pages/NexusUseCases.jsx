@@ -99,7 +99,7 @@ const industries = [
       {
         title: 'XCP-on-Ethernet measurement',
         copy:
-          'Reach ECUs over IP with XCP-on-Ethernet, auto-detecting host and port from the A2L XCP_ON_ETH block — including Ethernet-only A2Ls that omit CAN TP_BLOB metadata.',
+          'Reach ECUs over IP with XCP-on-Ethernet, auto-detecting host and port from the A2L file.',
         chips: ['XCP / Ethernet', 'A2L auto-detect', 'UDP'],
         result: {
           run: 'xcp-eth-measure',
@@ -145,7 +145,7 @@ const industries = [
   },
   {
     id: 'robotics',
-    label: 'Robotics & Autonomous Systems',
+    label: 'Robotics (CAN / UART / bench)',
     blurb:
       'When a robot throws a fault, the old workflow is procedure execution: pull the logs, find the frame, apply the documented mitigation, verify it cleared, write the report. Nexus runs the bounded part and returns before-and-after evidence — the engineer still owns the judgment call.',
     features: [
@@ -234,7 +234,7 @@ const industries = [
   },
   {
     id: 'ros2-dds',
-    label: 'ROS 2 & Autonomous Robotics',
+    label: 'ROS 2 & DDS (telemetry / supervision)',
     blurb:
       'Point Plotune Nexus at a ROS 2 / DDS robot and it becomes the test-and-supervision instrument over the wire — with no ROS tooling on the operator side. It joins the robot’s DDS domain through its CycloneDDS backend, reads telemetry, injects bounded commands, records MCAP evidence, and gates requirements on live signals.',
     features: [
@@ -279,7 +279,7 @@ const industries = [
             ['Command', 'Twist x+y+yaw'],
             ['Result pose', '(3.45, 0.57)'],
             ['Heading θ', '2.87 rad'],
-            ['Stop-on-zero', 'odom → 3.3e-16'],
+            ['Stop-on-zero', 'odom → ~0 (exact)'],
           ],
         },
       },
@@ -515,7 +515,7 @@ const industries = [
       {
         title: 'Raw UDS request / response',
         copy:
-          'Issue raw UDS services over CAN or DoIP and get structured negative-response handling back — including NRC 0x78 request-received-response-pending extended waits — as a low-level, bounded diagnostic surface. Curated VIN/DTC flows sit above this as a follow-up layer.',
+          'Issue raw UDS services over CAN or DoIP and get structured negative-response handling back — including extended pending-response waits (NRC 0x78) handled automatically — as a low-level, bounded diagnostic surface. Curated VIN/DTC flows sit above this as a follow-up layer.',
         chips: ['UDS', 'CAN / DoIP', 'NRC-aware'],
         result: {
           run: 'uds-raw-request',
@@ -814,7 +814,8 @@ const motionCss = `
 
   @media (prefers-reduced-motion: reduce) {
     .use-case-row,
-    .use-case-status {
+    .use-case-status,
+    .use-case-loading-spinner {
       animation: none !important;
     }
   }
@@ -830,7 +831,7 @@ const IndustryTab = ({ industry, isActive, onSelect }) => (
   <button
     type="button"
     onClick={onSelect}
-    className={`rounded-full px-4 py-2.5 text-xs font-semibold transition-all duration-300 sm:text-sm ${
+    className={`rounded-full px-4 py-3 text-xs font-semibold transition-all duration-300 sm:text-sm ${
       isActive
         ? 'bg-primary text-white shadow-custom'
         : 'bg-white/[0.04] text-gray-text hover:bg-white/[0.08] hover:text-light-text'
@@ -910,7 +911,7 @@ const HeroProof = ({ family, scenario, cycle }) => {
           <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{family.shell}</p>
           <h2 className="mt-3 text-2xl font-semibold text-light-text">{scenario.label}</h2>
         </div>
-        <span className="use-case-status rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <span title="Example outcome" className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
           {scenario.status}
         </span>
       </div>
@@ -938,7 +939,7 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
         <div className="min-w-0">
           <h3 className="text-xl font-semibold text-light-text">{scenario.label}</h3>
         </div>
-        <span className="use-case-status shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <span title="Example outcome" className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
           {scenario.status}
         </span>
       </div>
@@ -959,32 +960,34 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
 const ResultMatrix = ({ scenarios }) => (
   <div className="rounded-[2rem] bg-dark-card/80 p-4 shadow-custom">
     <div className="overflow-hidden rounded-[1.5rem] bg-dark-surface/75">
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr className="text-[11px] uppercase tracking-[0.22em] text-gray-text">
-            <th className="px-4 py-4 font-semibold">Scenario</th>
-            <th className="px-4 py-4 font-semibold">Output</th>
-            <th className="px-4 py-4 font-semibold">State</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scenarios.map((scenario, index) => (
-            <tr
-              key={scenario.id}
-              className="use-case-row text-light-text"
-              style={{ animationDelay: `${index * 0.42}s` }}
-            >
-              <td className="px-4 py-4 font-semibold">{scenario.label}</td>
-              <td className="px-4 py-4 text-gray-text">{scenario.chips[0]}</td>
-              <td className="px-4 py-4">
-                <span className="rounded-full bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-                  {scenario.status}
-                </span>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="text-[11px] uppercase tracking-[0.22em] text-gray-text">
+              <th className="px-4 py-4 font-semibold">Scenario</th>
+              <th className="px-4 py-4 font-semibold">Output</th>
+              <th className="px-4 py-4 font-semibold">State</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {scenarios.map((scenario, index) => (
+              <tr
+                key={scenario.id}
+                className="use-case-row text-light-text"
+                style={{ animationDelay: `${index * 0.42}s` }}
+              >
+                <td className="px-4 py-4 font-semibold">{scenario.label}</td>
+                <td className="px-4 py-4 text-gray-text">{scenario.chips[0]}</td>
+                <td className="px-4 py-4">
+                  <span className="rounded-full bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                    {scenario.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 );
@@ -999,6 +1002,7 @@ const NexusUseCases = () => {
   const [activeScenarioByFamily, setActiveScenarioByFamily] = useState({ claude: 0, codex: 0 });
   const [frameSeed, setFrameSeed] = useState(0);
   const [artifactCycle, setArtifactCycle] = useState(0);
+  const [frameLoaded, setFrameLoaded] = useState(false);
 
   const activeIndustryConfig =
     industries.find((industry) => industry.id === activeIndustry) || industries[0];
@@ -1014,6 +1018,10 @@ const NexusUseCases = () => {
 
     return `${activeFamilyConfig.src}?${params.toString()}`;
   }, [activeFamilyConfig.src, activeScenario, frameSeed]);
+
+  useEffect(() => {
+    setFrameLoaded(false);
+  }, [activeFamily, frameSeed]);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -1082,6 +1090,26 @@ const NexusUseCases = () => {
                   <FiArrowRight />
                 </a>
               </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href="#runtime"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:border-primary/40 hover:text-white"
+                >
+                  Runtime
+                </a>
+                <a
+                  href="#artifacts"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:border-primary/40 hover:text-white"
+                >
+                  Artifacts
+                </a>
+                <a
+                  href="#industries"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:border-primary/40 hover:text-white"
+                >
+                  By industry
+                </a>
+              </div>
             </div>
 
             <HeroProof
@@ -1104,7 +1132,7 @@ const NexusUseCases = () => {
         </div>
       </section>
 
-      <section className="pb-24">
+      <section id="runtime" className="scroll-mt-24 pb-24">
         <div className="container mx-auto px-5">
           <div className="rounded-[2rem] bg-dark-card/80 p-3 shadow-2xl backdrop-blur-xl md:p-4">
             <div className="flex items-center justify-between px-3 pb-3 pt-1">
@@ -1114,18 +1142,33 @@ const NexusUseCases = () => {
               </span>
             </div>
 
-            <div className="overflow-hidden rounded-[1.5rem] bg-[#090a0c]">
+            <div className="relative overflow-hidden rounded-[1.5rem] bg-[#090a0c]">
               <iframe
                 key={`${activeFamily}-${frameSeed}`}
                 src={frameSrc}
                 title={`${activeFamilyConfig.label} use cases`}
                 className="h-[33rem] w-full border-0 bg-[#090a0c] md:h-[40rem] xl:h-[46rem]"
                 loading="eager"
+                onLoad={() => setFrameLoaded(true)}
               />
+              {!frameLoaded && (
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <div
+                    role="status"
+                    className="flex items-center gap-2 rounded-full border border-white/15 bg-dark-card/90 px-4 py-2 text-sm text-gray-text shadow-custom"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="use-case-loading-spinner h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/20 border-t-primary"
+                    />
+                    Loading runtime…
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="mt-8 flex items-end justify-between gap-6">
+          <div id="artifacts" className="mt-8 flex scroll-mt-24 items-end justify-between gap-6">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Artifacts</p>
               <h2 className="mt-4 text-3xl font-semibold text-light-text md:text-4xl">
@@ -1151,7 +1194,7 @@ const NexusUseCases = () => {
             <ResultMatrix scenarios={activeFamilyConfig.scenarios} />
           </div>
 
-          <div className="mt-24">
+          <div id="industries" className="mt-24 scroll-mt-24">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Scenarios by industry</p>
             <h2 className="mt-4 text-3xl font-semibold text-light-text md:text-4xl">
               See how Plotune Nexus works in your world
@@ -1160,7 +1203,7 @@ const NexusUseCases = () => {
               Select your industry to see the bounded workflows Plotune Nexus runs on real hardware — and the evidence each one leaves behind.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-2">
+            <div className="mt-8 flex flex-wrap gap-3">
               {industries.map((industry) => (
                 <IndustryTab
                   key={industry.id}
@@ -1179,7 +1222,7 @@ const NexusUseCases = () => {
                 </div>
                 <a
                   href={demoMailto(activeIndustryConfig.label)}
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-gray-text transition-all duration-300 hover:border-primary/40 hover:text-white"
                 >
                   Request a Demo
                   <FiArrowRight />
