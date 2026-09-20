@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShare2, FiServer, FiShoppingBag, FiBookOpen } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShare2, FiServer, FiShoppingBag, FiBookOpen, FiChevronDown } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
 
@@ -18,7 +18,7 @@ const NavIcon = ({ name, className }) => {
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const { user, logout } = useContext(AuthContext);
   const isLoggedIn = !!user;
   const location = useLocation();
@@ -26,14 +26,15 @@ const Header = () => {
   // Lokasyon değiştiğinde mobile menüyü kapat
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setOpenDropdown(null);
   }, [location]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = (itemPath) => {
+    setOpenDropdown((current) => current === itemPath ? null : itemPath);
   };
 
   const handleLogout = () => {
@@ -81,7 +82,7 @@ const Header = () => {
 
   const renderNavLink = (item) => {
     const isActive = location.pathname === item.to || item.children?.some((child) => location.pathname === child.to);
-    const linkClass = `text-dark-text font-medium text-base hover:text-primary relative transition-colors duration-300 ${
+    const linkClass = `min-h-[44px] text-dark-text font-medium text-base hover:text-primary relative transition-colors duration-300 ${
       isActive 
         ? 'text-primary after:w-full after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0' 
         : 'after:w-0 after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0 after:transition-all after:duration-300 hover:after:w-full'
@@ -103,24 +104,39 @@ const Header = () => {
     }
 
     if (item.children) {
+      const dropdownId = `${item.label.toLowerCase().replace(/\s+/g, '-')}-submenu`;
+      const isOpen = openDropdown === item.to;
+
       return (
-        <div className="group relative">
-          <Link
-            to={item.to}
-            className={`flex items-center gap-2 ${linkClass}`}
-          >
-            {item.icon && <NavIcon name={item.icon} className="text-lg" />}
-            {item.label}
-          </Link>
-          {/* Positioner carries a transparent top padding so the hover area
-              bridges the gap between the parent and the menu (no dead zone). */}
-          <div className="hidden md:absolute md:left-0 md:top-full md:pt-3 md:group-hover:block">
+        <div className="relative">
+          <div className="flex items-center">
+            <Link
+              to={item.to}
+              aria-current={isActive ? 'page' : undefined}
+              className={`flex items-center gap-2 ${linkClass}`}
+            >
+              {item.icon && <NavIcon name={item.icon} className="text-lg" />}
+              {item.label}
+            </Link>
+            <button
+              type="button"
+              className="ml-1 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-label={`${isOpen ? 'Hide' : 'Show'} ${item.label} navigation`}
+              aria-controls={dropdownId}
+              aria-expanded={isOpen}
+              onClick={() => toggleDropdown(item.to)}
+            >
+              <FiChevronDown aria-hidden="true" className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+          <div id={dropdownId} className={`${isOpen ? 'block' : 'hidden'} mt-2 md:absolute md:left-0 md:top-full md:mt-3 md:min-w-48`}>
             <div className="min-w-48 rounded-xl border border-white/10 bg-dark-surface p-3 shadow-custom">
               {item.children.map((child) => (
                 <Link
                   key={child.to}
                   to={child.to}
-                  className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary ${
+                  aria-current={location.pathname === child.to ? 'page' : undefined}
+                  className={`flex min-h-[44px] items-center rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary ${
                     location.pathname === child.to ? 'text-primary' : 'text-dark-text'
                   }`}
                 >
@@ -129,21 +145,6 @@ const Header = () => {
               ))}
             </div>
           </div>
-          {isMobileMenuOpen && (
-            <div className="mt-2 space-y-2 pl-4 md:hidden">
-              {item.children.map((child) => (
-                <Link
-                  key={child.to}
-                  to={child.to}
-                  className={`block text-sm font-medium transition-colors duration-300 hover:text-primary ${
-                    location.pathname === child.to ? 'text-primary' : 'text-gray-text'
-                  }`}
-                >
-                  {child.label}
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
       );
     }
@@ -151,6 +152,7 @@ const Header = () => {
     return (
       <Link
         to={item.to}
+        aria-current={isActive ? 'page' : undefined}
         className={`flex items-center gap-2 ${linkClass}`}
         // Internal linkler için de tıklanınca menüyü kapatmak istiyorsak:
         // onClick={() => setIsMobileMenuOpen(false)}
@@ -173,8 +175,8 @@ const Header = () => {
           </span>
         </div>
           </Link>
-        <nav className="flex items-center">
-          <ul className={`md:flex gap-8 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface backdrop-blur-xl p-5' : 'hidden md:flex'}`}>
+        <nav className="flex items-center" aria-label="Main navigation">
+          <ul id="main-navigation" className={`md:flex gap-8 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface backdrop-blur-xl p-5' : 'hidden md:flex'}`}>
             {navItems.map((item) => (
               <li key={item.to}>
                 {renderNavLink(item)}
@@ -185,9 +187,11 @@ const Header = () => {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 w-full text-left text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                  aria-label="Log out"
+                  className="flex min-h-[44px] min-w-[44px] items-center gap-2 text-left text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
                 >
                   <FiLogOut className="text-lg" />
+                  <span>Log out</span>
                 </button>
               </li>
             )}
@@ -197,7 +201,8 @@ const Header = () => {
                 <li>
                   <Link
                     to="/login"
-                    className="block text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                    aria-label="Log in"
+                    className="flex min-h-[44px] min-w-[44px] items-center text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                 <FiUser className="text-2xl" />
@@ -213,7 +218,8 @@ const Header = () => {
               // Logout button for logged-in users (desktop)
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                aria-label="Log out"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-lg text-dark-text font-medium text-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
               >
                 <FiLogOut className="text-lg" />
               </button>
@@ -222,7 +228,8 @@ const Header = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                  aria-label="Log in"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text font-medium text-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
                 >
                 <FiUser className="text-2xl" />
                 </Link>
@@ -232,9 +239,11 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <button 
-            className="md:hidden text-dark-text text-2xl ml-4" 
+            className="md:hidden ml-4 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text text-2xl hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={toggleMobileMenu} 
-            aria-label="Toggle mobile menu"
+            aria-label={isMobileMenuOpen ? 'Close main navigation' : 'Open main navigation'}
+            aria-controls="main-navigation"
+            aria-expanded={isMobileMenuOpen}
           >
             <FiMenu />
           </button>

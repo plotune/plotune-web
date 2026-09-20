@@ -1,49 +1,55 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 const Footer = () => {
+  const location = useLocation();
+  const linkClass = (path) => `flex min-h-[44px] items-center text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300 ${location.pathname === path ? 'text-primary' : ''}`;
+
   return (
     <footer className="bg-dark-surface backdrop-blur-xl py-16 border-t border-white/5">
       <div className="container mx-auto px-5">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
           <div>
-            <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Plotune home">
               <img src={logo} alt="Plotune Logo" className="h-9 w-auto" />
               <span className="text-2xl font-bold text-light-text">Plotune</span>
-            </div>
+            </Link>
             <p className="mt-5 text-gray-text max-w-xs">
               Empowering engineers, analysts, and researchers with real-time data visualization tools.
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-light-text mb-5">Product</h3>
-            <ul className="space-y-3">
-              <li><Link to="/" className="text-gray-text hover:text-primary transition-colors duration-300">Features</Link></li>
-              <li><Link to="/nexus" className="text-gray-text hover:text-primary transition-colors duration-300">Nexus</Link></li>
-              <li><Link to="/extensions" className="text-gray-text hover:text-primary transition-colors duration-300">Extensions</Link></li>
-              <li><Link to="/download" className="text-gray-text hover:text-primary transition-colors duration-300">Download</Link></li>
+            <h3 id="footer-product" className="text-xl font-semibold text-light-text mb-5">Product</h3>
+            <nav aria-labelledby="footer-product"><ul className="space-y-3">
+              <li><Link to="/#features" className={linkClass('/')}>Features</Link></li>
+              <li><Link to="/nexus" aria-current={location.pathname === '/nexus' ? 'page' : undefined} className={linkClass('/nexus')}>Nexus</Link></li>
+              <li><Link to="/extensions" aria-current={location.pathname === '/extensions' ? 'page' : undefined} className={linkClass('/extensions')}>Extensions</Link></li>
+              <li><Link to="/download" aria-current={location.pathname === '/download' ? 'page' : undefined} className={linkClass('/download')}>Download</Link></li>
             </ul>
+            </nav>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-light-text mb-5">Resources</h3>
-            <ul className="space-y-3">
-              <li><Link to="/docs" className="text-gray-text hover:text-primary transition-colors duration-300">Documentation</Link></li>
-              <li><Link to="/faq" className="text-gray-text hover:text-primary transition-colors duration-300">FAQ</Link></li>
-              <li><Link to="/tutorials" className="text-gray-text hover:text-primary transition-colors duration-300">Tutorials</Link></li>
-              <li><Link to="/blog" className="text-gray-text hover:text-primary transition-colors duration-300">Blog</Link></li>
-              <li><Link to="/community" className="text-gray-text hover:text-primary transition-colors duration-300">Community</Link></li>
+            <h3 id="footer-resources" className="text-xl font-semibold text-light-text mb-5">Resources</h3>
+            <nav aria-labelledby="footer-resources"><ul className="space-y-3">
+              <li><Link to="/docs" aria-current={location.pathname === '/docs' ? 'page' : undefined} className={linkClass('/docs')}>Documentation</Link></li>
+              <li><Link to="/faq" aria-current={location.pathname === '/faq' ? 'page' : undefined} className={linkClass('/faq')}>FAQ</Link></li>
+              <li><Link to="/tutorials" aria-current={location.pathname === '/tutorials' ? 'page' : undefined} className={linkClass('/tutorials')}>Tutorials</Link></li>
+              <li><Link to="/blog" aria-current={location.pathname === '/blog' ? 'page' : undefined} className={linkClass('/blog')}>Blog</Link></li>
+              <li><Link to="/community" aria-current={location.pathname === '/community' ? 'page' : undefined} className={linkClass('/community')}>Community</Link></li>
             </ul>
+            </nav>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-light-text mb-5">Company</h3>
-            <ul className="space-y-3">
-              <li><Link to="/about" className="text-gray-text hover:text-primary transition-colors duration-300">About Us</Link></li>
-              <li><Link to="/partners" className="text-gray-text hover:text-primary transition-colors duration-300">Partnership</Link></li>
-              <li><Link to="/contact" className="text-gray-text hover:text-primary transition-colors duration-300">Contact</Link></li>
-              <li><Link to="/careers" className="text-gray-text hover:text-primary transition-colors duration-300">Careers</Link></li>
-              <li><Link to="/legal" className="text-gray-text hover:text-primary transition-colors duration-300">Legal</Link></li>
+            <h3 id="footer-company" className="text-xl font-semibold text-light-text mb-5">Company</h3>
+            <nav aria-labelledby="footer-company"><ul className="space-y-3">
+              <li><Link to="/about" aria-current={location.pathname === '/about' ? 'page' : undefined} className={linkClass('/about')}>About Us</Link></li>
+              <li><Link to="/partners" aria-current={location.pathname === '/partners' ? 'page' : undefined} className={linkClass('/partners')}>Partnership</Link></li>
+              <li><Link to="/contact" aria-current={location.pathname === '/contact' ? 'page' : undefined} className={linkClass('/contact')}>Contact</Link></li>
+              <li><Link to="/careers" aria-current={location.pathname === '/careers' ? 'page' : undefined} className={linkClass('/careers')}>Careers</Link></li>
+              <li><Link to="/legal" aria-current={location.pathname === '/legal' ? 'page' : undefined} className={linkClass('/legal')}>Legal</Link></li>
             </ul>
+            </nav>
           </div>
         </div>
         <div className="text-center pt-8 border-t border-white/5 text-gray-text text-sm">
