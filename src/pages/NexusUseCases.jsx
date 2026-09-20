@@ -247,8 +247,8 @@ const industries = [
           run: 'dds-topic-discovery',
           rows: [
             ['Topics visible', '332'],
-            ['Bridge topics', '/nexus/* pub=1'],
-            ['Transport', 'dds_udp'],
+            ['Bridge topics', '1 publisher'],
+            ['Transport', 'UDP'],
             ['Session readiness', 'ready'],
           ],
         },
@@ -292,7 +292,7 @@ const industries = [
           run: 'dds-drive-cycle-record',
           rows: [
             ['Topics', '/scan + /nexus/*'],
-            ['Scan rate', '6.47 Hz ∈ [2,10]'],
+            ['Scan rate', '6.47 Hz, within 2–10 Hz window'],
             ['Messages', '194 / 30 s'],
             ['Artifact', 'MCAP saved'],
           ],
@@ -715,7 +715,7 @@ const families = {
   claude: {
     id: 'claude',
     label: 'Claude',
-    shell: '~ : claude',
+    shell: 'Terminal: claude',
     railLabel: 'Operational cases',
     runtimeLabel: 'Operational flow',
     src: `${publicBase}/use-cases/claude/index.html`,
@@ -911,7 +911,7 @@ const HeroProof = ({ family, scenario, cycle }) => {
           <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{family.shell}</p>
           <h2 className="mt-3 text-2xl font-semibold text-light-text">{scenario.label}</h2>
         </div>
-        <span title="Example outcome" className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <span title="Example outcome" aria-label="Example outcome" className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
           {scenario.status}
         </span>
       </div>
@@ -939,7 +939,7 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
         <div className="min-w-0">
           <h3 className="text-xl font-semibold text-light-text">{scenario.label}</h3>
         </div>
-        <span title="Example outcome" className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <span title="Example outcome" aria-label="Example outcome" className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
           {scenario.status}
         </span>
       </div>

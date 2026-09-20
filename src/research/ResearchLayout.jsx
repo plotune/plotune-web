@@ -16,10 +16,12 @@ const ResearchLayout = ({ children }) => {
     try {
       await navigator.clipboard.writeText(rssUrl);
       setCopyState('copied');
+      // Only the success state self-reverts; a clipboard failure must stay truthful
+      // until the condition changes, not flip back to "Copy feed link" after 2.4s.
+      window.setTimeout(() => setCopyState((current) => (current === 'copied' ? 'idle' : current)), 2400);
     } catch {
       setCopyState('failed');
     }
-    window.setTimeout(() => setCopyState('idle'), 2400);
   };
   return <div className="research-site"><header className="research-header"><Link className="research-brand" to="/research" aria-label="Plotune Research home"><span>Plotune</span><strong>Research</strong></Link><button className="research-menu" onClick={() => setOpen(!open)} aria-expanded={open}>Menu</button><nav className={open ? 'is-open' : ''}>{nav.map(([to, label]) => <Link key={to} to={to} className={location.pathname === to ? 'active' : ''} onClick={() => setOpen(false)}>{label}</Link>)}<div className="rss-control"><button className="rss-button" onClick={() => setRssOpen(!rssOpen)} aria-label="RSS options" aria-expanded={rssOpen}><RssIcon /></button>{rssOpen && <div className="rss-popover"><strong>Follow this research</strong><a href={`https://feedly.com/i/subscription/feed/${encodeURIComponent(rssUrl)}`} target="_blank" rel="noreferrer">Open in Feedly</a><button onClick={copyFeed}>{copyState === 'copied' ? 'Feed link copied' : copyState === 'failed' ? 'Copy unavailable — select the link below' : 'Copy feed link'}</button>{copyState === 'failed' && <input readOnly value={rssUrl} onFocus={(e) => e.target.select()} aria-label="RSS feed link" />}</div>}</div><a className="research-brand-home" href="https://www.plotune.net/" onClick={() => setOpen(false)}>Plotune.net</a><Link className="research-login" to="/login" onClick={() => setOpen(false)}>Log in</Link><Link className="research-register" to="/register" onClick={() => setOpen(false)}>Register</Link></nav></header><main>{children}</main><footer className="research-footer"><span>(c) {new Date().getFullYear()} Plotune Research</span><a href="/research/rss.xml">RSS feed</a></footer></div>;
 };

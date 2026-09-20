@@ -61,9 +61,9 @@ const FaqSection = () => {
       question: 'Where can I get older versions of Plotune?',
       answer: (
         <p>
-          Previous stable versions of Plotune are available in our version archive. We recommend
-          always using the latest stable version unless you have specific compatibility
-          requirements.
+          Need an older version of Plotune? Contact us and we&apos;ll help you find the right
+          release for your setup. We recommend always using the latest stable version unless you
+          have specific compatibility requirements.
         </p>
       ),
     },

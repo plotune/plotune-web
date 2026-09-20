@@ -27,7 +27,7 @@ const SolutionPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(38,166,154,0.18),transparent_34%),radial-gradient(circle_at_82%_12%,rgba(63,81,181,0.14),transparent_28%),linear-gradient(180deg,#101112_0%,#121212_58%,#151719_100%)]" />
         <div className="relative container mx-auto px-5 pt-32">
           <Link to="/research" className="mb-10 inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-gray-text transition-colors hover:text-primary">
-            ← Back to research
+            ← Related research
           </Link>
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="max-w-xl">

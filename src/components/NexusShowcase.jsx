@@ -23,7 +23,7 @@ const runs = [
     title: 'Command, then measure',
     status: 'Effect proven',
     copy: 'Published a scalar Twist onto the ROS 2 graph, then gated on live odometry to prove the effect.',
-    chips: ['Twist → pose', 'θ 2.87', 'stop 3.3e-16'],
+    chips: ['Twist → pose', 'θ 2.87', 'stop ~0 (exact)'],
     Svg: MeshSvg,
   },
   {
@@ -32,7 +32,7 @@ const runs = [
     title: 'Multi-topic evidence to one MCAP',
     status: 'Recorded',
     copy: 'Recorded several ROS 2 topics into a single MCAP as an async job, within the expected rate window.',
-    chips: ['6.47 Hz', '∈ [2,10]', '194 / 30 s'],
+    chips: ['6.47 Hz', 'rate in expected window', '194 / 30 s'],
     Svg: TimelineSvg,
   },
   {
@@ -89,7 +89,7 @@ const NexusShowcase = () => (
             <article key={run.id} className="rounded-[1.5rem] bg-dark-card/80 p-5 shadow-custom">
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-gray-text">{run.source}</p>
-                <span className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary" title="Example outcome">
+                <span className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary" title="Example outcome" aria-label="Example outcome">
                   {run.status}
                 </span>
               </div>
@@ -127,9 +127,9 @@ const NexusShowcase = () => (
       </div>
 
       <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-6 text-gray-text">
-        Example-run readings: θ = final heading error (rad) · Hz = recording rate within its
-        expected window · P0D67:28 = logged fault code with subcode · A and V = measured
-        current and voltage before → after.
+        Example outcomes from illustrative runs. Readings: θ = final heading error (rad) · Hz =
+        recording rate within its expected window · P0D67:28 = logged fault code with subcode ·
+        A and V = measured current and voltage before → after.
       </p>
     </div>
   </section>

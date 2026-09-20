@@ -100,7 +100,7 @@ const NexusStream = () => {
                   title="Illustrative diagram — not a live connection status"
                 >
                   <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-primary" />
-                  Illustration
+                  Illustrative diagram
                 </span>
               </div>
               <StreamPipeline className="mt-4 h-auto w-full" />
