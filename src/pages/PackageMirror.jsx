@@ -318,7 +318,7 @@ const PackageMirror = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveSection('mirror')}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+              className="px-4 py-2 min-h-[44px] bg-white/5 text-light-text border border-white/10 rounded-lg hover:bg-white/10 transition"
             >
               + Add Package
             </button>
@@ -535,7 +535,7 @@ const PackageMirror = () => {
               onClick={() => setActiveSection('mirror')}
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'mirror'
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
               }`}
             >
@@ -546,7 +546,7 @@ const PackageMirror = () => {
               onClick={() => setActiveSection('manage')}
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'manage'
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
               }`}
             >
@@ -557,7 +557,7 @@ const PackageMirror = () => {
               onClick={() => setActiveSection('logs')}
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'logs'
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
               }`}
             >

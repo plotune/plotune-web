@@ -47,7 +47,7 @@ const TalentPool = () => {
             </a>
             <a
               href="/contact"
-              className="inline-flex items-center min-h-[44px] px-6 py-2.5 text-gray-text hover:text-light-text underline underline-offset-4 transition-colors"
+              className="inline-flex items-center min-h-[44px] px-6 py-2.5 text-gray-text hover:text-light-text underline underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
             >
               or use the contact form
             </a>

@@ -162,7 +162,7 @@ const StreamOverviewPage = () => {
                     if (totalPoints > 0 && !window.confirm('Clear all captured data points? This cannot be undone.')) return;
                     clearMessages();
                   }}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                  className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
                 >
                   Clear Data
                 </button>

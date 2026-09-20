@@ -48,7 +48,7 @@ const ExtensionsGrid = ({
   if (error) {
     return (
       <div className="container mx-auto px-5 py-8">
-        <div className="text-center py-12">
+        <div className="text-center py-12" role="alert">
           <FaSearch className="mx-auto text-5xl text-gray-text/90 mb-5" />
           <h3 className="text-xl font-semibold text-light-text mb-2">Couldn't load extensions.</h3>
           <p className="text-gray-text mb-5">Something went wrong while loading the marketplace.</p>

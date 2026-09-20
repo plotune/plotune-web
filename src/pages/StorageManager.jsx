@@ -327,7 +327,7 @@ const handleUpload = async (file) => {
                   }`} />
                   
                   {uploading ? (
-                    <div className="space-y-2">
+                    <div className="space-y-2" role="status">
                       <p className="text-light-text">Uploading {selectedFile?.name}</p>
                       <p className="text-sm text-gray-text flex items-center justify-center">
                         <FaSpinner className="animate-spin mr-2" />
@@ -394,13 +394,13 @@ const handleUpload = async (file) => {
 
               {/* File List Table */}
               {error ? (
-                <div className="text-center py-12">
+                <div className="text-center py-12" role="alert">
                   <FaFile className="text-5xl text-gray-600 mx-auto mb-4" />
                   <h3 className="text-light-text text-lg mb-2">Couldn't load your files.</h3>
                   <p className="text-gray-text mb-4">Something went wrong while fetching your file list.</p>
                   <button
                     onClick={fetchData}
-                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                    className="inline-flex min-h-[44px] items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
                   >
                     Retry
                   </button>

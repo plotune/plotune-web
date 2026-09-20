@@ -332,7 +332,7 @@ const ForgotPassword = () => {
                 type="button"
                 onClick={handleResendCode}
                 disabled={!canResend || isSubmitting}
-                className="text-primary hover:underline text-sm disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                className="inline-flex min-h-[44px] items-center text-primary hover:underline text-sm disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               >
                 {isSubmitting ? 'Sending...' : 'Resend Code'}
               </button>

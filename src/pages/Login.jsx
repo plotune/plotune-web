@@ -248,7 +248,8 @@ const Login = () => {
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-text hover:text-light-text"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center w-11 text-gray-text hover:text-light-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -274,7 +275,7 @@ const Login = () => {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <label className="flex items-center py-2 text-gray-text text-sm cursor-pointer">
+              <label className="flex min-h-[44px] items-center py-2 text-gray-text text-sm cursor-pointer">
                 <input
                   type="checkbox"
                   checked={rememberMe}

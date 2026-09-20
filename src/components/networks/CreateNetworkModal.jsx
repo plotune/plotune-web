@@ -60,7 +60,8 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
           <h3 className="text-xl font-semibold text-light-text">Create New Network</h3>
           <button
             onClick={onClose}
-            className="text-gray-text hover:text-light-text transition"
+            aria-label="Close"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-text hover:text-light-text transition"
           >
             ✕
           </button>
@@ -177,14 +178,14 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex min-h-[44px] items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Creating…' : 'Create Network'}
               </button>

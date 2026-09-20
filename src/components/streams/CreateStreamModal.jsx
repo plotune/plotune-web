@@ -51,7 +51,7 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
             onClick={onClose}
             disabled={isSubmitting}
             aria-label="Close"
-            className="text-gray-text hover:text-light-text transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-text hover:text-light-text transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             ✕
           </button>
@@ -100,14 +100,14 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex min-h-[44px] items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Creating…' : 'Create Stream'}
             </button>

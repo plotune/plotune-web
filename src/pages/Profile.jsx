@@ -194,13 +194,13 @@ useEffect(() => {
                       <button
                         onClick={handleUpdate}
                         disabled={isSaving}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-70"
+                        className="inline-flex min-h-[44px] items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-70"
                       >
                         {isSaving ? 'Saving…' : 'Save Changes'}
                       </button>
                       <button
                         onClick={handleCancelEdit}
-                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                        className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
                       >
                         Cancel
                       </button>

@@ -32,7 +32,7 @@ const MarketplaceControls = ({
             <button
               onClick={() => setCurrentSearch('')}
               aria-label="Clear search"
-              className="absolute inset-y-0 right-0 p-2 m-auto h-fit flex items-center text-gray-text hover:text-light-text transition-colors"
+              className="absolute inset-y-0 right-0 my-auto h-[44px] w-[44px] flex items-center justify-center text-gray-text hover:text-light-text transition-colors"
             >
               ×
             </button>

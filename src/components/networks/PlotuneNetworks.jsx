@@ -429,11 +429,11 @@ const PlotuneNetworks = () => {
               </p>
               {activeTab === 'my' && (
                 profileError ? (
-                  <div className="text-center">
+                  <div className="text-center" role="alert">
                     <p className="text-red-400 text-sm mb-4">Couldn't load your profile.</p>
                     <button
                       onClick={retryProfile}
-                      className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                      className="inline-flex min-h-[44px] items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
                     >
                       Retry
                     </button>

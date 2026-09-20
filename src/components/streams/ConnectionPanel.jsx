@@ -46,13 +46,13 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
               <button
                 onClick={() => setShowToken(!showToken)}
                 aria-label={showToken ? 'Hide token in URL' : 'Show token in URL'}
-                className="text-gray-text hover:text-light-text text-sm flex items-center gap-1 transition"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-text hover:text-light-text text-sm transition"
               >
                 {showToken ? <FaEyeSlash className="w-3 h-3" /> : <FaEye className="w-3 h-3" />}
               </button>
               <button
                 onClick={onCopyConnection}
-                className="text-primary hover:text-primary-dark text-sm flex items-center gap-1 transition"
+                className="inline-flex min-h-[44px] items-center justify-center text-primary hover:text-primary-dark text-sm transition"
               >
                 <FaCopy className="w-3 h-3" /> Copy
               </button>

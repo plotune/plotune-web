@@ -21,7 +21,8 @@ const DevBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <div
+    <button
+      type="button"
       style={{
         position: "fixed",
         top: "12px",
@@ -38,9 +39,10 @@ const DevBanner = () => {
       }}
       onClick={() => setIsVisible(false)}
       title="Click to dismiss"
+      aria-label="Dismiss preview notice"
     >
       Preview build — some features may be incomplete
-    </div>
+    </button>
   );
 };
 
