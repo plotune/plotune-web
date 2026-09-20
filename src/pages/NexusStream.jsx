@@ -95,20 +95,18 @@ const NexusStream = () => {
             <div className="rounded-[2rem] border border-primary/25 bg-primary/10 p-6 shadow-custom md:p-7">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Always-on</p>
-                <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                  <span className="nexus-stream-live inline-block h-2 w-2 rounded-full bg-primary" />
-                  Live
+                <span
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary"
+                  title="Illustrative diagram — not a live connection status"
+                >
+                  <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-primary" />
+                  Illustration
                 </span>
               </div>
               <StreamPipeline className="mt-4 h-auto w-full" />
               <p className="mt-4 text-base text-gray-text">
                 Monitor, trigger, and validate as your tests run. Around the clock, close to your data.
               </p>
-              <style>{`
-                .nexus-stream-live { animation: nexusStreamLive 2.4s ease-in-out infinite; }
-                @keyframes nexusStreamLive { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-                @media (prefers-reduced-motion: reduce) { .nexus-stream-live { animation: none !important; opacity: 1 !important; } }
-              `}</style>
             </div>
           </div>
         </div>
@@ -183,7 +181,7 @@ const NexusStream = () => {
       <section className="py-20">
         <div className="container mx-auto px-5">
           <h2 className="text-3xl font-semibold text-light-text md:text-4xl">How teams use Plotune Stream today</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {scenarios.map(([title, copy]) => (
               <article key={title} className="rounded-2xl bg-dark-card/80 p-6 shadow-custom">
                 <FiFileText className="text-2xl text-primary" />

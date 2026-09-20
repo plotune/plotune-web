@@ -85,8 +85,8 @@ const NexusConnectivity = () => {
                   Request a Demo
                   <FiArrowRight />
                 </Link>
-                <Link to="/nexus/stream" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
-                  Learn More
+                <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
+                  See it in action
                 </Link>
               </div>
             </div>
@@ -169,6 +169,28 @@ const NexusConnectivity = () => {
                 <p className="mt-3 text-sm leading-7 text-gray-text">{copy}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-24">
+        <div className="container mx-auto px-5">
+          <div className="rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.12))] p-8 text-center shadow-custom md:p-12">
+            <h2 className="text-3xl font-semibold text-light-text md:text-4xl">
+              Ready to connect your test environment?
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-text">
+              See Plotune Nexus working with your CAN, XCP, and measurement setup — and where connected validation can take your team next.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
+                Request a Demo
+                <FiArrowRight />
+              </Link>
+              <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
+                Explore use cases
+              </Link>
+            </div>
           </div>
         </div>
       </section>

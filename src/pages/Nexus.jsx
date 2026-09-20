@@ -49,10 +49,10 @@ const capabilities = [
 ];
 
 const outcomes = [
-  'Test Execution',
-  'Software / Calibration Update',
-  'Diagnostic Checks',
-  'Scheduling',
+  'Test run report',
+  'Updated ECU or calibration',
+  'Diagnostic log',
+  'Scheduled job status',
 ];
 
 const Nexus = () => {
@@ -153,7 +153,7 @@ const Nexus = () => {
                 </p>
               </div>
               <div className="mt-8 rounded-2xl border border-primary/25 bg-primary/10 p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Powered by 500+ Automotive Context Skills</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Powered by Automotive Context Skills</p>
                 <p className="mt-3 text-sm leading-7 text-gray-text">
                   Plotune Nexus understands the full scope of automotive validation, from ADAS and thermal behavior to diagnostics, compliance, testing, and legislation requirements.
                 </p>
