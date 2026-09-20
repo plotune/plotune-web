@@ -22,7 +22,7 @@ const ResearchPlot = ({ chart, title, caption }) => {
             <p>{chart.fallbackLabel}</p>
           </div>
         ) : (
-          <Suspense fallback={<div className="research-plot__fallback" role="status">Loading interactive figure?</div>}>
+          <Suspense fallback={<div className="research-plot__fallback" role="status">Loading interactive figure…</div>}>
             <InteractivePlotly chart={chart} />
           </Suspense>
         )}

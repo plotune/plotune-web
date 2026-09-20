@@ -11,3 +11,24 @@
 
 
 
+
+/* Laws of UX conformance overrides (do not reformat the minified rules above) */
+/* Fitts: raise primary interactive controls to >=44px effective touch height */
+.research-menu{min-height:44px;padding:10px 14px;font-size:13px}
+.filter-bar select,.search-control input{height:44px}
+.metric-tabs button,.workflow-tabs button,.metric-tabs-list button,.landscape-tabs button,.workflow-side-nav button{min-height:44px;box-sizing:border-box}
+.methodology-nav a{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box}
+.rss-button{width:44px;height:44px}
+.pagination button{width:44px;height:44px}
+.research-article-cta a{min-height:44px;box-sizing:border-box}
+/* Proximity/Jakob: separate the jammed-together study metadata spans */
+.research-meta{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:8px;font-size:11px;color:#848991}
+.research-meta span+span{border-left:1px solid #e2e4e7;padding-left:12px}
+/* Doherty/Zeigarnik: honest recovery state when an article chunk fails to load */
+.research-load-error{border:1px solid #e2e4e7;border-radius:8px;padding:14px 16px;background:#fbfcfe}
+.research-load-error p{margin:0 0 10px;font-size:13px;color:#4c5561}
+.research-load-error button{min-height:44px;padding:10px 18px;border:0;border-radius:8px;background:#2563d9;color:#fff;font:650 13px Inter,inherit;cursor:pointer}
+/* Peak-End: onward action after the results list */
+.results-next-step{margin:18px 0 0;text-align:center;font-size:13px}
+.results-next-step a{color:#2563d9;text-decoration:none;font-weight:650}
+.results-next-step a:hover{text-decoration:underline}
