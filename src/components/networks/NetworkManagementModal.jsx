@@ -34,7 +34,10 @@ const NetworkManagementModal = ({
   const [copied, setCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const panelRef = useRef(null);
-  useModalDismiss(true, onClose, panelRef);
+  // Suppress Escape/outside-click dismissal while a share request is in
+  // flight, so an accidental dismiss can't orphan a pending request (same
+  // protection CreateNetworkModal applies via !isSubmitting).
+  useModalDismiss(!isSharing, onClose, panelRef);
 
   // Filter out owner from auths list
   const peerAuths = network.auths ? network.auths.filter(auth => 

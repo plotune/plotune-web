@@ -73,7 +73,11 @@ export function useAddToHomeScreen() {
       message += '\nCheck your browser menu for "Install" or "Add to Home screen" option.';
     }
     
-    toast.info(message, { autoClose: 8000 });
+    // The message uses literal "\n" line breaks (previously shown via native
+    // alert(), which renders them); react-toastify's default styling doesn't
+    // preserve newlines, so without this the numbered steps collapse into one
+    // run-on sentence.
+    toast.info(message, { autoClose: 8000, className: 'whitespace-pre-line' });
   };
 
   return { 

@@ -51,5 +51,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js",
+      "^react-router$": "<rootDir>/node_modules/react-router/dist/development/index.js",
+      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(axios|@mdx-js|react-router|react-router-dom|@remix-run|react-plotly\\.js|plotly\\.js)/)",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ]
   }
 }

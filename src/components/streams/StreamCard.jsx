@@ -38,10 +38,15 @@ const StreamCard = ({ stream, onManage, onDelete, isShared = false, streamToken 
   const handleDeleteClick = async (e) => {
     e.stopPropagation();
     if (!onDelete) return;
-    
+
     setIsDeleting(true);
-    await onDelete(stream.name);
-    setIsDeleting(false);
+    try {
+      await onDelete(stream.name);
+    } catch (err) {
+      // Failure toast is shown by the parent handler; just stop spinning.
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Check if user can connect (owner or has read access)

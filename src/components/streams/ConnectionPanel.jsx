@@ -1,9 +1,24 @@
 // components/streams/ConnectionPanel.jsx - Updated
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCopy, FaLink, FaUser, FaCalendar, FaEye, FaEyeSlash, FaEdit } from 'react-icons/fa';
+
+const REVEAL_TIMEOUT_MS = 15000;
 
 const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConnection, streamToken }) => {
   const [showToken, setShowToken] = useState(false);
+
+  // Auto re-mask the token: don't leave a live credential visible in the DOM
+  // (and in any screen share/recording) indefinitely once revealed.
+  useEffect(() => {
+    if (!showToken) return undefined;
+    const timer = window.setTimeout(() => setShowToken(false), REVEAL_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [showToken]);
+
+  // Re-mask whenever a different stream is shown in this panel.
+  useEffect(() => {
+    setShowToken(false);
+  }, [stream?.name]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

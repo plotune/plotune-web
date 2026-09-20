@@ -42,7 +42,7 @@ const AboutHero = () => {
         </div>
 
         {/* Right: Visual Card */}
-        <div className="flex-1 w-full max-w-lg">
+        <div className="relative flex-1 w-full max-w-lg">
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-2xl">
             <div className="flex items-start mb-6">
               <div className="w-3 h-3 rounded-full bg-red-500 mr-2 mt-1"></div>

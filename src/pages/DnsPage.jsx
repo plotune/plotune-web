@@ -63,7 +63,7 @@ const DnsPage = () => {
               <div>
                 <h3 className="text-lg font-semibold text-light-text mb-1">DNS Limits</h3>
                 <p className="text-gray-text text-sm">
-                  {user?.isPlusUser ? 'Plus User' : 'Regular User'}: {currentDomains.length}/{maxDomains} domains
+                  {user?.isPlusUser ? 'Plus User' : 'Regular User'}: {domains.length}/{maxDomains} domains
                 </p>
               </div>
               {!user?.isPlusUser && (
@@ -107,7 +107,7 @@ const DnsPage = () => {
                 <div className="flex gap-3">
                   <button
                     type="submit"
-                    disabled={currentDomains.length >= maxDomains}
+                    disabled={domains.length >= maxDomains}
                     className="px-6 py-2 bg-primary text-white rounded-custom font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Add Domain
@@ -125,12 +125,12 @@ const DnsPage = () => {
           ) : (
             <button
               onClick={() => setIsAdding(true)}
-              disabled={currentDomains.length >= maxDomains}
+              disabled={domains.length >= maxDomains}
               className="w-full p-6 bg-dark-card border border-dashed border-white/10 rounded-custom text-gray-text hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="flex items-center justify-center gap-2">
                 <span className="material-icons">add</span>
-                Add New Domain ({currentDomains.length}/{maxDomains})
+                Add New Domain ({domains.length}/{maxDomains})
               </div>
             </button>
           )}
@@ -140,13 +140,13 @@ const DnsPage = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-light-text mb-4">Your Domains</h2>
           
-          {currentDomains.length === 0 ? (
+          {domains.length === 0 ? (
             <div className="text-center py-12 text-gray-text">
               <span className="material-icons text-6xl mb-4 opacity-50">dns</span>
               <p>No domains configured yet</p>
             </div>
           ) : (
-            currentDomains.map((domain) => (
+            domains.map((domain) => (
               <div key={domain.id} className="bg-dark-card rounded-custom p-6 border border-white/5">
                 <div className="flex items-center justify-between mb-4">
                   <div>

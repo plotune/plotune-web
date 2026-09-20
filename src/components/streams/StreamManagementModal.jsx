@@ -52,7 +52,9 @@ const StreamManagementModal = ({
   }, [activeTab, streamToken, isShared]);
 
   // Doherty/consistent dismissal: Escape and outside mousedown close the modal.
-  useModalDismiss(true, onClose);
+  // Suppressed while a share request is in flight so an accidental dismiss
+  // can't orphan a pending request.
+  useModalDismiss(!isSharing, onClose);
 
   const handleShareSubmit = async (e) => {
     e.preventDefault();
@@ -272,8 +274,11 @@ const StreamManagementModal = ({
                       if (window.confirm(`Delete stream "${stream.name}"? All messages will be permanently removed.`)) {
                         try {
                           await onDeleteStream(stream.name, true); // confirmed here; parent skips its own confirm
-                        } finally {
+                          // Only close on success — a failed delete already showed a
+                          // toast; keep the modal open so the user sees it and can retry.
                           onClose();
+                        } catch (err) {
+                          // Failure toast is shown by the parent handler.
                         }
                       }
                     }}

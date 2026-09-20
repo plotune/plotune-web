@@ -57,7 +57,10 @@ const useStreamWebSocket = (stream, isShared, user, streamToken, mode = 'consume
     setLoading(true);
 
     try {
-      console.log('Connecting to WebSocket:', url);
+      // Never log the raw URL: it embeds the live stream auth token in the
+      // `token=` query param, which would otherwise leak into the console
+      // (including in production).
+      console.log('Connecting to WebSocket:', url.replace(/([?&]token=)[^&]+/, '$1••••••••'));
       wsRef.current = new WebSocket(url);
 
       wsRef.current.onopen = () => {

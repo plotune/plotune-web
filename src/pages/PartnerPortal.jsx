@@ -285,7 +285,7 @@ const StatsOverview = ({ partnerData }) => (
     <StatCard
       label="Compliance Score"
       value={
-        partnerData.complianceScore && partnerData.complianceScore !== '-'
+        typeof partnerData.complianceScore === 'number'
           ? `${partnerData.complianceScore}%`
           : '—'
       }

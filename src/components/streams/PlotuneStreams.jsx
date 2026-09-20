@@ -197,6 +197,9 @@ const PlotuneStreams = () => {
     } catch (err) {
       console.error('Delete error:', err);
       toast.error('Failed to delete stream');
+      // Surface the failure to the caller so a management modal knows not to
+      // close itself as if the delete had succeeded.
+      throw err;
     }
   };
 
@@ -220,6 +223,8 @@ const PlotuneStreams = () => {
       fetchMyStreams();
     } catch (err) {
       toast.error('Failed to share stream');
+      // Surface the failure to the modal so it can keep the typed email.
+      throw err;
     }
   };
 
