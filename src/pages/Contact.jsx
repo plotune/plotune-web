@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Seo from '../components/Seo';
 
 const ContactPage = () => {
+  const [formState, setFormState] = useState('loading'); // loading | ready | error
+
   useEffect(() => {
     // Load jQuery if not already loaded
     if (!window.jQuery) {
@@ -24,14 +26,18 @@ const ContactPage = () => {
               messageTitle: 'Support Request',
               messageSubmit: 'Submit',
               messageThankYou: 'Thank you for your inquiry (#%s)! We\'ll contact you as soon as possible.',
-              debug: true,
+              debug: false,
               showTitle: true,
               modal: false,
               noCSS: true,
               attachmentSupport: true
             });
+            setFormState('ready');
+          } else {
+            setFormState('error');
           }
         };
+        zammadScript.onerror = () => setFormState('error');
         document.head.appendChild(zammadScript);
       }
     };
@@ -61,7 +67,7 @@ const ContactPage = () => {
       icon: 'fa-map-marker-alt',
       title: 'Address',
       info: 'Tuzla, Istanbul, Turkey',
-      link: 'https://goo.gl/maps/XXXXXXX',
+      link: 'https://maps.google.com/?q=Ayd%C4%B1nl%C4%B1+Mahallesi,+34485+Tuzla+%C4%B0stanbul',
       bgColor: 'from-orange-500 to-red-600'
     },
     {
@@ -120,14 +126,14 @@ const ContactPage = () => {
               
               <div className="relative w-full h-96 rounded-xl overflow-hidden mb-6 shadow-2xl">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3015.846968486693!2d28.97551431548492!3d41.10924397932371!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab7167a3c3b1b%3A0x8ddca3a4a9e5c7c!2sTuzla%2C%20Sariyer%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1699000000000"
+                  src="https://www.google.com/maps?q=Ayd%C4%B1nl%C4%B1%20Mahallesi%2C%2034485%20Tuzla%2F%C4%B0stanbul&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Plotune Location"
+                  title="Plotune Location — Aydınlı Mah., 34485 Tuzla/İstanbul"
                 ></iframe>
               </div>
 
@@ -162,6 +168,26 @@ const ContactPage = () => {
           <div id="zammad-support-form">
             {/* The form will be automatically generated here by Zammad */}
           </div>
+          {formState === 'loading' && (
+            <p className="text-gray-400 text-sm" role="status">
+              Loading the support form…
+            </p>
+          )}
+          {formState === 'error' && (
+            <div
+              className="rounded-xl border border-white/10 bg-dark-card/40 p-5 text-gray-300"
+              role="alert"
+            >
+              <p className="font-semibold text-white">We couldn’t load the support form.</p>
+              <p className="mt-2 text-sm">
+                Your message still reaches us — email it directly to{' '}
+                <a className="text-primary underline" href="mailto:contact@plotune.net">
+                  contact@plotune.net
+                </a>{' '}
+                and we’ll get back to you.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -197,8 +223,8 @@ const ContactPage = () => {
         #zammad-support-form textarea:focus,
         #zammad-support-form select:focus {
           outline: none;
-          border-color: rgba(59, 130, 246, 0.5);
-          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+          border-color: rgba(38, 166, 154, 0.5);
+          box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.2);
         }
         
         #zammad-support-form input::placeholder,
@@ -208,8 +234,9 @@ const ContactPage = () => {
         
         #zammad-support-form .btn {
           width: 100%;
+          min-height: 48px;
           padding: 1rem 1.5rem;
-          background: linear-gradient(to right, #2563eb, #7c3aed);
+          background: linear-gradient(to right, #26a69a, #00796b);
           color: white;
           border: none;
           border-radius: 0.75rem;
@@ -222,7 +249,12 @@ const ContactPage = () => {
         
         #zammad-support-form .btn:hover {
           transform: translateY(-1px);
-          box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+          box-shadow: 0 10px 25px rgba(38, 166, 154, 0.3);
+        }
+        
+        #zammad-support-form .btn:focus-visible {
+          outline: 2px solid #26a69a;
+          outline-offset: 2px;
         }
         
         #zammad-support-form .form-group.checkbox {
@@ -251,12 +283,12 @@ const ContactPage = () => {
         }
 
         #zammad-support-form .form-group.checkbox label a {
-          color: #3b82f6;
+          color: #26a69a;
           text-decoration: underline;
         }
 
         #zammad-support-form .form-group.checkbox label a:hover {
-          color: #60a5fa;
+          color: #4db6ac;
         }
       `}</style>
     </section>
