@@ -23,8 +23,8 @@ const FaqSection = () => {
       question: "What's the difference between stable and alpha versions?",
       answer: (
         <>
-          <p><strong>Stable versions</strong> (v1.0.0) are production-ready releases that have been thoroughly tested. These are recommended for most users.</p>
-          <p><strong>Alpha versions</strong> (v0.9.0-alpha) are early access releases that include experimental features. These may be unstable and are intended for testing and development purposes only.</p>
+          <p><strong>Stable releases</strong> are production-ready versions that have been thoroughly tested. These are recommended for most users.</p>
+          <p><strong>Alpha previews</strong> are early access releases that include experimental features. These may be unstable and are intended for testing and development purposes only.</p>
         </>
       ),
     },

@@ -90,10 +90,10 @@ const DownloadSection = () => {
     return latestRelease.html_url;
   };
 
-  // Get asset size for display
+  // Get asset size for display (null when unknown — never fabricate)
   const getAssetSize = (pattern) => {
     const asset = findAsset(pattern);
-    if (!asset) return 'N/A';
+    if (!asset) return null;
     
     // Convert bytes to MB
     const sizeMB = (asset.size / (1024 * 1024)).toFixed(1);
@@ -107,9 +107,9 @@ const DownloadSection = () => {
       downloads: [
         {
           name: 'Windows Installer',
-          description: 'Recommended for most Windows users. Complete setup package with automatic updates.',
+          description: 'Works on Windows. Linux is our primary supported platform; Windows builds are best-effort.',
           version: latestRelease ? latestRelease.tag_name : 'Latest',
-          size: getAssetSize('plotune-windows') || '~57 MB',
+          size: getAssetSize('plotune-windows'),
           type: 'zip',
           getDownloadUrl: () => getWindowsDownloadUrl(),
           instructions: [
@@ -129,7 +129,7 @@ const DownloadSection = () => {
           name: 'Debian/Ubuntu (.deb)',
           description: 'Recommended for Debian-based distributions. Easy installation with APT package manager.',
           version: latestRelease ? latestRelease.tag_name : 'Latest',
-          size: getAssetSize('.deb') || '~81 MB',
+          size: getAssetSize('.deb'),
           type: 'deb',
           getDownloadUrl: () => getLinuxDownloadUrl('deb'),
           command: 'curl -fsSL https://plotune.net/install.sh | bash',
@@ -160,7 +160,7 @@ const DownloadSection = () => {
           name: 'Snap Package',
           description: 'Universal package for most Linux distributions. Sandboxed and auto-updating.',
           version: latestRelease ? latestRelease.tag_name : 'Latest',
-          size: '~78 MB',
+          size: null,
           type: 'snap',
           getDownloadUrl: () => getLinuxDownloadUrl('snap'),
           command: 'sudo snap install plotune',
@@ -175,9 +175,9 @@ const DownloadSection = () => {
           name: 'Standalone Binary',
           description: 'Generic Linux binary. No installation needed - download and run directly.',
           version: latestRelease ? latestRelease.tag_name : 'Latest',
-          size: getAssetSize('plotune-linux') || '~88 MB',
+          size: getAssetSize('plotune-linux'),
           type: 'binary',
-          getDownloadUrl: () => "https://github.com/plotune/plotune-dl/tree/main",
+          getDownloadUrl: () => "https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz",
           command: './plotune',
           instructions: [
             'wget https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz',
@@ -268,10 +268,12 @@ const DownloadSection = () => {
                           <i className="fas fa-tag"></i>
                           {download.version}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <i className="fas fa-weight-hanging"></i>
-                          {download.size}
-                        </span>
+                        {download.size && (
+                          <span className="flex items-center gap-1">
+                            <i className="fas fa-weight-hanging"></i>
+                            {download.size}
+                          </span>
+                        )}
                         {download.command && (
                           <span className="flex items-center gap-1 font-mono text-xs bg-black/30 px-3 py-1.5 rounded-lg">
                             <i className="fas fa-terminal"></i>
@@ -317,17 +319,15 @@ const DownloadSection = () => {
                     </a>
                     
                     {download.installScript && (
-                      <button
-                        onClick={() => {
-                          if (window.confirm('This will open the installation script. Run this in your terminal: curl -fsSL https://plotune.net/install.sh | bash\n\nContinue to script page?')) {
-                            window.open('https://plotune.net/install.sh', '_blank');
-                          }
-                        }}
+                      <a
+                        href="https://plotune.net/install.sh"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="py-4 px-6 border border-primary/50 text-primary rounded-xl hover:bg-primary/10 transition-all duration-300 font-medium text-center"
                       >
                         <i className="fas fa-terminal mr-2"></i>
                         View Install Script
-                      </button>
+                      </a>
                     )}
                     
                     {download.type === 'snap' && (
@@ -395,16 +395,12 @@ const DownloadSection = () => {
             <div className="text-center pt-8 border-t border-white/10">
               <div className="inline-flex flex-wrap justify-center gap-8 text-gray-text mb-12">
                 <div className="flex items-center gap-2">
-                  <i className="fas fa-shield-alt text-primary"></i>
-                  <span>Secure & Verified</span>
+                  <i className="fas fa-code text-primary"></i>
+                  <span>Open-source installer scripts</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <i className="fas fa-bolt text-primary"></i>
                   <span>Fast Installation</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="fas fa-sync-alt text-primary"></i>
-                  <span>Auto Updates</span>
                 </div>
               </div>
 

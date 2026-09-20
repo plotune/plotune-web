@@ -136,7 +136,7 @@ const Privacy = () => {
               <li><strong>Objection:</strong> Object to processing for direct marketing or other purposes.</li>
             </ul>
             <p className="text-gray-text mb-4">
-              To exercise these rights, contact us at <a href="mailto:privacy@plotune.com" className="text-primary hover:underline">privacy@plotune.com</a>.
+              To exercise these rights, contact us at <a href="mailto:contact@plotune.net" className="text-primary hover:underline">contact@plotune.net</a>.
             </p>
           </Element>
           <Element name="security" className="privacy-section mt-12">
@@ -163,7 +163,7 @@ const Privacy = () => {
               If you have questions about this Privacy Policy or our data practices, please contact us at:
             </p>
             <p className="text-gray-text mb-4">
-              Email: <a href="mailto:privacy@plotune.com" className="text-primary hover:underline">privacy@plotune.com</a>
+              Email: <a href="mailto:contact@plotune.net" className="text-primary hover:underline">contact@plotune.net</a>
             </p>
             <p className="text-gray-text mb-4">
               Last updated: August 25, 2025

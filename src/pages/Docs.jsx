@@ -154,10 +154,10 @@ export default function Docs() {
       <section className="min-h-[40vh] flex flex-col justify-center py-16 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
         <div className="container mx-auto px-5">
           <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-4">
-            Plotune Gateway Documentation
+            Plotune Documentation
           </h1>
           <p className="text-lg text-gray-text max-w-2xl mx-auto">
-            Explore components, calculations, extensions, SDK and API.
+            Explore components, calculations, extensions and the SDK.
           </p>
         </div>
       </section>

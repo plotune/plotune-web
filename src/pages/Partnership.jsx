@@ -67,7 +67,6 @@ const Partnership = () => {
       <section className="py-20 bg-gradient-to-br from-dark-bg to-gray-900">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-light-text mb-6">
-            <br></br>
             Plotune Partner Network
           </h1>
           <p className="text-xl text-gray-text max-w-3xl mx-auto mb-8 leading-relaxed">

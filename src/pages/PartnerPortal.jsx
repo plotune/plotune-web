@@ -11,7 +11,7 @@ import api, { streamApi } from '../services/api';
 const PARTNER_STATS = {
   activeStreams: 0,//12,
   totalClients: 0,//8,
-  storageUsed: '0 M',//'45.2 GB',
+  storageUsed: '0 MB',//'45.2 GB',
   complianceScore: '-'//92
 };
 
@@ -284,7 +284,11 @@ const StatsOverview = ({ partnerData }) => (
     />
     <StatCard
       label="Compliance Score"
-      value={`${partnerData.complianceScore}%`} 
+      value={
+        partnerData.complianceScore && partnerData.complianceScore !== '-'
+          ? `${partnerData.complianceScore}%`
+          : '—'
+      }
       icon="shield-alt" 
       color="green-500" 
     />
@@ -331,21 +335,46 @@ const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
       <div className="p-4 border-t border-white/10">
         <div className="text-sm text-gray-text mb-2">Quick Actions</div>
         <button 
-          onClick={() => handleComingSoon('Support Ticket')}
-          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-text hover:text-light-text hover:bg-white/5 rounded-lg transition-colors"
+          disabled
+          className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text/70 cursor-not-allowed rounded-lg"
         >
           <i className="fas fa-plus"></i>
-          New Support Ticket
+          <span>New Support Ticket</span>
+          <span className="ml-auto text-[10px] uppercase tracking-wide bg-white/5 border border-white/10 text-gray-text px-1.5 py-0.5 rounded">Coming soon</span>
         </button>
         <button 
-          onClick={() => handleComingSoon('Client Onboarding')}
-          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-text hover:text-light-text hover:bg-white/5 rounded-lg transition-colors"
+          disabled
+          className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text/70 cursor-not-allowed rounded-lg"
         >
           <i className="fas fa-user-plus"></i>
-          Add New Client
+          <span>Add New Client</span>
+          <span className="ml-auto text-[10px] uppercase tracking-wide bg-white/5 border border-white/10 text-gray-text px-1.5 py-0.5 rounded">Coming soon</span>
         </button>
       </div>
     </div>
+  </div>
+);
+
+// Muted empty-state for zero-row tables and empty lists
+const EmptyStateMessage = () => (
+  <span>
+    Cloud services are not yet active for your account — contact{' '}
+    <a href="mailto:contact@plotune.net" className="text-primary hover:underline">contact@plotune.net</a>{' '}
+    to get set up.
+  </span>
+);
+
+const EmptyStateRow = ({ colSpan }) => (
+  <tr>
+    <td colSpan={colSpan} className="py-8 px-4 text-center text-gray-text/60 text-sm">
+      <EmptyStateMessage />
+    </td>
+  </tr>
+);
+
+const EmptyStateText = () => (
+  <div className="py-8 text-center text-gray-text/60 text-sm">
+    <EmptyStateMessage />
   </div>
 );
 
@@ -397,17 +426,28 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
         </div>
       </div>
       
-      {/* Simple chart visualization */}
-      <div className="h-64 flex items-end gap-2 pt-8">
-        {usageData.dataVolume.map((height, index) => (
-          <div key={index} className="flex-1 flex flex-col items-center">
-            <div 
-              className="w-full bg-gradient-to-t from-primary to-blue-400 rounded-t"
-              style={{height: `${height * 2}%`}}
-            ></div>
-            <div className="text-gray-text text-xs mt-2">{usageData.months[index]}</div>
+      {/* Simple chart visualization (sample data, not yet live) */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="text-center">
+            <div className="text-4xl mb-4 opacity-20">
+              <i className="fas fa-chart-line"></i>
+            </div>
+            <p className="text-gray-text text-lg">Usage Analytics</p>
+            <p className="text-gray-text text-sm mt-2">Coming Soon in Cloud Tier</p>
           </div>
-        ))}
+        </div>
+        <div className="h-64 flex items-end gap-2 pt-8 opacity-30">
+          {usageData.dataVolume.map((height, index) => (
+            <div key={index} className="flex-1 flex flex-col items-center">
+              <div 
+                className="w-full bg-gradient-to-t from-primary to-blue-400 rounded-t"
+                style={{height: `${height * 2}%`}}
+              ></div>
+              <div className="text-gray-text text-xs mt-2">{usageData.months[index]}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
 
@@ -506,15 +546,6 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
         <h2 className="text-2xl font-bold text-light-text mb-2">Data Stream Management</h2>
         <p className="text-gray-text">Monitor and manage all active data streams from your clients' devices</p>
       </div>
-      <button 
-        onClick={() => handleComingSoon('Stream Management')}
-        disabled
-        className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-        title="Coming Soon in Cloud Tier"
-      >
-        <i className="fas fa-sliders-h"></i>
-        Manage Streams
-      </button>
     </div>
 
     <div className="overflow-x-auto">
@@ -530,7 +561,10 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
           </tr>
         </thead>
         <tbody>
-          {streams.map(stream => (
+          {streams.length === 0 ? (
+            <EmptyStateRow colSpan={6} />
+          ) : (
+            streams.map(stream => (
             <tr key={stream.id} className="border-b border-white/5 hover:bg-white/2">
               <td className="py-3 px-4">
                 <div className="flex items-center gap-3">
@@ -564,8 +598,9 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
                 </button>
               </td>
             </tr>
-          ))}
-        </tbody>
+          ))
+            )}
+          </tbody>
       </table>
     </div>
   </div>
@@ -578,24 +613,10 @@ const AnalyticsTab = ({ handleComingSoon, usageData }) => (
         <h2 className="text-2xl font-bold text-light-text mb-2">Real-Time Analytics</h2>
         <p className="text-gray-text">Live data visualization and performance metrics across all streams</p>
       </div>
-      <div className="flex items-center gap-2">
-        <button 
-          onClick={() => handleComingSoon('Analytics Filters')}
-          disabled
-          className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-        >
-          <i className="fas fa-filter"></i>
-          Filter
-        </button>
-        <button 
-          onClick={() => handleComingSoon('Export Analytics')}
-          disabled
-          className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-        >
-          <i className="fas fa-download"></i>
-          Export
-        </button>
-      </div>
+    </div>
+
+    <div className="text-center text-gray-text/60 text-sm mb-6">
+      <EmptyStateMessage />
     </div>
 
     {/* Live Chart Placeholder */}
@@ -628,21 +649,16 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
         <h2 className="text-2xl font-bold text-light-text mb-2">Storage & Backup</h2>
         <p className="text-gray-text">Cloud storage, backup management, and data retention policies</p>
       </div>
-      <button 
-        onClick={() => handleComingSoon('Storage Settings')}
-        disabled
-        className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-      >
-        <i className="fas fa-cog"></i>
-        Manage Storage
-      </button>
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Storage Usage</h3>
         <div className="space-y-4">
-          {storageClients.map((client, index) => (
+          {storageClients.length === 0 ? (
+            <EmptyStateText />
+          ) : (
+            storageClients.map((client, index) => (
             <div key={index}>
               <div className="flex justify-between text-sm text-gray-text mb-1">
                 <span>{client.name}</span>
@@ -655,14 +671,18 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
                 ></div>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </div>
 
       <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Backup Status</h3>
         <div className="space-y-3">
-          {backupStatus.map((backup, index) => (
+          {backupStatus.length === 0 ? (
+            <EmptyStateText />
+          ) : (
+            backupStatus.map((backup, index) => (
             <div key={index} className="flex items-center justify-between p-3 bg-black/20 rounded">
               <div className="flex items-center gap-3">
                 <i className={`fas fa-${
@@ -674,7 +694,8 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
               </div>
               <span className="text-gray-text">{backup.lastRun}</span>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </div>
     </div>
@@ -688,14 +709,6 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
         <h2 className="text-2xl font-bold text-light-text mb-2">Compute & Processing Jobs</h2>
         <p className="text-gray-text">Run batch processing, data transformation, and ML inference jobs</p>
       </div>
-      <button 
-        onClick={() => handleComingSoon('New Job')}
-        disabled
-        className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-      >
-        <i className="fas fa-plus"></i>
-        New Job
-      </button>
     </div>
 
     <div className="overflow-x-auto">
@@ -711,7 +724,10 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
           </tr>
         </thead>
         <tbody>
-          {jobs.map(job => (
+          {jobs.length === 0 ? (
+            <EmptyStateRow colSpan={6} />
+          ) : (
+            jobs.map(job => (
             <tr key={job.id} className="border-b border-white/5 hover:bg-white/2">
               <td className="py-3 px-4 text-light-text">{job.name}</td>
               <td className="py-3 px-4">
@@ -742,8 +758,9 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
                 </button>
               </td>
             </tr>
-          ))}
-        </tbody>
+          ))
+            )}
+          </tbody>
       </table>
     </div>
   </div>
@@ -756,14 +773,6 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
         <h2 className="text-2xl font-bold text-light-text mb-2">Security & Compliance Monitoring</h2>
         <p className="text-gray-text">Enterprise-grade security monitoring and compliance reporting</p>
       </div>
-      <button 
-        onClick={() => handleComingSoon('Security Report')}
-        disabled
-        className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-      >
-        <i className="fas fa-file-pdf"></i>
-        Generate Report
-      </button>
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -793,7 +802,10 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
     <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
       <h3 className="text-light-text font-semibold mb-4">Recent Security Events</h3>
       <div className="space-y-3">
-        {securityEvents.map(event => (
+        {securityEvents.length === 0 ? (
+          <EmptyStateText />
+        ) : (
+          securityEvents.map(event => (
           <div key={event.id} className="flex items-center justify-between p-3 bg-black/20 rounded">
             <div className="flex items-center gap-3">
               <i className={`fas fa-${
@@ -805,7 +817,8 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
             </div>
             <span className="text-gray-text text-sm">{event.time}</span>
           </div>
-        ))}
+        ))
+        )}
       </div>
     </div>
   </div>
@@ -818,21 +831,16 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
         <h2 className="text-2xl font-bold text-light-text mb-2">API & Integration Hub</h2>
         <p className="text-gray-text">Manage API keys, webhooks, and third-party integrations</p>
       </div>
-      <button 
-        onClick={() => handleComingSoon('New API Key')}
-        disabled
-        className="px-4 py-2 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed flex items-center gap-2"
-      >
-        <i className="fas fa-key"></i>
-        Generate API Key
-      </button>
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">API Keys</h3>
         <div className="space-y-3">
-          {apiKeys.map(api => (
+          {apiKeys.length === 0 ? (
+            <EmptyStateText />
+          ) : (
+            apiKeys.map(api => (
             <div key={api.id} className="p-3 bg-black/20 rounded">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-light-text font-medium">{api.name}</span>
@@ -851,14 +859,18 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
                 </button>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </div>
 
       <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Available Integrations</h3>
         <div className="space-y-3">
-          {integrations.map(integration => (
+          {integrations.length === 0 ? (
+            <EmptyStateText />
+          ) : (
+            integrations.map(integration => (
             <div key={integration.id} className="flex items-center justify-between p-3 bg-black/20 rounded">
               <div>
                 <div className="text-light-text font-medium">{integration.name}</div>
@@ -876,7 +888,8 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
                 {integration.status === 'connected' ? 'Connected' : 'Connect'}
               </button>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </div>
     </div>

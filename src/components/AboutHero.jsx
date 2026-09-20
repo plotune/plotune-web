@@ -87,10 +87,7 @@ const AboutHero = () => {
               <div className="flex justify-between items-center text-xs text-gray-text">
                 <div className="flex items-center">
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  <span>Trusted by data teams worldwide</span>
-                </div>
-                <div className="text-light-text/40 font-mono">
-                  v1.0
+                  <span>Plotune</span>
                 </div>
               </div>
             </div>

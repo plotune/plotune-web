@@ -45,6 +45,12 @@ const TalentPool = () => {
                 <i className="fas fa-arrow-right text-primary ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
               </div>
             </a>
+            <a
+              href="/contact"
+              className="inline-flex items-center min-h-[44px] px-6 py-2.5 text-gray-text hover:text-light-text underline underline-offset-4 transition-colors"
+            >
+              or use the contact form
+            </a>
           </div>
           
         </div>

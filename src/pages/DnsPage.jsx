@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const DnsPage = () => {
@@ -6,15 +7,9 @@ const DnsPage = () => {
   const [domains, setDomains] = useState([]);
   const [newDomain, setNewDomain] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-
-  // Mock data for demonstration
-  const mockDomains = [
-    { id: 1, name: 'myapp', fullDomain: 'myapp.dns.plotune.net', ip: '192.168.1.100', createdAt: '2024-01-15' },
-    { id: 2, name: 'server', fullDomain: 'server.dns.plotune.net', ip: '192.168.1.101', createdAt: '2024-01-16' },
-  ];
+  const [copiedId, setCopiedId] = useState(null);
 
   const maxDomains = user?.isPlusUser ? 5 : 2;
-  const currentDomains = domains.length > 0 ? domains : mockDomains;
 
   const handleAddDomain = (e) => {
     e.preventDefault();
@@ -29,13 +24,26 @@ const DnsPage = () => {
       createdAt: new Date().toISOString().split('T')[0],
     };
 
-    setDomains([...currentDomains, newDomainEntry]);
+    setDomains([...domains, newDomainEntry]);
     setNewDomain('');
     setIsAdding(false);
   };
 
-  const handleDeleteDomain = (id) => {
-    setDomains(currentDomains.filter(domain => domain.id !== id));
+  const handleDeleteDomain = (domain) => {
+    // Irreversible action: name the target and require confirmation (Occam/Tesler).
+    if (!window.confirm(`Delete ${domain.fullDomain}? This cannot be undone.`)) return;
+    setDomains(domains.filter((item) => item.id !== domain.id));
+  };
+
+  const copyCurlCommand = async (domain) => {
+    try {
+      await navigator.clipboard.writeText(generateCurlCommand(domain.name));
+      setCopiedId(domain.id);
+      window.setTimeout(() => setCopiedId((current) => (current === domain.id ? null : current)), 2000);
+    } catch {
+      // Clipboard can be unavailable (http, denied permission) — say so instead of failing silently.
+      window.alert('Copy failed. Select the command text and copy it manually.');
+    }
   };
 
   const generateCurlCommand = (domainName) => {
@@ -59,9 +67,12 @@ const DnsPage = () => {
                 </p>
               </div>
               {!user?.isPlusUser && (
-                <button className="px-4 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-custom text-sm font-medium hover:opacity-90 transition-opacity">
+                <Link
+                  to="/partners"
+                  className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-custom text-sm font-medium hover:opacity-90 transition-opacity"
+                >
                   Upgrade to Plus
-                </button>
+                </Link>
               )}
             </div>
           </div>
@@ -145,11 +156,11 @@ const DnsPage = () => {
                     </p>
                   </div>
                   <button
-                    onClick={() => handleDeleteDomain(domain.id)}
-                    className="p-2 text-red-400 hover:bg-red-400/10 rounded-custom transition-colors"
-                    title="Delete domain"
+                    onClick={() => handleDeleteDomain(domain)}
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-2 text-red-400 hover:bg-red-400/10 rounded-custom transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                    aria-label={`Delete domain ${domain.fullDomain}`}
                   >
-                    <span className="material-icons">delete</span>
+                    <span className="material-icons" aria-hidden="true">delete</span>
                   </button>
                 </div>
 
@@ -158,11 +169,11 @@ const DnsPage = () => {
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-gray-text text-sm font-medium">Update IP with cURL</label>
                     <button
-                      onClick={() => navigator.clipboard.writeText(generateCurlCommand(domain.name))}
-                      className="flex items-center gap-1 text-xs text-primary hover:text-secondary transition-colors"
+                      onClick={() => copyCurlCommand(domain)}
+                      className="inline-flex min-h-[44px] items-center gap-1 px-2 text-xs text-primary hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                     >
-                      <span className="material-icons text-sm">content_copy</span>
-                      Copy
+                      <span className="material-icons text-sm" aria-hidden="true">content_copy</span>
+                      {copiedId === domain.id ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
                   <pre className="text-xs text-gray-text bg-black/20 p-3 rounded-custom overflow-x-auto">

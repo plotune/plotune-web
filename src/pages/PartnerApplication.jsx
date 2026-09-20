@@ -33,9 +33,21 @@ const PartnerApplication = () => {
               height="1200" 
               frameBorder="0"
               className="min-h-[800px]"
+              title="Partner application form"
             >
               Loading…
             </iframe>
+            <p className="text-center text-gray-text mt-4">
+              Form not loading?{' '}
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSc2xQCMnvMH-_nHptO7cBudN5c9GrX79FpowISPhtp5puihHw/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Open it in a new tab
+              </a>
+            </p>
           </div>
         </div>
 

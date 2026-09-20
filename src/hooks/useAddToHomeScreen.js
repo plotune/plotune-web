@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export function useAddToHomeScreen() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -40,15 +41,20 @@ export function useAddToHomeScreen() {
       return;
     }
 
-    await deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
-    
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
+    try {
+      await deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+    } catch (err) {
+      console.error('Install prompt failed:', err);
+      showManualInstallInstructions();
     }
-    
+
     setDeferredPrompt(null);
   };
 
@@ -67,7 +73,7 @@ export function useAddToHomeScreen() {
       message += '\nCheck your browser menu for "Install" or "Add to Home screen" option.';
     }
     
-    alert(message);
+    toast.info(message, { autoClose: 8000 });
   };
 
   return { 

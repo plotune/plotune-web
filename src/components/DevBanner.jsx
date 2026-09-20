@@ -39,7 +39,7 @@ const DevBanner = () => {
       onClick={() => setIsVisible(false)}
       title="Click to dismiss"
     >
-      ⚠️ Dev Mode
+      Preview build — some features may be incomplete
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as ScrollLink, Element } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Legal = () => {
   const [activeSection, setActiveSection] = useState('terms');
@@ -40,10 +41,6 @@ const Legal = () => {
                 { id: 'terms', label: 'Terms of Service' },
                 { id: 'privacy', label: 'Privacy Policy' },
                 { id: 'software-license', label: 'Software License' },
-                { id: 'extension-policy', label: 'Extension Policy' },
-                { id: 'disclaimer', label: 'Disclaimer' },
-                { id: 'liability', label: 'Limitation of Liability' },
-                { id: 'compliance', label: 'Compliance' },
               ].map((item) => (
                 <li key={item.id}>
                   <ScrollLink
@@ -83,32 +80,15 @@ const Legal = () => {
           </Element>
           <Element name="privacy" className="legal-section mt-12">
             <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Privacy Policy</h2>
-            <p className="text-gray-text mb-4">Plotune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and disclose information about you when you use our software and services.</p>
-            <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">Information We Collect</h3>
-            <p className="text-gray-text mb-4">We collect information you provide directly to us, such as:</p>
-            <ul className="list-disc ml-5 space-y-2 text-gray-text">
-              <li>Account registration information (name, email address)</li>
-              <li>Payment information for Pro and Enterprise licenses</li>
-              <li>Technical support communications</li>
-              <li>Optional usage statistics to improve our software</li>
-            </ul>
-            <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">How We Use Information</h3>
-            <p className="text-gray-text mb-4">We use the information we collect to:</p>
-            <ul className="list-disc ml-5 space-y-2 text-gray-text">
-              <li>Provide, maintain, and improve our services</li>
-              <li>Process transactions and send related information</li>
-              <li>Respond to your comments, questions, and requests</li>
-              <li>Send technical notices, updates, and security alerts</li>
-              <li>Monitor and analyze usage trends and activities</li>
-            </ul>
-            <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">Information Sharing</h3>
-            <p className="text-gray-text mb-4">We do not share or sell your personal information to third parties except:</p>
-            <ul className="list-disc ml-5 space-y-2 text-gray-text">
-              <li>With your consent</li>
-              <li>To comply with legal obligations</li>
-              <li>To protect and defend the rights of Plotune</li>
-              <li>With service providers who need access to perform work on our behalf</li>
-            </ul>
+            <p className="text-gray-text mb-4">
+              Plotune is committed to protecting your privacy. For details on what information we collect, how we use it, and your rights, please read our full Privacy Policy.
+            </p>
+            <RouterLink
+              to="/privacy"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              Read the full Privacy Policy <span aria-hidden="true">→</span>
+            </RouterLink>
           </Element>
           <Element name="software-license" className="legal-section mt-12">
             <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Software License</h2>

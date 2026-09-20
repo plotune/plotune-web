@@ -10,6 +10,7 @@ const Extensions = () => {
   const [currentFilter, setCurrentFilter] = useState('all');
   const [currentSearch, setCurrentSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   // Cache configuration
   const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
@@ -221,7 +222,8 @@ const Extensions = () => {
   const loadExtensions = async () => {
     console.log("Loading extensions...");
     setLoading(true);
-    
+    setError(false);
+
     try {
       // Check for cached extensions data
       const cachedExtensions = localStorage.getItem(CACHE_KEY);
@@ -254,6 +256,8 @@ const Extensions = () => {
       
     } catch (error) {
       console.error("Error loading extensions:", error);
+      setExtensions([]);
+      setError(true);
       toast.error("Failed to load extensions");
     } finally {
       setLoading(false);
@@ -271,8 +275,8 @@ const Extensions = () => {
             
             return {
               ...ext,
-              version: releaseInfo?.version || 'v0.0.0',
-              last_updated: releaseInfo?.last_updated || new Date().toISOString().split('T')[0],
+              version: releaseInfo?.version ?? null,
+              last_updated: releaseInfo?.last_updated ?? null,
               core_version: '>=1.0.0',
               deployment: ext.deployment
             };
@@ -280,8 +284,8 @@ const Extensions = () => {
             console.error(`Error processing extension ${ext.name}:`, error);
             return {
               ...ext,
-              version: 'v0.0.0',
-              last_updated: new Date().toISOString().split('T')[0],
+              version: null,
+              last_updated: null,
               core_version: '>=1.0.0',
             };
           }
@@ -295,8 +299,8 @@ const Extensions = () => {
       
       return baseExtensions.map(ext => ({
         ...ext,
-        version: 'v0.0.0',
-        last_updated: new Date().toISOString().split('T')[0],
+        version: null,
+        last_updated: null,
         core_version: '>=1.0.0',
       }));
     }
@@ -371,14 +375,14 @@ const Extensions = () => {
       if (extension.deployment) {
         toast.info(
           <div>
-            <p>You can also manually download from:</p>
+            <p>You can also download from GitHub Releases:</p>
             <a 
               href={extension.deployment} 
               target="_blank" 
               rel="noopener noreferrer"
               style={{ color: '#61dafb', textDecoration: 'underline' }}
             >
-              {extension.deployment}
+              Download from GitHub Releases
             </a>
           </div>,
           {
@@ -443,11 +447,12 @@ const Extensions = () => {
         setCurrentSearch={setCurrentSearch}
         extensionCount={filteredExtensions.length}
         totalCount={extensions.length}
-        onClearCache={clearCache} // Optional: add a clear cache button
       />
       <ExtensionsGrid
         extensions={filteredExtensions}
         loading={loading}
+        error={error}
+        onRetry={loadExtensions}
         installExtension={installExtension}
         visitWebsite={visitWebsite}
         visitRepo={visitRepo}

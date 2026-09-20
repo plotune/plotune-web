@@ -12,9 +12,7 @@ const MarketplaceControls = ({
     { key: 'all', label: 'All' },
     { key: 'verified', label: 'Verified' },
     { key: 'core', label: 'Core' },
-    { key: 'package', label: 'Package' },
     { key: 'stream', label: 'Stream' },
-    { key: 'cloud', label: 'Cloud' },
   ];
 
   return (
@@ -25,6 +23,7 @@ const MarketplaceControls = ({
           <input
             type="text"
             placeholder="Search extensions..."
+            aria-label="Search extensions"
             value={currentSearch}
             onChange={(e) => setCurrentSearch(e.target.value)}
             className="w-full px-4 py-2.5 bg-dark-card border border-white/10 rounded-lg text-light-text placeholder-gray-text focus:outline-none focus:border-primary/30 transition-all duration-200 text-sm"
@@ -32,7 +31,8 @@ const MarketplaceControls = ({
           {currentSearch && (
             <button
               onClick={() => setCurrentSearch('')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-text hover:text-light-text transition-colors"
+              aria-label="Clear search"
+              className="absolute inset-y-0 right-0 p-2 m-auto h-fit flex items-center text-gray-text hover:text-light-text transition-colors"
             >
               ×
             </button>
@@ -45,7 +45,7 @@ const MarketplaceControls = ({
             <button
               key={filter.key}
               onClick={() => setCurrentFilter(filter.key)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
+              className={`px-3 py-2 text-sm min-h-[44px] rounded-md font-medium transition-all duration-200 ${
                 currentFilter === filter.key
                   ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'bg-white/5 text-gray-text hover:bg-white/10 hover:text-light-text'
@@ -58,7 +58,7 @@ const MarketplaceControls = ({
 
         {/* Results Count - Subtle */}
         <div className="text-center mt-3 text-xs text-gray-text/60">
-          {extensionCount} of {totalCount}
+          Showing {extensionCount} of {totalCount} extensions
         </div>
       </div>
     </div>
