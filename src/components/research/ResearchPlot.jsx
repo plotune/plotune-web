@@ -15,7 +15,7 @@ const ResearchPlot = ({ chart, title, caption }) => {
         <h2 id="research-plot-title">{title}</h2>
         <span>Interactive figure</span>
       </div>
-      <div className="research-plot__canvas">
+      <div className="research-plot__canvas" style={chart.height ? { height: chart.height } : undefined}>
         {!isMounted ? (
           <div className="research-plot__fallback" role="img" aria-label={chart.summary}>
             <div className="research-plot__bars"><i /><i /><i /><i /></div>

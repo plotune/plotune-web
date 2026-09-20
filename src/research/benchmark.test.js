@@ -1,4 +1,5 @@
 import { buildBenchmarkView, rankMetricRows, selectBenchmarkRows } from './content/benchmark';
+import { buildMonthlyBenchmarkCharts } from './content/charts';
 
 test('builds a final-data leaderboard from the matching workflow category', () => {
   const view = buildBenchmarkView({ taskGroup: 'Automated test flows', metric: 'performance', sort: 'score' });
@@ -48,4 +49,35 @@ test('returns a readable chart cohort ordered for the selected metric', () => {
   expect(fastest).toHaveLength(8);
   expect(fastest[0].time).toBeLessThanOrEqual(fastest[1].time);
   expect(fastest.every((row) => rows.includes(row))).toBe(true);
+});
+
+test('builds scannable benchmark report charts without label collisions', () => {
+  const charts = buildMonthlyBenchmarkCharts();
+
+  expect(Object.keys(charts.categoryCharts)).toEqual([
+    'Industrial data analysis',
+    'Automated test flows',
+    'Calibration & software',
+    'Real-time stream validation',
+    'Safety & evidence',
+    'V-cycle',
+  ]);
+  expect(charts.overviewMatrix.data).toHaveLength(1);
+  expect(charts.overviewMatrix.data[0]).toMatchObject({ type: 'bar', orientation: 'h' });
+  expect(charts.overviewMatrix.data[0].y).toContain('Anthropic · Fable 5.1');
+  expect(charts.overviewMatrix.data[0].marker.color).toContain('#c65d1e');
+  expect(charts.overviewMatrix.data[0].marker.color).toContain('#1f2937');
+  expect(charts.overviewMatrix.data[0].marker.color).toContain('#5a860b');
+  expect(charts.overviewMatrix.layout.yaxis.automargin).toBe(true);
+  expect(charts.overviewMatrix.height).toBe(440);
+  expect(charts.recommendationProfile.data.map((trace) => trace.name)).toEqual([
+    'Sonnet 5',
+    'GPT-5.6 Terra',
+    'GLM 5.3 Flash',
+  ]);
+  expect(charts.recommendationProfile.data.every((trace) => trace.orientation === 'h')).toBe(true);
+  expect(charts.recommendationProfile.layout.legend.y).toBeGreaterThan(1);
+  expect(charts.recommendationProfile.layout.yaxis.autorange).toBe('reversed');
+  expect(charts.recommendationProfile.height).toBe(400);
+  expect(charts.categoryCharts['Industrial data analysis'].data[0].x).toHaveLength(13);
 });

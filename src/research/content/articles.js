@@ -1,4 +1,6 @@
-﻿import { buildModelComparisonChart } from './charts';
+﻿import { buildMonthlyBenchmarkCharts } from './charts';
+
+const monthlyBenchmarkCharts = buildMonthlyBenchmarkCharts();
 
 // `segment` is optional and maps to a key in src/content/solutions.js: when set, the article
 // renders a "see how this workflow can be automated" CTA to /solutions/<segment>. `cta` is an
@@ -12,11 +14,14 @@
 // (the pillar-targeted ones) set it explicitly since there's no segment to derive it from.
 const articles = [{
   slug: 'agentic-test-validation-model-comparison',
-  title: 'How to read a monthly benchmark release',
-  summary: 'A guide to reading agentic test and validation results through task acceptance, evidence, cost, time, and reliability.',
+  title: 'September 2026: Agentic Testing Environments Monthly Benchmark Review',
+  summary: 'A category-normalized review of 13 models across six agentic engineering workflows, with final validation index, cost, and duration context.',
   topic: 'Agentic Test & Validation',
-  publishedAt: '2026-09-17', updatedAt: '2026-09-17', featured: true, published: true, readingTime: '6 min read',
-  heroChart: buildModelComparisonChart(),
+  publishedAt: '2026-09-20', updatedAt: '2026-09-20', featured: true, published: true, readingTime: '14 min read',
+  cta: { path: '/solutions/agentic-test-development', summary: 'See how bounded agentic workflows turn these benchmark behaviors into repeatable engineering test runs.', label: 'Explore Agentic Test & Development' },
+  tag: 'agentic-dev',
+  heroChart: monthlyBenchmarkCharts.overviewMatrix,
+  monthlyCharts: monthlyBenchmarkCharts,
   loader: () => import('../articles/agentic-test-validation-model-comparison.mdx'),
 }, {
   slug: 'automating-can-ecu-tests-with-ai-agents',

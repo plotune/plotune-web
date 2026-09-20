@@ -1,7 +1,7 @@
 ﻿import { getResearchArticle, publishedResearchArticles } from './content/articles';
 import { getSolutionSegment } from '../content/solutions';
 
-test('publishes the featured agentic validation study with a stable route', () => {
+test('publishes the featured monthly benchmark report with a stable route and solution CTA', () => {
   const article = getResearchArticle('agentic-test-validation-model-comparison');
 
   expect(article).toMatchObject({
@@ -9,8 +9,12 @@ test('publishes the featured agentic validation study with a stable route', () =
     featured: true,
     topic: 'Agentic Test & Validation',
     published: true,
+    updatedAt: '2026-09-20',
+    tag: 'agentic-dev',
   });
-  expect(article.summary).toMatch(/task acceptance/i);
+  expect(article.title).toMatch(/monthly benchmark review/i);
+  expect(article.cta).toMatchObject({ path: '/solutions/agentic-test-development' });
+  expect(article.monthlyCharts.categoryCharts).toBeDefined();
   expect(publishedResearchArticles).toHaveLength(11);
 });
 
@@ -41,4 +45,3 @@ test('every article has exactly one funnel path: a segment, an explicit cta, or 
     expect(article.segment && article.cta).toBeFalsy();
   });
 });
-

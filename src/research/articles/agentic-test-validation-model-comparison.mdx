@@ -1,39 +1,120 @@
-﻿---
+---
 slug: agentic-test-validation-model-comparison
-title: How to read a monthly benchmark release
-summary: A guide to reading agentic test and validation results through task acceptance, evidence, cost, time, and reliability.
+title: "September 2026: Agentic Testing Environments Monthly Benchmark Review"
+summary: Category-normalized final results for 13 models across six agentic engineering workflows, with cost and duration context.
 topic: Agentic Test & Validation
-publishedAt: 2026-09-17
-updatedAt: 2026-09-17
+publishedAt: 2026-09-20
+updatedAt: 2026-09-20
 featured: true
-heroChart: workflow-profile
+heroChart: monthly-benchmark-profile
 ---
 
-<Insight eyebrow="Reading guide" title="A benchmark result is a record of a complete task.">
-A useful release makes the task definition, environment, evidence, and acceptance criteria visible alongside its headline metrics.
+<Insight eyebrow="September release" title="This is a benchmark of completed engineering work, not a chatbot preference ranking.">
+Each reported result comes from an agent completing a bounded validation workflow: acquiring the available interface, collecting evidence, reaching a supported verdict, and leaving the environment in a reviewable terminal state. The release compares the final category-normalized validation index for 13 models across six engineering workflow categories.
 </Insight>
 
-## Executive summary
+## Executive readout
 
-A single score cannot explain whether an agent is useful in an engineering workflow. A monthly release should make four dimensions readable together: task acceptance, operational cost, task duration, and reliability of completion.
+The leaders are a tie, not a near tie. **Anthropic Fable 5.1 and OpenAI GPT-6 Astra both score 85.1 on the category-normalized index**, and their six reported category scores are identical in this release. Anthropic Opus 5 follows at 83.4, then OpenAI GPT-5.6 Sol at 81.6.
 
-<ResearchPlot chart={props.article.heroChart} title="Example workflow comparison" caption="The interactive figure demonstrates the kind of task-level comparison a monthly release can include." />
+The practical question is not only which curve is highest. It is where a model sits once cost, task duration, and the type of engineering work are considered together. That is why this report keeps the full category profile visible instead of declaring a winner from one aggregate number.
 
-## What a release contains
+<StatFigure title="Release scope" stats={[['Scheduled evaluation cells', '468'], ['Models', '13'], ['Workflow categories', '6'], ['Providers', '8']]} />
 
-Each report records the task manifest, fixture or environment revision, model and provider configuration, agent settings, tool version, and acceptance checks. These details let a reader distinguish a model change from a task or infrastructure change.
+The source file contains validation index, average cost per task, and average task duration. It does **not** contain reliability/completion outcomes, prior-month results, error bars, confidence intervals, SUT latency, or fully versioned harness/configuration fields. This report therefore makes no reliability, significance, or month-over-month claims.
 
-## How tasks are accepted
+## What the benchmark asks an agent to do
 
-A task is accepted only when the expected observed effect and its required evidence are both present. The evidence can include captured signals, configuration readback, a trace window, an execution record, and a clean terminal state.
+The unit under evaluation is a complete engineering task. A good textual answer cannot compensate for a wrong verdict, missing evidence, an unsafe action, or an uncleared test state.
 
-## Reading the measures
+<FlowDiagram title="Evaluation path" steps={['Read task + constraints', 'Acquire bounded interface', 'Capture evidence', 'Act only when permitted', 'Verify verdict + cleanup']} />
 
-- **Performance** measures accepted attempts within a task family.
-- **Cost per task** includes successful, failed, and retried work.
-- **Time per task** includes tool execution, waits, verification, and cleanup.
-- **Reliability** measures whether a scheduled attempt reached a valid terminal result with cleanup; it is separate from correctness.
+The reported index is **category-normalized**: each of the six workflow scores contributes equally to the overall value. That prevents industrial data analysis, which has more scheduled cells in the source, from dominating the monthly headline.
 
-## Changes between months
+## The field at a glance
 
-A release should name task, harness, tool, and scoring changes before comparing values across months. Only compatible protocol versions should be compared directly.
+<Insight eyebrow="Reading the ranking" title="Start with the decision bands, then use the category charts to investigate the gap.">
+Fable 5.1 and GPT-6 Astra form a tied top tier. Sonnet 5 and GPT-5.6 Terra are the close, balanced deployment choices; GLM 5.3 Flash is the distinct low-cost option. The full category-by-category evidence remains visible in the review below, without forcing every reader to decode thirteen overlapping lines first.
+</Insight>
+
+<ResearchPlot chart={props.article.monthlyCharts.overviewMatrix} title="Final benchmark ranking across all workflow categories" caption="A single category-normalized ranking makes the field scannable. Bars and labels use recognizable provider identifiers, rather than turning recommendations into a separate colour system." />
+
+Industrial data analysis produces the highest reported scores in the release. V-cycle verification produces the lowest reported category scores. That observation describes this task mix; it does not establish that one family is inherently harder, nor that any difference is statistically significant.
+
+<ResearchPlot chart={props.article.monthlyCharts.operatingTradeoff} title="Validation index versus cost per task" caption="Each point is a final benchmark model. The dotted line marks the observed cost/performance Pareto frontier; lower cost and higher validation index are preferred." />
+
+## Deployment guidance: three practical starting points
+
+The joint leaders are suitable reference points for teams pursuing the highest observed validation index. For day-to-day deployment, the choice is more specific.
+
+<StatFigure title="Recommended deployment candidates" stats={[['Sonnet 5', '79.0 · $0.452/task'], ['GPT-5.6 Terra', '78.2 · $0.514/task'], ['GLM 5.3 Flash', '66.0 · $0.013/task'], ['Fable / Astra', '85.1 · $2.260/task']]} />
+
+**Sonnet 5** is the balanced Anthropic default in this release. It exceeds Terra in every reported category by 0.8–1.0 points, while costing $0.0616 less per task; its average task duration is 0.1 minute longer. It is the clearest starting point when teams want a strong index without paying the joint-leader price.
+
+**GPT-5.6 Terra** is the recommended OpenAI-family baseline for teams standardizing on that family. Its 78.2 index and 6.0-minute average duration place it close to Sonnet’s profile, even though GPT-5.6 Sol is stronger on the supplied index and lower on cost. Terra should therefore be selected for OpenAI-family continuity and operating preference, not presented as the data leader.
+
+**GLM 5.3 Flash** is the very-low-cost candidate: roughly 34.5× lower reported cost than Sonnet, with a 13.0-point category-normalized index tradeoff. For teams evaluating an open-weight path, it is the user-designated candidate in this release; licensing and deployment status should be independently confirmed before treating it as an open-weight option.
+
+<Insight eyebrow="What the profile says" title="Sonnet and Terra are closely matched; GLM is a deliberate cost-for-index tradeoff.">
+Read each workflow row across, not the chart as a universal winner. Sonnet remains narrowly ahead of Terra in the supplied categories, while GLM’s lower bars should be read together with its unusually low reported cost and the separate licensing check required for an open-weight deployment.
+</Insight>
+
+<ResearchPlot chart={props.article.monthlyCharts.recommendationProfile} title="Recommended candidates by workflow" caption="Each workflow is read left to right on the same 0–100 scale. The chart makes the recommendation tradeoffs visible without rotated labels or a dense legend." />
+
+## Category review
+
+### Industrial data analysis
+
+Industrial data analysis asks an agent to discover a supplied BTMS recording, decode the available artifact, locate and quantify a seeded deviation, trace its root cause, cite evidence, and abstain correctly on a clean control. Detection is a gate: a missed seeded issue or false positive earns zero. Correct detections are weighted across detection (35%), localization (20%, ±500 ms), quantification (20%, ±15%), and root cause with cited evidence (25%).
+
+Fable 5.1 and GPT-6 Astra tie at **93.9**. Opus 5 follows at 92.2, GPT-5.6 Sol at 90.2, Sonnet 5 at 87.4, Terra at 86.4, and GLM 5.3 Flash at 73.0. This is the release’s highest-scoring category, but the three input encodings have identical supplied results per model/scenario, so the report does not claim a measured format-robustness advantage.
+
+<ResearchPlot chart={props.article.monthlyCharts.categoryCharts['Industrial data analysis']} title="Industrial data analysis: all model results" caption="Validation index for the final data-analysis category. The ranking contains every final model, not just the recommended candidates." />
+
+### Automated test flows
+
+Automated test flows evaluates whether an agent can turn a black-box requirement into a safe verification strategy, use a coherent timebase, perform live control where required, and return an evidence-backed verdict. The scenarios cover interlock timing and hysteresis, a charge-thermal watchdog that needs a command-refresh loop, and a clean-control false-positive check. Wrong or unsupported verdicts score zero; successful runs are weighted across correctness (40%), evidence window (20%), requirement citation (20%), and faithful observed behavior (20%).
+
+Fable 5.1 and GPT-6 Astra tie at **83.5**; Sonnet 5 is 77.5, Terra 76.7, and GLM 5.3 Flash 64.7. The category has the largest observed model spread in this release, so it is especially useful when a deployment needs live timing and evidence discipline rather than only offline reasoning.
+
+<ResearchPlot chart={props.article.monthlyCharts.categoryCharts['Automated test flows']} title="Automated test flows: all model results" caption="Full final ranking for bounded requirement-to-verdict test execution." />
+
+### Calibration & software
+
+Calibration and software work tests baseline inspection, an explicitly permitted change, exact readback, behavioral verification with evidence, and restoration to the baseline. The published weighting is authorized change selection (25%), safety and evidence discipline (20%), exact readback (20%), behavioral verification (20%), and restoration evidence (15%). An unauthorized or out-of-range write, unsafe control action, or non-baseline cleanup is a hard zero.
+
+Fable 5.1 and GPT-6 Astra tie at **87.3**. Sonnet 5 reaches 81.0, Terra 80.1, and GLM 5.3 Flash 67.6. The supporting category documentation describes CS-01 as simulator-validated while other scenarios await smoke coverage, so this number should be read as the current calibration-change workflow result, not as a claim of full production calibration maturity.
+
+<ResearchPlot chart={props.article.monthlyCharts.categoryCharts['Calibration & software']} title="Calibration & software: all model results" caption="Final ranking for authorized-change, readback, behavior verification, and restoration work." />
+
+### Real-time stream validation
+
+Real-time stream validation covers live thresholds, timing, and event sequences through Nexus. An agent must select a coherent timestamp source and an appropriate observation window, assess the required threshold, rate, or sequence, preserve a reviewable trace, return a supported terminal verdict, and restore the test state.
+
+Fable 5.1 and GPT-6 Astra tie at **84.7**; Sonnet 5 is 78.6, Terra 77.8, and GLM 5.3 Flash 65.6. The category README still marks fixtures and tolerances as planned for freeze, so the number is reported as the release’s stream-validation category score—not as a certified real-time performance result.
+
+<ResearchPlot chart={props.article.monthlyCharts.categoryCharts['Real-time stream validation']} title="Real-time stream validation: all model results" caption="Final ranking for live threshold, timing, sequence, and trace-evidence work." />
+
+### Safety & evidence quality
+
+Safety and evidence quality evaluates appropriately bounded decisions: respecting operating limits, stopping when further action is unsafe, separating observations from assumptions and hypotheses, choosing a justified terminal state, preserving provenance, and giving an actionable next step.
+
+Fable 5.1 and GPT-6 Astra tie at **85.4**. Sonnet 5 reaches 79.3, Terra 78.5, and GLM 5.3 Flash 66.3. The supporting scope is still documented as planned, so this aggregate must not be represented as a certified safety or reliability result. It is a useful behavioral readout for the current benchmark corpus and nothing more.
+
+<ResearchPlot chart={props.article.monthlyCharts.categoryCharts['Safety & evidence']} title="Safety & evidence: all model results" caption="Final ranking for evidence sufficiency, uncertainty handling, safe boundaries, and reviewable conclusions." />
+
+### V-cycle verification
+
+V-cycle verification is the end-to-end path from requirement to observable acceptance condition, test strategy, bounded execution, evidence collection, verdict, cleanup, and next action. The intended coverage spans runtime behavior, diagnostics, calibration-dependent behavior, interfaces and timing, clean controls, and unavailable dependencies.
+
+Fable 5.1 and GPT-6 Astra tie at **75.6**, the lowest reported leader score of the six categories. Sonnet 5 reaches 70.2, Terra 69.4, and GLM 5.3 Flash 58.6. The category’s fixtures, weights, and tolerances are still described as awaiting freeze, so this is a report of the current V-cycle category result rather than a general claim about every migrated-ECU validation program.
+
+<ResearchPlot chart={props.article.monthlyCharts.categoryCharts['V-cycle']} title="V-cycle verification: all model results" caption="Final ranking for requirement-to-verdict validation with evidence and cleanup." />
+
+## How to use this release
+
+<Insight eyebrow="Decision rule" title="Choose for the workflow and operating boundary, then verify on your own fixture.">
+The release supports a starting point, not a universal deployment claim. Use the category profile to choose a candidate, apply the same bounded operations and evidence requirements in your environment, then validate on your own interfaces, limits, and acceptance checks. The report does not substitute for fixture-specific qualification.
+</Insight>
+
+For methodology and scoring definitions, see the [Agentic Test & Validation Protocol](/research/methodology). The solution link below takes the next step: turning a chosen model profile into a bounded, repeatable engineering workflow.
