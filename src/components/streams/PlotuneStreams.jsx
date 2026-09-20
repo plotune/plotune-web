@@ -23,10 +23,29 @@ const PlotuneStreams = () => {
   const [activeStream, setActiveStream] = useState(null);
   const [streamToken, setStreamToken] = useState(null);
   const [activeTab, setActiveTab] = useState('my'); // 'my' or 'shared'
+  const [isCreatingStream, setIsCreatingStream] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   useEffect(() => {
     fetchStreamToken();
   }, []);
+
+  // Premium status lives in the /user/premium endpoint (see Dashboard/Profile),
+  // not on the user object — fetch it so plan limits display truthfully.
+  useEffect(() => {
+    const fetchPremiumStatus = async () => {
+      if (!token) return;
+      try {
+        const response = await api.get('/user/premium', {
+          headers: { Authorization: token },
+        });
+        setIsPremium(response.data.is_premium || false);
+      } catch (err) {
+        setIsPremium(false);
+      }
+    };
+    fetchPremiumStatus();
+  }, [token]);
 
   // Get stream token from backend first
   const fetchStreamToken = async () => {
@@ -119,6 +138,7 @@ const PlotuneStreams = () => {
       return;
     }
 
+    setIsCreatingStream(true);
     try {
       const createData = {
         name: streamData.name,
@@ -144,16 +164,18 @@ const PlotuneStreams = () => {
       } else {
         toast.error('Failed to create stream');
       }
+    } finally {
+      setIsCreatingStream(false);
     }
   };
 
-  const handleDeleteStream = async (streamName) => {
+  const handleDeleteStream = async (streamName, skipConfirm = false) => {
     if (!streamToken) {
       toast.error('Stream access not available');
       return;
     }
 
-    if (!window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
+    if (!skipConfirm && !window.confirm(`Delete stream "${streamName}"? All messages will be permanently removed.`)) {
       return;
     }
 
@@ -262,26 +284,15 @@ const PlotuneStreams = () => {
         </div>
 
         <button
-            onClick={() => setShowCreateModal(true)}          // senin handler
-            className="group relative flex items-center justify-center
-                        w-8 h-8 rounded-full
-                        bg-blue-600 hover:bg-blue-700
-                        text-white
-                        transition-colors"
-            >
-            <FaPlus className="w-3.5 h-3.5" />
-
-            {/* Tooltip */}
-            <span
-                className="pointer-events-none absolute left-1/2 top-full mt-2
-                        -translate-x-1/2
-                        whitespace-nowrap
-                        rounded bg-gray-900 px-2 py-1 text-xs text-white
-                        opacity-0 group-hover:opacity-100
-                        transition-opacity"
-            >
-                New Stream
-            </span>
+          onClick={() => setShowCreateModal(true)}
+          className="inline-flex items-center justify-center gap-2
+                      px-4 py-2 min-h-[44px] rounded-lg
+                      bg-blue-600 hover:bg-blue-700
+                      text-white text-sm font-medium
+                      transition-colors"
+        >
+          <FaPlus className="w-4 h-4" />
+          New Stream
         </button>
 
         
@@ -396,7 +407,8 @@ const PlotuneStreams = () => {
         <CreateStreamModal 
           onClose={() => setShowCreateModal(false)} 
           onSubmit={handleCreateStream}
-          user={user}
+          isPremium={isPremium}
+          isSubmitting={isCreatingStream}
         />
       )}
       {activeStream && (
@@ -406,6 +418,7 @@ const PlotuneStreams = () => {
           onUpdate={() => activeTab === 'my' ? fetchMyStreams() : fetchSharedStreams()}
           onShare={activeStream.is_shared ? null : handleShareStream}
           onUnshare={activeStream.is_shared ? null : handleUnshareStream}
+          onDeleteStream={handleDeleteStream}
           user={user}
           isShared={activeStream.is_shared}
         />

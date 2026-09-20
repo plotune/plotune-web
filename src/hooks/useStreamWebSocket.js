@@ -9,6 +9,7 @@ const useStreamWebSocket = (stream, isShared, user, streamToken, mode = 'consume
   const [loading, setLoading] = useState(false);
   const wsRef = useRef(null);
   const isConnectingRef = useRef(false);
+  const errorOccurredRef = useRef(false);
 
   // Build WebSocket URL
   const buildWebSocketUrl = useCallback(() => {
@@ -61,6 +62,7 @@ const useStreamWebSocket = (stream, isShared, user, streamToken, mode = 'consume
 
       wsRef.current.onopen = () => {
         console.log('✅ WebSocket connected');
+        errorOccurredRef.current = false;
         setConnectionStatus('connected');
         setLoading(false);
         isConnectingRef.current = false;
@@ -115,14 +117,18 @@ const useStreamWebSocket = (stream, isShared, user, streamToken, mode = 'consume
 
       wsRef.current.onerror = (error) => {
         console.error('❌ WebSocket error:', error);
+        errorOccurredRef.current = true;
         setConnectionStatus('error');
         setLoading(false);
         isConnectingRef.current = false;
+        toast.error('Connection failed. Check your network and try again.');
       };
 
       wsRef.current.onclose = (event) => {
         console.log('🔌 WebSocket closed:', event.code, event.reason);
-        setConnectionStatus('disconnected');
+        // Surface failure truthfully: if an error preceded the close, stay in
+        // the 'error' state instead of reporting a clean disconnect.
+        setConnectionStatus(errorOccurredRef.current ? 'error' : 'disconnected');
         setLoading(false);
         isConnectingRef.current = false;
         wsRef.current = null;

@@ -30,6 +30,9 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
 
   // Draw visualization
   useEffect(() => {
+    // Honest pause: when paused, skip the redraw entirely so the canvas keeps
+    // showing the last rendered frame instead of silently updating.
+    if (isPaused) return;
     if (!canvasRef.current || Object.keys(data).length === 0) return;
 
     const canvas = canvasRef.current;
@@ -196,7 +199,10 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
       : [activeKey].filter(Boolean);
     
     legendKeys.forEach((key, index) => {
-      const yPos = margin.top - 20 - (index * 20);
+      // Clamp legend rows so 3+ entries stay inside the canvas: rows that would
+      // render above the top edge are stacked downward just below the top margin.
+      const rawY = margin.top - 20 - (index * 20);
+      const yPos = Math.max(rawY, rawY < 0 ? 4 + (index * 20) : rawY);
       const color = colors[index % colors.length];
       
       // Color box
@@ -217,7 +223,7 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
       ctx.fillText(`${count} points`, margin.left + width - 10, yPos + 10);
     });
     
-  }, [data, activeKey, selectedKeys, timeRange, visualizationMode]);
+  }, [data, activeKey, selectedKeys, timeRange, visualizationMode, isPaused]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -268,7 +274,8 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
               connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
             }`}></div>
             <span className="text-gray-text">
-              {connectionStatus === 'connected' ? 'Live' : 'Paused'}
+              {connectionStatus === 'connected' ? 'Live' :
+               connectionStatus === 'connecting' ? 'Connecting…' : 'Disconnected'}
             </span>
           </div>
         </div>
@@ -301,7 +308,8 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
           {/* Pause/Play */}
           <button
             onClick={() => setIsPaused(!isPaused)}
-            className="p-2 bg-dark-bg border border-white/10 rounded-lg hover:bg-white/5 transition"
+            aria-label={isPaused ? 'Resume updates' : 'Pause updates'}
+            className="min-h-[44px] min-w-[44px] p-2 inline-flex items-center justify-center bg-dark-bg border border-white/10 rounded-lg hover:bg-white/5 transition"
             title={isPaused ? 'Resume updates' : 'Pause updates'}
           >
             {isPaused ? <FaPlay className="w-4 h-4" /> : <FaPause className="w-4 h-4" />}
@@ -310,8 +318,9 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
           {/* Export */}
           <button
             onClick={exportData}
-            className="p-2 bg-dark-bg border border-white/10 rounded-lg hover:bg-white/5 transition"
-            title="Export data"
+            aria-label="Export PNG"
+            className="min-h-[44px] min-w-[44px] p-2 inline-flex items-center justify-center bg-dark-bg border border-white/10 rounded-lg hover:bg-white/5 transition"
+            title="Export PNG"
           >
             <FaDownload className="w-4 h-4" />
           </button>
@@ -319,7 +328,8 @@ const StreamVisualizer = ({ data, activeKey, selectedKeys, connectionStatus }) =
           {/* Fullscreen */}
           <button
             onClick={toggleFullscreen}
-            className="p-2 bg-dark-bg border border-white/10 rounded-lg hover:bg-white/5 transition"
+            aria-label="Toggle fullscreen"
+            className="min-h-[44px] min-w-[44px] p-2 inline-flex items-center justify-center bg-dark-bg border border-white/10 rounded-lg hover:bg-white/5 transition"
             title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
           >
             {isFullscreen ? <FaCompress className="w-4 h-4" /> : <FaExpand className="w-4 h-4" />}

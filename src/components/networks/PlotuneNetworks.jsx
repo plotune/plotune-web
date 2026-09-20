@@ -27,21 +27,34 @@ const PlotuneNetworks = () => {
   const [activeTab, setActiveTab] = useState('my');
   const [userEmail, setUserEmail] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState({});
+  const [isCreating, setIsCreating] = useState(false);
+  const [profileError, setProfileError] = useState(false);
 
   useEffect(() => {
     fetchStreamToken();
   }, []);
 
-  // Get user email on component mount
-  useEffect(() => {
-    const loadUserEmail = async () => {
-      if (token) {
-        const email = await ensureUserEmail();
+  // Get user email on component mount (distinguish loading vs failed)
+  const loadUserEmail = useCallback(async () => {
+    if (token) {
+      const email = await ensureUserEmail();
+      if (email) {
         setUserEmail(email);
+        setProfileError(false);
+      } else {
+        setProfileError(true);
       }
-    };
-    loadUserEmail();
+    }
   }, [token, ensureUserEmail]);
+
+  const retryProfile = useCallback(() => {
+    setProfileError(false);
+    loadUserEmail();
+  }, [loadUserEmail]);
+
+  useEffect(() => {
+    loadUserEmail();
+  }, [loadUserEmail]);
 
   // Get stream token from backend
   const fetchStreamToken = async () => {
@@ -141,6 +154,7 @@ const PlotuneNetworks = () => {
     }
 
     try {
+      setIsCreating(true);
       const createData = {
         name: networkData.name,
         owner_email: userEmail,
@@ -162,6 +176,8 @@ const PlotuneNetworks = () => {
       } else {
         toast.error('Failed to create network');
       }
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -171,7 +187,7 @@ const PlotuneNetworks = () => {
       return;
     }
 
-    if (!window.confirm('Are you sure you want to delete this network? This action cannot be undone.')) {
+    if (!window.confirm(`Delete network "${networkName}"? This cannot be undone.`)) {
       return;
     }
 
@@ -213,6 +229,8 @@ const PlotuneNetworks = () => {
       fetchMyNetworks();
     } catch (err) {
       toast.error('Failed to share network');
+      // Surface the failure to the modal so it can keep the typed email.
+      throw err;
     }
   };
 
@@ -410,17 +428,29 @@ const PlotuneNetworks = () => {
                   : 'You have not joined any networks yet'}
               </p>
               {activeTab === 'my' && (
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  disabled={!userEmail}
-                  className={`px-6 py-3 rounded-lg ${
-                    userEmail 
-                      ? 'bg-primary text-white hover:bg-primary-dark' 
-                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  {userEmail ? 'Create Your First Network' : 'Loading user information...'}
-                </button>
+                profileError ? (
+                  <div className="text-center">
+                    <p className="text-red-400 text-sm mb-4">Couldn't load your profile.</p>
+                    <button
+                      onClick={retryProfile}
+                      className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowCreateModal(true)}
+                    disabled={!userEmail}
+                    className={`px-6 py-3 rounded-lg ${
+                      userEmail 
+                        ? 'bg-primary text-white hover:bg-primary-dark' 
+                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {userEmail ? 'Create Your First Network' : 'Loading user information...'}
+                  </button>
+                )
               )}
             </div>
           )}
@@ -452,6 +482,7 @@ const PlotuneNetworks = () => {
           onSubmit={handleCreateNetwork}
           user={{ ...user, email: userEmail }}
           isLoading={!userEmail}
+          isSubmitting={isCreating}
         />
       )}
       {activeNetwork && (

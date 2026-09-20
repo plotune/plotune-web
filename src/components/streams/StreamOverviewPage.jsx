@@ -32,10 +32,12 @@ const StreamOverviewPage = () => {
     clearMessages
   } = useStreamWebSocket(stream, isShared, user, streamToken, 'consumer');
 
-  // Debug: Log data flow
+  // Debug: Log data flow (dev only — never log full buffers in production)
   useEffect(() => {
-    console.log('messageMap updated:', messageMap);
-    console.log('uniqueKeys updated:', uniqueKeys);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('messageMap updated:', messageMap);
+      console.log('uniqueKeys updated:', uniqueKeys);
+    }
   }, [messageMap, uniqueKeys]);
 
   // Auto-connect on component mount if user has read access
@@ -101,6 +103,8 @@ const StreamOverviewPage = () => {
     );
   };
 
+  const totalPoints = getTotalPoints();
+
   return (
     <div className="min-h-screen bg-dark-bg text-light-text">
       {/* Header */}
@@ -154,7 +158,10 @@ const StreamOverviewPage = () => {
                 )}
                 
                 <button
-                  onClick={clearMessages}
+                  onClick={() => {
+                    if (totalPoints > 0 && !window.confirm('Clear all captured data points? This cannot be undone.')) return;
+                    clearMessages();
+                  }}
                   className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
                 >
                   Clear Data
@@ -191,14 +198,14 @@ const StreamOverviewPage = () => {
             
             <div>
               <span className="text-gray-text">Data Points:</span>{' '}
-              <span className="font-semibold">{getTotalPoints().toLocaleString()}</span>
+              <span className="font-semibold">{totalPoints.toLocaleString()}</span>
             </div>
             
             <div className="hidden sm:block text-gray-text">•</div>
             
             <div>
               <span className="text-gray-text">Buffer:</span>{' '}
-              <span className="font-semibold">2000/point</span>
+              <span className="font-semibold">2000 points/signal</span>
             </div>
           </div>
         </div>

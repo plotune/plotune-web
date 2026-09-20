@@ -66,7 +66,11 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
         <div className="flex items-center gap-2">
           {messages.length > 0 && (
             <button
-              onClick={onClearMessages}
+              onClick={() => {
+                if (window.confirm('Clear all received messages?')) {
+                  onClearMessages();
+                }
+              }}
               className="px-3 py-2 bg-red-600/20 text-red-400 hover:bg-red-600/30 rounded-lg text-sm flex items-center gap-2 transition"
             >
               <FaTrash className="w-4 h-4" />

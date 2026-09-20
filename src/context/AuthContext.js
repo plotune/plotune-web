@@ -1,6 +1,7 @@
 // context/AuthContext.js
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 import api from '../services/api';
 
 export const AuthContext = createContext();
@@ -173,6 +174,7 @@ export const AuthProvider = ({ children }) => {
     });
     
     Cookies.remove('auth_token');
+    toast.success('Signed out');
     window.location.href = '/login';
   };
 

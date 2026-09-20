@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { streamApi } from '../../services/api';
+import useModalDismiss from '../../hooks/useModalDismiss';
 
 const StreamManagementModal = ({ 
   stream, 
@@ -9,11 +10,13 @@ const StreamManagementModal = ({
   onUpdate, 
   onShare, 
   onUnshare, 
+  onDeleteStream,
   streamToken,
   user,
   isShared = false  // Add this prop
 }) => {
   const [activeTab, setActiveTab] = useState('details');
+  const [isSharing, setIsSharing] = useState(false);
   const [sharedUsers, setSharedUsers] = useState([]);
   const [loadingShared, setLoadingShared] = useState(false);
   const [shareForm, setShareForm] = useState({
@@ -48,23 +51,31 @@ const StreamManagementModal = ({
     }
   }, [activeTab, streamToken, isShared]);
 
+  // Doherty/consistent dismissal: Escape and outside mousedown close the modal.
+  useModalDismiss(true, onClose);
+
   const handleShareSubmit = async (e) => {
     e.preventDefault();
     if (!shareForm.email.trim()) {
       toast.error('Please enter an email address');
       return;
     }
+    if (isSharing) return;
 
+    setIsSharing(true);
     try {
       await onShare(stream.name, shareForm.email, {
         can_read: shareForm.can_read,
         can_write: shareForm.can_write
       });
-      
+
+      // Only reset the form on success so a failed share keeps the typed email.
       setShareForm({ email: '', can_read: true, can_write: false });
       fetchSharedUsers(); // Refresh the list
     } catch (err) {
       // Error handled in parent
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -95,7 +106,7 @@ const StreamManagementModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-card rounded-2xl border border-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+      <div data-modal-root className="bg-dark-card rounded-2xl border border-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div>
@@ -162,9 +173,8 @@ const StreamManagementModal = ({
                       <span className="text-light-text">
                         <a 
                           href={`mailto:${isShared ? stream.owner_email : user?.email}`}
+                          className="hover:underline"
                           style={{
-                            textDecoration: 'none',
-                            color: 'inherit',
                             cursor: 'pointer'
                           }}
                         >
@@ -258,10 +268,13 @@ const StreamManagementModal = ({
                     Deleting this stream will permanently remove all messages and cannot be undone.
                   </p>
                   <button
-                    onClick={() => {
-                      if (window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
-                        onClose();
-                        // Delete will be handled by parent
+                    onClick={async () => {
+                      if (window.confirm(`Delete stream "${stream.name}"? All messages will be permanently removed.`)) {
+                        try {
+                          await onDeleteStream(stream.name, true); // confirmed here; parent skips its own confirm
+                        } finally {
+                          onClose();
+                        }
                       }
                     }}
                     className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
@@ -321,9 +334,10 @@ const StreamManagementModal = ({
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium"
+                    disabled={isSharing}
+                    className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Share Stream
+                    {isSharing ? 'Sharing…' : 'Share Stream'}
                   </button>
                 </form>
               </div>

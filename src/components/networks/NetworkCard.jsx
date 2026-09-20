@@ -7,7 +7,6 @@ import {
   FaGlobe,
   FaLock,
   FaUser,
-  FaShareAlt,
   FaEye,
   FaCloudUploadAlt,
   FaCalendar,
@@ -320,17 +319,6 @@ const NetworkCard = ({
                 <span className="sm:hidden">Del</span>
               </>
             )}
-          </button>
-        )}
-        
-        {/* Share Icon for owned networks */}
-        {!isAuthorized && (
-          <button
-            onClick={() => onManage(network)}
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-primary/20"
-            title="Share Network"
-          >
-            <FaShareAlt className="w-4 h-4" />
           </button>
         )}
       </div>

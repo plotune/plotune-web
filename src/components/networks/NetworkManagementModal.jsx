@@ -1,5 +1,5 @@
 // components/networks/NetworkManagementModal.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   FaTimes, 
   FaUsers,
@@ -14,6 +14,7 @@ import {
   FaCheck,
   FaLock
 } from 'react-icons/fa';
+import useModalDismiss from '../../hooks/useModalDismiss';
 
 const NetworkManagementModal = ({ 
   network, 
@@ -31,17 +32,29 @@ const NetworkManagementModal = ({
     can_subscribe: true
   });
   const [copied, setCopied] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const panelRef = useRef(null);
+  useModalDismiss(true, onClose, panelRef);
 
   // Filter out owner from auths list
   const peerAuths = network.auths ? network.auths.filter(auth => 
     auth.user_email !== network.owner_email
   ) : [];
 
-  const handleShareSubmit = (e) => {
+  const handleShareSubmit = async (e) => {
     e.preventDefault();
     if (shareEmail && onShare) {
-      onShare(network.name, shareEmail, sharePermissions);
-      setShareEmail('');
+      setIsSharing(true);
+      try {
+        await onShare(network.name, shareEmail, sharePermissions);
+        // Only clear the email once the share succeeded, so a failure
+        // keeps the typed value for an easy retry.
+        setShareEmail('');
+      } catch (err) {
+        // Failure toast is shown by the parent; keep the typed email.
+      } finally {
+        setIsSharing(false);
+      }
     }
   };
 
@@ -59,7 +72,7 @@ const NetworkManagementModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-card rounded-2xl border border-white/10 shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+      <div ref={panelRef} className="bg-dark-card rounded-2xl border border-white/10 shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-white/10">
           <div className="flex justify-between items-start mb-4">
@@ -293,10 +306,11 @@ const NetworkManagementModal = ({
                   
                   <button
                     type="submit"
-                    className="w-full px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center justify-center gap-2"
+                    disabled={isSharing}
+                    className="w-full px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <FaUserPlus className="w-4 h-4" />
-                    Invite Peer
+                    {isSharing ? 'Inviting…' : 'Invite Peer'}
                   </button>
                 </form>
               </div>
@@ -333,10 +347,11 @@ const NetworkManagementModal = ({
                         </div>
                         <button
                           onClick={() => handleUnshare(auth.user_email)}
-                          className="p-2 text-rose-400 hover:bg-rose-500/10 rounded-lg transition"
-                          title="Remove peer"
+                          className="flex items-center gap-2 px-3 min-h-[44px] text-sm font-medium text-rose-400 hover:bg-rose-500/10 rounded-lg transition"
+                          aria-label="Remove peer"
                         >
                           <FaTrash className="w-4 h-4" />
+                          Remove
                         </button>
                       </div>
                     ))}

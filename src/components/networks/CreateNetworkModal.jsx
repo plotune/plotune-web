@@ -1,15 +1,18 @@
 // components/networks/CreateNetworkModal.jsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     FaGlobe, 
     FaLock,
     FaShareAlt , 
     FaUsers, 
-    
+    FaSpinner,
     FaNetworkWired
   } from 'react-icons/fa';
+import useModalDismiss from '../../hooks/useModalDismiss';
 
-const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false }) => {
+const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubmitting = false }) => {
+  const panelRef = useRef(null);
+  useModalDismiss(!isSubmitting, onClose, panelRef);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -33,6 +36,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (validate()) {
       onSubmit(formData);
     }
@@ -51,7 +55,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl w-full max-w-md">
+      <div ref={panelRef} className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-light-text">Create New Network</h3>
           <button
@@ -112,9 +116,12 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false }) => {
             </div>
 
             {/* Visibility Toggle */}
-            <div 
-              className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5 cursor-pointer hover:border-primary/30 transition"
+            <button
+              type="button"
+              role="switch"
+              aria-checked={formData.is_public}
               onClick={toggleVisibility}
+              className="w-full text-left bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5 cursor-pointer hover:border-primary/30 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -148,7 +155,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false }) => {
                   }`} />
                 </div>
               </div>
-            </div>
+            </button>
 
             {/* Owner Information */}
             <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
@@ -176,9 +183,10 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false }) => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Create Network
+                {isSubmitting ? 'Creating…' : 'Create Network'}
               </button>
             </div>
           </form>

@@ -1,8 +1,10 @@
 // components/streams/ConnectionPanel.jsx - Updated
-import React from 'react';
-import { FaCopy, FaLink, FaUser, FaCalendar, FaEye, FaEdit } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaCopy, FaLink, FaUser, FaCalendar, FaEye, FaEyeSlash, FaEdit } from 'react-icons/fa';
 
 const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConnection, streamToken }) => {
+  const [showToken, setShowToken] = useState(false);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -23,6 +25,12 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
 
   const consumerUrl = `wss://stream.plotune.net/ws/consumer/${getOwnerUsername()}/${stream.name}/${user?.username}?token=${encodeURIComponent(streamToken)}`;
 
+  // Masked display copy: the real URL (with the full stream token) is only
+  // shown via the explicit show/hide toggle; Copy always uses the real URL.
+  const displayUrl = showToken
+    ? consumerUrl
+    : consumerUrl.replace(/(token=)[^&]+/, '$1••••••••');
+
   return (
     <div className="bg-dark-card rounded-xl border border-white/10 p-5">
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -34,15 +42,24 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
         <div>
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-text text-sm">Consumer Endpoint</span>
-            <button
-              onClick={onCopyConnection}
-              className="text-primary hover:text-primary-dark text-sm flex items-center gap-1 transition"
-            >
-              <FaCopy className="w-3 h-3" /> Copy
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowToken(!showToken)}
+                aria-label={showToken ? 'Hide token in URL' : 'Show token in URL'}
+                className="text-gray-text hover:text-light-text text-sm flex items-center gap-1 transition"
+              >
+                {showToken ? <FaEyeSlash className="w-3 h-3" /> : <FaEye className="w-3 h-3" />}
+              </button>
+              <button
+                onClick={onCopyConnection}
+                className="text-primary hover:text-primary-dark text-sm flex items-center gap-1 transition"
+              >
+                <FaCopy className="w-3 h-3" /> Copy
+              </button>
+            </div>
           </div>
           <code className="bg-dark-bg text-xs p-3 rounded-lg block break-all font-mono">
-            {consumerUrl}
+            {displayUrl}
           </code>
         </div>
 
@@ -108,12 +125,14 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
             <span className="text-sm font-medium">
               {connectionStatus === 'connected' ? 'Live connection active' :
                connectionStatus === 'connecting' ? 'Connecting to stream...' :
+               connectionStatus === 'error' ? 'Connection failed — check your connection and try again' :
                'Disconnected from stream'}
             </span>
           </div>
           <p className="text-xs text-gray-text mt-1">
             {connectionStatus === 'connected' ? 'Receiving real-time messages' :
              connectionStatus === 'connecting' ? 'Establishing WebSocket connection' :
+             connectionStatus === 'error' ? 'The connection attempt did not succeed' :
              'Click Connect to start consuming messages'}
           </p>
         </div>

@@ -35,12 +35,6 @@ const StreamCard = ({ stream, onManage, onDelete, isShared = false, streamToken 
     });
   };
 
-  const getMessageRateColor = (rate) => {
-    if (rate >= 100) return "text-rose-400";
-    if (rate >= 50) return "text-amber-400";
-    return "text-emerald-400";
-  };
-
   const handleDeleteClick = async (e) => {
     e.stopPropagation();
     if (!onDelete) return;
@@ -94,8 +88,11 @@ const StreamCard = ({ stream, onManage, onDelete, isShared = false, streamToken 
                   }}
                   className="hidden sm:block"
                 >
-                  <button className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-primary/20 group/connect">
-                    <FaPlay className="w-3 h-3 ml-0.5" />
+                  <button
+                    aria-label="Connect to stream"
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-primary/20 group/connect"
+                  >
+                    <FaPlay className="w-4 h-4 ml-0.5" />
                   </button>
                 </Link>
               )}
@@ -160,9 +157,9 @@ const StreamCard = ({ stream, onManage, onDelete, isShared = false, streamToken 
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-gray-text flex items-center gap-1.5">
               <FaEnvelope className="w-3 h-3" />
-              <span className="hidden xs:inline">Rate</span>
+              <span className="hidden xs:inline">Max rate</span>
             </span>
-            <span className={`text-xs font-bold ${getMessageRateColor(stream.max_messages_per_second || 5)}`}>
+            <span className="text-xs font-bold text-light-text">
               {stream.max_messages_per_second || 5}/s
             </span>
           </div>

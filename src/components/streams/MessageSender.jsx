@@ -1,10 +1,12 @@
 // components/streams/MessageSender.jsx - Updated
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { FaPaperPlane, FaCode, FaPlug } from 'react-icons/fa';
 
 const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
   const [key, setKey] = useState('');
   const [value, setValue] = useState('');
+  const [valueError, setValueError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -14,20 +16,18 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
       return;
     }
 
-    if (connectionStatus !== 'connected') {
-      alert('Please connect to the stream first');
+    // Parse value as number before sending; surface a small inline error
+    // under the Value input instead of a blocking alert.
+    const numericValue = parseFloat(value);
+    if (isNaN(numericValue)) {
+      setValueError('Value must be a number');
       return;
     }
+    setValueError('');
 
     setLoading(true);
     
     try {
-      // Parse value as number
-      const numericValue = parseFloat(value);
-      if (isNaN(numericValue)) {
-        throw new Error('Value must be a number');
-      }
-
       const success = await onSendMessage(key, numericValue);
       if (success) {
         setKey('');
@@ -35,7 +35,7 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
       }
     } catch (err) {
       console.error('Error sending message:', err);
-      alert(err.message || 'Failed to send message');
+      toast.error('Message could not be sent. Check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -87,11 +87,17 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
           <input
             type="text"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => {
+              setValue(e.target.value);
+              if (valueError) setValueError('');
+            }}
             placeholder="23.5"
-            className="w-full p-3 bg-dark-bg rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+            className={`w-full p-3 bg-dark-bg rounded-lg border text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent ${
+              valueError ? 'border-red-500' : 'border-white/10'
+            }`}
             required
           />
+          {valueError && <p className="text-red-400 text-xs mt-1">{valueError}</p>}
         </div>
 
         <button
