@@ -27,13 +27,23 @@ const AgenticTestDevelopmentPage = () => (
         <div className="rounded-[1.75rem] bg-dark-card/80 p-7 shadow-custom md:p-8">
           <h3 className="text-lg font-semibold text-light-text">Traditional automation</h3>
           <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
-            {pillar.traditional.map((item) => <li key={item}>{item}</li>)}
+            {pillar.traditional.map((item, index) => (
+              <li key={item} className="flex items-start gap-3">
+                <span aria-hidden="true" className="font-semibold text-gray-text/70">{index + 1}.</span>
+                <span>{item}</span>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="rounded-[1.75rem] border border-primary/20 bg-dark-card/80 p-7 shadow-custom md:p-8">
           <h3 className="text-lg font-semibold text-light-text">The agentic approach</h3>
           <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
-            {pillar.agentic.map((item) => <li key={item}>{item}</li>)}
+            {pillar.agentic.map((item, index) => (
+              <li key={item} className="flex items-start gap-3">
+                <span aria-hidden="true" className="font-semibold text-primary">{index + 1}.</span>
+                <span>{item}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -50,12 +60,12 @@ const AgenticTestDevelopmentPage = () => (
               <Link
                 key={slug}
                 to={withFunnelParams(`/solutions/${slug}`)}
-                className="group rounded-[1.25rem] bg-dark-card/80 p-5 shadow-custom transition-all duration-300 hover:bg-dark-card"
+                className="group rounded-[1.25rem] bg-dark-card/80 p-5 shadow-custom transition-all duration-300 hover:bg-dark-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{segment.label}</p>
                 <p className="mt-2 text-sm leading-6 text-gray-text">{segment.heroTitle}</p>
                 <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-light-text">
-                  Read more <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                  Read more <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1" />
                 </span>
               </Link>
             );

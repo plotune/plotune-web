@@ -23,10 +23,12 @@ const SolutionPage = () => {
   return (
     <main className="bg-dark-bg text-dark-text">
       <Seo title={`${config.label} | Plotune Nexus`} description={config.problem} path={`/solutions/${config.slug}`} />
-
-      <section className="relative pt-32 pb-16">
+      <section className="relative pb-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(38,166,154,0.18),transparent_34%),radial-gradient(circle_at_82%_12%,rgba(63,81,181,0.14),transparent_28%),linear-gradient(180deg,#101112_0%,#121212_58%,#151719_100%)]" />
-        <div className="relative container mx-auto px-5">
+        <div className="relative container mx-auto px-5 pt-32">
+          <Link to="/research" className="mb-10 inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-gray-text transition-colors hover:text-primary">
+            ← Back to research
+          </Link>
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="max-w-xl">
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">{config.label}</p>
@@ -94,7 +96,7 @@ const SolutionPage = () => {
           <h2 className="text-xl font-semibold text-light-text">Supported integrations</h2>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {config.integrations.map((item) => (
-              <div key={item} className="rounded-2xl bg-white/[0.04] px-5 py-4 text-sm font-semibold text-light-text transition-colors duration-300 hover:bg-white/[0.07]">{item}</div>
+              <div key={item} className="rounded-2xl bg-white/[0.04] px-5 py-4 text-sm font-semibold text-light-text">{item}</div>
             ))}
           </div>
         </div>
@@ -109,9 +111,6 @@ const SolutionPage = () => {
                 <p className="mt-2 text-gray-text">Plotune Nexus is one product, this is how it runs against {config.label}.</p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link to={withFunnelParams('/nexus', { segment: config.slug, solution: config.slug })} className="inline-flex items-center justify-center gap-2 rounded-full bg-white/[0.06] px-6 py-3 font-semibold text-light-text transition-all duration-300 hover:bg-white/[0.1]">
-                  Explore Nexus
-                </Link>
                 <Link to={withFunnelParams('/contact', { segment: config.slug, solution: config.slug })} className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
                   Discuss your setup <FiArrowRight />
                 </Link>

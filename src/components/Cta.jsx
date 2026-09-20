@@ -12,13 +12,13 @@ const Cta = () => {
         <div className="flex justify-center gap-4">
           <Link
             to="/download"
-            className="py-2 px-4 bg-primary text-white rounded hover:bg-primary-dark transition-all duration-300"
+            className="inline-flex min-h-[44px] items-center justify-center px-6 bg-primary text-white rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary hover:bg-primary-dark transition-all duration-300"
           >
             Download Plotune
           </Link>
           <Link
             to="/contact"
-            className="py-2 px-4 bg-dark-card border border-gray-text text-gray-text rounded hover:border-light-text hover:text-light-text transition-all duration-300"
+            className="inline-flex min-h-[44px] items-center justify-center px-6 bg-dark-card border border-gray-text text-gray-text rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary hover:border-light-text hover:text-light-text transition-all duration-300"
           >
             Contact Us
           </Link>
