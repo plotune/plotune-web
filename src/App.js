@@ -62,7 +62,7 @@ const NotFound = () => (
       We couldn&apos;t find that page.
     </h1>
     <p className="mt-4 max-w-md text-lg leading-8 text-gray-text">
-      The link may be outdated or mistyped. Here are the places people usually need:
+      The link may be outdated or mistyped. Here are some places to start:
     </p>
     <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
       <Link

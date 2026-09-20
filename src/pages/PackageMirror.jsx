@@ -119,8 +119,8 @@ const PackageMirror = () => {
                 size: '210MB', 
                 logs: [
                   ...pkg.logs, 
-                  'Successfully authenticated',
-                  'Pulling latest image from GHCR',
+                  'Demo: authenticated locally',
+                  'Demo: would pull latest image from GHCR',
                   'Image verified and ready for Plotune ecosystem',
                   'Demo complete — nothing was synced'
                 ] 
@@ -139,7 +139,8 @@ const PackageMirror = () => {
   };
 
   const handleAction = async (packageId, action) => {
-    if (action === 'delete' && !window.confirm('Remove this package from your list?')) return;
+    const targetPackage = packages.find((p) => p.id === packageId);
+    if (action === 'delete' && !window.confirm(`Remove "${targetPackage?.displayName || 'this package'}" from your list?`)) return;
 
     setPackages(prev => prev.map(pkg => 
       pkg.id === packageId 

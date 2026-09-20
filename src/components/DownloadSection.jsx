@@ -107,7 +107,7 @@ const DownloadSection = () => {
       downloads: [
         {
           name: 'Windows Installer',
-          description: 'Works on Windows. Linux is our primary supported platform; Windows builds are best-effort.',
+          description: 'Works on Windows. Linux is our primary supported platform; Windows builds are provided with less testing than Linux.',
           version: latestRelease ? latestRelease.tag_name : 'Latest',
           size: getAssetSize('plotune-windows'),
           type: 'zip',
@@ -396,11 +396,10 @@ const DownloadSection = () => {
               <div className="inline-flex flex-wrap justify-center gap-8 text-gray-text mb-12">
                 <div className="flex items-center gap-2">
                   <i className="fas fa-code text-primary"></i>
-                  <span>Open-source installer scripts</span>
-                </div>
+                  <span>Open-source installer scripts</span>                </div>
                 <div className="flex items-center gap-2">
                   <i className="fas fa-bolt text-primary"></i>
-                  <span>Fast Installation</span>
+                  <span>Fast installation</span>
                 </div>
               </div>
 

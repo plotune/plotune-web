@@ -197,7 +197,7 @@ const ForgotPassword = () => {
       return 'This code has expired. Request a new one and try again.';
     }
     if (text.includes('invalid') || text.includes('incorrect')) {
-      return "That code doesn't match. Check the email and try again.";
+      return "That code doesn't match. Check the code in your email and try again.";
     }
     return "We couldn't reset your password right now. Please try again.";
   };

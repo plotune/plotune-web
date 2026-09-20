@@ -82,9 +82,6 @@ const Embeddings = () => {
                     <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                     <span>Low latency</span>
                   </div>
-                  <div className="text-light-text/40 font-mono">
-                    v2.0
-                  </div>
                 </div>
               </div>
             </div>

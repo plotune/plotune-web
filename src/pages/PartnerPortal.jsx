@@ -434,7 +434,7 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
               <i className="fas fa-chart-line"></i>
             </div>
             <p className="text-gray-text text-lg">Usage Analytics</p>
-            <p className="text-gray-text text-sm mt-2">Coming Soon in Cloud Tier</p>
+            <p className="text-gray-text text-sm mt-2">Coming soon in the Cloud Tier</p>
           </div>
         </div>
         <div className="h-64 flex items-end gap-2 pt-8 opacity-30">
@@ -627,7 +627,7 @@ const AnalyticsTab = ({ handleComingSoon, usageData }) => (
             <i className="fas fa-chart-line"></i>
           </div>
           <p className="text-gray-text text-lg">Live Analytics Dashboard</p>
-          <p className="text-gray-text text-sm mt-2">Coming Soon in Cloud Tier</p>
+          <p className="text-gray-text text-sm mt-2">Coming soon in the Cloud Tier</p>
         </div>
       </div>
       <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 h-96 opacity-30">

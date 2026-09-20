@@ -52,7 +52,7 @@ const VerifyEmail = () => {
       } else if (detail.includes('invalid') || detail.includes('not found')) {
         setFailureReason('This verification link is invalid or has already been used.');
       } else {
-        setFailureReason('We could not verify your email address right now.');
+        setFailureReason('We couldn\u2019t verify your email address right now.');
       }
       setVerificationStatus('error');
     } finally {

@@ -188,11 +188,32 @@ const Register = () => {
               .filter(([key]) => key)
           : Object.entries(detail);
         const fieldKeyMap = { confirm_password: 'confirmPassword', full_name: 'fullName' };
+        // Postel/Tesler: backend messages are for developers — map each field to the
+        // human copy the form itself already uses, with a generic fallback.
+        const humanFieldCopy = {
+          email: 'That email address looks incomplete',
+          username: 'That username isn\'t available — try a different one',
+          password: 'Password must be at least 8 characters',
+          confirmPassword: 'Passwords do not match',
+          fullName: 'Please enter your full name',
+          sector: 'Please choose your sector',
+          country: 'Please choose your country',
+        };
         const fieldErrors = {};
         entries.forEach(([key, value]) => {
           const fieldName = fieldKeyMap[key] || key;
           if (fieldName in formData) {
-            fieldErrors[fieldName] = Array.isArray(value) ? value.join(', ') : String(value);
+            const raw = Array.isArray(value) ? value.join(', ') : String(value);
+            const knownConflict = /exist|taken|already|registered|unique/i.test(raw);
+            fieldErrors[fieldName] =
+              humanFieldCopy[fieldName] ||
+              (knownConflict ? humanFieldCopy[fieldName] || 'Please choose a different value.' : 'Please choose a different value.');
+            if (knownConflict && fieldName === 'username') {
+              fieldErrors[fieldName] = 'That username isn\'t available — try a different one';
+            }
+            if (knownConflict && fieldName === 'email') {
+              fieldErrors[fieldName] = 'An account with this email already exists. Try logging in instead.';
+            }
           }
         });
         if (Object.keys(fieldErrors).length > 0) {
@@ -201,7 +222,17 @@ const Register = () => {
           toast.error('Registration failed. Please try again.');
         }
       } else if (typeof detail === 'string' && detail.trim()) {
-        toast.error(detail);
+        // Postel: even a plain-string detail is developer text — classify it instead
+        // of showing it verbatim.
+        const raw = detail.toLowerCase();
+        if (raw.includes('exist') || raw.includes('taken') || raw.includes('already') || raw.includes('registered')) {
+          toast.error('An account with these details already exists. Try logging in instead.');
+        } else if (raw.includes('username')) {
+          toast.error("That username isn't available — try a different one.");
+        } else {
+          toast.error("We couldn't create your account. Please try again.");
+        }
+        console.error('Registration failed:', detail);
       } else {
         toast.error('Registration failed. Please try again.');
       }
