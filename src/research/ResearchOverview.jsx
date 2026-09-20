@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { buildBenchmarkView, buildScatterChart, formatMetricValue, metricDefinitions, rankMetricRows } from './content/benchmark';
@@ -6,8 +6,8 @@ import ScatterMetricChart from '../components/research/ScatterMetricChart';
 
 const format = formatMetricValue;
 const chartMetrics = ['performance', 'cost', 'latency'];
-const detailMetrics = ['performance', 'cost', 'latency', 'reliability'];
-const landscapeMetrics = ['cost', 'latency', 'reliability'];
+const detailMetrics = ['performance', 'cost', 'latency'];
+const landscapeMetrics = ['cost', 'latency'];
 const PAGE_SIZE = 7;
 
 const ResearchOverview = () => {
@@ -21,14 +21,73 @@ const ResearchOverview = () => {
   const scatterChart = useMemo(() => buildScatterChart(resultsView.rows, landscapeMetric, 'performance'), [resultsView, landscapeMetric]);
   const pageCount = Math.ceil(resultsView.rows.length / PAGE_SIZE);
   const pageRows = resultsView.rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const update = (changes) => { const next = new URLSearchParams(params); Object.entries(changes).forEach(([key, value]) => value && value !== 'All tasks' ? next.set(key, value) : next.delete(key)); setParams(next); };
-  const setPage = (next) => { update({ page: next > 1 ? next : null }); document.getElementById('results-title')?.scrollIntoView({ behavior: 'smooth' }); };
-  return <><Seo title="Agentic Test & Validation | Plotune Research" description="Visual comparisons for agentic engineering test and validation workflows." path="/research" />
-    <section className="research-page benchmark-page"><header className="page-heading"><span className="section-label">Benchmark</span><h1>Agentic Test &amp; Validation</h1><p>Visual comparisons for engineering workflows, designed to make performance, cost, time, and reliability legible before the detailed results.</p>
-    </header><div className="benchmark-layout"><aside className="workflow-side-nav"><span className="section-label">Workflow</span>{view.taskGroups.map((task) => <button key={task} className={task === taskGroup ? 'active' : ''} onClick={() => update({ task, page: null })}>{task === 'All tasks' ? 'Overall index' : task}</button>)}</aside><div className="benchmark-canvas"><section className="highlights" aria-labelledby="highlights-title"><div className="highlights-heading"><div><span className="section-label">Highlights</span><h2 id="highlights-title">Leading models at a glance</h2></div><span>{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span></div><div className="highlight-chart-grid">{chartMetrics.map((key) => <MetricBarChart key={key} rows={view.rows} metric={key} onSelect={() => update({ metric: key })} active={metric === key} />)}</div></section><section className="performance-landscape" aria-labelledby="landscape-title"><div className="ranked-chart-heading"><div><span className="section-label">{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span><h2 id="landscape-title">Performance landscape</h2><p>Every model plotted against performance, so the tradeoff is visible at a glance — not just the ranking.</p></div></div><div className="landscape-tabs" role="tablist">{landscapeMetrics.map((key) => <button key={key} className={landscapeMetric === key ? 'active' : ''} onClick={() => update({ landscape: key })}>Performance vs {metricDefinitions[key].label}</button>)}</div><ScatterMetricChart chart={scatterChart} label={`Performance versus ${metricDefinitions[landscapeMetric].label}, one point per model`} /><details className="chart-explainer"><summary><b>How to read this chart</b><i>+</i></summary><p>Each point is one model, colored by provider — click a provider in the legend below the chart to isolate it. The dotted line connects the Pareto frontier: models where no other model scores at least as well on both axes and strictly better on one. The shaded corner marks the most attractive combination of {metricDefinitions[landscapeMetric].label.toLowerCase()} and performance.</p></details></section><section className="metric-detail" aria-labelledby="metric-title"><div className="metric-tabs-list" role="tablist">{detailMetrics.map((key) => <button key={key} className={metric === key ? 'active' : ''} onClick={() => update({ metric: key })}>{metricDefinitions[key].label}</button>)}</div><div className="ranked-chart-panel"><div className="ranked-chart-heading"><div><span className="section-label">{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span><h2 id="metric-title">{metricDefinitions[metric]?.label} across models</h2><p>{metric === 'performance' ? 'Task-normalized score. Higher is better.' : metric === 'cost' ? 'Average cost per completed task. Lower is better.' : metric === 'latency' ? 'Average task duration. Lower is better.' : 'Completed runs with a valid terminal result. Higher is better.'}</p></div><span>Top 12</span></div><RankedBarChart rows={rankMetricRows(view.rows, metric, 12)} metric={metric} /></div></section><section className="metric-detail all-results" aria-labelledby="results-title"><div className="ranked-chart-heading"><div><span className="section-label">{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span><h2 id="results-title">All model results</h2><p>Every model in the run, ranked by performance, with cost, time, and reliability alongside.</p></div><span>{resultsView.rows.length} models</span></div><div className="result-card-grid">{pageRows.map((row) => <article className="model-result-card" key={row.model}><header><span className="rank-chip">#{row.rank}</span><span className="provider-monogram" style={{ backgroundColor: row.providerColor }}>{row.provider[0]}</span><div><h2>{row.modelName}</h2><p>{row.provider}</p></div></header><div className="result-measures"><span><small>Score</small><b>{format(row.score, 'score')}</b></span><span><small>Cost / task</small><b>{format(row.cost, 'cost')}</b></span><span><small>Time / task</small><b>{format(row.time, 'time')}</b></span><span><small>Reliability</small><b>{format(row.reliability, 'reliability')}</b></span></div></article>)}</div>{pageCount > 1 && <nav className="pagination" aria-label="Results pages">{Array.from({ length: pageCount }, (_, index) => index + 1).map((item) => <button key={item} className={item === page ? 'active' : ''} onClick={() => setPage(item)}>{item}</button>)}</nav>}<p className="results-next-step"><Link to="/research/reports">Read the latest report →</Link></p></section></div></div>
-    </section></>;
+  const update = (changes) => {
+    const next = new URLSearchParams(params);
+    Object.entries(changes).forEach(([key, value]) => value && value !== 'All tasks' ? next.set(key, value) : next.delete(key));
+    setParams(next);
+  };
+  const setPage = (next) => {
+    update({ page: next > 1 ? next : null });
+    document.getElementById('results-title')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return <>
+    <Seo title="Agentic Test & Validation | Plotune Research" description="Visual comparisons from Plotune's final agentic engineering test and validation benchmark." path="/research" />
+    <section className="research-page benchmark-page">
+      <header className="page-heading">
+        <span className="section-label">Final benchmark</span>
+        <h1>Agentic Test &amp; Validation</h1>
+        <p>Visual comparisons for engineering workflows, using the final benchmark’s validation index, cost per task, and task duration.</p>
+      </header>
+      <div className="benchmark-layout">
+        <aside className="workflow-side-nav">
+          <span className="section-label">Workflow</span>
+          {view.taskGroups.map((task) => <button key={task} className={task === taskGroup ? 'active' : ''} onClick={() => update({ task, page: null })}>{task === 'All tasks' ? 'Overall index' : task}</button>)}
+        </aside>
+        <div className="benchmark-canvas">
+          <section className="highlights" aria-labelledby="highlights-title">
+            <div className="highlights-heading"><div><span className="section-label">Highlights</span><h2 id="highlights-title">Leading models at a glance</h2></div><span>{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span></div>
+            <div className="highlight-chart-grid">{chartMetrics.map((key) => <MetricBarChart key={key} rows={view.rows} metric={key} onSelect={() => update({ metric: key })} active={metric === key} />)}</div>
+          </section>
+          <section className="performance-landscape" aria-labelledby="landscape-title">
+            <div className="ranked-chart-heading"><div><span className="section-label">{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span><h2 id="landscape-title">Performance landscape</h2><p>Every model plotted against performance, so the tradeoff is visible at a glance — not just the ranking.</p></div></div>
+            <div className="landscape-tabs" role="tablist">{landscapeMetrics.map((key) => <button key={key} className={landscapeMetric === key ? 'active' : ''} onClick={() => update({ landscape: key })}>Performance vs {metricDefinitions[key].label}</button>)}</div>
+            <ScatterMetricChart chart={scatterChart} label={`Performance versus ${metricDefinitions[landscapeMetric].label}, one point per model`} />
+            <details className="chart-explainer"><summary><b>How to read this chart</b><i>+</i></summary><p>Each point is one model, colored by provider — click a provider in the legend below the chart to isolate it. The dotted line connects the Pareto frontier: models where no other model scores at least as well on both axes and strictly better on one. The shaded corner marks the most attractive combination of {metricDefinitions[landscapeMetric].label.toLowerCase()} and performance.</p></details>
+          </section>
+          <section className="metric-detail" aria-labelledby="metric-title">
+            <div className="metric-tabs-list" role="tablist">{detailMetrics.map((key) => <button key={key} className={metric === key ? 'active' : ''} onClick={() => update({ metric: key })}>{metricDefinitions[key].label}</button>)}</div>
+            <div className="ranked-chart-panel"><div className="ranked-chart-heading"><div><span className="section-label">{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span><h2 id="metric-title">{metricDefinitions[metric]?.label} across models</h2><p>{metric === 'performance' ? 'Category-normalized validation index. Higher is better.' : metric === 'cost' ? 'Average cost per task. Lower is better.' : 'Average task duration. Lower is better.'}</p></div><span>Top 12</span></div><RankedBarChart rows={rankMetricRows(view.rows, metric, 12)} metric={metric} /></div>
+          </section>
+          <section className="metric-detail all-results" aria-labelledby="results-title">
+            <div className="ranked-chart-heading"><div><span className="section-label">{taskGroup === 'All tasks' ? 'Overall index' : taskGroup}</span><h2 id="results-title">All model results</h2><p>Every model in the final run, ranked by validation index, with cost and task duration alongside.</p></div><span>{resultsView.rows.length} models</span></div>
+            <div className="result-card-grid">{pageRows.map((row) => <article className="model-result-card" key={row.model}><header><span className="rank-chip">#{row.rank}</span><span className="provider-monogram" style={{ backgroundColor: row.providerColor }}>{row.provider[0]}</span><div><h2>{row.modelName}</h2><p>{row.provider}</p></div></header><div className="result-measures"><span><small>Validation index</small><b>{format(row.score, 'score')}</b></span><span><small>Cost / task</small><b>{format(row.cost, 'cost')}</b></span><span><small>Time / task</small><b>{format(row.time, 'time')}</b></span></div></article>)}</div>
+            {pageCount > 1 && <nav className="pagination" aria-label="Results pages">{Array.from({ length: pageCount }, (_, index) => index + 1).map((item) => <button key={item} className={item === page ? 'active' : ''} onClick={() => setPage(item)}>{item}</button>)}</nav>}
+            <p className="results-next-step"><Link to="/research/reports">Read the latest report →</Link></p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </>;
 };
 
-const MetricBarChart = ({ rows, metric, onSelect, active }) => { const config = metricDefinitions[metric]; const cohort = rankMetricRows(rows, metric, 8); const values = cohort.map((row) => row[config.key]); const min = Math.min(...values); const max = Math.max(...values); const width = (value) => max === min ? 82 : 32 + ((config.higher ? value - min : max - value) / (max - min)) * 64; return <button className={active ? 'metric-card active' : 'metric-card'} onClick={onSelect}><header><div><span className="metric-swatch" /><h3>{metric === 'performance' ? 'Validation index' : metric === 'cost' ? 'Cost per task' : 'Time per task'}</h3></div><small>{config.higher ? 'Higher is better' : 'Lower is better'}</small></header><div className="mini-bars">{cohort.map((row) => <div key={row.model} className="mini-bar-row"><span title={row.model}>{row.modelName}</span><b><i style={{ width: `${width(row[config.key])}%`, backgroundColor: row.color }} /></b><strong>{format(row[config.key], metric)}</strong></div>)}</div></button>; };
-const RankedBarChart = ({ rows, metric }) => { const config = metricDefinitions[metric]; const values = rows.map((row) => row[config.key]); const min = Math.min(...values); const max = Math.max(...values); const width = (value) => max === min ? 82 : 18 + ((config.higher ? value - min : max - value) / (max - min)) * 78; return <div className="ranked-bars" role="img" aria-label={`Top ${rows.length} models ranked by ${config.label}`}>{rows.map((row, index) => <div className="ranked-bar-row" key={row.model}><span className="chart-rank">{index + 1}</span><span className="chart-model"><i style={{ backgroundColor: row.color }} />{row.model}</span><div className="bar-track"><b style={{ width: `${width(row[config.key])}%`, backgroundColor: row.color }}><em>{format(row[config.key], metric)}</em></b></div></div>)}</div>; };
+const MetricBarChart = ({ rows, metric, onSelect, active }) => {
+  const config = metricDefinitions[metric];
+  const cohort = rankMetricRows(rows, metric, 8);
+  const values = cohort.map((row) => row[config.key]);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const width = (value) => max === min ? 82 : 32 + ((config.higher ? value - min : max - value) / (max - min)) * 64;
+  return <button className={active ? 'metric-card active' : 'metric-card'} onClick={onSelect}><header><div><span className="metric-swatch" /><h3>{metric === 'performance' ? 'Validation index' : metric === 'cost' ? 'Cost per task' : 'Time per task'}</h3></div><small>{config.higher ? 'Higher is better' : 'Lower is better'}</small></header><div className="mini-bars">{cohort.map((row) => <div key={row.model} className="mini-bar-row"><span title={row.model}>{row.modelName}</span><b><i style={{ width: `${width(row[config.key])}%`, backgroundColor: row.color }} /></b><strong>{format(row[config.key], metric)}</strong></div>)}</div></button>;
+};
+
+const RankedBarChart = ({ rows, metric }) => {
+  const config = metricDefinitions[metric];
+  const values = rows.map((row) => row[config.key]);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const width = (value) => max === min ? 82 : 18 + ((config.higher ? value - min : max - value) / (max - min)) * 78;
+  return <div className="ranked-bars" role="img" aria-label={`Top ${rows.length} models ranked by ${config.label}`}>{rows.map((row, index) => <div className="ranked-bar-row" key={row.model}><span className="chart-rank">{index + 1}</span><span className="chart-model"><i style={{ backgroundColor: row.color }} />{row.model}</span><div className="bar-track"><b style={{ width: `${width(row[config.key])}%`, backgroundColor: row.color }}><em>{format(row[config.key], metric)}</em></b></div></div>)}</div>;
+};
+
 export default ResearchOverview;

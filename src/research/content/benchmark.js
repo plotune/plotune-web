@@ -1,16 +1,9 @@
-import { demoData } from './charts';
-
-const operational = {
-  'Atlas Reasoner': { cost: 0.12, time: 2.8, reliability: 99.1 },
-  'Vector Agent': { cost: 0.08, time: 2.1, reliability: 98.2 },
-  'Summit Code': { cost: 0.15, time: 2.4, reliability: 97.6 },
-};
+import finalBenchmarkData from './finalBenchmarkData.json';
 
 const metricDefinitions = {
   performance: { label: 'Performance', key: 'score', suffix: '', higher: true },
   cost: { label: 'Cost', key: 'cost', suffix: '$ / task', higher: false },
   latency: { label: 'Latency', key: 'time', suffix: 'min / task', higher: false },
-  reliability: { label: 'Reliability', key: 'reliability', suffix: '%', higher: true },
 };
 
 // One color per provider (not per model) so the scatter chart's legend can double as a filter —
@@ -27,7 +20,6 @@ const getProviderColor = (provider) => providerColors[provider]
 
 export const formatMetricValue = (value, metric) => metric === 'cost' ? `$${value.toFixed(3)}`
   : metric === 'latency' ? `${value.toFixed(1)} min`
-  : metric === 'reliability' ? `${value.toFixed(1)}%`
   : value.toFixed(1);
 
 const average = (values) => values.reduce((total, value) => total + value, 0) / values.length;
@@ -44,24 +36,21 @@ export const rankMetricRows = (rows, metric = 'performance', limit = 12) => {
 };
 
 export const buildBenchmarkView = ({ taskGroup = 'All tasks', metric = 'performance', sort } = {}) => {
-  const taskIndex = demoData.tasks.indexOf(taskGroup);
-  const rows = demoData.models.map((model) => {
+  const taskIndex = finalBenchmarkData.tasks.indexOf(taskGroup);
+  const rows = finalBenchmarkData.models.map((model) => {
     const score = taskIndex >= 0 ? model.scores[taskIndex] : average(model.scores);
     const [provider, ...modelParts] = model.name.split(': ');
     return {
       model: model.name,
       provider,
       modelName: modelParts.join(': '),
-      color: model.color,
+      color: getProviderColor(provider),
       providerColor: getProviderColor(provider),
       scores: model.scores,
       score: Number(score.toFixed(1)),
       taskScore: taskIndex >= 0 ? model.scores[taskIndex] : null,
-      ...(operational[model.name] || {
-        cost: Number((0.025 + (model.scores[0] % 7) * 0.018).toFixed(3)),
-        time: Number((1.4 + (model.scores[1] % 7) * 0.32).toFixed(1)),
-        reliability: Number((94 + (model.scores[2] % 6) * 0.8).toFixed(1)),
-      }),
+      cost: model.cost,
+      time: model.time,
     };
   });
   const metricConfig = metricDefinitions[metric] || metricDefinitions.performance;
@@ -69,18 +58,18 @@ export const buildBenchmarkView = ({ taskGroup = 'All tasks', metric = 'performa
   rows.sort((a, b) => sortConfig.higher ? b[sortConfig.key] - a[sortConfig.key] : a[sortConfig.key] - b[sortConfig.key]);
 
   return {
-    id: 'agentic-validation-v0-1',
+    id: 'agentic-validation-v1-0',
     name: 'Agentic Test & Validation',
-    version: 'v0.1',
-    updatedAt: '17 Sep 2026',
-    isPreview: true,
+    version: 'v1.0',
+    updatedAt: '20 Sep 2026',
+    isPreview: false,
     taskGroup,
-    taskGroups: ['All tasks', ...demoData.tasks],
+    taskGroups: ['All tasks', ...finalBenchmarkData.tasks],
     providers: [...new Set(rows.map((row) => row.provider))].sort(),
     metric: metricConfig,
     rows: rows.map((row, index) => ({ ...row, rank: index + 1 })),
     pareto: rows.filter((row) => !rows.some((other) => other.model !== row.model && other.cost <= row.cost && other.score >= row.score && (other.cost < row.cost || other.score > row.score))),
-    matrix: demoData.models.map((model) => ({ model: model.name, color: model.color, scores: model.scores })),
+    matrix: finalBenchmarkData.models.map((model) => ({ model: model.name, color: getProviderColor(model.name.split(': ')[0]), scores: model.scores })),
   };
 };
 

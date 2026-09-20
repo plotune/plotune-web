@@ -1,0 +1,25 @@
+{
+  "tasks": [
+    "Industrial data analysis",
+    "Automated test flows",
+    "Calibration & software",
+    "Real-time stream validation",
+    "Safety & evidence",
+    "V-cycle"
+  ],
+  "models": [
+    { "name": "Anthropic: Sonnet 5", "scores": [87.4, 77.5, 81, 78.6, 79.3, 70.2], "cost": 0.452, "time": 6.1 },
+    { "name": "Anthropic: Opus 5", "scores": [92.2, 81.8, 85.4, 83, 83.7, 74.1], "cost": 1.13, "time": 6.7 },
+    { "name": "Anthropic: Fable 5.1", "scores": [93.9, 83.5, 87.3, 84.7, 85.4, 75.6], "cost": 2.2599, "time": 6.8 },
+    { "name": "Anthropic: Haiku 4.5", "scores": [70.1, 19.3, 65, 63.1, 63.7, 56.3], "cost": 0.226, "time": 5.5 },
+    { "name": "OpenAI: GPT-5.6 Terra", "scores": [86.4, 76.7, 80.1, 77.8, 78.5, 69.4], "cost": 0.5136, "time": 6 },
+    { "name": "OpenAI: GPT-6 Astra", "scores": [93.9, 83.5, 87.3, 84.7, 85.4, 75.6], "cost": 2.2599, "time": 6.7 },
+    { "name": "OpenAI: GPT-5.6 Sol", "scores": [90.2, 80.1, 83.7, 81.2, 82, 72.5], "cost": 0.452, "time": 6.3 },
+    { "name": "Z.ai: GLM 5.3 Flash", "scores": [73, 64.7, 67.6, 65.6, 66.3, 58.6], "cost": 0.0131, "time": 5.6 },
+    { "name": "Qwen: Qwen3 Coder 480B A35B", "scores": [74.9, 66.5, 69.4, 67.4, 68, 60.2], "cost": 0.0524, "time": 5.8 },
+    { "name": "MoonshotAI: Kimi K2.7 Code", "scores": [80.6, 71.6, 74.8, 72.6, 73.2, 64.8], "cost": 0.1497, "time": 6.2 },
+    { "name": "DeepSeek: DeepSeek V3.2", "scores": [67.2, 59.6, 62.3, 60.5, 61, 54], "cost": 0.0317, "time": 5.9 },
+    { "name": "NVIDIA: Nemotron 3 Ultra", "scores": [76.8, 68.2, 71.2, 69.1, 69.8, 61.7], "cost": 0.1171, "time": 6.4 },
+    { "name": "opencode: big-pickle", "scores": [52.8, 29.7, 61.3, 47.5, 48, 42.4], "cost": 0, "time": 6.9 }
+  ]
+}

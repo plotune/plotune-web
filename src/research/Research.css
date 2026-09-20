@@ -17,6 +17,8 @@
 .research-menu{min-height:44px;padding:10px 14px;font-size:13px}
 .filter-bar select,.search-control input{height:44px}
 .metric-tabs button,.workflow-tabs button,.metric-tabs-list button,.landscape-tabs button,.workflow-side-nav button{min-height:44px;box-sizing:border-box}
+
+.result-measures{grid-template-columns:repeat(3,1fr)}
 .methodology-nav a{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box}
 .rss-button{width:44px;height:44px}
 .pagination button{width:44px;height:44px}
