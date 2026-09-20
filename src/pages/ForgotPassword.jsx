@@ -64,7 +64,7 @@ const ForgotPassword = () => {
     const newErrors = {};
     if (!email) {
       newErrors.email = 'Email is required';
-    } else if (!email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    } else if (!email.match(/^\S+@\S+\.\S+$/)) {
       newErrors.email = 'Invalid email format';
     }
     setErrors(newErrors);
@@ -136,7 +136,7 @@ const ForgotPassword = () => {
       setStep('reset');
       toast.success('Code verified successfully');
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Invalid verification code');
+      toast.error(getCodeErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -157,7 +157,7 @@ const ForgotPassword = () => {
       toast.success('Password reset successfully');
       navigate('/login');
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Password reset failed');
+      toast.error(getCodeErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -188,6 +188,20 @@ const ForgotPassword = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Map backend errors to human-friendly messages; never render raw backend strings
+  const getCodeErrorMessage = (err) => {
+    console.error('Password reset step failed:', err);
+    const detail = err?.response?.data?.detail;
+    const text = typeof detail === 'string' ? detail.toLowerCase() : '';
+    if (text.includes('expired')) {
+      return 'This code has expired. Request a new one and try again.';
+    }
+    if (text.includes('invalid') || text.includes('incorrect')) {
+      return "That code doesn't match. Check the email and try again.";
+    }
+    return "We couldn't reset your password right now. Please try again.";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
       <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl w-full max-w-md">
@@ -209,6 +223,14 @@ const ForgotPassword = () => {
             {step === 'code' && 'Enter the 9-digit code sent to your email'}
             {step === 'reset' && 'Create a new strong password for your account'}
           </p>
+
+          <div className="mt-3 flex items-center justify-center gap-2 text-xs">
+            <span className={step === 'email' ? 'text-primary font-semibold' : 'text-gray-text'}>1. Email</span>
+            <span className="text-gray-text" aria-hidden="true">→</span>
+            <span className={step === 'code' ? 'text-primary font-semibold' : 'text-gray-text'}>2. Code</span>
+            <span className="text-gray-text" aria-hidden="true">→</span>
+            <span className={step === 'reset' ? 'text-primary font-semibold' : 'text-gray-text'}>3. New password</span>
+          </div>
         </div>
 
         {/* Step 1: Email Input */}
@@ -230,6 +252,7 @@ const ForgotPassword = () => {
                   errors.email ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
                 placeholder="Enter your email address"
+                autoComplete="email"
               />
               {errors.email && (
                 <p className="text-red-400 text-xs mt-1 flex items-center">
@@ -289,6 +312,7 @@ const ForgotPassword = () => {
                 }`}
                 placeholder="000000000"
                 maxLength={9}
+                autoComplete="one-time-code"
               />
               {errors.code && (
                 <p className="text-red-400 text-xs mt-1 flex items-center">
@@ -312,6 +336,11 @@ const ForgotPassword = () => {
               >
                 {isSubmitting ? 'Sending...' : 'Resend Code'}
               </button>
+              {!canResend && countdown > 0 && (
+                <p className="text-gray-text text-xs mt-1">
+                  You can resend in {formatTime(countdown)}.
+                </p>
+              )}
             </div>
 
             <button
@@ -364,6 +393,7 @@ const ForgotPassword = () => {
                     errors.newPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
                   }`}
                   placeholder="Create a strong password"
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
@@ -440,6 +470,7 @@ const ForgotPassword = () => {
                     errors.confirmPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
                   }`}
                   placeholder="Confirm your password"
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"

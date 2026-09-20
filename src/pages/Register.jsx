@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { toast } from 'react-toastify';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -72,7 +73,7 @@ const Register = () => {
   const validate = () => {
     const newErrors = {};
     
-    if (!formData.email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    if (!formData.email.match(/^\S+@\S+\.\S+$/)) {
       newErrors.email = 'Invalid email format';
     }
     
@@ -104,6 +105,55 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Validate a single field (used on blur) so untouched fields are not flagged
+  const validateField = (name) => {
+    let error = '';
+    switch (name) {
+      case 'email':
+        if (!formData.email.match(/^\S+@\S+\.\S+$/)) {
+          error = 'Invalid email format';
+        }
+        break;
+      case 'username':
+        if (formData.username.length < 3) {
+          error = 'Username must be at least 3 characters';
+        }
+        break;
+      case 'password':
+        if (formData.password.length < 8) {
+          error = 'Password must be at least 8 characters';
+        }
+        break;
+      case 'confirmPassword':
+        if (formData.password !== formData.confirmPassword) {
+          error = 'Passwords do not match';
+        }
+        break;
+      case 'sector':
+        if (!formData.sector) {
+          error = 'Sector is required';
+        }
+        break;
+      case 'country':
+        if (!formData.country) {
+          error = 'Country is required';
+        }
+        break;
+      default:
+        break;
+    }
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (error) {
+        next[name] = error;
+      } else {
+        delete next[name];
+      }
+      return next;
+    });
+    return !error;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -125,9 +175,36 @@ const Register = () => {
         mac_address: null // Optional: Include mac_address if needed
       });
       toast.success('Registration successful. Please verify your email.');
-      // Redirect to login or verification page
+      navigate('/verify-email', { state: { email: formData.email } });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      const detail = err.response?.data?.detail;
+      console.error('Registration failed:', err);
+      if (detail && typeof detail === 'object') {
+        // FastAPI field-error payload (dict, or array of {loc, msg} entries):
+        // map entries whose key matches a form field into field errors
+        const entries = Array.isArray(detail)
+          ? detail
+              .map((item) => [item?.loc?.[item.loc.length - 1], item?.msg])
+              .filter(([key]) => key)
+          : Object.entries(detail);
+        const fieldKeyMap = { confirm_password: 'confirmPassword', full_name: 'fullName' };
+        const fieldErrors = {};
+        entries.forEach(([key, value]) => {
+          const fieldName = fieldKeyMap[key] || key;
+          if (fieldName in formData) {
+            fieldErrors[fieldName] = Array.isArray(value) ? value.join(', ') : String(value);
+          }
+        });
+        if (Object.keys(fieldErrors).length > 0) {
+          setErrors((prev) => ({ ...prev, ...fieldErrors }));
+        } else {
+          toast.error('Registration failed. Please try again.');
+        }
+      } else if (typeof detail === 'string' && detail.trim()) {
+        toast.error(detail);
+      } else {
+        toast.error('Registration failed. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -142,6 +219,13 @@ const Register = () => {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-light-text mb-2">Create Account</h1>
           <p className="text-gray-text">Join Plotune to access exclusive features</p>
+          <div className="mt-3 flex items-center justify-center gap-2 text-xs">
+            <span className="text-primary font-semibold">1. Create account</span>
+            <span className="text-gray-text" aria-hidden="true">→</span>
+            <span className="text-gray-text">2. Verify email</span>
+            <span className="text-gray-text" aria-hidden="true">→</span>
+            <span className="text-gray-text">3. Sign in</span>
+          </div>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -164,7 +248,8 @@ const Register = () => {
               name="email"
               value={email}
               onChange={handleInputChange}
-              onBlur={validate}
+              onBlur={() => validateField('email')}
+              autoComplete="email"
               className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                 errors.email ? 'border-red-500' : 'border-white/10 focus:border-primary'
               }`}
@@ -185,7 +270,8 @@ const Register = () => {
               name="username"
               value={username}
               onChange={handleInputChange}
-              onBlur={validate}
+              onBlur={() => validateField('username')}
+              autoComplete="username"
               className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                 errors.username ? 'border-red-500' : 'border-white/10 focus:border-primary'
               }`}
@@ -207,7 +293,8 @@ const Register = () => {
                 name="password"
                 value={password}
                 onChange={handleInputChange}
-                onBlur={validate}
+                onBlur={() => validateField('password')}
+                autoComplete="new-password"
                 className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
                   errors.password ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
@@ -253,13 +340,13 @@ const Register = () => {
                     {password.length >= 8 ? '✓' : '•'} At least 8 characters
                   </li>
                   <li className={/[A-Z]/.test(password) ? 'text-green-400' : ''}>
-                    {/[A-Z]/.test(password) ? '✓' : '•'} Uppercase letter
+                    {/[A-Z]/.test(password) ? '✓' : '•'} Uppercase letter (optional)
                   </li>
                   <li className={/[0-9]/.test(password) ? 'text-green-400' : ''}>
-                    {/[0-9]/.test(password) ? '✓' : '•'} Number
+                    {/[0-9]/.test(password) ? '✓' : '•'} Number (optional)
                   </li>
                   <li className={/[^A-Za-z0-9]/.test(password) ? 'text-green-400' : ''}>
-                    {/[^A-Za-z0-9]/.test(password) ? '✓' : '•'} Special character
+                    {/[^A-Za-z0-9]/.test(password) ? '✓' : '•'} Special character (optional)
                   </li>
                 </ul>
               </div>
@@ -274,7 +361,8 @@ const Register = () => {
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={handleInputChange}
-                onBlur={validate}
+                onBlur={() => validateField('confirmPassword')}
+                autoComplete="new-password"
                 className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
                   errors.confirmPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
@@ -312,7 +400,7 @@ const Register = () => {
                 name="sector"
                 value={sector}
                 onChange={handleInputChange}
-                onBlur={validate}
+                onBlur={() => validateField('sector')}
                 className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                   errors.sector ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
@@ -341,7 +429,7 @@ const Register = () => {
                 name="country"
                 value={country}
                 onChange={handleInputChange}
-                onBlur={validate}
+                onBlur={() => validateField('country')}
                 className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                   errors.country ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
@@ -355,6 +443,7 @@ const Register = () => {
                 <option value="canada">Canada</option>
                 <option value="australia">Australia</option>
                 <option value="japan">Japan</option>
+                <option value="other">Other</option>
               </select>
               {errors.country && <p className="text-red-400 text-xs mt-1 flex items-center">
                 <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -377,35 +466,31 @@ const Register = () => {
             />
           </div>
           
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="newsletter"
-                type="checkbox"
-                checked={newsletter}
-                onChange={(e) => setNewsletter(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/30"
-              />
-            </div>
-            <label htmlFor="newsletter" className="ml-3 text-sm text-gray-text">
+          <label htmlFor="newsletter" className="flex items-start gap-3 py-2 cursor-pointer">
+            <input
+              id="newsletter"
+              type="checkbox"
+              checked={newsletter}
+              onChange={(e) => setNewsletter(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/30"
+            />
+            <span className="text-sm text-gray-text">
               Subscribe to our newsletter for updates and offers (optional)
-            </label>
-          </div>
+            </span>
+          </label>
           
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="terms"
-                type="checkbox"
-                checked={termsAgreed}
-                onChange={(e) => setTermsAgreed(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/30"
-              />
-            </div>
-            <label htmlFor="terms" className="ml-3 text-sm text-gray-text">
+          <label htmlFor="terms" className="flex items-start gap-3 py-2 cursor-pointer">
+            <input
+              id="terms"
+              type="checkbox"
+              checked={termsAgreed}
+              onChange={(e) => setTermsAgreed(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/30"
+            />
+            <span className="text-sm text-gray-text">
               I agree to the <Link to="/legal" className="text-primary hover:underline font-medium">Terms of Service</Link> and <Link to="/privacy" className="text-primary hover:underline font-medium">Privacy Policy</Link> (GDPR/KVKK compliant)
-            </label>
-          </div>
+            </span>
+          </label>
           {errors.terms && <p className="text-red-400 text-xs mt-1 flex items-center">
             <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -438,7 +523,7 @@ const Register = () => {
           <div className="flex-grow border-t border-white/10"></div>
         </div>
         
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <button disabled className="py-2.5 px-4 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg text-light-text opacity-50 cursor-not-allowed flex items-center justify-center">
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
