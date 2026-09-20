@@ -1,5 +1,6 @@
 // Embeddings.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // Eğer SVG'lerin arka planını temaya göre değiştirmek istersen,
 // her bir SVG'yi bir <div> içine alıp arka plan rengini CSS ile kontrol edebilirsin.
@@ -31,21 +32,21 @@ const Embeddings = () => {
             </p>
 
             <div className="pt-4 flex gap-4 flex-wrap">
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 font-semibold"
               >
                 Get API Key
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </a>
-              <a
-                href="/docs"
+              </Link>
+              <Link
+                to="/docs"
                 className="inline-flex items-center px-6 py-3 border-2 border-primary text-primary rounded-full hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 font-semibold"
               >
                 API Reference
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -67,7 +68,7 @@ const Embeddings = () => {
   -d '{
     "model": "plotune-embed-small-v1",
     "input": "Engine misfire code P0302"
-  }''`}
+  }`}
                 </pre>
               </div>
               
@@ -79,7 +80,7 @@ const Embeddings = () => {
                 <div className="flex justify-between items-center text-xs text-gray-text">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                    <span>Latency &lt; 50ms</span>
+                    <span>Low latency</span>
                   </div>
                   <div className="text-light-text/40 font-mono">
                     v2.0
@@ -181,12 +182,12 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
                   <div className="text-gray-text text-xs">Dimensions</div>
                 </div>
                 <div className="p-3 bg-dark-card rounded-lg">
-                  <div className="text-primary font-bold text-lg">50ms</div>
+                  <div className="text-primary font-bold text-lg">Low</div>
                   <div className="text-gray-text text-xs">Avg. latency</div>
                 </div>
                 <div className="p-3 bg-dark-card rounded-lg">
-                  <div className="text-primary font-bold text-lg">99.9%</div>
-                  <div className="text-gray-text text-xs">Uptime SLA</div>
+                  <div className="text-primary font-bold text-lg">24/7</div>
+                  <div className="text-gray-text text-xs">Support</div>
                 </div>
               </div>
             </div>
@@ -315,7 +316,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
                 </div>
                 <h3 className="text-lg font-semibold text-light-text mb-3">Enterprise Ready</h3>
                 <p className="text-gray-text text-sm">
-                  SOC2 compliant, dedicated support, and customizable fine‑tuning for your proprietary data.
+                  Dedicated support and customizable fine‑tuning for your proprietary data.
                 </p>
               </div>
             </div>

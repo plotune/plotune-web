@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -8,7 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 const Profile = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [userData, setUserData] = useState({});
+  const [savedSnapshot, setSavedSnapshot] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('profile');
   const [apiToken, setApiToken] = useState('');
@@ -36,6 +39,7 @@ useEffect(() => {
         headers: { Authorization: token },
       });
       setUserData(profileResponse.data);
+      setSavedSnapshot(profileResponse.data);
 
       const premiumResponse = await api.get(
         `/user/premium?cb=${cachebuster}`,
@@ -55,6 +59,7 @@ useEffect(() => {
 
 
   const handleUpdate = async () => {
+    setIsSaving(true);
     try {
       await api.put('/profile', userData, {
         headers: { Authorization: token },
@@ -63,11 +68,21 @@ useEffect(() => {
       setIsEditing(false);
     } catch (err) {
       toast.error('Update failed');
+    } finally {
+      setIsSaving(false);
     }
   };
 
+  const handleCancelEdit = () => {
+    // Zeigarnik: warn before discarding typed changes instead of silently dropping them.
+    if (isDirty && !window.confirm('Discard your changes?')) return;
+    setUserData({ ...userData, ...savedSnapshot });
+    setIsEditing(false);
+  };
+
   const handleGenerateToken = async () => {
-    let r = confirm("This action will suspend the earlier generated token")
+    // Say what actually breaks (Tesler): the old token stops working, so scripts using it fail.
+    let r = confirm('Generate a new token? Existing scripts and apps using your current token will stop working.')
     if (!r){
         return;
     }
@@ -82,10 +97,19 @@ useEffect(() => {
     }
   };
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard!');
+  const copyToClipboard = async (text) => {
+    // Postel: only claim success after the clipboard actually accepts the text.
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success('Copied to clipboard!');
+    } catch {
+      toast.error('Copy failed — please copy the text manually.');
+    }
   };
+
+  const isDirty = ['full_name', 'company'].some(
+    (key) => (userData[key] || '') !== (savedSnapshot[key] || '')
+  );
 
   if (loading) {
     return (
@@ -169,12 +193,13 @@ useEffect(() => {
                     <div className="flex space-x-2">
                       <button
                         onClick={handleUpdate}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                        disabled={isSaving}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-70"
                       >
-                        Save Changes
+                        {isSaving ? 'Saving…' : 'Save Changes'}
                       </button>
                       <button
-                        onClick={() => setIsEditing(false)}
+                        onClick={handleCancelEdit}
                         className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
                       >
                         Cancel
@@ -306,9 +331,12 @@ useEffect(() => {
                   <p className="text-gray-text mb-4">
                     Learn how to use the Plotune API with our comprehensive documentation.
                   </p>
-                  <button className="px-6 py-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition font-medium">
+                  <Link
+                    to="/docs"
+                    className="inline-flex items-center px-6 py-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition font-medium"
+                  >
                     View API Docs
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}
@@ -322,27 +350,33 @@ useEffect(() => {
                   <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Password</h3>
                     <p className="text-gray-text mb-4">Change your password to keep your account secure.</p>
-                    <a href='/reset-password'>
-                    <button className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium">
+                    <Link
+                      to="/reset-password"
+                      className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium"
+                    >
                       Change Password
-                    </button>
-                    </a>
+                    </Link>
                   </div>
 
                   <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Two-Factor Authentication</h3>
                     <p className="text-gray-text mb-4">Add an extra layer of security to your account.</p>
-                    <button className="px-6 py-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition font-medium">
+                    <button
+                      disabled
+                      title="Two-factor authentication is not available yet"
+                      className="px-6 py-3 bg-primary/20 text-primary rounded-lg font-medium opacity-50 cursor-not-allowed inline-flex items-center"
+                    >
                       Enable 2FA
+                      <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">Soon</span>
                     </button>
                   </div>
 
                   <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Login History</h3>
-                    <p className="text-gray-text mb-4">Review your recent account activity.</p>
-                    <div className="text-sm text-gray-text space-y-2">
-                      <p>Last login: {new Date().toLocaleDateString()} from your current device</p>
-                    </div>
+                    <p className="text-gray-text">
+                      Login history isn&apos;t available yet. When it is, your recent account
+                      activity will appear here.
+                    </p>
                   </div>
                 </div>
               </div>

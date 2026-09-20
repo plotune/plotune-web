@@ -32,11 +32,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Token expired, clear cookie and redirect to login
+    const status = error.response?.status;
+    const url = error.config?.url || '';
+    const isAuthRequest = /\/(login|register|auth\/)/.test(url);
+    if (status === 401 && !isAuthRequest) {
+      // Session expired on an authenticated request: clear the cookie and return to
+      // login with a flag so the page can explain what happened (Postel/Zeigarnik —
+      // never silently teleport the user or swallow the error).
       Cookies.remove('auth_token');
-      window.location.href = '/login';
+      window.location.href = '/login?expired=1';
     }
+    // 401s on the auth endpoints themselves (e.g. wrong password) must reach the
+    // caller's catch block so the form can show a real error message.
     return Promise.reject(error);
   }
 );

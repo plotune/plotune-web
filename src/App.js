@@ -53,6 +53,34 @@ const RedirectToSolutionsPillar = () => {
   return <Navigate to={`/solutions/agentic-test-development${location.search}`} replace />;
 };
 
+// Jakob: an unknown URL must not render as a silent blank page between Header and
+// Footer — a real 404 with a way forward keeps navigation honest.
+const NotFound = () => (
+  <main className="flex min-h-[60vh] flex-col items-center justify-center bg-dark-bg px-5 py-20 text-center text-dark-text">
+    <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">404</p>
+    <h1 className="mt-4 text-3xl font-semibold text-light-text md:text-4xl">
+      We couldn&apos;t find that page.
+    </h1>
+    <p className="mt-4 max-w-md text-lg leading-8 text-gray-text">
+      The link may be outdated or mistyped. Here are the places people usually need:
+    </p>
+    <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <Link
+        to="/"
+        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      >
+        Go to the homepage
+      </Link>
+      <Link
+        to="/docs"
+        className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      >
+        Read the docs
+      </Link>
+    </div>
+  </main>
+);
+
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
@@ -142,6 +170,7 @@ function App() {
               <Route path="/research/methodology" element={<ResearchMethodology />} />
               <Route path="/research/articles/:slug" element={<ResearchArticle />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </NavigationWrapper>
         </div>

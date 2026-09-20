@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [verificationStatus, setVerificationStatus] = useState('loading'); // 'loading', 'success', 'error'
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+  const [failureReason, setFailureReason] = useState('');
   const token = searchParams.get('token');
+  const email = location.state?.email;
+
+  // Peak-End: success is the peak moment — show a visible countdown the user can
+  // read (and a button), instead of yanking them away mid-read with a silent timer.
+  useEffect(() => {
+    if (verificationStatus !== 'success') return undefined;
+    if (countdown <= 0) {
+      navigate('/login');
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setCountdown((value) => value - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [verificationStatus, countdown, navigate]);
 
   useEffect(() => {
     if (token) {
@@ -27,25 +43,21 @@ const VerifyEmail = () => {
       if (response.status === 200) {
         setVerificationStatus('success');
         toast.success('Email verified successfully!');
-        
-        // Redirect to login page after 3 seconds
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
       }
     } catch (err) {
       console.error('Verification error:', err.response?.data);
+      const detail = typeof err.response?.data?.detail === 'string' ? err.response.data.detail.toLowerCase() : '';
+      if (detail.includes('expired')) {
+        setFailureReason('This verification link has expired.');
+      } else if (detail.includes('invalid') || detail.includes('not found')) {
+        setFailureReason('This verification link is invalid or has already been used.');
+      } else {
+        setFailureReason('We could not verify your email address right now.');
+      }
       setVerificationStatus('error');
-      toast.error(err.response?.data?.detail || 'Email verification failed');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const resendVerification = async () => {
-    // This would typically require the user's email
-    // For now, we'll show a message that they need to register again or contact support
-    toast.info('Please register again or contact support for a new verification link');
   };
 
   return (
@@ -106,7 +118,7 @@ const VerifyEmail = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span className="text-green-400 text-sm font-medium">
-                  Your email has been successfully verified. You will be redirected to login shortly.
+                  Your email has been successfully verified. Redirecting you to login in {countdown}…
                 </span>
               </div>
             </div>
@@ -131,45 +143,31 @@ const VerifyEmail = () => {
         {verificationStatus === 'error' && (
           <div className="space-y-6">
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-red-500 mr-2 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span className="text-red-400 text-sm font-medium">
-                  The verification link is invalid or has expired. Please request a new verification email.
+                  {failureReason || 'The verification link is invalid or has expired.'}
+                  {email && ` We sent the original link to ${email}.`}
                 </span>
               </div>
             </div>
-            
+
             <div className="flex flex-col space-y-3">
-              <button
-                onClick={resendVerification}
-                disabled={isSubmitting}
-                className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all duration-300 font-medium flex items-center justify-center disabled:opacity-70"
+              {/* Postel (truthful controls): there is no resend endpoint wired up, so the
+                  recovery action is an honest prefilled support email — not a button
+                  that pretends to resend. */}
+              <a
+                href={`mailto:support@plotune.net?subject=${encodeURIComponent('Resend verification email')}${email ? `&body=${encodeURIComponent(`Please resend the verification link for: ${email}`)}` : ''}`}
+                className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all duration-300 font-medium text-center"
               >
-                {isSubmitting ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Sending...
-                  </>
-                ) : (
-                  'Resend Verification Email'
-                )}
-              </button>
-              
-              <Link
-                to="/register"
-                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
-              >
-                Create New Account
-              </Link>
-              
+                Email us to resend the link
+              </a>
+
               <Link
                 to="/login"
-                className="w-full py-3 text-primary hover:underline text-sm text-center"
+                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Back to Login
               </Link>

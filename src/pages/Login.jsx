@@ -69,21 +69,60 @@ const Login = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error('OAuth login failed:', err);
-      toast.error(err.response?.data?.detail || 'Authentication failed');
+      toast.error(humanLoginError(err));
       setIsSubmitting(false);
     }
   };
 
-  // Form validation
+  // Postel/Tesler: never show raw backend detail to users — map the known cases to
+  // human copy and keep the raw payload in the console for diagnostics.
+  const humanLoginError = (err) => {
+    const detail = err?.response?.data?.detail;
+    const raw = typeof detail === 'string' ? detail.toLowerCase() : '';
+    if (
+      raw.includes('incorrect') || raw.includes('invalid') ||
+      raw.includes('credential') || raw.includes('password') ||
+      raw.includes('not found') || raw.includes('user')
+    ) {
+      return 'Incorrect username or password. Please try again.';
+    }
+    return "We couldn't log you in right now. Please try again in a moment.";
+  };
+
+  // Form validation: a login form checks that fields are filled — the server
+  // decides whether the credentials are correct (a length rule here would block
+  // users with legacy passwords and make them doubt their own input).
+  const validateField = (name) => {
+    const newErrors = { ...errors };
+    if (name === 'usernameOrEmail') {
+      if (!usernameOrEmail) {
+        newErrors.usernameOrEmail = 'Username or email is required';
+      } else if (usernameOrEmail.includes('@') && !usernameOrEmail.match(/^\S+@\S+\.\S+$/)) {
+        newErrors.usernameOrEmail = 'That email address looks incomplete';
+      } else {
+        delete newErrors.usernameOrEmail;
+      }
+    }
+    if (name === 'password') {
+      if (!password) {
+        newErrors.password = 'Password is required';
+      } else {
+        delete newErrors.password;
+      }
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!usernameOrEmail) {
       newErrors.usernameOrEmail = 'Username or email is required';
-    } else if (usernameOrEmail.includes('@') && !usernameOrEmail.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-      newErrors.usernameOrEmail = 'Invalid email format';
+    } else if (usernameOrEmail.includes('@') && !usernameOrEmail.match(/^\S+@\S+\.\S+$/)) {
+      newErrors.usernameOrEmail = 'That email address looks incomplete';
     }
-    if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+    if (!password) {
+      newErrors.password = 'Password is required';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -115,7 +154,7 @@ const Login = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error('Error response:', err.response?.data);
-      toast.error(err.response?.data?.detail || 'Login failed');
+      toast.error(humanLoginError(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -137,6 +176,17 @@ const Login = () => {
         <h1 className="text-3xl font-bold text-light-text mb-2 text-center">Login to Plotune</h1>
         <p className="text-gray-text text-center mb-8">Access your account to continue</p>
 
+        {/* Zeigarnik/Jakob: explain why the user landed here after a session expiry
+            instead of teleporting them to an unexplained blank form. */}
+        {new URLSearchParams(window.location.search).get('expired') && (
+          <div
+            className="mb-6 rounded-lg border border-primary/30 bg-primary/10 p-4 text-sm text-dark-text"
+            role="status"
+          >
+            Your session has expired. Please log in again to continue.
+          </div>
+        )}
+
         {/* Loading State (OAuth) */}
         {isSubmitting && (
           <div className="flex justify-center mb-6">
@@ -148,9 +198,11 @@ const Login = () => {
         {!isSubmitting && (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-gray-text mb-2 text-sm font-medium">Username or Email</label>
+              <label htmlFor="login-username" className="block text-gray-text mb-2 text-sm font-medium">Username or Email</label>
               <input
+                id="login-username"
                 type="text"
+                autoComplete="username"
                 value={usernameOrEmail}
                 onChange={(e) => {
                   setUsernameOrEmail(e.target.value);
@@ -158,7 +210,7 @@ const Login = () => {
                     setErrors({ ...errors, usernameOrEmail: '' });
                   }
                 }}
-                onBlur={validate}
+                onBlur={() => validateField('usernameOrEmail')}
                 className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                   errors.usernameOrEmail ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
@@ -175,10 +227,12 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-gray-text mb-2 text-sm font-medium">Password</label>
+              <label htmlFor="login-password" className="block text-gray-text mb-2 text-sm font-medium">Password</label>
               <div className="relative">
                 <input
+                  id="login-password"
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -186,7 +240,7 @@ const Login = () => {
                       setErrors({ ...errors, password: '' });
                     }
                   }}
-                  onBlur={validate}
+                  onBlur={() => validateField('password')}
                   className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
                     errors.password ? 'border-red-500' : 'border-white/10 focus:border-primary'
                   }`}
@@ -220,7 +274,7 @@ const Login = () => {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <label className="flex items-center text-gray-text text-sm">
+              <label className="flex items-center py-2 text-gray-text text-sm cursor-pointer">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -262,7 +316,7 @@ const Login = () => {
           <button
             disabled
             className="py-2.5 px-4 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg text-light-text opacity-50 cursor-not-allowed flex items-center justify-center"
-            title="Google login not implemented yet"
+            title="Google login is not available yet"
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
               {/* Google SVG icon */}
@@ -272,6 +326,7 @@ const Login = () => {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
             Google
+            <span className="ml-1.5 rounded-full bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-text">Soon</span>
           </button>
 
           <button

@@ -14,6 +14,7 @@ const Dashboard = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [premiumStatus, setPremiumStatus] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [statsError, setStatsError] = useState(false);
   const [stats, setStats] = useState({
     extensions: 0,
     projects: 0,
@@ -73,25 +74,28 @@ const Dashboard = () => {
   // Filter only enabled links
   const enabledQuickLinks = quickLinks.filter(link => link.enabled);
 
+  const fetchData = async () => {
+    setStatsError(false);
+    try {
+      const premiumResponse = await api.get('/user/premium', {
+        headers: { Authorization: token },
+      });
+      setPremiumStatus(premiumResponse.data.is_premium || false);
+
+      const statsResponse = await api.get('/user/stats', {
+        headers: { Authorization: token },
+      });
+      setStats(statsResponse.data);
+    } catch (err) {
+      setStatsError(true);
+      toast.error('Failed to load dashboard data');
+      if (err.response?.status === 401) logout();
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(false);
-      try {
-        const premiumResponse = await api.get('/user/premium', {
-          headers: { Authorization: token },
-        });
-        setPremiumStatus(premiumResponse.data.is_premium || false);
-        
-        const statsResponse = await api.get('/user/stats', {
-          headers: { Authorization: token },
-        });
-        setStats(statsResponse.data);
-      } catch (err) {
-        toast.error('Failed to load dashboard data');
-        if (err.response?.status === 401) logout();
-      }
-    };
-    
+    setLoading(false);
+
     // Mobil cihaz kontrolü - geliştirilmiş versiyon
     const checkIfMobile = () => {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -136,6 +140,26 @@ const Dashboard = () => {
       <div className="container mx-auto px-4">
 
         <div className="space-y-6">
+          {/* Truthful failure state (Doherty/Postel): a failed load must not read as
+              "0 extensions / 0 api calls" — say what happened and offer a retry. */}
+          {statsError && (
+            <div
+              className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-red-400/30 bg-red-400/10 p-6 sm:flex-row sm:items-center"
+              role="alert"
+            >
+              <div>
+                <h2 className="text-lg font-semibold text-light-text">Couldn&apos;t load your dashboard data.</h2>
+                <p className="text-gray-text text-sm mt-1">Check your connection and try again.</p>
+              </div>
+              <button
+                onClick={fetchData}
+                className="inline-flex min-h-[44px] items-center rounded-lg bg-primary px-6 py-2 font-medium text-white hover:bg-primary-dark transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           {/* Quick Actions */}
           <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
             <h2 className="text-xl font-semibold text-light-text mb-4">Quick Actions</h2>
