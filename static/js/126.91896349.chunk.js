@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkplotune_react=self.webpackChunkplotune_react||[]).push([[126],{8126:(e,t,a)=>{a.r(t),a.d(t,{default:()=>r});var n=a(9379),d=(a(6998),a(805)),o=a(9134),i=a.n(o),c=a(3446);const s=(0,d.Z)(i()),u="undefined"!==typeof window&&window.matchMedia&&window.matchMedia("(pointer: coarse)").matches,r=e=>{let{chart:t}=e;return(0,c.jsx)(s,{data:t.data,layout:(0,n.A)((0,n.A)({},t.layout),{},{autosize:!0},u?{dragmode:!1}:{}),config:t.config,useResizeHandler:!0,style:{width:"100%",height:"100%"}})}}}]);
+//# sourceMappingURL=126.91896349.chunk.js.map

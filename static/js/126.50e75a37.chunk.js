@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkplotune_react=self.webpackChunkplotune_react||[]).push([[126],{8126:(e,t,a)=>{a.r(t),a.d(t,{default:()=>o});var u=a(9379),s=(a(6998),a(805)),l=a(9134),n=a.n(l),c=a(3446);const r=(0,s.Z)(n()),o=e=>{let{chart:t}=e;return(0,c.jsx)(r,{data:t.data,layout:(0,u.A)((0,u.A)({},t.layout),{},{autosize:!0}),config:t.config,useResizeHandler:!0,style:{width:"100%",height:"100%"}})}}}]);
-//# sourceMappingURL=126.50e75a37.chunk.js.map
