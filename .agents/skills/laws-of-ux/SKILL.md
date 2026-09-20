@@ -10,7 +10,7 @@ Use the [Laws of UX](https://lawsofux.com/) as decision aids, not a substitute f
 ## Select the mode
 
 - **Audit:** identify and report issues; do not change the product.
-- **Fix:** make a targeted, in-scope change only when the evidence supports it, then re-audit the affected flow.
+- **Fix:** make a targeted, in-scope change only after the threshold below is met, then re-audit the affected flow.
 
 Before either mode, collect the relevant screen, prototype, or source evidence and state the user task and viewport or state being reviewed. Do not infer behavior that the evidence cannot support.
 
@@ -24,6 +24,8 @@ Read [the law checks reference](references/law-checks.md) and examine only laws 
 
 Report **five or fewer** findings by default, prioritizing high severity and distinct root causes. Exceed five only when the requester asks for comprehensive coverage or more than five high-severity issues are independently evidenced; say why.
 
+Treat a **page group** as the related pages or states named in the request. Enter Fix mode only when that page group has **more than five confirmed violations**. With five or fewer confirmed violations, remain in Audit mode and provide the grouped findings without changing the product.
+
 ## Fix pass
 
-Keep changes minimal and within the requested scope. Preserve established patterns unless the evidence shows that they are causing the issue; do not redesign adjacent screens or add unrequested features. After changing the product, re-audit the affected task and report what was resolved, what remains, and any evidence still needed.
+Keep changes minimal and within the requested scope. Preserve established patterns unless the evidence shows that they are causing the issue; do not redesign adjacent screens or add unrequested features. Preserve accessibility, including semantics, keyboard operation, focus behavior, target usability, contrast, and accessible names. After changing the product, re-audit the affected task and accessibility-relevant effects; report what was resolved, what remains, and any evidence still needed.
