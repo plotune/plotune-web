@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Research.css';
 
@@ -11,6 +11,25 @@ const ResearchLayout = ({ children }) => {
   const location = useLocation();
   const nav = [['/research', 'Overview'], ['/research/reports', 'Reports'], ['/research/methodology', 'Methodology']];
   const rssUrl = `${window.location.origin}/research/rss.xml`;
+  // Doherty/Occam: Escape and outside clicks close the RSS popover instead of
+  // requiring a precise second click on the small RSS button.
+  useEffect(() => {
+    if (!rssOpen) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setRssOpen(false);
+    };
+    const onMouseDown = (event) => {
+      if (event.target instanceof Element && !event.target.closest('.rss-control')) {
+        setRssOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('mousedown', onMouseDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('mousedown', onMouseDown);
+    };
+  }, [rssOpen]);
   const copyFeed = async () => {
     if (!navigator.clipboard) { setCopyState('failed'); return; }
     try {

@@ -45,7 +45,7 @@ const Features = () => {
   ];
 
   return (
-    <section id="features" className="py-16 md:py-24 bg-dark-card/30" ref={ref}>
+    <section id="features" className="scroll-mt-24 py-16 md:py-24 bg-dark-card/30" ref={ref}>
       <div className="container mx-auto px-5">
 
         <div className="text-center mb-10 md:mb-16 max-w-2xl mx-auto">

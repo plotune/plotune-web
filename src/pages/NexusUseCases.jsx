@@ -791,30 +791,11 @@ const families = {
 };
 
 const motionCss = `
-  .use-case-row {
-    animation: useCaseRowPulse 5.4s ease-in-out infinite;
-  }
-
-  .use-case-status {
-    animation: useCaseStatusPulse 3s ease-in-out infinite;
-  }
-
-  @keyframes useCaseRowPulse {
-    0%, 100% { background-color: rgba(255, 255, 255, 0); }
-    14% { background-color: rgba(38, 166, 154, 0.08); }
-    26% { background-color: rgba(38, 166, 154, 0.16); }
-    42% { background-color: rgba(255, 255, 255, 0.03); }
-  }
-
-  @keyframes useCaseStatusPulse {
-    0%, 100% { opacity: 0.76; box-shadow: 0 0 0 0 rgba(38, 166, 154, 0); }
-    34% { opacity: 1; box-shadow: 0 0 0 10px rgba(38, 166, 154, 0); }
-    14% { opacity: 1; box-shadow: 0 0 0 0 rgba(38, 166, 154, 0.3); }
-  }
+  /* Status badges and result rows are static editorial outcomes ("Example run"),
+     not live indicators — no pulse animations, so they can't read as real-time
+     state. The only animated element is the real iframe loading spinner. */
 
   @media (prefers-reduced-motion: reduce) {
-    .use-case-row,
-    .use-case-status,
     .use-case-loading-spinner {
       animation: none !important;
     }
@@ -831,7 +812,7 @@ const IndustryTab = ({ industry, isActive, onSelect }) => (
   <button
     type="button"
     onClick={onSelect}
-    className={`rounded-full px-4 py-3 text-xs font-semibold transition-all duration-300 sm:text-sm ${
+    className={`rounded-full px-4 py-3 min-h-[44px] text-xs font-semibold transition-all duration-300 sm:text-sm ${
       isActive
         ? 'bg-primary text-white shadow-custom'
         : 'bg-white/[0.04] text-gray-text hover:bg-white/[0.08] hover:text-light-text'
@@ -970,11 +951,10 @@ const ResultMatrix = ({ scenarios }) => (
             </tr>
           </thead>
           <tbody>
-            {scenarios.map((scenario, index) => (
+            {scenarios.map((scenario) => (
               <tr
                 key={scenario.id}
-                className="use-case-row text-light-text"
-                style={{ animationDelay: `${index * 0.42}s` }}
+                className="text-light-text transition-colors duration-300 hover:bg-white/[0.03]"
               >
                 <td className="px-4 py-4 font-semibold">{scenario.label}</td>
                 <td className="px-4 py-4 text-gray-text">{scenario.chips[0]}</td>

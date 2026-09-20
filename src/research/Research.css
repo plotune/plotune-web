@@ -32,3 +32,19 @@
 .results-next-step{margin:18px 0 0;text-align:center;font-size:13px}
 .results-next-step a{color:#2563d9;text-decoration:none;font-weight:650}
 .results-next-step a:hover{text-decoration:underline}
+
+/* Second Fitts pass (interaction review): controls the first override block missed */
+.chart-explainer summary{min-height:44px;box-sizing:border-box}
+.rss-popover a,.rss-popover button{min-height:44px;box-sizing:border-box}
+.rss-popover input{height:44px;box-sizing:border-box}
+.research-register{min-height:44px!important;padding:10px 14px!important;box-sizing:border-box}
+.research-header nav a{min-height:44px;box-sizing:border-box}
+.report-row a{display:inline-flex;align-items:center;min-height:44px}
+.compare-button{min-height:44px;box-sizing:border-box}
+.clear-selection{min-height:44px;box-sizing:border-box}
+.show-more{min-height:44px;box-sizing:border-box}
+.metric-side-nav button,.metric-side-nav a{min-height:44px;box-sizing:border-box}
+.results-link{min-height:44px;box-sizing:border-box}
+.detail-back{display:inline-flex;align-items:center;min-height:44px}
+.selection-tray button{min-height:44px;box-sizing:border-box}
+.guidance-grid aside a{display:inline-flex;align-items:center;min-height:44px}

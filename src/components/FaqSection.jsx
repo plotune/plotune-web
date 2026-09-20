@@ -82,13 +82,15 @@ const FaqSection = () => {
               key={index}
               className={`bg-dark-card rounded-custom p-4 border border-white/5 ${activeFaq === index ? 'shadow-custom' : ''}`}
             >
-              <div
-                className="flex justify-between items-center cursor-pointer"
+              <button
+                type="button"
+                className="flex w-full min-h-[44px] justify-between items-center cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                aria-expanded={activeFaq === index}
                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
               >
-                <h3 className="text-lg font-semibold text-light-text">{faq.question}</h3>
-                <i className={`fas fa-chevron-down text-primary transition-transform ${activeFaq === index ? 'rotate-180' : ''}`}></i>
-              </div>
+                <span className="text-lg font-semibold text-light-text">{faq.question}</span>
+                <i className={`fas fa-chevron-down text-primary transition-transform ${activeFaq === index ? 'rotate-180' : ''}`} aria-hidden="true"></i>
+              </button>
               {activeFaq === index && (
                 <div className="mt-3 text-gray-text">{faq.answer}</div>
               )}
