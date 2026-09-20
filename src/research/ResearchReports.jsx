@@ -4,7 +4,7 @@ import Seo from '../components/Seo';
 import { publishedResearchArticles } from './content/articles';
 import { getTopicVisual } from './content/topicVisuals';
 
-const ALL_TOPICS = 'All';
+const ALL_TOPICS = 'All topics';
 
 const ReportThumbnail = ({ topic }) => {
   const { from, to, Icon } = getTopicVisual(topic);
@@ -58,41 +58,35 @@ const ResearchReports = () => {
       <header className="page-heading">
         <span className="section-label">Reports</span>
         <h1>Research reports</h1>
+        <p>A growing monthly library of benchmark readouts, protocol changes, workflow findings, and detailed studies.</p>
       </header>
 
-      <div className="reports-toolbar">
-        <div className="reports-controls">
-          <label className="search-control">
-            <span aria-hidden="true">Search</span>
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search reports by title, topic, or summary"
-              aria-label="Search reports"
-            />
-          </label>
-          <label className="reports-sort">
-            Sort
-            <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)} aria-label="Sort reports by date">
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-            </select>
-          </label>
-        </div>
-        <div className="reports-tags" role="group" aria-label="Filter by tag">
-          {topics.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={`reports-tag${topic === option ? ' active' : ''}`}
-              onClick={() => setTopic(option)}
-              aria-pressed={topic === option}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
+      <div className="reports-filter-bar">
+        <label className="search-control">
+          <span aria-hidden="true">Search</span>
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search reports by title, topic, or summary"
+            aria-label="Search reports"
+          />
+        </label>
+        <label>
+          Topic
+          <select value={topic} onChange={(event) => setTopic(event.target.value)} aria-label="Filter by topic">
+            {topics.map((option) => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Sort
+          <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)} aria-label="Sort reports by date">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </label>
       </div>
 
       <section className="report-library">
