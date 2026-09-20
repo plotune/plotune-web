@@ -1,12 +1,19 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
+import { FiCheck } from 'react-icons/fi';
 import { ReactComponent as CoreVisual } from '../assets/features-core.svg';
 import { ReactComponent as StreamVisual } from '../assets/features-stream.svg';
 import { ReactComponent as CloudVisual } from '../assets/features-cloud.svg';
 
 const Features = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  // Doherty/Aesthetic-Usability: honor reduced-motion instead of animating cards in
+  const prefersReducedMotion = useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    []
+  );
 
   const variants = {
     hidden: { opacity: 0, y: 30 },
@@ -58,8 +65,8 @@ const Features = () => {
               key={index}
               className="bg-dark-card rounded-custom p-8 border border-white/5 hover:border-primary/30 hover:-translate-y-2 hover:shadow-custom transition-all duration-300 group"
               variants={variants}
-              initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
+              initial={prefersReducedMotion ? false : 'hidden'}
+              animate={isInView || prefersReducedMotion ? 'visible' : 'hidden'}
               transition={{ delay: index * 0.2 }}
             >
               <div className="mb-6 rounded-2xl bg-dark-bg/50 p-4 ring-1 ring-white/5">
@@ -82,7 +89,7 @@ const Features = () => {
               <ul className="space-y-2">
                 {service.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-center text-light-text/80 text-sm">
-                    <i className="fas fa-check text-primary mr-3 text-xs"></i>
+                    <FiCheck aria-hidden="true" className="text-primary mr-3 shrink-0" />
                     {feature}
                   </li>
                 ))}
@@ -95,19 +102,19 @@ const Features = () => {
         <motion.div 
           className="text-center mt-16"
           variants={variants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
+          initial={prefersReducedMotion ? false : 'hidden'}
+          animate={isInView || prefersReducedMotion ? 'visible' : 'hidden'}
           transition={{ delay: 0.6 }}
         >
           <p className="text-gray-text mb-6 max-w-2xl mx-auto">
             Ready to modernize your data operations? See how the integrated platform can work for your team.
           </p>
-          <a
-            href="/contact"
-            className="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 inline-block"
+          <Link
+            to="/contact"
+            className="inline-flex items-center justify-center rounded-full border-2 border-primary px-8 py-3 font-semibold text-primary hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
           >
             Schedule a Demo
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>

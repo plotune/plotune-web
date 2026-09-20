@@ -56,21 +56,8 @@ const runs = [
 ];
 
 const motionCss = `
-  .nexus-showcase-status {
-    animation: nexusShowcaseStatusPulse 3s ease-in-out infinite;
-  }
-
-  @keyframes nexusShowcaseStatusPulse {
-    0%, 100% { opacity: 0.78; box-shadow: 0 0 0 0 rgba(38, 166, 154, 0); }
-    34% { opacity: 1; box-shadow: 0 0 0 10px rgba(38, 166, 154, 0); }
-    14% { opacity: 1; box-shadow: 0 0 0 0 rgba(38, 166, 154, 0.3); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .nexus-showcase-status {
-      animation: none !important;
-    }
-  }
+  /* Status badges are static editorial outcomes ("Gate passed", "Recorded"), not
+     live indicators — no pulse animation, so they can't read as real-time state. */
 `;
 
 const Chip = ({ value }) => (
@@ -102,7 +89,7 @@ const NexusShowcase = () => (
             <article key={run.id} className="rounded-[1.5rem] bg-dark-card/80 p-5 shadow-custom">
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-gray-text">{run.source}</p>
-                <span className="nexus-showcase-status shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                <span className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary" title="Example outcome">
                   {run.status}
                 </span>
               </div>
@@ -126,7 +113,7 @@ const NexusShowcase = () => (
 
         <Link
           to="/nexus/use-cases"
-          className="group flex flex-col justify-center rounded-[1.5rem] border border-primary/25 bg-primary/[0.06] p-6 text-left shadow-custom transition-all duration-300 hover:-translate-y-1 hover:bg-primary/[0.1]"
+          className="group flex flex-col justify-center rounded-[1.5rem] border border-primary/25 bg-primary/[0.06] p-6 text-left shadow-custom transition-all duration-300 hover:-translate-y-1 hover:bg-primary/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
         >
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Use Cases</p>
           <p className="mt-3 text-lg font-semibold text-light-text">
@@ -134,10 +121,16 @@ const NexusShowcase = () => (
           </p>
           <span className="mt-5 inline-flex items-center gap-2 font-semibold text-primary">
             See it run in Use Cases
-            <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+            <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1" />
           </span>
         </Link>
       </div>
+
+      <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-6 text-gray-text">
+        Example-run readings: θ = final heading error (rad) · Hz = recording rate within its
+        expected window · P0D67:28 = logged fault code with subcode · A and V = measured
+        current and voltage before → after.
+      </p>
     </div>
   </section>
 );

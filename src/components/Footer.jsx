@@ -34,9 +34,18 @@ const Footer = () => {
             <nav aria-labelledby="footer-resources"><ul className="space-y-3">
               <li><Link to="/docs" aria-current={location.pathname === '/docs' ? 'page' : undefined} className={linkClass('/docs')}>Documentation</Link></li>
               <li><Link to="/faq" aria-current={location.pathname === '/faq' ? 'page' : undefined} className={linkClass('/faq')}>FAQ</Link></li>
-              <li><Link to="/tutorials" aria-current={location.pathname === '/tutorials' ? 'page' : undefined} className={linkClass('/tutorials')}>Tutorials</Link></li>
-              <li><Link to="/blog" aria-current={location.pathname === '/blog' ? 'page' : undefined} className={linkClass('/blog')}>Blog</Link></li>
-              <li><Link to="/community" aria-current={location.pathname === '/community' ? 'page' : undefined} className={linkClass('/community')}>Community</Link></li>
+              <li>
+                <a
+                  href="https://github.com/plotune/plotune-web/discussions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex min-h-[44px] items-center gap-2 text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300 ${location.pathname === '/community' ? 'text-primary' : ''}`}
+                >
+                  Community
+                  <span aria-hidden="true" className="text-xs">↗</span>
+                  <span className="sr-only">(opens GitHub in a new tab)</span>
+                </a>
+              </li>
             </ul>
             </nav>
           </div>
@@ -53,7 +62,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="text-center pt-8 border-t border-white/5 text-gray-text text-sm">
-          &copy; 2025 Plotune. All rights reserved.
+          &copy; {new Date().getFullYear()} Plotune. All rights reserved.
         </div>
       </div>
     </footer>

@@ -51,7 +51,7 @@ const NexusUseCasesTeaser = () => (
 
         <Link
           to="/nexus/use-cases"
-          className="mt-9 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
+          className="mt-9 inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300 hover:-translate-y-1 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
         >
           Explore the Use Cases
           <FiArrowRight />
@@ -63,13 +63,13 @@ const NexusUseCasesTeaser = () => (
           <Link
             key={page.to}
             to={page.to}
-            className="group flex items-center justify-between gap-4 rounded-2xl bg-dark-card p-6 shadow-custom transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            className="group flex items-center justify-between gap-4 rounded-2xl bg-dark-card p-6 shadow-custom transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
           >
             <div>
               <h3 className="text-xl font-semibold text-light-text">{page.label}</h3>
               <p className="mt-2 text-sm leading-7 text-gray-text">{page.copy}</p>
             </div>
-            <FiArrowRight className="shrink-0 text-xl text-primary transition-transform duration-300 group-hover:translate-x-1" />
+            <FiArrowRight aria-hidden="true" className="shrink-0 text-xl text-primary transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1" />
           </Link>
         ))}
       </div>

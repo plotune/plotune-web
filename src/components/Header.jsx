@@ -29,6 +29,26 @@ const Header = () => {
     setOpenDropdown(null);
   }, [location]);
 
+  // Doherty/Occam: Escape and outside clicks close the open dropdown, instead of
+  // requiring a precise second click on the same chevron.
+  useEffect(() => {
+    if (!openDropdown) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setOpenDropdown(null);
+    };
+    const onMouseDown = (event) => {
+      if (event.target instanceof Element && !event.target.closest('[data-nav-dropdown]')) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('mousedown', onMouseDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('mousedown', onMouseDown);
+    };
+  }, [openDropdown]);
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -82,10 +102,10 @@ const Header = () => {
 
   const renderNavLink = (item) => {
     const isActive = location.pathname === item.to || item.children?.some((child) => location.pathname === child.to);
-    const linkClass = `min-h-[44px] text-dark-text font-medium text-base hover:text-primary relative transition-colors duration-300 ${
+    const linkClass = `min-h-[44px] rounded-lg text-dark-text font-medium text-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary relative transition-colors duration-300 ${
       isActive 
         ? 'text-primary after:w-full after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0' 
-        : 'after:w-0 after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0 after:transition-all after:duration-300 hover:after:w-full'
+        : 'after:w-0 after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0 after:transition-all after:duration-300 hover:after:w-full focus-visible:after:w-full'
     }`;
 
     if (item.isExternal) {
@@ -108,7 +128,7 @@ const Header = () => {
       const isOpen = openDropdown === item.to;
 
       return (
-        <div className="relative">
+        <div className="relative" data-nav-dropdown>
           <div className="flex items-center">
             <Link
               to={item.to}
@@ -136,7 +156,7 @@ const Header = () => {
                   key={child.to}
                   to={child.to}
                   aria-current={location.pathname === child.to ? 'page' : undefined}
-                  className={`flex min-h-[44px] items-center rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary ${
+                  className={`flex min-h-[44px] items-center rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     location.pathname === child.to ? 'text-primary' : 'text-dark-text'
                   }`}
                 >
@@ -167,7 +187,7 @@ const Header = () => {
   return (
     <header className="bg-white/5 backdrop-blur-xl fixed w-full top-0 z-50 shadow-custom py-4">
       <div className="container mx-auto px-5 flex justify-between items-center">
-          <Link  to="/">
+          <Link to="/" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
         <div className="flex items-center gap-3">
           <img src={logo} alt="Plotune Logo" className="h-10 w-auto" />
           <span className="text-2xl font-bold text-light-text bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -201,11 +221,20 @@ const Header = () => {
                 <li>
                   <Link
                     to="/login"
-                    aria-label="Log in"
-                    className="flex min-h-[44px] min-w-[44px] items-center text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                    className="flex min-h-[44px] items-center gap-2 rounded-lg text-dark-text font-medium text-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                <FiUser className="text-2xl" />
+                    <FiUser className="text-xl" />
+                    <span>Log in</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/register"
+                    className="flex min-h-[44px] items-center rounded-lg text-primary font-semibold text-base hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Register
                   </Link>
                 </li>
               </>
@@ -232,6 +261,12 @@ const Header = () => {
                   className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text font-medium text-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
                 >
                 <FiUser className="text-2xl" />
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex min-h-[44px] items-center justify-center rounded-lg px-3 text-primary font-semibold text-base hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
+                >
+                  Register
                 </Link>
               </>
             )}
