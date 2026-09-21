@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.2f7edfb2.css",
-    "main.js": "/static/js/main.3bf334c5.js",
+    "main.js": "/static/js/main.f8120e04.js",
     "static/js/733.5280bf86.chunk.js": "/static/js/733.5280bf86.chunk.js",
     "static/js/668.f160ed6b.chunk.js": "/static/js/668.f160ed6b.chunk.js",
     "static/js/950.0c700ac7.chunk.js": "/static/js/950.0c700ac7.chunk.js",
@@ -32,18 +32,18 @@
     "static/js/887.f2b851a5.chunk.js": "/static/js/887.f2b851a5.chunk.js",
     "static/js/830.243d8f94.chunk.js": "/static/js/830.243d8f94.chunk.js",
     "static/media/logo.png": "/static/media/logo.68f6b6f816def703f8e0.png",
-    "static/media/connectivity-hub.svg": "/static/media/connectivity-hub.9f622fe3eee8a33f08df2355d75102d5.svg",
-    "static/media/stream-pipeline.svg": "/static/media/stream-pipeline.fe06c76fbac64ceb52e3a6af3f17ce94.svg",
-    "static/media/use-case-bus-gate.svg": "/static/media/use-case-bus-gate.373fcaf31df9f501748e7e22eba52f4d.svg",
+    "static/media/connectivity-hub.svg": "/static/media/connectivity-hub.1d37979980185c6b4cd4352dd26edebe.svg",
+    "static/media/stream-pipeline.svg": "/static/media/stream-pipeline.46329cdf43149257af49d17f00c277ed.svg",
+    "static/media/use-case-bus-gate.svg": "/static/media/use-case-bus-gate.f63e16a1e54e509431e4a1c9a71840aa.svg",
     "index.html": "/index.html",
-    "static/media/businessimpact-trend.svg": "/static/media/businessimpact-trend.eff856529fa9540cd6f76ec9123c3899.svg",
-    "static/media/use-case-diff.svg": "/static/media/use-case-diff.149e2a13d31d4a852239304844f33368.svg",
-    "static/media/use-case-mesh.svg": "/static/media/use-case-mesh.13bcd378c4c12afdc0f212f49377d979.svg",
-    "static/media/features-core.svg": "/static/media/features-core.ef077b474345deafbd2f9531642420a5.svg",
-    "static/media/use-case-document.svg": "/static/media/use-case-document.576521846d45f76ca4c4574bffec023f.svg",
-    "static/media/use-case-timeline.svg": "/static/media/use-case-timeline.8f1e651faf9ef181601201e6be67dee0.svg",
-    "static/media/features-stream.svg": "/static/media/features-stream.c91de55c02c8fa760daea233cac549e6.svg",
-    "static/media/features-cloud.svg": "/static/media/features-cloud.c617b8ec7a71d52b6df96f625a36aeaa.svg",
+    "static/media/businessimpact-trend.svg": "/static/media/businessimpact-trend.3d65d1c10254cf82aa2360aaa6667334.svg",
+    "static/media/use-case-diff.svg": "/static/media/use-case-diff.023d10ba7be82945cd2a89f4d5751ccf.svg",
+    "static/media/use-case-mesh.svg": "/static/media/use-case-mesh.57a2a715fff93e62deb549b88616994c.svg",
+    "static/media/features-core.svg": "/static/media/features-core.d317d67aa1075c58dc877187e189e4bd.svg",
+    "static/media/use-case-document.svg": "/static/media/use-case-document.9ac8ac8768467cda02d4b4178ef9d42a.svg",
+    "static/media/use-case-timeline.svg": "/static/media/use-case-timeline.ae9e794bcf1120b5e00ea0948b59e8fa.svg",
+    "static/media/features-stream.svg": "/static/media/features-stream.4b322b929b6446b3b2a3a5d64d0e037c.svg",
+    "static/media/features-cloud.svg": "/static/media/features-cloud.d70e70a2aa6456f4b14d333edc146a26.svg",
     "static/media/stream.svg": "/static/media/stream.c022b81ee4689fefb69026acb71d5b8c.svg",
     "static/media/profile.svg": "/static/media/profile.d3a70f58a38d6ad354c3c3951d302660.svg",
     "static/media/billing.svg": "/static/media/billing.1468fb2f734f3aaac1131cd81b9f69cc.svg",
@@ -52,7 +52,7 @@
     "static/media/overview.svg": "/static/media/overview.656fb8ccdec973c7a6794ecc12c04808.svg",
     "static/media/download.svg": "/static/media/download.168f48f49bb7aaf833cbfd4829f1eeb6.svg",
     "main.2f7edfb2.css.map": "/static/css/main.2f7edfb2.css.map",
-    "main.3bf334c5.js.map": "/static/js/main.3bf334c5.js.map",
+    "main.f8120e04.js.map": "/static/js/main.f8120e04.js.map",
     "733.5280bf86.chunk.js.map": "/static/js/733.5280bf86.chunk.js.map",
     "668.f160ed6b.chunk.js.map": "/static/js/668.f160ed6b.chunk.js.map",
     "950.0c700ac7.chunk.js.map": "/static/js/950.0c700ac7.chunk.js.map",
@@ -85,6 +85,6 @@
   },
   "entrypoints": [
     "static/css/main.2f7edfb2.css",
-    "static/js/main.3bf334c5.js"
+    "static/js/main.f8120e04.js"
   ]
 }
