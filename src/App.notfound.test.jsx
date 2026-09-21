@@ -1,6 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
+
+jest.mock('react-toastify/dist/ReactToastify.css', () => ({}));
+
 import App from './App';
 
 // Jakob regression guard: any unknown URL (e.g. /contact/asd) must render the
