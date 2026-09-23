@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "node scripts/generate-research-rss.cjs && craco build",
+    "build": "node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs",
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build && cp CNAME build/CNAME",
