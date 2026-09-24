@@ -28,14 +28,29 @@ const systems = [
   ['Custom Setups', 'Flexible integration for non-standard or bespoke test environments.'],
 ];
 
-const enables = [
-  ['Describe tests in plain language', 'Tell Plotune Nexus what you need to validate. It figures out how to run it.'],
-  ['Read and write CAN and XCP signals directly', 'Interact with your measurement setup instantly, no extra tooling required.'],
-  ['Update software and calibrations remotely', 'Apply changes to your ECU or calibration target from anywhere.'],
-  ['Run automated test routines on a schedule', 'Create, execute, and repeat test jobs without manual intervention.'],
-  ['Log data based on conditions', 'Define signal thresholds or events. Plotune Nexus logs what matters, when it matters.'],
-  ['Store results in your own systems', 'Results go directly to your database or data environment, no manual export.'],
-  ['Connect to AI validation services securely', 'Extend Plotune Nexus with AI-powered validation while keeping your data protected.'],
+const enableGroups = [
+  {
+    label: 'Control',
+    items: [
+      ['Describe tests in plain language', 'Tell Plotune Nexus what you need to validate. It figures out how to run it.'],
+      ['Update software and calibrations remotely', 'Apply changes to your ECU or calibration target from anywhere.'],
+      ['Run automated test routines on a schedule', 'Create, execute, and repeat test jobs without manual intervention.'],
+    ],
+  },
+  {
+    label: 'Signals & data',
+    items: [
+      ['Read and write CAN and XCP signals directly', 'Interact with your measurement setup instantly, no extra tooling required.'],
+      ['Log data based on conditions', 'Define signal thresholds or events. Plotune Nexus logs what matters, when it matters.'],
+    ],
+  },
+  {
+    label: 'Storage & integration',
+    items: [
+      ['Store results in your own systems', 'Results go directly to your database or data environment, no manual export.'],
+      ['Connect to AI validation services securely', 'Extend Plotune Nexus with AI-powered validation while keeping your data protected.'],
+    ],
+  },
 ];
 
 const values = [
@@ -143,15 +158,22 @@ const NexusConnectivity = () => {
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-light-text md:text-4xl">What you can do with Plotune Nexus connected</h2>
           </div>
-          <div className="mt-10 space-y-4">
-            {enables.map(([title, copy], index) => (
-              <div key={title} className="flex gap-4 rounded-2xl bg-dark-card/80 p-5 shadow-custom">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">
-                  {index + 1}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-light-text">{title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-gray-text">{copy}</p>
+          <div className="mt-10 space-y-10">
+            {enableGroups.map((group) => (
+              <div key={group.label}>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{group.label}</p>
+                <div className="mt-4 space-y-4">
+                  {group.items.map(([title, copy], index) => (
+                    <div key={title} className="flex gap-4 rounded-2xl bg-dark-card/80 p-5 shadow-custom">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-light-text">{title}</h3>
+                        <p className="mt-2 text-sm leading-7 text-gray-text">{copy}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}

@@ -23,6 +23,7 @@ const industries = [
     features: [
       {
         title: 'Release-gate CAN capture',
+        group: 'run',
         copy:
           'Run the bounded release procedure on the bench: capture the trace, wait on the decoded pressure condition, and package the evidence instead of relying on a "looks good" run note.',
         chips: ['Classic CAN', 'DBC decoded wait', 'Artifact'],
@@ -38,6 +39,7 @@ const industries = [
       },
       {
         title: 'XCP measurement & calibration',
+        group: 'run',
         copy:
           'Start XCP DAQ, record CAN evidence, read the calibration, run the acceptance sequence, apply a bounded change, and rerun the gate — the chart is earned by the workflow, not described after it.',
         chips: ['XCP-on-CAN', 'Calibration', 'Acceptance rerun'],
@@ -53,6 +55,7 @@ const industries = [
       },
       {
         title: 'DBC-backed signal stimulation',
+        group: 'run',
         copy:
           'Encode a message from your DBC, send it at the required cycle time, and wait on the decoded response signal instead of hand-crafting raw frames for every check.',
         chips: ['DBC', 'Encode / send', 'Decoded wait'],
@@ -68,6 +71,7 @@ const industries = [
       },
       {
         title: 'Signal regression vs baseline',
+        group: 'evidence',
         copy:
           'Replay a validated capture as the baseline and diff a fresh run against it, so new arbitration IDs or timing drift are caught before sign-off.',
         chips: ['Baseline', 'Diff', 'Regression'],
@@ -83,6 +87,7 @@ const industries = [
       },
       {
         title: 'Periodic-send endurance',
+        group: 'run',
         copy:
           'Hold a heartbeat or periodic frame over a long window as an async job, watch for dropouts, and release the bus cleanly at the end.',
         chips: ['Periodic send', 'Endurance', 'Async job'],
@@ -98,6 +103,7 @@ const industries = [
       },
       {
         title: 'XCP-on-Ethernet measurement',
+        group: 'setup',
         copy:
           'Reach ECUs over IP with XCP-on-Ethernet, auto-detecting host and port from the A2L file.',
         chips: ['XCP / Ethernet', 'A2L auto-detect', 'UDP'],
@@ -113,6 +119,7 @@ const industries = [
       },
       {
         title: 'XCP Seed+Key unlock',
+        group: 'setup',
         copy:
           'Unlock protected XCP sessions with a getSeed challenge and key response, coordinated statefully across the two calls, before running calibration or measurement.',
         chips: ['Seed+Key', 'getSeed / unlock', 'Stateful'],
@@ -128,6 +135,7 @@ const industries = [
       },
       {
         title: 'Multi-ECU sign-off sequence',
+        group: 'evidence',
         copy:
           'Orchestrate a repeatable multi-step sequence across several ECUs and capture the handshake as one artifact another engineer can review.',
         chips: ['Test sequence', 'Multi-ECU', 'Sign-off'],
@@ -151,6 +159,7 @@ const industries = [
     features: [
       {
         title: 'Fault triage & mitigation',
+        group: 'run',
         copy:
           'The agent waits for the fault frame, captures the context, runs the approved mitigation sequence, waits for the fault-clear condition, and returns before-and-after evidence.',
         chips: ['Capture', 'Mitigation', 'Fault-clear'],
@@ -166,6 +175,7 @@ const industries = [
       },
       {
         title: 'UART controller bring-up',
+        group: 'setup',
         copy:
           'Open the managed UART session, send the bring-up command, wait for the expected response, store the exchange, and tie it to the run artifact — no terminal screenshot, no pasted transcript.',
         chips: ['UART', 'RS-485', 'Bounded record'],
@@ -181,6 +191,7 @@ const industries = [
       },
       {
         title: 'Power-rail capture under motion',
+        group: 'evidence',
         copy:
           'Record the supply rail while the actuator moves, capture the sag window, and keep the trace tied to the exact run that produced it.',
         chips: ['Capture', 'Power rail', 'Evidence'],
@@ -196,6 +207,7 @@ const industries = [
       },
       {
         title: 'Warm-restart reproduction',
+        group: 'run',
         copy:
           'Trigger the warm restart, record CAN and UART through recovery, and confirm whether the fault recurs — the repro is a controlled procedure, not a manual retry.',
         chips: ['Repro', 'Recovery', 'Artifact'],
@@ -211,6 +223,7 @@ const industries = [
       },
       {
         title: 'CAN gateway allowlist rules',
+        group: 'setup',
         copy:
           'Forward traffic between interfaces under allowlist-style policy so bridging stays inside defined boundaries, and leave proof of exactly what crossed.',
         chips: ['Gateway', 'Allowlist', 'Policy'],
@@ -226,6 +239,7 @@ const industries = [
       },
       {
         title: 'Overnight endurance watch',
+        group: 'run',
         copy:
           'Leave a bounded watch running as an async job so an intermittent fault is captured with context the moment it appears, not the next morning.',
         chips: ['Overnight', 'Async job', 'Evidence'],
@@ -240,6 +254,7 @@ const industries = [
     features: [
       {
         title: 'Cross-host DDS discovery',
+        group: 'setup',
         copy:
           'Join the robot’s DDS domain over the bench network and enumerate every participant and topic before touching anything — a readiness gate confirms the middleware, clock, and interfaces are ready first.',
         chips: ['CycloneDDS', 'Cross-host', 'Discovery'],
@@ -255,6 +270,7 @@ const industries = [
       },
       {
         title: 'Requirement-verdict gate on live telemetry',
+        group: 'run',
         copy:
           'Gate a requirement on a fresh DDS sample with wait_dds_signal instead of assuming the command worked. The session’s long-lived participant reuses completed discovery, so the gate matches reliably cross-host.',
         chips: ['wait_dds_signal', 'Verdict', 'Cross-host'],
@@ -270,6 +286,7 @@ const industries = [
       },
       {
         title: 'Drive-by-wire command + telemetry gate',
+        group: 'run',
         copy:
           'Publish a scalar command onto the ROS 2 graph, then gate on live odometry to prove the effect — command, then measure, not command and hope. A clean zero-command stop is part of the procedure.',
         chips: ['publish_dds_message', 'Odometry gate', 'Effect-proven'],
@@ -285,6 +302,7 @@ const industries = [
       },
       {
         title: 'Multi-topic DDS recording to one MCAP',
+        group: 'evidence',
         copy:
           'Record several ROS 2 topics into a single MCAP artifact — each topic its own channel — as a bounded async job, then derive the real rate from message count over the window.',
         chips: ['record_dds_topics', 'MCAP', 'Async job'],
@@ -300,6 +318,7 @@ const industries = [
       },
       {
         title: 'Controller-in-the-loop supervision',
+        group: 'run',
         copy:
           'Deploy a reference controller as its own managed container, supervise its closed loop over DDS, and prove Nexus can override it — the instrument, not just an observer of the stack.',
         chips: ['Container', 'Closed loop', 'Override'],
@@ -315,6 +334,7 @@ const industries = [
       },
       {
         title: 'AMCL localization bring-up',
+        group: 'setup',
         copy:
           'Publish an initial pose estimate onto /initialpose and watch AMCL begin emitting pose and covariance — the localization stack is exercised through the same bounded DDS surface.',
         chips: ['/initialpose', 'AMCL', 'Covariance'],
@@ -330,6 +350,7 @@ const industries = [
       },
       {
         title: 'Bounded DDS test sequence',
+        group: 'evidence',
         copy:
           'Wrap join → record → publish → wait → leave as one bounded test sequence with an ordered verdict and an evidence MCAP, so a ROS 2 requirement check is repeatable and reviewable.',
         chips: ['run_test_sequence', 'Verdict', 'Repeatable'],
@@ -353,6 +374,7 @@ const industries = [
     features: [
       {
         title: 'Full CAN interface lifecycle',
+        group: 'run',
         copy:
           'A missing-heartbeat test becomes a controlled procedure: the adapter is attached, the interface is acquired, the heartbeat runs, the gateway reaction is captured, transmission stops, and the interface is released cleanly.',
         chips: ['Acquire → release', 'Periodic send', 'Lifecycle'],
@@ -368,6 +390,7 @@ const industries = [
       },
       {
         title: 'Bus inspection & snapshot',
+        group: 'setup',
         copy:
           'Bring up an unfamiliar bus, list the active arbitration IDs, read the load, and snapshot the state before you change anything.',
         chips: ['Inspect', 'Snapshot', 'Bring-up'],
@@ -383,12 +406,14 @@ const industries = [
       },
       {
         title: 'Standard MCP control surface',
+        group: 'setup',
         copy:
           'Expose common CAN, UART, and XCP tasks as bounded MCP actions — acquire, capture, wait, send only the approved message, stop, package — instead of raw shell or one-off script sprawl.',
         chips: ['MCP', 'Bounded ops', 'No raw shell'],
       },
       {
         title: 'DBC decoded-signal gate',
+        group: 'run',
         copy:
           'Wait on a decoded signal or condition from your DBC to gate the next step of an integration flow, so ordering is enforced by the workflow.',
         chips: ['DBC', 'Decoded wait', 'Condition'],
@@ -404,18 +429,21 @@ const industries = [
       },
       {
         title: 'Gateway regression jobs',
+        group: 'evidence',
         copy:
           'Run allowlist gateway jobs and compare against a clean baseline to catch new IDs or timing drift before they reach the field.',
         chips: ['Gateway', 'Baseline', 'Regression'],
       },
       {
         title: 'Segment forwarding rules',
+        group: 'setup',
         copy:
           'Bridge two segments with an explicit forwarding allowlist so only intended traffic crosses between networks, with proof of what was passed and blocked.',
         chips: ['Segmentation', 'Allowlist', 'Policy'],
       },
       {
         title: 'CAN FD bring-up lane',
+        group: 'setup',
         copy:
           'Run CAN FD frames through the same send, periodic, wait, snapshot, DBC and gateway flows on Linux SocketCAN. It is implemented and usable for bring-up today, and tracked as qualification-pending rather than a production guarantee.',
         chips: ['CAN FD', 'SocketCAN', 'Qualification-pending'],
@@ -439,6 +467,7 @@ const industries = [
     features: [
       {
         title: 'Root-cause evidence capture',
+        group: 'evidence',
         copy:
           'Open the UART session, record CAN, trigger the warm restart, wait for the fault condition, rerun the failing window, and build the service evidence from the real sequence.',
         chips: ['UART + CAN', 'Fault window', 'Evidence'],
@@ -454,6 +483,7 @@ const industries = [
       },
       {
         title: 'Unattended overnight capture',
+        group: 'run',
         copy:
           'A fault at 2am no longer waits for morning. The agent is already watching: it catches the condition, starts the bounded capture, runs the approved check, and leaves the package ready for review.',
         chips: ['Always watching', 'Bounded', 'Overnight'],
@@ -469,6 +499,7 @@ const industries = [
       },
       {
         title: 'Intermittent-fault window capture',
+        group: 'run',
         copy:
           'Define the threshold once. When a signal crosses it, the bounded capture starts immediately and records the surrounding window so the rare event is never missed.',
         chips: ['Threshold', 'Fault window', 'Capture'],
@@ -484,6 +515,7 @@ const industries = [
       },
       {
         title: 'Delegated field access',
+        group: 'setup',
         copy:
           'The on-site operator runs the vehicle; a remote expert reviews the same evidence. Ownership is bootstrapped, access is delegated, and the handoff stays scoped.',
         chips: ['Delegated', 'Operator UI', 'Scoped'],
@@ -499,6 +531,7 @@ const industries = [
       },
       {
         title: 'Clean export to your storage',
+        group: 'evidence',
         copy:
           'Keep the run local first, then move artifacts to storage you already control — SFTP, Google Drive, or OneDrive — instead of a vendor-owned archive.',
         chips: ['Export', 'Customer storage', 'Local-first'],
@@ -514,6 +547,7 @@ const industries = [
       },
       {
         title: 'Raw UDS request / response',
+        group: 'run',
         copy:
           'Issue raw UDS services over CAN or DoIP and get structured negative-response handling back — including extended pending-response waits (NRC 0x78) handled automatically — as a low-level, bounded diagnostic surface. Curated VIN/DTC flows sit above this as a follow-up layer.',
         chips: ['UDS', 'CAN / DoIP', 'NRC-aware'],
@@ -529,6 +563,7 @@ const industries = [
       },
       {
         title: 'DoIP ECU discovery',
+        group: 'setup',
         copy:
           'Probe for DoIP entities across IPv4 and IPv6 with VIN-targeted or EID-targeted identification requests, and keep reused batch sockets alive with Alive Check before running a diagnostic exchange.',
         chips: ['DoIP', 'IPv4 / IPv6', 'VIN / EID'],
@@ -544,6 +579,7 @@ const industries = [
       },
       {
         title: 'Reproducible triage sequence',
+        group: 'evidence',
         copy:
           'Capture the recurring triage steps once and re-run them the same way across sites and vehicles, so field turnaround does not depend on a specialist being available.',
         chips: ['Sequence', 'Repeatable', 'Consistent'],
@@ -558,6 +594,7 @@ const industries = [
     features: [
       {
         title: 'Containerized sim on virtual CAN',
+        group: 'setup',
         copy:
           'The controller or simulator runs as a staged container on the device, connected to a virtual CAN bus, with a policy gateway between virtual and real CAN so only approved frames cross.',
         chips: ['Container', 'Virtual CAN', 'Policy gateway'],
@@ -573,6 +610,7 @@ const industries = [
       },
       {
         title: 'Async recording jobs',
+        group: 'run',
         copy:
           'Start long recordings that return a job ID and poll for status, so unattended runs do not block the workflow or a person standing next to the bench.',
         chips: ['Async job', 'Job ID', 'Poll'],
@@ -588,6 +626,7 @@ const industries = [
       },
       {
         title: 'Fault-injection verification',
+        group: 'run',
         copy:
           'Inject a bounded fault, watch the diagnostic react, confirm graceful degradation, and keep the before-and-after as evidence the safety mechanism worked.',
         chips: ['Fault injection', 'Verify', 'Evidence'],
@@ -603,18 +642,21 @@ const industries = [
       },
       {
         title: 'Test-sequence orchestration',
+        group: 'run',
         copy:
           'Drive repeatable multi-step runs across CAN, UART, DBC, and XCP as a single orchestrated sequence, then export the results to your data path.',
         chips: ['Sequence', 'Multi-step', 'Export'],
       },
       {
         title: 'Regression across releases',
+        group: 'evidence',
         copy:
           'Re-run the validated sequence against a new firmware build and diff it against the prior release to protect behavior that already passed.',
         chips: ['Regression', 'Baseline', 'Repeatable'],
       },
       {
         title: 'XCP STIM bypass injection',
+        group: 'run',
         copy:
           'Inject signals directly into ECU measurement memory over XCP for hardware-in-the-loop bypass testing — periodic writes that preserve integer and bitmask values according to the A2L measurement type.',
         chips: ['XCP STIM', 'HIL bypass', 'A2L-typed'],
@@ -630,6 +672,7 @@ const industries = [
       },
       {
         title: 'Night validation runs',
+        group: 'evidence',
         copy:
           'Set up the routines before you leave; they run overnight as async jobs and the packaged results are waiting when you arrive.',
         chips: ['Overnight', 'Async job', 'Report'],
@@ -644,6 +687,7 @@ const industries = [
     features: [
       {
         title: 'Bounded operations, not raw access',
+        group: 'setup',
         copy:
           'Agents act through a narrow set of bounded operations — acquire, capture, wait, send only approved frames, stop, package — rather than direct, unrestricted hardware tools, which makes AI-assisted work operationally approvable.',
         chips: ['Guardrails', 'Bounded', 'Approvable'],
@@ -659,6 +703,7 @@ const industries = [
       },
       {
         title: 'Local artifact first',
+        group: 'evidence',
         copy:
           'The run produces local artifacts first. Inspect bounded reads, export through a controlled transfer flow, or hand off to storage you already control — raw bench data does not default to a vendor cloud.',
         chips: ['Local-first', 'Customer path', 'Data control'],
@@ -674,6 +719,7 @@ const industries = [
       },
       {
         title: 'MCP + OAuth onboarding',
+        group: 'setup',
         copy:
           'Stand up the MCP surface with the OAuth browser flow, dynamic client registration, and delegated device access so AI-assisted work stays inside policy from day one.',
         chips: ['MCP', 'OAuth', 'Delegated'],
@@ -689,18 +735,21 @@ const industries = [
       },
       {
         title: 'Evidence another engineer can trust',
+        group: 'evidence',
         copy:
           'The value is the chain behind the answer: live DAQ, CAN trace, calibration readback, sequence result, and a packaged artifact — not "the AI thinks it passed."',
         chips: ['Artifact', 'Reviewable', 'Chain'],
       },
       {
         title: 'Workflow-first, not protocol-first',
+        group: 'run',
         copy:
           'Start with the real bench workflow your engineer runs by hand and let the agent run the bounded procedure and hand back the proof — the infrastructure follows the workflow.',
         chips: ['Workflow', 'Bounded', 'Proof'],
       },
       {
         title: 'Start with one real workflow',
+        group: 'run',
         copy:
           'Prove one bounded workflow on real hardware before scaling, instead of a full platform migration.',
         chips: ['One workflow', 'Real hardware', 'Prove it'],
@@ -708,6 +757,21 @@ const industries = [
     ],
   },
 ];
+
+// Chunks each industry's flat feature list (6-8 items) into the same three
+// workflow-phase clusters the rest of the site already uses (acquire/connect,
+// then run/gate, then capture/package) instead of one long undifferentiated list.
+const featureGroupOrder = ['setup', 'run', 'evidence'];
+const featureGroupLabels = {
+  setup: 'Setup & connect',
+  run: 'Run & verify',
+  evidence: 'Evidence & comparison',
+};
+
+const groupFeatures = (features) =>
+  featureGroupOrder
+    .map((groupId) => ({ id: groupId, label: featureGroupLabels[groupId], items: features.filter((f) => f.group === groupId) }))
+    .filter((group) => group.items.length > 0);
 
 const familyOrder = ['claude', 'codex'];
 
@@ -1209,18 +1273,25 @@ const NexusUseCases = () => {
                 </a>
               </div>
 
-              <div className="mt-8 space-y-3">
-                {activeIndustryConfig.features.map((feature) => {
-                  const key = `${activeIndustryConfig.id}:${feature.title}`;
-                  return (
-                    <FeatureAccordionItem
-                      key={key}
-                      feature={feature}
-                      isOpen={Boolean(openFeatures[key])}
-                      onToggle={() => toggleFeature(key)}
-                    />
-                  );
-                })}
+              <div className="mt-8 space-y-6">
+                {groupFeatures(activeIndustryConfig.features).map((group) => (
+                  <div key={group.id}>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-text">{group.label}</p>
+                    <div className="mt-3 space-y-3">
+                      {group.items.map((feature) => {
+                        const key = `${activeIndustryConfig.id}:${feature.title}`;
+                        return (
+                          <FeatureAccordionItem
+                            key={key}
+                            feature={feature}
+                            isOpen={Boolean(openFeatures[key])}
+                            onToggle={() => toggleFeature(key)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
