@@ -83,7 +83,7 @@ const NexusStream = () => {
               </div>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
-                  Request a Demo
+                  Contact Us
                   <FiArrowRight />
                 </Link>
                 <Link to="/nexus/connectivity" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
@@ -203,7 +203,7 @@ const NexusStream = () => {
               Stream workers monitor, trigger, and validate, without manual intervention. Your team stays focused on engineering, not on watching test screens.
             </p>
             <Link to="/contact" className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
-              Request a Demo
+              Contact Us
               <FiArrowRight />
             </Link>
           </div>

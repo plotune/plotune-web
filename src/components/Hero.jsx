@@ -22,7 +22,7 @@ const Hero = () => {
               to="/contact"
               className="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
             >
-              Request a Demo
+              Contact Us
             </Link>
             <Link
               to="/nexus"

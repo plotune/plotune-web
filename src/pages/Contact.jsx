@@ -92,7 +92,7 @@ const ContactPage = () => {
     <section className="py-20 bg-gradient-to-br from-gray-900 via-dark-surface to-black relative overflow-hidden">
       <Seo
         title="Contact Plotune"
-        description="Get in touch with the Plotune team or request a demo of the DataOps platform and Plotune Nexus."
+        description="Get in touch with the Plotune team about the DataOps platform and Plotune Nexus."
         path="/contact"
       />
       {/* Background Pattern */}

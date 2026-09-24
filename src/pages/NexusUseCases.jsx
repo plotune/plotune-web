@@ -11,8 +11,8 @@ const publicBase = process.env.PUBLIC_URL || '';
 
 const syncMessageType = 'plotune-nexus-use-case';
 
-const demoMailto = (label) =>
-  `mailto:contact@plotune.net?subject=${encodeURIComponent(`Plotune Nexus demo request — ${label}`)}`;
+const contactMailto = (label) =>
+  `mailto:contact@plotune.net?subject=${encodeURIComponent(`Plotune Nexus inquiry: ${label}`)}`;
 
 const industries = [
   {
@@ -1063,10 +1063,10 @@ const NexusUseCases = () => {
               </p>
               <div className="mt-8">
                 <a
-                  href={demoMailto('Plotune Nexus')}
+                  href={contactMailto('Plotune Nexus')}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
                 >
-                  Request a Demo
+                  Contact Us
                   <FiArrowRight />
                 </a>
               </div>
@@ -1201,10 +1201,10 @@ const NexusUseCases = () => {
                   <p className="mt-3 leading-7 text-gray-text">{activeIndustryConfig.blurb}</p>
                 </div>
                 <a
-                  href={demoMailto(activeIndustryConfig.label)}
+                  href={contactMailto(activeIndustryConfig.label)}
                   className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-gray-text transition-all duration-300 hover:border-primary/40 hover:text-white"
                 >
-                  Request a Demo
+                  Contact Us
                   <FiArrowRight />
                 </a>
               </div>
@@ -1232,10 +1232,10 @@ const NexusUseCases = () => {
                 <p className="mt-2 text-gray-text">Plotune Nexus can mirror the same flow shape against your own validation cases. Start with one real workflow.</p>
               </div>
               <a
-                href={demoMailto('Plotune Nexus')}
+                href={contactMailto('Plotune Nexus')}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
-                Request a Demo
+                Contact Us
                 <FiArrowRight />
               </a>
             </div>

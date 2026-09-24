@@ -82,7 +82,7 @@ const NexusConnectivity = () => {
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
-                  Request a Demo
+                  Contact Us
                   <FiArrowRight />
                 </Link>
                 <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
@@ -184,7 +184,7 @@ const NexusConnectivity = () => {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
-                Request a Demo
+                Contact Us
                 <FiArrowRight />
               </Link>
               <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">

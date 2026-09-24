@@ -113,7 +113,7 @@ const Features = () => {
             to="/contact"
             className="inline-flex items-center justify-center rounded-full border-2 border-primary px-8 py-3 font-semibold text-primary hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
           >
-            Schedule a Demo
+            Contact Us
           </Link>
         </motion.div>
       </div>

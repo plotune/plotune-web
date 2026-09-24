@@ -81,7 +81,7 @@ const Nexus = () => {
                   to="/contact"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
                 >
-                  Request a Demo
+                  Contact Us
                   <FiArrowRight />
                 </Link>
                 <Link
@@ -220,7 +220,7 @@ const Nexus = () => {
                 to="/contact"
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
-                Request a Demo
+                Contact Us
                 <FiArrowRight />
               </Link>
             </div>
