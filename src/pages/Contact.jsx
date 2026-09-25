@@ -21,7 +21,7 @@ const nextSteps = [
 const CONTACT_EMAIL = 'contact@plotune.net';
 
 // Builds a pre-filled mailto so a visitor arriving from a research article or
-// solution page doesn't have to re-explain what they're reaching out about --
+// solution page doesn't have to re-explain what they're reaching out about;
 // the subject/body already name the workflow they were just reading about.
 // Falls back to a plain, undirected inquiry when there's no funnel context.
 const useContactMailto = () => {
@@ -60,7 +60,7 @@ const ContactPage = () => {
     <section className="relative overflow-hidden bg-dark-bg py-20 text-dark-text md:py-28">
       <Seo
         title="Contact Plotune"
-        description="Tell us about your test environment and we'll walk you through how Plotune Nexus fits -- integration details, timeline, and next steps included."
+        description="Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
         path="/contact"
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
@@ -73,9 +73,9 @@ const ContactPage = () => {
               Tell us about your test environment.
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-text">
-              Send us a message and we'll walk you through how Plotune Nexus fits your bench,
-              your team, and the tools you already run -- integration details, timeline, and
-              next steps included.
+              Send us a message and we'll walk you through how Plotune Nexus fits your bench and
+              your team. You'll get integration details, a timeline, and clear next steps in
+              that first reply.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
