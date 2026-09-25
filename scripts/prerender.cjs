@@ -6,19 +6,20 @@
 // curl -- gets nothing page-specific from any route on this site, including the
 // research articles this section exists to get read and cited.
 //
-// This script closes that gap for the highest-priority section (Research, per
-// explicit product direction) by actually rendering each route in a real browser
+// This script closes that gap by actually rendering each route in a real browser
 // at build time and saving that rendered HTML as the static file, so a plain GET
-// returns the real article/page content with no JavaScript required. React still
-// boots normally on top of it for real visitors (src/index.js uses
+// returns the real page content with no JavaScript required. React still boots
+// normally on top of it for real visitors (src/index.js uses
 // ReactDOM.createRoot().render(), a full client render, not hydrateRoot(), so
 // there is no hydration-mismatch risk from prerendered markup differing slightly
 // from the first client render).
 //
-// Scope: research articles + the research nav pages (overview/reports/
-// methodology) + FAQ (its FAQPage JSON-LD already exists in code but was
-// equally invisible pre-render). Solutions/Nexus/etc. are unprerendered shims
-// for now -- extend the `routes` list below if that scope grows later.
+// Scope: research articles + the research nav pages + FAQ (its FAQPage JSON-LD
+// already existed in code but was equally invisible pre-render), plus every
+// Solutions and Nexus page and Contact -- the pages a reader actually lands on
+// after a research article's own "see how this workflow can be automated" CTA.
+// Anything else stays an unprerendered shim for now; extend `routes` if that
+// scope grows later.
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
@@ -48,13 +49,24 @@ const forceInView = () => {
 };
 
 const articlesDir = path.join(root, 'src/research/articles');
-const routes = ['/research', '/research/reports', '/research/methodology', '/faq'];
+const routes = [
+  '/research', '/research/reports', '/research/methodology', '/faq',
+  '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases',
+  '/solutions/agentic-test-development', '/contact',
+];
 fs.readdirSync(articlesDir)
   .filter((file) => file.endsWith('.mdx'))
   .forEach((file) => {
     const { data } = matter(fs.readFileSync(path.join(articlesDir, file), 'utf8'));
     if (data.slug) routes.push(`/research/articles/${data.slug}`);
   });
+
+// One route per solution segment (and its legacy alias), extracted from the data
+// file's own `slug: '...'` / alias-key text the same way generate-static-routes.cjs
+// does, rather than importing the ESM module from this CommonJS script.
+const solutionsSrc = fs.readFileSync(path.join(root, 'src/content/solutions.js'), 'utf8');
+[...solutionsSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/solutions/${slug}`));
+[...solutionsSrc.matchAll(/^\s*'([a-z0-9-]+)':\s*'[a-z0-9-]+',?$/gm)].forEach(([, aliasSlug]) => routes.push(`/solutions/${aliasSlug}`));
 
 const serveStatic = () =>
   new Promise((resolve) => {
@@ -84,7 +96,7 @@ const serveStatic = () =>
 
 (async () => {
   if (!fs.existsSync(path.join(buildDir, 'index.html'))) {
-    console.error('prerender-research: build/index.html not found -- run the build first.');
+    console.error('prerender: build/index.html not found -- run the build first.');
     process.exit(1);
   }
 
@@ -94,7 +106,7 @@ const serveStatic = () =>
   await context.addInitScript(forceInView);
 
   let done = 0;
-  for (const route of routes) {
+  for (const route of [...new Set(routes)]) {
     const page = await context.newPage();
     try {
       await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle', timeout: 30000 });
@@ -110,7 +122,7 @@ const serveStatic = () =>
       fs.writeFileSync(outPath, `<!DOCTYPE html>\n${html}`);
       done += 1;
     } catch (err) {
-      console.error(`prerender-research: FAILED ${route}: ${err.message}`);
+      console.error(`prerender: FAILED ${route}: ${err.message}`);
     } finally {
       await page.close();
     }
@@ -118,5 +130,5 @@ const serveStatic = () =>
 
   await browser.close();
   server.close();
-  console.log(`prerender-research: rendered ${done}/${routes.length} routes into build/.`);
+  console.log(`prerender: rendered ${done}/${new Set(routes).size} routes into build/.`);
 })();
