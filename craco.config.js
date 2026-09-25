@@ -1,4 +1,5 @@
 const remarkFrontmatter = require('remark-frontmatter').default;
+const remarkGfm = require('remark-gfm').default;
 
 module.exports = {
   webpack: {
@@ -14,7 +15,7 @@ module.exports = {
         test: /\.mdx?$/,
         use: [
           { loader: require.resolve('babel-loader'), options: { presets: [require.resolve('babel-preset-react-app')] } },
-          { loader: require.resolve('@mdx-js/loader'), options: { providerImportSource: '@mdx-js/react', remarkPlugins: [remarkFrontmatter] } },
+          { loader: require.resolve('@mdx-js/loader'), options: { providerImportSource: '@mdx-js/react', remarkPlugins: [remarkFrontmatter, remarkGfm] } },
         ],
       });
       config.resolve.extensions.push('.mdx');
