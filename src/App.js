@@ -12,7 +12,6 @@ import Download from './pages/Download';
 import About from './pages/About';
 import Careers from './pages/Careers';
 import Header from './components/Header';
-import DevBanner from './components/DevBanner';
 import Footer from './components/Footer';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -115,7 +114,6 @@ const NavigationWrapper = ({ children }) => {
 
   return (
     <>
-      {!shouldHide && <DevBanner />}
       {!shouldHide && <Header />}
       {children}
       {!shouldHide && <Footer />}
