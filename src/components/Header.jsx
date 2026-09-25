@@ -82,6 +82,7 @@ const Header = () => {
       to: '/docs',
       label: 'Docs',
       children: [
+        { to: '/docs/nexus', label: 'Nexus Documentation' },
         { to: '/faq', label: 'FAQ' },
       ],
     },

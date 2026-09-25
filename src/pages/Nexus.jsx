@@ -225,6 +225,14 @@ const Nexus = () => {
               </Link>
             </div>
           </div>
+
+          <p className="mt-8 text-center text-sm text-gray-text">
+            Already evaluating the technical fit?{' '}
+            <Link to="/docs/nexus" className="font-semibold text-primary hover:text-primary-dark">
+              Read the Nexus documentation
+            </Link>
+            {' '}for the security model, hardware compatibility, and MCP API reference.
+          </p>
         </div>
       </section>
     </main>
