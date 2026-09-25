@@ -29,12 +29,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
+    "playwright": "^1.63.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3"
   },
   "scripts": {
     "start": "craco start",
-    "build": "node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs",
+    "build": "node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs && node scripts/prerender-research.cjs",
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build && cp CNAME build/CNAME",
