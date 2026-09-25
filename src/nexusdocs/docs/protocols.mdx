@@ -1,0 +1,47 @@
+## CAN and CAN FD
+
+Nexus's CAN support is built on Linux `SocketCAN`, not a vendor SDK, which is why the [hardware compatibility matrix](/docs/nexus/hardware-compatibility) is organized around Linux transport fit rather than vendor branding.
+
+**Implemented today**: interface discovery and virtual-CAN (`vcan`) lifecycle management; SLCAN serial adapter discovery, attach, and detach, including arbitrary bitrate codes for non-standard adapter firmware; configurable interface timing (`configure_can_bitrate` takes bitrate, sample point, SJW, and phase-segment values directly, not just a fixed preset list); raw CAN and CAN FD send, batch send, periodic send, wait, and snapshot flows; async recording jobs with ASC artifact output; DBC-backed message encode/send and decoded-signal waits; policy-based CAN gateways with explicit directional allowlists; and hotplug-aware stale-lease cleanup so a crashed session doesn't permanently hold an interface.
+
+**Not implemented yet**: persisted or cross-process lease coordination, job persistence across a service restart, non-Linux CAN management paths, per-message data-phase bitrate overrides, and CAN FD expansion to SLCAN, UDS-on-CAN, XCP-on-CAN, and DoIP (those stay classical-CAN-only in the current claim).
+
+<Note>
+Interface status fields like `bitrate`, `data_bitrate`, and `fd_enabled` are best-effort Linux observations and may be absent depending on the driver or host. A running CAN job or gateway that survives a restart is **not** resumed in place. It recovers as an interrupted-failure snapshot, and the operator has to restart it explicitly.
+</Note>
+
+## UDS (diagnostics)
+
+Nexus ships raw UDS on exactly two transports: `can_isotp` and `doip`. Both are the standard, unmodified Linux paths rather than a Nexus-specific reimplementation.
+
+- **`can_isotp`** is the standard Linux SocketCAN ISO-TP path, supporting both normal and extended (1-byte address prefix) addressing modes.
+- **`doip`** is an outbound network client from the device API, gated by a saved DoIP policy plus explicit IPv4 interface or source-address selection, not a vendor-specific adapter abstraction.
+
+A practical consequence worth stating plainly: a dedicated Nexus-side DoIP dongle is not required when the ECU or gateway is already reachable over ordinary Linux networking. A vendor VCI that hides DoIP behind J2534, D-PDU, or a Windows-only runtime is *not* natively supported today even if the underlying hardware is DoIP-capable. See the [compatibility matrix](/docs/nexus/hardware-compatibility) for exactly which vendor families that affects.
+
+## DoIP discovery
+
+DoIP support includes dual-stack IPv4/IPv6 discovery, with both VIN-targeted and EID-targeted identification requests, and reused batch sockets kept alive with Alive Check messages before a diagnostic exchange begins.
+
+## XCP
+
+Two distinct transport paths, with different current scope:
+
+- **XCP-on-CAN** supports recording, measurement, calibration, and PROGRAM commands.
+- **XCP-on-Ethernet** supports calibration, STIM, and Seed+Key over UDP, with host/port auto-detected from the ECU's own A2L file metadata (the `XCP_ON_ETH` block), including A2L files that omit the CAN `TP_BLOB` request/response identifiers entirely, since the Ethernet path doesn't need them. XCP-on-Ethernet does not currently support recording.
+
+Seed+Key unlock for protected XCP sessions is a stateful two-call exchange: a `getSeed` challenge followed by a key response, coordinated across both calls before calibration or measurement access is granted.
+
+## ROS 2 / DDS
+
+Nexus joins a robot's existing DDS domain over the network rather than requiring ROS tooling installed on the operator's side. The typical sequence: join a session on a given domain ID, discover participants and topics before acting on anything, capture a snapshot of current state, publish a bounded command or let an external controller drive the loop, gate the next step on a live signal condition rather than a fixed wait, then record the relevant topics into a single MCAP artifact. See the DDS example in [Quick Start](/docs/nexus/quick-start) for the full call sequence against a runnable simulator.
+
+## References
+
+- [ISO 11898](https://www.iso.org/standard/63648.html), CAN data link and physical layer
+- [ISO 15765-2](https://www.iso.org/standard/66574.html), ISO-TP transport protocol for UDS over CAN
+- [ISO 14229](https://www.iso.org/standard/72439.html), UDS Unified Diagnostic Services
+- [ISO 13400](https://www.iso.org/standard/74785.html), DoIP Diagnostics over Internet Protocol
+- [ASAM XCP protocol standard](https://www.asam.net/standards/detail/mcd-1-xcp/)
+- [ASAM A2L (ASAP2) format](https://www.asam.net/standards/detail/mcd-2-mc/)
+- [CycloneDDS](https://cyclonedds.io/), the DDS implementation Nexus's ROS 2 support is built on

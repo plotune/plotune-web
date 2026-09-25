@@ -1,6 +1,6 @@
 // src/pages/Docs.jsx
 import React, { lazy, Suspense } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import clsx from "clsx";
 import Seo from "../components/Seo";
 
@@ -47,10 +47,11 @@ const tabs = [
     id: "nexus",
     label: "Nexus",
     Icon: ServerIcon,
-    sub: [
-      { id: "nexus", label: "Quick start" },
-      { id: "nexus-remote-routing", label: "Remote routing" },
-    ],
+    // Real per-page documentation (prerendered, so it's readable without JS) lives
+    // at /docs/nexus/* now, not behind this page's ?page= query-param tabs -- see
+    // NexusDocsOverview.jsx / NexusDocPage.jsx. renderTab() below special-cases
+    // this tab to navigate there instead of calling selectPage().
+    href: "/docs/nexus",
   },
 
   {
@@ -128,6 +129,17 @@ export default function Docs() {
         ? "bg-primary/20 text-primary border-l-4 border-primary"
         : "text-gray-text hover:text-light-text hover:bg-white/5"
     );
+
+    if (tab.href) {
+      return (
+        <Link key={tab.id} to={tab.href} className={baseCls}>
+          {tab.Icon && (
+            <img src={tab.Icon} alt="" className="w-5 h-5 opacity-70" />
+          )}
+          {tab.label}
+        </Link>
+      );
+    }
 
     return (
       <button

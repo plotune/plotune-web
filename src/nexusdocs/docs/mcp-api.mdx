@@ -1,0 +1,114 @@
+## Endpoint
+
+Nexus exposes its tool surface over the Model Context Protocol (MCP), HTTP transport:
+
+- **Direct to a device on your network**: `http://<device-ip>/mcp`
+- **Through Plotune's cloud router**, device-scoped: `https://nexus.plotune.net/devices/<device-uuid>/mcp/`
+
+The direct path is HTTP-only, because Nexus is a networked device rather than a local stdio process. The router path is HTTPS and owns OAuth discovery plus dynamic client registration for that public endpoint; the device UUID is part of the URL because the router has to resolve the correct device route before it can present that device's OAuth surface.
+
+## Authenticating
+
+**OAuth is the preferred path.** It keeps redirect, consent, and client-registration behavior on the standard, auditable MCP surface, and it's the only path that can grant a session the full owner-level permission set.
+
+Some clients fall back from device-scoped OAuth discovery to origin-level paths (`/.well-known/oauth-protected-resource`, `/.well-known/oauth-authorization-server`, `/register`) that don't carry a device UUID, which means the router can't safely infer which device to route to from the URL alone. For those clients, pass the device UUID as a static header instead:
+
+```json
+{
+  "servers": {
+    "plotune-nexus": {
+      "type": "http",
+      "url": "https://nexus.plotune.net/devices/<device-uuid>/mcp/",
+      "headers": { "X-Plotune-Device-UUID": "<device-uuid>" }
+    }
+  }
+}
+```
+
+**Manual bearer tokens are the fallback** for clients that can't complete OAuth at all. An authorized device user generates a time-bound token from the device's Security page, then sends it as either `Authorization: Bearer <token>` or `X-Plotune-MCP-Bearer-Token: <token>`. Manual token generation is unavailable from a degraded local-recovery session; see [Security & Trust Model](/docs/nexus/security-model) for why.
+
+OAuth dynamic client registration generally requires HTTPS. A client set to OAuth mode will fail against a plain-HTTP local device deployment before the request even reaches the device, since that's the client's own OAuth library rejecting a non-HTTPS authorization server, not a Nexus restriction. If that happens, switch the client to its static-header / manual-token configuration instead of its OAuth path.
+
+## Client setup
+
+**Claude Code**
+
+```bash
+claude mcp add --transport http plotune-nexus http://<device-ip>/mcp
+```
+
+**Codex**
+
+```bash
+codex mcp add plotuneNexus --url http://<device-ip>/mcp
+```
+
+For the cloud router endpoint, Codex's dynamic client registration works directly against the device-scoped URL:
+
+```bash
+codex mcp add plotune-nexus --url https://nexus.plotune.net/devices/<device-uuid>/mcp/
+codex mcp login plotune-nexus
+```
+
+**VS Code**, in `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "plotune-nexus": { "type": "http", "url": "http://<device-ip>/mcp" }
+  }
+}
+```
+
+**Cursor**, in `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "plotune-nexus": { "url": "http://<device-ip>/mcp" }
+  }
+}
+```
+
+**OpenCode**, using the manual bearer token path directly (the most reliable route for a local HTTP device deployment):
+
+```bash
+opencode mcp add plotune-nexus --url http://<device-ip>/mcp \
+  --header "Authorization=Bearer <token>"
+```
+
+**n8n** can call Nexus MCP tools from ordinary workflows, without an LLM in the loop, using n8n's MCP Client node against the same `/mcp` endpoint and bearer-token model.
+
+## Resources vs. tools
+
+Nexus separates read-only state from mutating actions. Use resources first for current-state reads, then tools for anything that changes state, transfers data, or runs a longer workflow:
+
+- `plotune://device/interfaces`: currently attached/available interfaces
+- `plotune://device/context`: device identity and runtime status
+- `plotune://artifacts/recent`: recently produced recordings and artifacts
+
+## Representative tool surface
+
+This is not the complete tool list, and the exact signature of any tool can change; it's meant to show the shape of the surface, not serve as a frozen spec. Confirm current tools and their parameters against your own connected device (`get_runtime_capabilities_tool()` and `get_tooling_health_tool()` report what's actually live).
+
+| Category | Example tools |
+| --- | --- |
+| CAN | `create_virtual_can`, `acquire_can_interface`, `attach_slcan`, `configure_can_bitrate`, `send_dbc_message`, `wait_dbc_signal`, `record_can`, `release_stale_can_leases` |
+| UART | `open_uart_session`, `send_uart`, `read_uart`, `record_uart`, `get_uart_modem_lines`, `set_uart_modem_lines`, `close_uart_session` |
+| XCP | `record_xcp`, `read_xcp_calibration`, `set_xcp_calibration` |
+| DDS / ROS 2 | `join_dds_session`, `list_dds_participants_tool`, `list_dds_topics_tool`, `capture_dds_snapshot`, `publish_dds_message`, `wait_dds_signal`, `record_dds_topics`, `leave_dds_session` |
+| Artifacts | `read_artifact`, `prepare_put_artifact`, `put_artifact`, `get_artifact`, `upload_to_artifact_drive`, `download_from_artifact_drive` |
+| Orchestration | `run_test_sequence` |
+| Containers | `start_container` (used to run bundled protocol simulators or customer workloads under Nexus's managed container runtime) |
+
+`configure_can_bitrate` takes standard CAN timing parameters directly: bitrate, sample point, SJW, and the phase-segment values, rather than only accepting a fixed preset list.
+
+## Job model
+
+DAQ operations are asynchronous jobs, not blocking MCP calls, because recording and control work can be slow, stateful, and produce large outputs. A tool call that starts a job returns status, timestamps, and either an inline small result or a retrieval reference for larger artifacts, not the raw data itself for anything nontrivial in size.
+
+## References
+
+- [Model Context Protocol specification](https://modelcontextprotocol.io/specification/)
+- [MCP transport](https://modelcontextprotocol.io/specification/basic/transports), HTTP + OAuth
+- [OAuth 2.0 Dynamic Client Registration](https://datatracker.ietf.org/doc/html/rfc7591)

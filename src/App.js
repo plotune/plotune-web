@@ -18,6 +18,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Legal from './pages/Legal';
 import Docs from './pages/Docs';
+import NexusDocsOverview from './pages/NexusDocsOverview';
+import NexusDocPage from './pages/NexusDocPage';
 import Dashboard from './pages/Dashboard';
 import Privacy from './pages/Privacy';
 import ContactPage from './pages/Contact';
@@ -143,6 +145,8 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/legal" element={<Legal />} />
               <Route path="/docs" element={<Docs />} />
+              <Route path="/docs/nexus" element={<NexusDocsOverview />} />
+              <Route path="/docs/nexus/:slug" element={<NexusDocPage />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/verify-email" element={<VerifyEmail />} />

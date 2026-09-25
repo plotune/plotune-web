@@ -15,9 +15,11 @@
 // from the first client render).
 //
 // Scope: research articles + the research nav pages + FAQ (its FAQPage JSON-LD
-// already existed in code but was equally invisible pre-render), plus every
-// Solutions and Nexus page and Contact -- the pages a reader actually lands on
-// after a research article's own "see how this workflow can be automated" CTA.
+// already existed in code but was equally invisible pre-render), every Solutions
+// and Nexus page and Contact -- the pages a reader actually lands on after a
+// research article's own "see how this workflow can be automated" CTA -- plus
+// the Nexus technical documentation section (/docs/nexus and each doc), which
+// exists specifically to be read and cited by agents and bots, not just people.
 // Anything else stays an unprerendered shim for now; extend `routes` if that
 // scope grows later.
 const fs = require('fs');
@@ -67,6 +69,11 @@ fs.readdirSync(articlesDir)
 const solutionsSrc = fs.readFileSync(path.join(root, 'src/content/solutions.js'), 'utf8');
 [...solutionsSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/solutions/${slug}`));
 [...solutionsSrc.matchAll(/^\s*'([a-z0-9-]+)':\s*'[a-z0-9-]+',?$/gm)].forEach(([, aliasSlug]) => routes.push(`/solutions/${aliasSlug}`));
+
+// One route per Nexus doc, extracted the same way from its own `slug: '...'` text.
+routes.push('/docs/nexus');
+const nexusDocsSrc = fs.readFileSync(path.join(root, 'src/content/nexusDocs.js'), 'utf8');
+[...nexusDocsSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/docs/nexus/${slug}`));
 
 const serveStatic = () =>
   new Promise((resolve) => {

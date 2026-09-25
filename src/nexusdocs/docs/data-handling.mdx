@@ -1,0 +1,51 @@
+## Recording path
+
+1. An agent calls an MCP tool, either directly on the device or through Plotune's cloud router.
+2. The device may first serve read-only context through MCP resources (`plotune://device/context`, `plotune://device/interfaces`, `plotune://artifacts/recent`) before any mutating call.
+3. The device validates the request and creates an async job when the work is long-running or stateful, rather than blocking the MCP call itself.
+4. The job reads from the relevant DAQ interface and writes local output to the device's own artifact store first.
+5. Small textual results can return directly in the MCP response; bounded local reads are available through `read_artifact` before any export happens.
+6. Larger or externalized outputs move through one of two current paths: Plotune-managed transfer-cloud handoff (`prepare_put_artifact` / `put_artifact` / `get_artifact`), or a configured artifact drive (`upload_to_artifact_drive` / `download_from_artifact_drive`).
+7. The job's final result returns status, timestamps, artifact metadata, and a signed retrieval path where relevant.
+
+Async execution is a deliberate choice, not an implementation detail: DAQ operations can be slow, stateful, and produce large outputs, and tying MCP request lifetime to recording duration would make retries, cancellation, and upload handling far harder to reason about.
+
+## Where data actually lands
+
+- **Device-local storage is the first landing zone for every completed job.** Nothing skips this step to go straight to a cloud destination.
+- **Bounded local reads are available before export.**
+- **Configured artifact-drive integrations today**: local files, plus `rclone`-managed remotes such as SFTP, Google Drive, and OneDrive/SharePoint.
+- **Bring-your-own cloud object storage is a stated design direction**, but it is not the only current transfer path; the shipped default handoff is Plotune-managed rather than a customer's own object storage bucket.
+
+## Data classes
+
+- **Control metadata**: job status, session IDs, tool inputs, timestamps.
+- **Small results**: plain JSON or text, returned inline in the MCP response.
+- **Artifacts**: raw traces, binary captures, logs, and derived files, handled through the artifact-store and export paths above rather than inline responses.
+
+## Deploying into a closed network
+
+Nexus supports deployment into a lab network, air-gapped test cell, or customer site with no outbound internet route, under one specific model: **provision online, then air-gap.**
+
+Ownership bootstrap is deliberately tied to verifying a real Plotune account, which requires reaching Plotune's platform API at least once (see [Security & Trust Model](/docs/nexus/security-model)). Claiming a device with zero internet access from first boot is not supported. This is a stated product position, not a gap the team is working around.
+
+**Checklist:**
+
+1. Provision the device with internet access reachable to `nexus.plotune.net`.
+2. Confirm registration actually completed, not just that the device booted. Registration failures don't stop the install, so a booted device isn't proof of a registered one. Check the device registration status file or the console MOTD auth-status line.
+3. Complete first-owner login while still online.
+4. Set a local fallback password from the device's Security page before disconnecting. This is what makes local UI login and MCP bearer-token verification both fully local afterward, with no further dependency on reaching the router at request time.
+5. Only then move the device into the closed network.
+
+<Note>
+A device moved into the closed network **before** registration reaches a confirmed registered state will keep retrying forever with no way to reach `nexus.plotune.net` from inside an air-gapped network. This doesn't block local operation, but the device will never show as registered in the router's inventory, and nothing in the software resolves it automatically. It's an operator-checklist step, not a self-healing one.
+</Note>
+
+**What still works once air-gapped:** local UI login via the fallback password, MCP tool calls authenticated with a bearer token issued before disconnecting (or a new owner-generated manual token), and all local DAQ operations (CAN, UART, XCP, DoIP, recording). None of these ever depended on the router or the Plotune platform API. The device also always listens at a fixed fallback address on any connected interface, useful when the closed network has no DHCP server.
+
+**What doesn't work offline:** claiming ownership on a device with no owner yet, and adding a new authorized user or transferring ownership. Both require a live Plotune-account login, the same as first-owner bootstrap.
+
+## References
+
+- [`rclone`](https://rclone.org/), used for configured artifact-drive remotes
+- [Model Context Protocol resources and tools](https://modelcontextprotocol.io/specification/server/resources)

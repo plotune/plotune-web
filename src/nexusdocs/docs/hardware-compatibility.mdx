@@ -1,0 +1,73 @@
+## Scope
+
+This maps real DAQ, CAN, and diagnostic hardware families to what Plotune Nexus actually supports today. The classification is deliberately conservative: a family only counts as supported when it lands on a transport Nexus's Linux-based runtime already understands, not when a vendor's spec sheet says the hardware is theoretically capable.
+
+Three tiers, used consistently below:
+
+- **Native now**: works directly, because the hardware lands on a Linux transport Nexus already speaks.
+- **Container now**: not a first-class Nexus hardware family, but usable if a Linux client for it can run inside a managed container on the device.
+- **Scale-up**: not a good fit today without new transport or vendor-SDK integration work.
+
+## Current runtime boundary
+
+Nexus's device runtime is Linux-first and transport-first, not vendor-SDK-first. Today it supports:
+
+- **CAN**: Linux `SocketCAN` for classical CAN, with CAN FD as an additive capability across raw send, batch send, periodic send, wait, snapshot, DBC-based send/wait, gateway forwarding, recording, and status reporting.
+- **SLCAN**: classical CAN over serial adapters, including a PTY-backed simulation mode for testing without hardware.
+- **UART**: generic serial, including RS-485 half-duplex and modem-control line access.
+- **DoIP**: an outbound network client from the device API itself. No dedicated Nexus-side DoIP dongle is required if the ECU or gateway is already reachable over ordinary Linux networking.
+- **UDS-over-ISO-TP**: normal and extended addressing, DTC management, flash-programming sequencing.
+- **XCP-on-CAN**: recording, measurement, calibration, and PROGRAM commands.
+- **XCP-on-Ethernet**: calibration, STIM, and Seed+Key over UDP, with host/port auto-detection from the ECU's A2L file (non-recording).
+
+<Note>
+**CAN FD is stated as "implemented on Linux SocketCAN, qualification pending," not a broad production-ready claim.** Public CAN FD support is limited to Linux-native SocketCAN interfaces that pass Nexus's own validation flow and are recorded, model by model, in its internal qualification matrix. SLCAN, UDS-on-CAN FD, XCP-on-CAN FD, and DoIP-over-CAN-FD all remain outside the current CAN FD claim.
+</Note>
+
+## Vendor family compatibility
+
+| Vendor / family | Examples | Linux path | Status | Notes |
+| --- | --- | --- | --- | --- |
+| PEAK PCAN | PCAN-USB, PCAN-USB FD, PCAN-USB Pro FD, PCAN-PCI Express FD | Linux `SocketCAN` netdevs | **Native now** | The cleanest fit for the current runtime. FD-capable models still need per-model qualification before an FD claim. |
+| Kvaser | Leaf v3, U100, Leaf Light v2, USBcan Pro 2xHS v2, Leaf Pro HS v2 | Linux `SocketCAN` | **Native now** | Kvaser publishes SocketCAN support directly. |
+| ETAS ES5xx (Linux-supported subset) | ES581.4, ES582.1, ES584.1 | Linux kernel `SocketCAN` driver | **Native now** | Fits natively via SocketCAN even though ETAS's own toolchain is Windows-first. |
+| HMS IXXAT | USB-to-CAN V2, USB-to-CAN FD, CAN-IB100/PCIe | Linux `SocketCAN` for the CAN path | **Native now** | ECI-only or non-CAN IXXAT features fall outside this and move to Scale-up. |
+| SLCAN-class adapters | LAWICEL CANUSB, CANable, CANable 2.0 | Serial SLCAN over `/dev/ttyUSB*` / `/dev/ttyACM*` | **Native now** | Classical-CAN-only in the current CAN FD claim. |
+| Generic DoIP-reachable ECU/gateway | Any Ethernet-reachable DoIP target | Raw IPv4 UDP discovery + outbound TCP DoIP | **Native now** | No Nexus-side DoIP dongle needed if the target is already IP-reachable. |
+| IXXAT CAN@net (Ethernet gateway family) | CAN@net NT 100/200/420 | Vendor Ethernet gateway path | **Container, conditional** | No first-class `CAN@net` transport; only realistic if a Linux client can run over host networking. |
+| Dewesoft openDAQ hardware | OBSIDIAN, IOLITE X, SIRIUS X/XHS | openDAQ / Dewesoft network client | **Container, conditional to yes** | A dedicated openDAQ transport layer would be needed for first-class support. |
+| Softing VCI | VIN\|ING 2000, VIN\|ING 200 | D-PDU / PassThru, often LAN/Wi-Fi/USB | **Scale-up** | No D-PDU/J2534 backend shipped; container use is plausible if a Linux D-PDU client exists. |
+| Bosch VCI | MTS 6531, MTS 6534, ADS 525X VCI | J2534 / D-PDU / Bosch PC software | **Scale-up** | Path remains PC-software-centric today. Direct raw DoIP from Nexus can bypass the VCI if the ECU is already Ethernet-reachable, which is a different thing from supporting the VCI itself. |
+| Vector interfaces | VN1630A, VN16xx, VN56xx | Vector XL backend, Windows-oriented | **Scale-up** | No Vector backend shipped; the public `python-can` Vector interface documentation is itself Windows-only. |
+| NI-XNET | USB-8502, PCIe-8510 | NI-XNET driver/backend | **Scale-up** | Real CAN hardware, but a platform integration project rather than quick adapter enablement. |
+| dSPACE bench/HIL | MicroAutoBox III, SCALEXIO, DS4342, DS2671 | dSPACE bus manager / HIL runtime | **Scale-up** | Strong HIL platforms in their own right, but not Linux-native Nexus transports; a separate integration track. |
+
+## Appliance hardware
+
+Nexus is sold as a managed appliance, not software for self-install on arbitrary bench PCs. Two qualified profiles:
+
+| | Standard Nexus Appliance | Expanded Nexus Appliance |
+| --- | --- | --- |
+| Form factor | DIN rail or wall mount | Custom chassis |
+| CPU | Intel Celeron J6412 / AMD Ryzen Embedded | Intel Elkhart Lake / AMD Ryzen Embedded V-series |
+| RAM | 8GB DDR4 SO-DIMM | 16GB DDR4 (ECC optional) |
+| Storage | 128–256GB industrial SSD | 256GB industrial SSD |
+| USB | 4x USB 3.0 (isolated preferred) | 6x USB 3.0 |
+| Ethernet | 2x Gigabit (dual LAN) | 2x Gigabit with PoE option |
+| Power | 24V DC industrial | 24V DC or PoE+ |
+| Operating temp | 0°C to 50°C | −20°C to 60°C |
+
+A lighter-weight engineering bring-up host profile (Intel i3/Ryzen 3 minimum, Ubuntu 22.04+) also exists for internal development and short evaluation work; it is not the standard production contract for customer rollout.
+
+## Reading this matrix honestly
+
+The rule of thumb the internal team uses, stated plainly: if a device shows up as `canX` or `slcanX` on Linux, it's a strong native candidate. If it only works through a vendor Windows SDK, a proprietary D-PDU/J2534 stack, or a bench-specific toolchain, it is not a current native Nexus target, whatever the vendor's own marketing claims.
+
+## References
+
+- [Linux SocketCAN documentation](https://www.kernel.org/doc/html/latest/networking/can.html)
+- [PEAK Linux driver page](https://www.peak-system.com/fileadmin/media/linux/index.php)
+- [Kvaser SocketCAN drivers](https://kvaser.com/software/kvaser-socketcan-device-drivers/)
+- [HMS IXXAT ECI vs. SocketCAN](https://support.hms-networks.com/hc/en-us/articles/8280046496530)
+- [ISO 11898](https://www.iso.org/standard/63648.html), CAN physical/data link layer
+- [ISO 11898-2](https://www.iso.org/standard/67244.html), CAN FD physical layer

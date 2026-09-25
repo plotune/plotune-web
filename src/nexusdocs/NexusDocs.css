@@ -1,0 +1,154 @@
+/* Typography for MDX-rendered Nexus documentation content. Research.css handles the
+   light editorial theme for /research/*; this is the dark-theme equivalent for
+   /docs/nexus/*, matching the rest of the Nexus/Solutions pages' Tailwind palette
+   (bg-dark-bg #121212, text-light-text #f5f5f5, text-gray-text #9e9e9e, primary
+   #26A69A) since MDX output is plain HTML that Tailwind's utility classes can't
+   reach without a wrapper stylesheet. */
+
+.nexus-doc-body h2 {
+  margin: 2.5rem 0 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  scroll-margin-top: 6rem;
+}
+
+.nexus-doc-body h2:first-child {
+  margin-top: 0;
+}
+
+.nexus-doc-body h3 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f5f5f5;
+}
+
+.nexus-doc-body p {
+  margin: 0 0 1.1rem;
+  line-height: 1.75;
+  color: #c7c7c7;
+}
+
+.nexus-doc-body ul,
+.nexus-doc-body ol {
+  margin: 0 0 1.1rem;
+  padding-left: 1.4rem;
+  color: #c7c7c7;
+  line-height: 1.7;
+}
+
+.nexus-doc-body li {
+  margin-bottom: 0.4rem;
+}
+
+.nexus-doc-body strong {
+  color: #f5f5f5;
+  font-weight: 600;
+}
+
+.nexus-doc-body em {
+  color: #4db6ac;
+  font-style: italic;
+}
+
+.nexus-doc-body a {
+  color: #4db6ac;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.nexus-doc-body a:hover {
+  color: #26a69a;
+}
+
+.nexus-doc-body code {
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-size: 0.88em;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.4rem;
+  color: #80cbc4;
+}
+
+.nexus-doc-body pre {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d0f10;
+  overflow-x: auto;
+}
+
+.nexus-doc-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #d4d4d4;
+}
+
+.nexus-doc-body table {
+  width: 100%;
+  margin: 0 0 1.5rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.nexus-doc-body thead th {
+  text-align: left;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: #9e9e9e;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.nexus-doc-body tbody td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #c7c7c7;
+  vertical-align: top;
+}
+
+.nexus-doc-body tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nexus-doc-body blockquote {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.25rem;
+  border-left: 3px solid #26a69a;
+  background: rgba(38, 166, 154, 0.08);
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: #c7c7c7;
+}
+
+.nexus-doc-body hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* A visible callout for a known limitation or in-progress area: the same honest
+   qualification-pending language the internal docs already use, kept visible
+   rather than softened, since it's a credibility signal, not a weakness. */
+.nexus-doc-note {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  background: rgba(255, 193, 7, 0.06);
+  border-radius: 0.75rem;
+}
+
+.nexus-doc-note p {
+  margin: 0;
+  color: #e0c284;
+  font-size: 0.92rem;
+}
+
+.nexus-doc-note strong {
+  color: #ffca57;
+}
