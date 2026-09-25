@@ -7,7 +7,7 @@ import { getSolutionSegment } from '../content/solutions';
 const nextSteps = [
   ['You tell us about your setup', 'What you’re testing, what’s already on your bench, and where the manual work is.'],
   ['We map it to Plotune Nexus', 'Which interfaces apply, what a first bounded workflow looks like on your equipment.'],
-  ['You see it before deciding anything', 'A concrete picture of the fit -- no generic pitch, no pressure to commit on the first message.'],
+  ['You get a straight answer', 'Whether it fits, and what setting it up on your bench would actually take.'],
 ];
 
 // The embedded Zammad ticket widget (support.plotune.net) is down and its
