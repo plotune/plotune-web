@@ -10,7 +10,9 @@ import { getSolutionSegment } from '../content/solutions';
 // until Zammad is redeployed. To restore it, see git history on this file
 // (the widget's <script> loader, jQuery.fn.ZammadForm init, and its custom
 // CSS block) from before this change.
-const SUPPORT_EMAIL = 'support@plotune.net';
+// contact@ is the funnel-facing address for new inquiries; support@ is reserved
+// for existing customers' issues and isn't the right destination for this page.
+const CONTACT_EMAIL = 'contact@plotune.net';
 
 // Builds a pre-filled mailto so a visitor arriving from a research article or
 // solution page doesn't have to re-explain what they're reaching out about --
@@ -27,7 +29,7 @@ const useContactMailto = () => {
     ? `Hi Plotune team,\n\nI was reading about ${solution.label} and wanted to talk through how it would fit our setup.\n\n`
     : `Hi Plotune team,\n\nI wanted to talk through how Plotune Nexus would fit our setup.\n\n`;
 
-  return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 };
 
 const otherChannels = [
@@ -74,7 +76,7 @@ const ContactPage = () => {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
             >
               <FiMail className="text-xl" />
-              Email {SUPPORT_EMAIL}
+              Email {CONTACT_EMAIL}
               <FiArrowRight />
             </a>
             <p className="text-sm text-gray-text">We read every message ourselves.</p>
