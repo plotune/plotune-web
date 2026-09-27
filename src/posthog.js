@@ -9,3 +9,6 @@ function initializePostHog() {
 }
 
 module.exports = initializePostHog;
+// Exposed so other modules (e.g. ScrollDepthTracker) can call posthog.capture() against the
+// same client instance instead of re-requiring posthog-js and redoing the ESM/CJS interop above.
+module.exports.posthog = posthog;

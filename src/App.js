@@ -46,6 +46,7 @@ import ResearchArticle from './research/ResearchArticle';
 import ResearchResults from './research/ResearchResults';
 import ResearchReports from './research/ResearchReports';
 import ResearchMethodology from './research/ResearchMethodology';
+import ScrollDepthTracker from './components/ScrollDepthTracker';
 
 // The pillar page moved from /agentic-test-development to /solutions/agentic-test-development
 // so every funnel destination lives under /solutions/ — this keeps the old URL working.
@@ -128,6 +129,7 @@ function App() {
       <Router>
         <div className="app">
           <ScrollToTop />
+          <ScrollDepthTracker />
           <NavigationWrapper>
             <Routes>
               <Route path="/" element={<Home />} />
