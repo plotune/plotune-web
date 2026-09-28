@@ -1,7 +1,8 @@
-﻿import { buildMonthlyBenchmarkCharts, buildDecisionModelCharts } from './charts';
+﻿import { buildMonthlyBenchmarkCharts } from './charts';
+import { buildDecisionModelScenarioCharts } from './decisionModelCharts';
 
 const monthlyBenchmarkCharts = buildMonthlyBenchmarkCharts();
-const decisionModelCharts = buildDecisionModelCharts();
+const decisionModelCharts = buildDecisionModelScenarioCharts();
 
 // `segment` is optional and maps to a key in src/content/solutions.js: when set, the article
 // renders a "see how this workflow can be automated" CTA to /solutions/<segment>. `cta` is an
