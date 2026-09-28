@@ -1,0 +1,102 @@
+---
+slug: decision-model-agent-guardrails
+title: "Using a Decision Model as an Agent's Guardrail, Not Its Judgment"
+summary: "Two simulated control systems, 88 real paid model calls, and one consistent finding: a fast decision model is a real safety win behind a rule, and a measurable safety regression left to decide on its own."
+topic: Agent Safety & Guardrails
+publishedAt: 2026-09-28
+updatedAt: 2026-09-28
+---
+
+<Insight eyebrow="The real question" title="A fast reflex is not automatically a safe one.">
+A decision model that answers in milliseconds instead of generating a full response looks like the missing reflex layer for an agent that has to act on real hardware. Tested as a guardrail behind a rule, it earns that role. Tested as the thing making the call on its own, it was measurably less safe than a one-line hand-written rule, on exactly the cases that rule was built to catch.
+</Insight>
+
+## Why a decision model looks like the missing piece
+
+A decision model doesn't generate text. Given a description of the current state of a system and a small, typed question, such as "is this trustworthy," "which of these applies," or "how severe is this," it returns a calibrated verdict directly: a probability, a choice, a score. No tokens to generate, no prose to parse.
+
+The pitch borrows Daniel Kahneman's distinction between fast, automatic judgment and slow, deliberate reasoning. A large language model is System 2: it thinks in sentences, and thinking in sentences is expensive. A decision model is positioned as System 1 for an agent: a reflex sitting in front of the slow model, handling routine, bounded calls fast enough that the expensive model only gets invoked for the genuinely hard cases. The speed argument isn't about a smaller model or a bigger GPU. It's a structurally shorter pipeline: a decision call skips generation entirely, where a language-model call has to produce and parse tokens even for a one-word answer.
+
+That gap, between a fast reflex and a trustworthy one, is what actually matters in a domain the pitch rarely gets tested in: hardware that can be damaged by the wrong call.
+
+## Two systems, one question
+
+Two independent simulated control systems were built, a plain hand-written rule run against each as a baseline, and three strategies for adding a decision model (`typesafe/jev-1.13`) on top compared: never, always, and only when the rule was already unsure.
+
+**A stabilization loop.** A controller holding a noisy sensor reading at a target setpoint, with five injected fault patterns: a clean run, a sensor that freezes in place, a single sharp spike, a slow drift away from the true value, and a dropout-then-recovery. The question asked every time: is the most recent reading trustworthy?
+
+**A battery pack.** A simulated 96-cell lithium-ion pack, tracking voltage, current, state of charge, cell temperature, and weakest-cell voltage, built from a published battery-management reference model and checked against its own worked examples before any model call was made. Five scenarios: a clean run, a load level that looks aggressive but is documented as safe, a weak cell sagging toward undervoltage, a cooling failure risking thermal runaway, and a compounding case: elevated temperature, low charge, and sustained current together, none individually over its own limit, but dangerous in combination. The model was given only the physical relationships in plain language, such as heat compounding or voltage sagging further at low charge, never the exact numeric thresholds the rule used. That gap is the actual test of reasoning versus recalling a threshold table.
+
+<StatFigure title="Every number below is a real, paid model call" stats={[
+  ['Total real model calls', '88'],
+  ['Total cost', '$0.003'],
+  ['Guardrail experiment, fewer calls with escalation', '78%'],
+  ['Battery experiment, fewer calls with escalation', '72%'],
+]} />
+
+## As a guardrail: real, narrow value
+
+Every wrong call across the five sensor-trust runs, by strategy:
+
+<ResearchPlot chart={props.article.charts.guardrailWrongCalls} title="Wrong calls per sensor scenario and strategy" caption="Lower is better. The rule alone and the escalation strategy tie everywhere except the always-ask column's one false alarm on the fully clean run." />
+
+On a fully healthy run, the plain rule correctly stays silent throughout. Asking the model on every reading produces one false alarm partway through: a mistake the rule never makes, since it never had a reason to doubt that reading.
+
+A frozen sensor and a dropout-then-recovery are both caught correctly by every strategy, with a brief lag at onset while enough consecutive bad readings confirm a real fault rather than noise. The fast rule was already good enough on its own here.
+
+A single sharp spike is where the plain rule stumbles: a fixed threshold flags the spike correctly, then flags the *return to normal* as suspicious too, since a sudden drop looks as alarming to a fixed rule as a sudden rise. Given a short window of recent readings instead of one before/after comparison, the model recognizes the recovery as fine and clears that false alarm, its one clear win in this experiment.
+
+The slow drift is the clearest miss: the sensor moves gradually enough that no single step trips the fixed rule, and a short window of recent readings was never enough to reveal a trend playing out over hundreds of readings. Neither the rule nor the model catches it.
+
+Asking the model only when the rule was already unsure kept the one real win, never produced the healthy-run false alarm, and did both at 78% fewer model calls than asking every time.
+
+## As an autonomous decision-maker: measurably less safe
+
+Here the model has to pick the correct protective action from five options, on a system where the wrong call has real consequences, with the exact numeric thresholds deliberately withheld:
+
+<ResearchPlot chart={props.article.charts.batteryUnsafeRate} title="Unsafe protective-action rate per battery scenario and strategy" caption="The always-ask strategy is the only one that ever turns unsafe on a scenario the plain rule got 100% right." />
+
+On a clean run and a high-but-documented-safe load level, the plain rule correctly does nothing. Asked every time, the model recommends easing off power on an otherwise unremarkable reading, and on the high-load run, at nearly every single check-in: never dangerous, since easing off power is always the conservative direction, but a near-constant intervention on operation that was never a problem.
+
+On a weak cell sagging toward undervoltage and a cooling failure risking thermal runaway, both faults taken directly from a published battery-protection reference, the plain rule tracks the correct response exactly, escalating from a moderate current cut to a full disconnect as each fault deepens. Asked every time, the model gets the early, moderate response right on both, then keeps recommending that same moderate response well after the fault has progressed to needing a full disconnect. That lag produced an unsafe call about a third of the time, on the two runs where the plain rule was 100% correct.
+
+The compounding scenario, built to be invisible to any rule that checks each signal in isolation, is where reasoning across signals actually paid off: the plain rule never reacts at all, while the model, working only from the plain-language description of how temperature, charge, and current interact, correctly cuts current for most of the danger window.
+
+<blockquote>
+Asked to decide on its own, every time, with no rule to defer to, the model was less safe than the simple rule on both realistic fault scenarios, wrong in the dangerous direction about a third of the time, on exactly the two runs where the plain rule was 100% correct.
+</blockquote>
+
+The escalation pattern held here too: zero unsafe calls on four of the five runs, at 72% fewer model calls than asking every time, while still capturing most of the compounding win.
+
+## The harness that actually worked
+
+The same shape solved both experiments independently: a fast deterministic rule decides by default and is never overruled while confident. The model is consulted only in a narrow, explicit band of uncertainty, and its answer only ever breaks a tie the rule couldn't resolve on its own, never vetoes a rule that already knows the answer.
+
+<FlowDiagram title="Where a decision model earns its keep" steps={["Rule evaluates first", "Confident: rule wins, no call made", "Unsure: escalate to the model", "Model breaks the tie only"]} />
+
+Response times sat around half a second per call regardless of what was asked, which rules out any inner control loop outright: this is a supervisory-cadence tool, not a per-instant one. The two failure patterns found, a reluctance to pick the most severe option and an over-eagerness to react to a merely high-looking number, look like calibration habits rather than a ceiling on reasoning ability, since the same model handled the genuinely hard multi-signal case well. A stronger model might reduce those specific habits. But the safety property that actually matters doesn't come from model quality: it comes from never letting any model's answer overrule a rule that's already confident. That property holds regardless of how capable the model behind it is, which makes the harness the fix to reach for first, not a bigger model.
+
+## The scorecard
+
+| System | Scenario | Verdict | Why |
+|---|---|---|---|
+| Stabilization loop | Sharp spike | Real win | Fixed a genuine false alarm the rule made |
+| Stabilization loop | Frozen sensor, dropout & recovery | Neutral | Model matched the rule exactly |
+| Stabilization loop | Slow drift | Neutral | Neither approach caught it |
+| Stabilization loop | Clean, healthy run | Unsafe when unguarded | Asked every time, the model raised a false alarm the rule never would |
+| Battery pack | Combined temp/charge/current risk | Real win | Cut a near-total rule blind spot substantially |
+| Battery pack | High but safe load | Unsafe when unguarded | Asked every time, the model intervened on almost every check |
+| Battery pack | Weak cell, thermal runaway | Unsafe when unguarded | Asked every time, the model was wrong, dangerously, about a third of the time |
+| Both systems | Ask-only-when-unsure | The actual finding | Kept every win, introduced no new failure, far fewer calls |
+
+## Where this fits in an agent-to-hardware stack
+
+Ordered from the fastest, least negotiable layer to the slowest and most deliberative:
+
+1. **Hard real-time actuation, on the order of milliseconds.** Never a decision model, never a language model.
+2. **Deterministic protection rules.** Decide by default, and are never overruled while confident.
+3. **A gated decision model, on the order of seconds.** The one role this testing actually supports.
+4. **Full language-model reasoning.** Novel conditions, explanations, judgment calls.
+5. **A human operator.** The genuine long tail.
+
+Never put a decision model, or a language model, in the innermost loop; the latency numbers alone rule it out. Use a gated decision model as a supervisory check, consulted only when the fast rule is already unsure, choosing among a small, pre-defined set of actions or trust judgments. Reserve the full language model for genuinely novel conditions, anything that needs to be explained to a person, anything where the space of possible responses can't be enumerated ahead of time. And structurally, never let a model of any kind override a confident deterministic safety rule: every unsafe call in both experiments came from exactly that being allowed to happen.

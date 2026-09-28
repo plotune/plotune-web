@@ -1,6 +1,7 @@
-﻿import { buildMonthlyBenchmarkCharts } from './charts';
+﻿import { buildMonthlyBenchmarkCharts, buildDecisionModelCharts } from './charts';
 
 const monthlyBenchmarkCharts = buildMonthlyBenchmarkCharts();
+const decisionModelCharts = buildDecisionModelCharts();
 
 // `segment` is optional and maps to a key in src/content/solutions.js: when set, the article
 // renders a "see how this workflow can be automated" CTA to /solutions/<segment>. `cta` is an
@@ -105,6 +106,16 @@ const articles = [{
   cta: { path: '/solutions/agentic-test-development', summary: 'Agentic Test & Development: where the line between bounded and autonomous actually sits.', label: 'See the full picture' },
   tag: 'agentic-dev',
   loader: () => import('../articles/ai-agents-vs-traditional-test-automation.mdx'),
+}, {
+  slug: 'decision-model-agent-guardrails',
+  title: "Using a Decision Model as an Agent's Guardrail, Not Its Judgment",
+  summary: 'Two simulated control systems, 88 real paid model calls, and one consistent finding: a fast decision model is a real safety win behind a rule, and a measurable safety regression left to decide on its own.',
+  topic: 'Agent Safety & Guardrails',
+  publishedAt: '2026-09-28', updatedAt: '2026-09-28', featured: false, published: true, readingTime: '8 min read',
+  cta: { path: '/solutions/agentic-test-development', summary: 'Agentic Test & Development: how a bounded operation set and a policy-first harness apply this same escalate-only-when-unsure pattern.', label: 'See the full picture' },
+  tag: 'agentic-dev',
+  charts: decisionModelCharts,
+  loader: () => import('../articles/decision-model-agent-guardrails.mdx'),
 }];
 
 export const publishedResearchArticles = articles.filter((article) => article.published);

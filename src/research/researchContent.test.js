@@ -15,7 +15,7 @@ test('publishes the featured monthly benchmark report with a stable route and so
   expect(article.title).toMatch(/monthly benchmark review/i);
   expect(article.cta).toMatchObject({ path: '/solutions/agentic-test-development' });
   expect(article.monthlyCharts.categoryCharts).toBeDefined();
-  expect(publishedResearchArticles).toHaveLength(11);
+  expect(publishedResearchArticles).toHaveLength(12);
 });
 
 test('does not expose unknown or unpublished studies', () => {

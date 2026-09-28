@@ -115,4 +115,67 @@ export const buildMonthlyBenchmarkCharts = () => {
   };
 };
 
+// Real numbers from a dated benchmark run (plotune-agent-benchmarks repo,
+// decision_model_experiments/, 2026-09-27: 33 real Jev calls / $0.0007 for the guardrail
+// experiment, 55 real Jev calls / $0.0025 for the battery experiment), not simulated or
+// invented for this chart. Wrong-call counts and unsafe-rate percentages are taken directly
+// from results/real_run.json and results/battery_real_run.json in that repo.
+export const buildDecisionModelCharts = () => {
+  const modeColors = { baseline: '#1f2937', jevAlways: '#c65d1e', jevEscalation: '#6d28d9' };
+  const modeLabels = {
+    baseline: 'Deterministic rule alone',
+    jevAlways: 'Jev asked every time',
+    jevEscalation: 'Jev asked only when unsure',
+  };
+  const modeOrder = ['baseline', 'jevAlways', 'jevEscalation'];
+
+  const groupedBar = (scenarios, series, yTitle, hoverSuffix) => ({
+    data: modeOrder.map((mode) => ({
+      type: 'bar', name: modeLabels[mode], x: scenarios, y: series[mode],
+      marker: { color: modeColors[mode] },
+      hovertemplate: `%{x}<br>${modeLabels[mode]}: %{y}${hoverSuffix}<extra></extra>`,
+    })),
+    layout: {
+      barmode: 'group', margin: { l: 52, r: 20, t: 24, b: 88 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#fbfcfe',
+      font: { family: 'Inter, sans-serif', color: '#334155', size: 12 },
+      yaxis: { title: yTitle, gridcolor: '#e2e8f0', zeroline: false },
+      xaxis: { tickangle: -16 },
+      legend: { orientation: 'h', y: -0.32 }, hoverlabel: { bgcolor: '#0f172a', font: { color: '#ffffff' } },
+    },
+    config: { responsive: true, displaylogo: false, displayModeBar: false },
+    height: 380,
+  });
+
+  return {
+    guardrailWrongCalls: {
+      ...groupedBar(
+        ['clean', 'stuck sensor', 'spike', 'slow drift', 'dropout & recover'],
+        {
+          baseline: [0, 1, 1, 3, 1],
+          jevAlways: [1, 1, 0, 3, 0],
+          jevEscalation: [0, 1, 0, 3, 1],
+        },
+        'Wrong calls (false alarms + misses)',
+        '',
+      ),
+      summary: 'Wrong calls per sensor-trust scenario and strategy: the deterministic rule alone, Jev asked every time, and Jev asked only when the rule is already unsure.',
+      fallbackLabel: 'Wrong-call counts across five sensor scenarios and three strategies.',
+    },
+    batteryUnsafeRate: {
+      ...groupedBar(
+        ['clean', 'high load (safe)', 'weak cell', 'thermal runaway', 'compounding risk'],
+        {
+          baseline: [0, 0, 0, 0, 44.4],
+          jevAlways: [0, 0, 33.3, 33.3, 11.1],
+          jevEscalation: [0, 0, 0, 0, 11.1],
+        },
+        'Unsafe-call rate (%)',
+        '%',
+      ),
+      summary: 'Unsafe protective-action rate per battery scenario and strategy: the deterministic rule alone, Jev asked every time, and Jev asked only when the rule is already unsure.',
+      fallbackLabel: 'Unsafe-call rates across five battery scenarios and three strategies.',
+    },
+  };
+};
+
 export { demoData };
