@@ -1,52 +1,58 @@
-﻿import React, { useLayoutEffect } from 'react';
+﻿import React, { lazy, Suspense, useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, Link } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
-import Faq from './pages/Faq';
-import Extensions from './pages/Extensions';
 import RedirectPage from './pages/RedirectPage';
-import Download from './pages/Download';
-import About from './pages/About';
-import Careers from './pages/Careers';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Legal from './pages/Legal';
-import Docs from './pages/Docs';
-import NexusDocsOverview from './pages/NexusDocsOverview';
-import NexusDocPage from './pages/NexusDocPage';
-import Dashboard from './pages/Dashboard';
-import Privacy from './pages/Privacy';
-import ContactPage from './pages/Contact';
-import VerifyEmail from './pages/VerifyEmail';
-import ForgotPassword from './pages/ForgotPassword';
-import Profile from './pages/Profile';
-import Streams from './pages/Streams';
-import DnsPage from './pages/DnsPage';
-import Partnership from './pages/Partnership';
-import PartnerApplication from './pages/PartnerApplication';
-import PartnerPortal from './pages/PartnerPortal';
-import StorageManager from './pages/StorageManager';
-import PackageMirror from './pages/PackageMirror';
-import Embeddings from './pages/Embeddings';
-import Nexus from './pages/Nexus';
-import SolutionPage from './pages/SolutionPage';
-import AgenticTestDevelopmentPage from './pages/AgenticTestDevelopmentPage';
-import NexusConnectivity from './pages/NexusConnectivity';
-import NexusStream from './pages/NexusStream';
-import NexusUseCases from './pages/NexusUseCases';
-import StreamOverviewPage from './components/streams/StreamOverviewPage';
 import ResearchLayout from './research/ResearchLayout';
-import ResearchOverview from './research/ResearchOverview';
-import ResearchArticle from './research/ResearchArticle';
-import ResearchResults from './research/ResearchResults';
-import ResearchReports from './research/ResearchReports';
-import ResearchMethodology from './research/ResearchMethodology';
 import ScrollDepthTracker from './components/ScrollDepthTracker';
+
+// Every other page is route-split: Home stays eager so the highest-traffic
+// route never shows a loading flash, but a homepage visitor was previously
+// downloading and parsing the JS for Dashboard, Login, StorageManager,
+// PackageMirror and every other page before React could paint the Hero --
+// that eager bundle was the main driver behind the site's FCP/LCP regression.
+const Faq = lazy(() => import('./pages/Faq'));
+const Extensions = lazy(() => import('./pages/Extensions'));
+const Download = lazy(() => import('./pages/Download'));
+const About = lazy(() => import('./pages/About'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Legal = lazy(() => import('./pages/Legal'));
+const Docs = lazy(() => import('./pages/Docs'));
+const NexusDocsOverview = lazy(() => import('./pages/NexusDocsOverview'));
+const NexusDocPage = lazy(() => import('./pages/NexusDocPage'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const ContactPage = lazy(() => import('./pages/Contact'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Streams = lazy(() => import('./pages/Streams'));
+const DnsPage = lazy(() => import('./pages/DnsPage'));
+const Partnership = lazy(() => import('./pages/Partnership'));
+const PartnerApplication = lazy(() => import('./pages/PartnerApplication'));
+const PartnerPortal = lazy(() => import('./pages/PartnerPortal'));
+const StorageManager = lazy(() => import('./pages/StorageManager'));
+const PackageMirror = lazy(() => import('./pages/PackageMirror'));
+const Embeddings = lazy(() => import('./pages/Embeddings'));
+const Nexus = lazy(() => import('./pages/Nexus'));
+const SolutionPage = lazy(() => import('./pages/SolutionPage'));
+const AgenticTestDevelopmentPage = lazy(() => import('./pages/AgenticTestDevelopmentPage'));
+const NexusConnectivity = lazy(() => import('./pages/NexusConnectivity'));
+const NexusStream = lazy(() => import('./pages/NexusStream'));
+const NexusUseCases = lazy(() => import('./pages/NexusUseCases'));
+const StreamOverviewPage = lazy(() => import('./components/streams/StreamOverviewPage'));
+const ResearchOverview = lazy(() => import('./research/ResearchOverview'));
+const ResearchArticle = lazy(() => import('./research/ResearchArticle'));
+const ResearchResults = lazy(() => import('./research/ResearchResults'));
+const ResearchReports = lazy(() => import('./research/ResearchReports'));
+const ResearchMethodology = lazy(() => import('./research/ResearchMethodology'));
 
 // The pillar page moved from /agentic-test-development to /solutions/agentic-test-development
 // so every funnel destination lives under /solutions/ — this keeps the old URL working.
@@ -131,6 +137,7 @@ function App() {
           <ScrollToTop />
           <ScrollDepthTracker />
           <NavigationWrapper>
+            <Suspense fallback={<div className="min-h-[60vh]" aria-hidden="true" />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/faq" element={<Faq />} />
@@ -176,6 +183,7 @@ function App() {
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
           </NavigationWrapper>
         </div>
         <ToastContainer position="bottom-right" autoClose={3000} />
