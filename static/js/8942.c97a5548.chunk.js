@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkplotune_react=self.webpackChunkplotune_react||[]).push([[8942],{8942:(e,c,t)=>{t.r(c),t.d(c,{default:()=>s});var r=t(663),a=t(3446);const s=()=>{const e=(0,r.zy)();return(0,a.jsx)(r.C5,{to:"/research".concat(e.search),replace:!0})}}}]);
+//# sourceMappingURL=8942.c97a5548.chunk.js.map
