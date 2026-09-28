@@ -61,11 +61,11 @@ The sensor drifts gradually away from the true value across the entire run, neve
 
 <ResearchPlot chart={props.article.charts.guardrail.slow_drift} title="Slow drift" caption="Missed entirely by every strategy: no single step ever looks implausible enough to trip." />
 
-Last, a dropout: the sensor reports a stale last-known value for a stretch, then recovers cleanly on its own. Same shape as the frozen-sensor case above: every strategy catches it, with the same brief lag at onset and at recovery.
+Last, a dropout: the sensor reports a stale last-known value for a stretch, then recovers cleanly on its own. Superficially the same shape as the frozen-sensor case above, but asking the model every time actually catches it one checkpoint sooner than the rule does: at the exact tick the dropout starts, the rule is still confidently reading it as normal, not yet flagged as uncertain, so escalation has no reason to ask and misses that same tick right alongside the rule.
 
-<ResearchPlot chart={props.article.charts.guardrail.dropout_then_recover} title="Dropout and recovery" caption="Caught correctly by every strategy, with the same brief lag as the frozen-sensor case." />
+<ResearchPlot chart={props.article.charts.guardrail.dropout_then_recover} title="Dropout and recovery" caption="The always-ask strategy catches the dropout one tick sooner than the rule; escalation misses that same tick, since the rule isn't flagged as uncertain there yet." />
 
-Across all five runs, asking the model only when the plain rule was already unsure kept the one real win (the spike), never produced the healthy-run false alarm, and did both while consulting the model 78% less often than asking every time.
+Across all five runs, asking the model only when the plain rule was already unsure kept the one real win within its reach (the spike), missed the smaller one it structurally couldn't reach (catching the dropout a tick sooner, which only ever happens when the rule is confidently wrong rather than merely unsure), never produced the healthy-run false alarm, and did all of that while consulting the model 78% less often than asking every time.
 
 ## As an autonomous decision-maker: measurably less safe
 
@@ -107,6 +107,8 @@ The escalation pattern held here too: zero unsafe calls on four of the five runs
 
 The same shape solved both experiments independently: a fast deterministic rule decides by default and is never overruled while confident. The model is consulted only in a narrow, explicit band of uncertainty, and its answer only ever breaks a tie the rule couldn't resolve on its own, never vetoes a rule that already knows the answer.
 
+That gating has one honest limit, visible in the dropout scenario above: it can only rescue a case the rule flags as uncertain, not one where the rule is confidently wrong. A confidently wrong rule never asks, so the model never gets a chance to help.
+
 <FlowDiagram title="Where a decision model earns its keep" steps={["Rule evaluates first", "Confident: rule wins, no call made", "Unsure: escalate to the model", "Model breaks the tie only"]} />
 
 Response times sat around half a second per call regardless of what was asked, which rules out any inner control loop outright: this is a supervisory-cadence tool, not a per-instant one. The two failure patterns found, a reluctance to pick the most severe option and an over-eagerness to react to a merely high-looking number, look like calibration habits rather than a ceiling on reasoning ability, since the same model handled the genuinely hard multi-signal case well. A stronger model might reduce those specific habits. But the safety property that actually matters doesn't come from model quality: it comes from never letting any model's answer overrule a rule that's already confident. That property holds regardless of how capable the model behind it is, which makes the harness the fix to reach for first, not a bigger model.
@@ -116,13 +118,14 @@ Response times sat around half a second per call regardless of what was asked, w
 | System | Scenario | Verdict | Why |
 |---|---|---|---|
 | Stabilization loop | Sharp spike | Real win | Fixed a genuine false alarm the rule made |
-| Stabilization loop | Frozen sensor, dropout & recovery | Neutral | Model matched the rule exactly |
+| Stabilization loop | Frozen sensor | Neutral | Model matched the rule exactly |
+| Stabilization loop | Dropout & recovery | Real win (always-ask only) | Caught one tick sooner than the rule; escalation can't reach this one, since it only asks once the rule is already unsure |
 | Stabilization loop | Slow drift | Neutral | Neither approach caught it |
 | Stabilization loop | Clean, healthy run | Unsafe when unguarded | Asked every time, the model raised a false alarm the rule never would |
 | Battery pack | Combined temp/charge/current risk | Real win | Cut a near-total rule blind spot substantially |
 | Battery pack | High but safe load | Unsafe when unguarded | Asked every time, the model intervened on almost every check |
 | Battery pack | Weak cell, thermal runaway | Unsafe when unguarded | Asked every time, the model was wrong, dangerously, about a third of the time |
-| Both systems | Ask-only-when-unsure | The actual finding | Kept every win, introduced no new failure, far fewer calls |
+| Both systems | Ask-only-when-unsure | The actual finding | Kept every win within its reach, introduced no new failure, far fewer calls |
 
 ## Where this fits in an agent-to-hardware stack
 
