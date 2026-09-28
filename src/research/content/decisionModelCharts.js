@@ -113,12 +113,17 @@ const buildGuardrailChart = (scenarioName) => {
   return {
     data,
     layout: {
-      xaxis: { domain: [0, 1], anchor: 'y', range, showticklabels: false, gridcolor: GRID },
-      yaxis: { domain: topDomain, anchor: 'x', title: { text: 'Reading', font: { size: 10 } }, gridcolor: GRID, color: '#334155' },
-      xaxis2: { domain: [0, 1], anchor: 'y2', range, title: { text: 'tick', font: { size: 10 } }, gridcolor: GRID, color: '#334155' },
+      // fixedrange on every axis: these figures are pre-zoomed to the interesting window and
+      // read only via hover, never explored by zoom/pan. Without it, a touch tap that a mobile
+      // browser interprets as the start of a drag can rescale just the tapped subplot's axis
+      // (they're positioned by hand, not through a shared-axes helper, so nothing keeps them
+      // in step), visibly desyncing the sensor trace from the status lane beneath it.
+      xaxis: { domain: [0, 1], anchor: 'y', range, showticklabels: false, gridcolor: GRID, fixedrange: true },
+      yaxis: { domain: topDomain, anchor: 'x', title: { text: 'Reading', font: { size: 10 } }, gridcolor: GRID, color: '#334155', fixedrange: true },
+      xaxis2: { domain: [0, 1], anchor: 'y2', range, matches: 'x', title: { text: 'tick', font: { size: 10 } }, gridcolor: GRID, color: '#334155', fixedrange: true },
       yaxis2: {
         domain: bottomDomain, anchor: 'x2', tickvals: [0, 1, 2], ticktext: ['Jev (escalation)', 'Jev (always)', 'Baseline'],
-        range: [-0.7, 2.7], gridcolor: GRID, color: INK,
+        range: [-0.7, 2.7], gridcolor: GRID, color: INK, fixedrange: true,
       },
       shapes, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: PLOT_BG, font: FONT, showlegend: false,
       margin: { l: 108, r: 16, t: 10, b: 34 }, hoverlabel: HOVERLABEL,
@@ -183,20 +188,23 @@ const buildBatteryChart = (scenarioName) => {
     paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: PLOT_BG, font: FONT, showlegend: false,
     margin: { l: 108, r: 16, t: 10, b: 34 }, hoverlabel: HOVERLABEL,
   };
+  // fixedrange + matches on every axis: see the guardrail chart's comment above -- with 6
+  // independently-positioned subplot rows here, an unsynced touch-triggered zoom on any one
+  // of them would be even more visibly broken than the 2-row guardrail case.
   const shapes = [];
+  const range = zoomedRange(windows.map((w) => w[0]).concat(windows.map((w) => w[1])), s.ticks);
   BATTERY_PANELS.forEach(([, label], i) => {
     const axisNum = i === 0 ? '' : `${i + 1}`;
-    layout[`xaxis${axisNum}`] = { domain: [0, 1], anchor: `y${axisNum}`, range: zoomedRange(windows.map((w) => w[0]).concat(windows.map((w) => w[1])), s.ticks), showticklabels: false, gridcolor: GRID };
-    layout[`yaxis${axisNum}`] = { domain: domains[i], anchor: `x${axisNum}`, title: { text: label, font: { size: 9 } }, gridcolor: GRID, color: '#334155' };
+    layout[`xaxis${axisNum}`] = { domain: [0, 1], anchor: `y${axisNum}`, range, ...(i > 0 ? { matches: 'x' } : {}), showticklabels: false, gridcolor: GRID, fixedrange: true };
+    layout[`yaxis${axisNum}`] = { domain: domains[i], anchor: `x${axisNum}`, title: { text: label, font: { size: 9 } }, gridcolor: GRID, color: '#334155', fixedrange: true };
     windows.forEach(([lo, hi, color]) => {
       shapes.push({ type: 'rect', xref: `x${axisNum}`, yref: 'paper', x0: lo - 0.5, x1: hi + 0.5, y0: domains[i][0], y1: domains[i][1], fillcolor: color, opacity: 0.08, line: { width: 0 } });
     });
   });
-  const range = zoomedRange(windows.map((w) => w[0]).concat(windows.map((w) => w[1])), s.ticks);
-  layout.xaxis6 = { domain: [0, 1], anchor: 'y6', range, title: { text: 'tick (s)', font: { size: 10 } }, gridcolor: GRID, color: '#334155' };
+  layout.xaxis6 = { domain: [0, 1], anchor: 'y6', range, matches: 'x', title: { text: 'tick (s)', font: { size: 10 } }, gridcolor: GRID, color: '#334155', fixedrange: true };
   layout.yaxis6 = {
     domain: statusDomain, anchor: 'x6', tickvals: [0, 1, 2], ticktext: ['Jev (escalation)', 'Jev (always)', 'Baseline'],
-    range: [-0.7, 2.7], gridcolor: GRID, color: INK,
+    range: [-0.7, 2.7], gridcolor: GRID, color: INK, fixedrange: true,
   };
   windows.forEach(([lo, hi, color]) => {
     shapes.push({ type: 'rect', xref: 'x6', yref: 'paper', x0: lo - 0.5, x1: hi + 0.5, y0: statusDomain[0], y1: statusDomain[1], fillcolor: color, opacity: 0.08, line: { width: 0 } });
