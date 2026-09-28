@@ -3,7 +3,8 @@ const posthog = posthogModule.default || posthogModule;
 
 function initializePostHog() {
   posthog.init('phc_oYVUYaQPBDJCHgaEgooHE2wSb9AeSWbwxeg5x3WAS4Je', {
-    api_host: 'https://us.i.posthog.com',
+    api_host: 'https://t.plotune.net',
+    ui_host: 'https://us.posthog.com',
     defaults: '2026-05-30',
   });
 }
