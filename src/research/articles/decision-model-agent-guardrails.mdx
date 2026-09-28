@@ -36,7 +36,14 @@ Two independent simulated control systems were built, a plain hand-written rule 
 
 ## As a guardrail: real, narrow value
 
-Each chart below shows one run: the top line is the sensor reading over time, with a shaded band marking where a real fault is happening. Underneath, three rows show what each strategy called at every checkpoint: the plain rule alone, the model asked every time, and the model asked only when the rule was already unsure. Green means the call was right, red means a false alarm, amber means a real fault was missed, gray means correctly quiet. A dark ring around a mark means the model was actually consulted at that point; most of the escalation row has no ring at all, because it usually didn't need to ask.
+Each chart below shows one run: the top line is the sensor reading over time, with a shaded band marking where a real fault is happening. Underneath, three rows show what each strategy called at every checkpoint: the plain rule alone, the model asked every time, and the model asked only when the rule was already unsure.
+
+<ChartLegend items={[
+  { color: '#15803d', symbol: 'circle', label: 'Caught the fault' },
+  { color: '#dc2626', symbol: 'triangle-up', label: 'False alarm' },
+  { color: '#d97706', symbol: 'diamond', label: 'Missed it' },
+  { color: '#9ca3af', symbol: 'circle', label: 'Correctly quiet' },
+]} ringNote="Ringed marker: the model was actually consulted at that checkpoint. Most of the escalation row has no ring, because it usually didn't need to ask." />
 
 On a fully healthy run, the sensor never leaves its normal range, and the plain rule correctly stays silent the entire time. Asking the model on every single reading, though, produces one false alarm partway through: a mistake the rule never makes, since it never had a reason to doubt that reading in the first place.
 
@@ -63,6 +70,12 @@ Across all five runs, asking the model only when the plain rule was already unsu
 ## As an autonomous decision-maker: measurably less safe
 
 Here the model has to do more than flag a problem: it has to pick the correct protective action from five options, on a system where the wrong call has real consequences. The exact numeric thresholds a rule-based system would use were deliberately withheld, so the model has to reason from plain-language physical relationships instead of recalling a table. The chart layout is the same idea as before, extended to five stacked signals: voltage, current, charge level, temperature, and weakest-cell voltage.
+
+<ChartLegend items={[
+  { color: '#15803d', symbol: 'circle', label: 'Exact match' },
+  { color: '#d97706', symbol: 'diamond', label: 'Over-cautious but safe' },
+  { color: '#dc2626', symbol: 'triangle-up', label: 'Unsafe' },
+]} ringNote="Ringed marker: the model was actually consulted at that checkpoint." />
 
 On a fully healthy run, both the plain rule and the ask-only-when-unsure strategy stay silent throughout, as they should. Asked every time, though, the model recommends easing off power on one otherwise unremarkable reading: the same crying-wolf tendency shows up here as it did on the healthy sensor run above.
 

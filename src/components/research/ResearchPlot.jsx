@@ -13,7 +13,6 @@ const ResearchPlot = ({ chart, title, caption }) => {
     <figure className="research-plot" aria-labelledby="research-plot-title">
       <div className="research-plot__header">
         <h2 id="research-plot-title">{title}</h2>
-        <span>Interactive figure</span>
       </div>
       <div className="research-plot__canvas" style={chart.height ? { height: chart.height } : undefined}>
         {!isMounted ? (
