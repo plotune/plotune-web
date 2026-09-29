@@ -233,7 +233,7 @@ const Nexus = () => {
                 ref={bottomContactCta.ref}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
-                Get Your Integration Plan
+                Contact Us
                 <FiArrowRight />
               </Link>
             </div>
