@@ -39,6 +39,7 @@ const Privacy = () => {
               {[
                 { id: 'overview', label: 'Overview' },
                 { id: 'data-collection', label: 'Data We Collect' },
+                { id: 'cookies', label: 'Cookies & Tracking' },
                 { id: 'data-usage', label: 'How We Use Data' },
                 { id: 'telemetry', label: 'Telemetry Data' },
                 { id: 'data-sharing', label: 'Data Sharing' },
@@ -82,6 +83,19 @@ const Privacy = () => {
               <li><strong>Support Communications:</strong> Information you provide when contacting our support team.</li>
               <li><strong>Device Information:</strong> IP address, browser type, operating system, and other technical details for analytics and security.</li>
             </ul>
+          </Element>
+          <Element name="cookies" className="privacy-section mt-12">
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Cookies & Tracking Technologies</h2>
+            <p className="text-gray-text mb-4">
+              Our website uses cookies and similar tracking technologies from the following third-party providers to understand site usage and measure marketing performance:
+            </p>
+            <ul className="list-disc ml-5 space-y-2 text-gray-text">
+              <li><strong>PostHog:</strong> a web analytics platform we use to understand how visitors use plotune.net, including page views and on-site behavior.</li>
+              <li><strong>LinkedIn Insight Tag:</strong> used to measure the performance of our LinkedIn advertising campaigns and build remarketing audiences. If you are a LinkedIn member, this may be linked to your LinkedIn account in accordance with LinkedIn's own privacy policy.</li>
+            </ul>
+            <p className="text-gray-text mb-4">
+              You can control or disable cookies through your browser settings. LinkedIn members can also manage ad-related data use through their LinkedIn account settings.
+            </p>
           </Element>
           <Element name="data-usage" className="privacy-section mt-12">
             <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">How We Use Your Data</h2>
