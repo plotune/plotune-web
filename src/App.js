@@ -5,17 +5,22 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
+import Nexus from './pages/Nexus';
 import RedirectPage from './pages/RedirectPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ResearchLayout from './research/ResearchLayout';
 import ScrollDepthTracker from './components/ScrollDepthTracker';
 
-// Every other page is route-split: Home stays eager so the highest-traffic
-// route never shows a loading flash, but a homepage visitor was previously
-// downloading and parsing the JS for Dashboard, Login, StorageManager,
-// PackageMirror and every other page before React could paint the Hero --
-// that eager bundle was the main driver behind the site's FCP/LCP regression.
+// Every other page is route-split: Home and Nexus stay eager (both are direct
+// landing destinations for nav/ad traffic) so a fresh page load never suspends
+// and swaps the prerendered markup for the Suspense fallback -- since index.js
+// uses createRoot (no hydration), that swap is a full-page layout shift, not
+// just a loading flash. Everything else was previously bundled together, so a
+// homepage visitor was downloading and parsing the JS for Dashboard, Login,
+// StorageManager, PackageMirror and every other page before React could paint
+// the Hero -- that eager bundle was the main driver behind the site's FCP/LCP
+// regression.
 const Faq = lazy(() => import('./pages/Faq'));
 const Extensions = lazy(() => import('./pages/Extensions'));
 const Download = lazy(() => import('./pages/Download'));
@@ -41,7 +46,6 @@ const PartnerPortal = lazy(() => import('./pages/PartnerPortal'));
 const StorageManager = lazy(() => import('./pages/StorageManager'));
 const PackageMirror = lazy(() => import('./pages/PackageMirror'));
 const Embeddings = lazy(() => import('./pages/Embeddings'));
-const Nexus = lazy(() => import('./pages/Nexus'));
 const SolutionPage = lazy(() => import('./pages/SolutionPage'));
 const AgenticTestDevelopmentPage = lazy(() => import('./pages/AgenticTestDevelopmentPage'));
 const NexusConnectivity = lazy(() => import('./pages/NexusConnectivity'));

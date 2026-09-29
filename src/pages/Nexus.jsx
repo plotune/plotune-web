@@ -16,7 +16,7 @@ import {
   FiUploadCloud,
 } from 'react-icons/fi';
 
-const nexusImage = '/assets/plotune-nexus.png';
+const nexusImage = '/assets/plotune-nexus.webp';
 
 const connections = [
   {
@@ -101,6 +101,9 @@ const Nexus = () => {
                   <img
                     src={nexusImage}
                     alt="Plotune Nexus hardware"
+                    width={1088}
+                    height={725}
+                    fetchPriority="high"
                     className="mx-auto w-full max-w-[34rem] object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.75)]"
                   />
                 </div>

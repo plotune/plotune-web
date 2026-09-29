@@ -41,7 +41,8 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build && cp CNAME build/CNAME",
     "deploy": "gh-pages -d build",
-    "generate:research-rss": "node scripts/generate-research-rss.cjs"
+    "generate:research-rss": "node scripts/generate-research-rss.cjs",
+    "webvitals": "node scripts/check-web-vitals.cjs"
   },
   "browserslist": {
     "production": [
