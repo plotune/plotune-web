@@ -86,7 +86,6 @@ const Nexus = () => {
                 <Link
                   to="/contact"
                   ref={heroContactCta.ref}
-                  onClick={heroContactCta.onClick}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
                 >
                   Get Your Integration Plan
@@ -95,7 +94,6 @@ const Nexus = () => {
                 <Link
                   to="/nexus/connectivity"
                   ref={heroConnectivityCta.ref}
-                  onClick={heroConnectivityCta.onClick}
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
                 >
                   See How It Connects
@@ -226,7 +224,6 @@ const Nexus = () => {
               <Link
                 to="/nexus/use-cases"
                 ref={bottomUseCasesCta.ref}
-                onClick={bottomUseCasesCta.onClick}
                 className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
               >
                 View Use Cases
@@ -234,7 +231,6 @@ const Nexus = () => {
               <Link
                 to="/contact"
                 ref={bottomContactCta.ref}
-                onClick={bottomContactCta.onClick}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
                 Get Your Integration Plan
