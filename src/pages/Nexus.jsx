@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
+import { useCtaTracking } from '../utils/ctaTracking';
 import {
   FiActivity,
   FiArrowRight,
@@ -56,6 +57,11 @@ const outcomes = [
 ];
 
 const Nexus = () => {
+  const heroContactCta = useCtaTracking('nexus_hero_contact');
+  const heroConnectivityCta = useCtaTracking('nexus_hero_connectivity');
+  const bottomUseCasesCta = useCtaTracking('nexus_bottom_use_cases');
+  const bottomContactCta = useCtaTracking('nexus_bottom_contact');
+
   return (
     <main className="overflow-hidden bg-dark-bg text-dark-text">
       <Seo
@@ -79,16 +85,20 @@ const Nexus = () => {
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Link
                   to="/contact"
+                  ref={heroContactCta.ref}
+                  onClick={heroContactCta.onClick}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
                 >
-                  Contact Us
+                  Get Your Integration Plan
                   <FiArrowRight />
                 </Link>
                 <Link
                   to="/nexus/connectivity"
+                  ref={heroConnectivityCta.ref}
+                  onClick={heroConnectivityCta.onClick}
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
                 >
-                  Learn More
+                  See How It Connects
                 </Link>
               </div>
             </div>
@@ -215,15 +225,19 @@ const Nexus = () => {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/nexus/use-cases"
+                ref={bottomUseCasesCta.ref}
+                onClick={bottomUseCasesCta.onClick}
                 className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
               >
                 View Use Cases
               </Link>
               <Link
                 to="/contact"
+                ref={bottomContactCta.ref}
+                onClick={bottomContactCta.onClick}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
-                Contact Us
+                Get Your Integration Plan
                 <FiArrowRight />
               </Link>
             </div>
