@@ -6,17 +6,25 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import Nexus from './pages/Nexus';
+import NexusConnectivity from './pages/NexusConnectivity';
+import NexusStream from './pages/NexusStream';
+import NexusUseCases from './pages/NexusUseCases';
 import RedirectPage from './pages/RedirectPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ResearchLayout from './research/ResearchLayout';
 import ScrollDepthTracker from './components/ScrollDepthTracker';
 
-// Every other page is route-split: Home and Nexus stay eager (both are direct
-// landing destinations for nav/ad traffic) so a fresh page load never suspends
-// and swaps the prerendered markup for the Suspense fallback -- since index.js
-// uses createRoot (no hydration), that swap is a full-page layout shift, not
-// just a loading flash. Everything else was previously bundled together, so a
+// Every other page is route-split: Home and the Nexus pages stay eager (all
+// direct landing destinations for nav/ad traffic, and the Nexus pages are
+// each small enough -- under 40KB -- that eager-importing them doesn't undo
+// the bundle-size win below) so a fresh page load never suspends and swaps
+// the prerendered markup for the Suspense fallback -- since index.js uses
+// createRoot (no hydration), that swap is a full-page layout shift, not just
+// a loading flash. Research pages hit the same failure mode in principle but
+// pull in a much larger shared chart chunk (Plotly), so they're not eager-
+// imported here; they were verified to already render without it (see
+// npm run webvitals). Everything else was previously bundled together, so a
 // homepage visitor was downloading and parsing the JS for Dashboard, Login,
 // StorageManager, PackageMirror and every other page before React could paint
 // the Hero -- that eager bundle was the main driver behind the site's FCP/LCP
@@ -48,9 +56,6 @@ const PackageMirror = lazy(() => import('./pages/PackageMirror'));
 const Embeddings = lazy(() => import('./pages/Embeddings'));
 const SolutionPage = lazy(() => import('./pages/SolutionPage'));
 const AgenticTestDevelopmentPage = lazy(() => import('./pages/AgenticTestDevelopmentPage'));
-const NexusConnectivity = lazy(() => import('./pages/NexusConnectivity'));
-const NexusStream = lazy(() => import('./pages/NexusStream'));
-const NexusUseCases = lazy(() => import('./pages/NexusUseCases'));
 const StreamOverviewPage = lazy(() => import('./components/streams/StreamOverviewPage'));
 const ResearchOverview = lazy(() => import('./research/ResearchOverview'));
 const ResearchArticle = lazy(() => import('./research/ResearchArticle'));
