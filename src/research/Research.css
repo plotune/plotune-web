@@ -49,3 +49,6 @@
 .detail-back{display:inline-flex;align-items:center;min-height:44px}
 .selection-tray button{min-height:44px;box-sizing:border-box}
 .guidance-grid aside a{display:inline-flex;align-items:center;min-height:44px}
+.research-header nav button.research-logout{height:100%;display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:0;border:0;border-bottom:2px solid transparent;background:none;color:#4d5968;font:inherit;font-size:13px;font-weight:600;cursor:pointer;width:max-content}
+.research-header nav button.research-logout:hover{color:#1455c0;border-bottom-color:#2563d9}
+.research-header nav.is-open button.research-logout{height:auto;padding:9px 0;border-bottom:0}
