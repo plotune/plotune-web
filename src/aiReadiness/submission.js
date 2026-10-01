@@ -30,25 +30,40 @@ import { SCORING_VERSION } from './scoring';
 //     result: { score, assessedAreas, totalAreas, confidence, band, areas },
 //     attribution: { entry_source, utm_* , referrer, ... },
 //     versions: { assessment, scoring }, submittedAt,
+//     submissionId <- same value on retries of one lead; the backend de-duplicates on it
 //     website   <- hidden honeypot field; always empty for real visitors
 //   }
 // ---------------------------------------------------------------------------------------------
 
 const ENDPOINT = process.env.REACT_APP_AI_READINESS_ENDPOINT || '';
-const TIMEOUT_MS = 10000;
+// Apps Script web apps can take 5-15 s on a cold start; a short timeout would show the visitor an
+// error for a lead that was actually saved (and invite a duplicate retry).
+const TIMEOUT_MS = 25000;
 
 // Deliberately simple: catches typos, not a full RFC 5322 parse (the server must re-validate).
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export const isValidEmail = (value) => EMAIL_PATTERN.test(value.trim());
 
+const CLICK_ID_KEYS = ['ref', 'li_fat_id', 'gclid', 'fbclid'];
+
 const readAttribution = (funnel) => {
   const params = new URLSearchParams(window.location.search);
   const utm = {};
-  params.forEach((value, key) => { if (key.startsWith('utm_') || key === 'ref') utm[key] = value; });
+  // utm_* plus ad click ids (LinkedIn's li_fat_id etc.), kept for later offline-conversion upload.
+  params.forEach((value, key) => { if (key.startsWith('utm_') || CLICK_ID_KEYS.includes(key)) utm[key] = value.slice(0, 300); });
   return { ...funnel, ...utm, referrer: document.referrer || null, landing_path: window.location.pathname };
 };
 
-export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, website = '' }) => ({
+export const newSubmissionId = () => {
+  try {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+  } catch {
+    // fall through
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+};
+
+export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, website = '', submissionId = '' }) => ({
   email: email.trim(),
   answers,
   result: {
@@ -62,6 +77,7 @@ export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, we
   attribution: readAttribution(funnel),
   versions: { assessment: ASSESSMENT_VERSION, scoring: SCORING_VERSION },
   submittedAt: new Date().toISOString(),
+  submissionId,
   website,
 });
 

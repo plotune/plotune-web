@@ -22,6 +22,9 @@ const SHEET_NAME = 'Leads';                       // tab name (created automatic
 // -----------------------------------------------------------------------------------------
 
 const MAX_BODY_CHARS = 20000;
+const MAX_CONFIRMATIONS_PER_HOUR = 20;  // global cap: the endpoint is public, so it must not be
+                                        // usable to make us email arbitrary addresses at volume
+const DEDUPE_SECONDS = 21600;           // CacheService maximum (6 h)
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const HEADERS = [
@@ -30,7 +33,11 @@ const HEADERS = [
   'Interfaces (other, typed)', 'Tools (other, typed)', 'Bottlenecks (other, typed)',
   'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'Referrer',
   'Assessment version', 'Scoring version', 'Raw JSON',
+  // Added after the first deployment -- new columns only ever go at the END so existing rows
+  // keep lining up with their headers.
+  'Submission ID', 'UTM content', 'UTM term', 'LinkedIn click id', 'Emails',
 ];
+const EMAILS_COLUMN = HEADERS.length; // 1-based index of the 'Emails' status column
 
 /** Opening the web app URL in a browser lands here: a quick "is it deployed?" check. */
 function doGet() {
@@ -52,9 +59,13 @@ function doPost(e) {
     if (!EMAIL_RE.test(email)) return json_({ ok: false, error: 'invalid_email' });
 
     const lead = toLead_(data, email);
-    saveLead_(lead, raw);          // if this throws, the site shows an error (nothing was saved)
-    notifyOwner_(lead);            // these two never fail the request
-    confirmVisitor_(lead);
+    const row = saveLead_(lead, raw);  // if this throws, the site shows an error (nothing was saved)
+    if (row === 0) return json_({ ok: true }); // duplicate of a submission already saved (a retry)
+
+    // These never fail the request; their outcome is written to the row's 'Emails' column.
+    const owner = notifyOwner_(lead);
+    const visitor = confirmVisitor_(lead);
+    recordEmailStatus_(row, 'owner: ' + owner + ' / visitor: ' + visitor);
 
     return json_({ ok: true });
   } catch (err) {
@@ -93,24 +104,49 @@ function toLead_(data, email) {
     referrer: clean_(attr.referrer, 300),
     assessmentVersion: clean_(versions.assessment, 20),
     scoringVersion: clean_(versions.scoring, 20),
+    submissionId: clean_(data.submissionId, 64),
+    utmContent: clean_(attr.utm_content, 120),
+    utmTerm: clean_(attr.utm_term, 120),
+    liFatId: clean_(attr.li_fat_id, 300),
   };
 }
 
+/** Appends the lead and returns its row number, or 0 if this submission was already saved. */
 function saveLead_(lead, raw) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
+    // The site re-sends the same submissionId when a visitor retries after a slow reply, so a
+    // retry of a lead that was in fact saved doesn't create a second row and second emails.
+    const cache = CacheService.getScriptCache();
+    const dedupeKey = lead.submissionId ? 'sub:' + hashKey_(lead.submissionId) : '';
+    if (dedupeKey && cache.get(dedupeKey)) return 0;
+
     const sheet = getSheet_();
-    sheet.appendRow([
-      lead.receivedAt, sheetSafe_(lead.email), lead.score, lead.assessed + ' of ' + lead.total,
+    const cells = [
+      lead.receivedAt, lead.email, lead.score, lead.assessed + ' of ' + lead.total,
       lead.confidence, lead.band, lead.interfaces, lead.tools, lead.bottlenecks, lead.automation,
-      sheetSafe_(lead.otherInterfaces), sheetSafe_(lead.otherTools), sheetSafe_(lead.otherBottlenecks),
-      sheetSafe_(lead.entrySource), sheetSafe_(lead.utmSource), sheetSafe_(lead.utmMedium),
-      sheetSafe_(lead.utmCampaign), sheetSafe_(lead.referrer),
-      lead.assessmentVersion, lead.scoringVersion, sheetSafe_(raw.slice(0, 5000)),
-    ]);
+      lead.otherInterfaces, lead.otherTools, lead.otherBottlenecks,
+      lead.entrySource, lead.utmSource, lead.utmMedium, lead.utmCampaign, lead.referrer,
+      lead.assessmentVersion, lead.scoringVersion, raw.slice(0, 5000),
+      lead.submissionId, lead.utmContent, lead.utmTerm, lead.liFatId, 'sending…',
+    ];
+    // EVERY text cell is neutralised: all of it arrives from a public endpoint, and appendRow
+    // would otherwise evaluate a value like =IMPORTXML(...) as a live formula in this sheet.
+    sheet.appendRow(cells.map(function (v) { return typeof v === 'string' ? sheetSafe_(v) : v; }));
+    const row = sheet.getLastRow();
+    if (dedupeKey) cache.put(dedupeKey, '1', DEDUPE_SECONDS);
+    return row;
   } finally {
     lock.releaseLock();
+  }
+}
+
+function recordEmailStatus_(row, text) {
+  try {
+    getSheet_().getRange(row, EMAILS_COLUMN).setValue(text);
+  } catch (err) {
+    console.error('recordEmailStatus_ failed: ' + err);
   }
 }
 
@@ -122,12 +158,16 @@ function getSheet_() {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  } else if (sheet.getLastColumn() < HEADERS.length) {
+    // Sheet created by an earlier version of this script: add the newer column headers.
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
   }
   return sheet;
 }
 
 // ---- Emails ----------------------------------------------------------------------------
 
+/** Returns 'sent' or 'failed'. */
 function notifyOwner_(lead) {
   try {
     const sheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
@@ -156,20 +196,29 @@ function notifyOwner_(lead) {
         'Hit Reply to write to the visitor directly.',
       ].join('\n'),
     });
+    return 'sent';
   } catch (err) {
     console.error('notifyOwner_ failed: ' + err);
+    return 'failed';
   }
 }
 
+/** Returns 'sent', 'off', 'skipped (...)' or 'failed'. */
 function confirmVisitor_(lead) {
-  if (!SEND_CONFIRMATION_TO_VISITOR) return;
+  if (!SEND_CONFIRMATION_TO_VISITOR) return 'off';
   try {
-    // At most one confirmation per address per 6 hours (the longest CacheService allows), so
-    // nobody can use the form to make us repeatedly email a third party.
+    // Abuse limits (the endpoint is public, so anyone could script it to make us email others):
+    //  - at most one confirmation per mailbox per 6 h; name+tag@x and name@x count as one mailbox,
+    //  - at most MAX_CONFIRMATIONS_PER_HOUR confirmations in total per hour.
+    // Your own notification is always sent, so a skipped confirmation never hides a lead.
     const cache = CacheService.getScriptCache();
-    const key = 'confirmed:' + lead.email;
-    if (cache.get(key)) return;
-    cache.put(key, '1', 21600);
+    const mailboxKey = 'confirmed:' + hashKey_(lead.email.replace(/\+[^@]*@/, '@'));
+    if (cache.get(mailboxKey)) return 'skipped (already confirmed recently)';
+    const hourKey = 'confirmations:' + Utilities.formatDate(new Date(), 'UTC', 'yyyyMMddHH');
+    const sentThisHour = Number(cache.get(hourKey) || 0);
+    if (sentThisHour >= MAX_CONFIRMATIONS_PER_HOUR) return 'skipped (hourly limit)';
+    cache.put(hourKey, String(sentThisHour + 1), 3600);
+    cache.put(mailboxKey, '1', DEDUPE_SECONDS);
 
     MailApp.sendEmail({
       to: lead.email,
@@ -189,8 +238,10 @@ function confirmVisitor_(lead) {
         'https://www.plotune.net',
       ].join('\n'),
     });
+    return 'sent';
   } catch (err) {
     console.error('confirmVisitor_ failed: ' + err);
+    return 'failed';
   }
 }
 
@@ -213,6 +264,11 @@ function toInt_(value) {
   return isFinite(n) ? Math.round(n) : '';
 }
 
+/** Short, fixed-length cache key (CacheService keys are limited to 250 characters). */
+function hashKey_(value) {
+  return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, value));
+}
+
 /** Stops text typed by a visitor from being treated as a spreadsheet formula (=, +, -, @). */
 function sheetSafe_(value) {
   return /^[=+\-@]/.test(value) ? "'" + value : value;
@@ -223,7 +279,9 @@ function sheetSafe_(value) {
 /**
  * Pretends to be a visitor submission. Running it once (a) makes Google ask you for the
  * permissions the script needs, and (b) proves the whole chain works: you should see a "Leads"
- * tab with one TEST row and receive two emails at NOTIFY_EMAIL. Delete the TEST row afterwards.
+ * tab with one TEST row and receive two emails at NOTIFY_EMAIL (the visitor confirmation is
+ * skipped if that address already got one in the last 6 hours -- see the row's 'Emails' column).
+ * Delete the TEST row afterwards.
  */
 function runTest() {
   const sample = {
@@ -235,6 +293,7 @@ function runTest() {
     result: { score: 77, assessedAreas: 4, totalAreas: 4, confidence: 'high', band: 'strong' },
     attribution: { entry_source: 'TEST', utm_source: 'test', referrer: '' },
     versions: { assessment: 'v1', scoring: 'v1' },
+    submissionId: 'test-' + new Date().getTime(),
   };
   const out = doPost({ postData: { contents: JSON.stringify(sample) } });
   Logger.log(out.getContent());

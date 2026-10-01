@@ -22,14 +22,24 @@ beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
+  mountAt({ pathname: '/ai-readiness', search: '?utm_source=linkedin' });
+});
+
+// Mounts (or re-mounts, simulating a page reload) at a given history entry.
+function mountAt(entry) {
   act(() => root.render(
     <HelmetProvider>
-      <MemoryRouter initialEntries={['/ai-readiness?utm_source=linkedin']}>
+      <MemoryRouter key={JSON.stringify(entry)} initialEntries={[entry]}>
         <AiReadinessPage />
       </MemoryRouter>
     </HelmetProvider>,
   ));
-});
+}
+const reloadAt = (step) => {
+  act(() => root.unmount());
+  root = createRoot(container);
+  mountAt({ pathname: '/ai-readiness', search: '?utm_source=linkedin', state: { alStep: step } });
+};
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
@@ -220,4 +230,88 @@ test('after sending the email a quiet Nexus button appears; the page itself stay
   click(link);
   expect(propsOf('ai_readiness_nexus_clicked')).toMatchObject({ from: 'email_confirmation' });
   expect(JSON.stringify(posthog.capture.mock.calls)).not.toContain('eng@example.com');
+});
+
+test('a reload mid-assessment restores the step and every earlier selection', () => {
+  click(button('Start assessment'));
+  click(card('Kvaser / IXXAT')); click(card('Other / Custom hardware'));
+  const input = container.querySelector('input[type="text"]');
+  act(() => {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    setter.call(input, 'UART rig');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  click(button('Continue'));
+  expect(text()).toContain('2 / 4');
+
+  reloadAt(2);
+  expect(text()).toContain('2 / 4');
+  click(button('Back'));
+  expect(card('Kvaser / IXXAT').getAttribute('aria-checked')).toBe('true');
+  expect(container.querySelector('input[type="text"]').value).toBe('UART rig');
+});
+
+test('a reload on the result after sending keeps the confirmation (no empty form, no double send)', async () => {
+  completeAll();
+  const input = container.querySelector('#ai-readiness-email');
+  act(() => {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    setter.call(input, 'eng@example.com');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await act(async () => { container.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
+  expect(text()).toContain('nothing was sent');
+
+  reloadAt(5);
+  expect(container.querySelector('[data-score]')).toBeTruthy();
+  expect(text()).toContain('nothing was sent');
+  expect(container.querySelector('#ai-readiness-email')).toBeNull();
+});
+
+test('Retake clears saved progress', () => {
+  completeAll();
+  click(button('Retake the assessment'));
+  reloadAt(5);
+  // Nothing restorable and nothing answered: back to the intro, not a bare Q1.
+  expect(button('Start assessment')).toBeTruthy();
+  click(button('Start assessment'));
+  expect(container.querySelectorAll('[aria-checked="true"]').length).toBe(0);
+});
+
+test('the email form discloses follow-up use honestly (no "only")', () => {
+  completeAll();
+  expect(text()).toContain('send your assessment and follow up about it');
+  expect(text()).not.toMatch(/used only/i);
+});
+
+test('Back right after tapping a Q4 answer cancels the pending auto-advance', () => {
+  click(button('Start assessment'));
+  click(card('PEAK / PCAN')); click(button('Continue'));
+  click(card('Python / custom scripts')); click(button('Continue'));
+  click(card('Setting up')); click(button('Continue'));
+  click(card('Partially automated'));
+  click(button('Back'));
+  act(() => { jest.advanceTimersByTime(500); });
+  expect(text()).toContain('3 / 4');
+  expect(container.querySelector('[data-score]')).toBeNull();
+  expect(events()).not.toContain('ai_readiness_q4_completed');
+});
+
+test('a double tap on Continue records one completion and advances one step', () => {
+  click(button('Start assessment'));
+  click(card('PEAK / PCAN'));
+  const cont = button('Continue');
+  act(() => {
+    cont.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    cont.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+  expect(text()).toContain('2 / 4');
+  expect(events().filter((e) => e === 'ai_readiness_q1_completed')).toHaveLength(1);
+});
+
+test('Retake is not logged as a Back action', () => {
+  completeAll();
+  posthog.capture.mockClear();
+  click(button('Retake the assessment'));
+  expect(events()).not.toContain('ai_readiness_back_clicked');
 });

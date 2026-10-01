@@ -9,6 +9,9 @@ import Nexus from './pages/Nexus';
 import NexusConnectivity from './pages/NexusConnectivity';
 import NexusStream from './pages/NexusStream';
 import NexusUseCases from './pages/NexusUseCases';
+// Eager like the Nexus pages: /ai-readiness is a paid-ad landing page and is prerendered, so a
+// lazy import would swap its prerendered markup for the blank Suspense fallback on load (see below).
+import AiReadinessPage from './aiReadiness/AiReadinessPage';
 import RedirectPage from './pages/RedirectPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -56,7 +59,6 @@ const PackageMirror = lazy(() => import('./pages/PackageMirror'));
 const Embeddings = lazy(() => import('./pages/Embeddings'));
 const SolutionPage = lazy(() => import('./pages/SolutionPage'));
 const AgenticTestDevelopmentPage = lazy(() => import('./pages/AgenticTestDevelopmentPage'));
-const AiReadinessPage = lazy(() => import('./aiReadiness/AiReadinessPage'));
 const StreamOverviewPage = lazy(() => import('./components/streams/StreamOverviewPage'));
 const ResearchOverview = lazy(() => import('./research/ResearchOverview'));
 const ResearchArticle = lazy(() => import('./research/ResearchArticle'));

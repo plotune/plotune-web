@@ -81,3 +81,19 @@ export const resultProperties = (result) => ({
   score_confidence: result.confidence,
   score_band: result.band,
 });
+
+// LinkedIn conversion for a confirmed lead, so ad campaigns can optimise for (and report) leads
+// rather than clicks. Uses the LinkedIn Insight Tag already loaded in public/index.html. Inactive
+// until REACT_APP_LINKEDIN_LEAD_CONVERSION_ID is set (Campaign Manager > Analyze > Conversion
+// tracking > Create conversion > Javascript/event-specific; the numeric id goes in .env.production).
+const LINKEDIN_LEAD_CONVERSION_ID = Number(process.env.REACT_APP_LINKEDIN_LEAD_CONVERSION_ID || 0);
+
+export const trackLinkedInLead = () => {
+  if (!LINKEDIN_LEAD_CONVERSION_ID || typeof window === 'undefined' || typeof window.lintrk !== 'function') return false;
+  try {
+    window.lintrk('track', { conversion_id: LINKEDIN_LEAD_CONVERSION_ID });
+    return true;
+  } catch {
+    return false;
+  }
+};

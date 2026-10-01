@@ -1,4 +1,7 @@
-jest.mock('posthog-js', () => ({ init: jest.fn() }), { virtual: true });
+// Not { virtual: true }: posthog-js really exists, and a virtual mock of a real package is not
+// reliably applied -- when it isn't, the real library loads, patches history.pushState and
+// fires real pageviews through the filter under test.
+jest.mock('posthog-js', () => ({ init: jest.fn() }));
 
 const posthog = require('posthog-js');
 const initializePostHog = require('./posthog');

@@ -17,8 +17,10 @@ import {
   questionProperties,
   resultProperties,
   trackAiReadiness,
+  trackLinkedInLead,
 } from './analytics';
-import { buildSubmissionPayload, submitAssessment } from './submission';
+import { buildSubmissionPayload, newSubmissionId, submitAssessment } from './submission';
+import { clearProgress, loadProgress, saveProgress } from './storage';
 
 // Standalone route (/ai-readiness). Steps: 0 = intro, 1..4 = questions, 5 = result.
 //
@@ -26,7 +28,9 @@ import { buildSubmissionPayload, submitAssessment } from './submission';
 //  - the phone's Back gesture / browser Back moves one step back, as people expect (Jakob),
 //  - answers stay in this component's state so Back never loses a selection,
 //  - the URL (and with it utm_* attribution) never changes mid-flow.
-// If a refresh wipes the answers, the step is clamped back to the first unanswered question.
+// Answers (and whether the email was already sent) are also kept in sessionStorage, so a reload
+// -- common when a phone visitor switches apps -- restores exactly where they were. If nothing
+// can be restored, the step is clamped back to the first unanswered question.
 
 const INTRO = 0;
 const RESULT = QUESTION_COUNT + 1;
@@ -45,11 +49,16 @@ const reachableStep = (answers) => {
 const AiReadinessPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState(EMPTY_ANSWERS);
+  const [restored] = useState(loadProgress);
+  const [answers, setAnswers] = useState(() => (restored ? restored.answers : EMPTY_ANSWERS));
+  const [submission, setSubmission] = useState(() => (restored ? restored.submission : null));
   const [advancing, setAdvancing] = useState(false);
 
   const requested = Number.isInteger(location.state?.alStep) ? location.state.alStep : INTRO;
-  const step = Math.min(requested, Math.max(INTRO, reachableStep(answers)));
+  const reachable = reachableStep(answers);
+  // Past the visitor's real progress (e.g. storage was blocked and a reload lost the answers):
+  // with nothing answered at all, go back to the intro rather than a bare Q1.
+  const step = requested <= reachable ? requested : reachable === 1 ? INTRO : reachable;
 
   const headingRef = useRef(null);
   const timerRef = useRef(null);
@@ -58,6 +67,9 @@ const AiReadinessPage = () => {
   const backByButtonRef = useRef(false);
   const prevStepRef = useRef(step);
   const scoreShownForRef = useRef(null);
+  const advancedFromRef = useRef(null); // guards against a double tap advancing twice
+  const introIdxRef = useRef(null); // history index of the intro entry, for a clean Retake
+  const submissionIdRef = useRef({ email: null, id: null });
 
   const result = useMemo(() => scoreAssessment(answers), [answers]);
 
@@ -74,6 +86,10 @@ const AiReadinessPage = () => {
     captureAssessmentEntry();
   }, []);
 
+  useEffect(() => {
+    saveProgress({ answers, submission });
+  }, [answers, submission]);
+
   // New screen: reset scroll instantly (smooth-scroll would make the new step feel laggy),
   // move focus to the heading for keyboard/screen-reader users, restart the step timer.
   useEffect(() => {
@@ -89,6 +105,10 @@ const AiReadinessPage = () => {
     }
     backByButtonRef.current = false;
     prevStepRef.current = step;
+    advancedFromRef.current = null;
+    if (step === INTRO && window.history.state && Number.isInteger(window.history.state.idx)) {
+      introIdxRef.current = window.history.state.idx;
+    }
   }, [step]);
 
   useEffect(() => () => window.clearTimeout(timerRef.current), []);
@@ -103,6 +123,10 @@ const AiReadinessPage = () => {
   const question = step >= 1 && step <= QUESTION_COUNT ? QUESTIONS[step - 1] : null;
 
   const advance = useCallback((fromStep, currentAnswers) => {
+    // Router navigation is a transition, so the old screen can stay mounted for a frame after the
+    // first tap; a second tap must not record a duplicate completion or push a duplicate entry.
+    if (advancedFromRef.current === fromStep) return;
+    advancedFromRef.current = fromStep;
     const q = QUESTIONS[fromStep - 1];
     trackAiReadiness(AI_READINESS_EVENTS.questionCompleted(fromStep), {
       ...questionProperties(q.id, currentAnswers),
@@ -143,6 +167,9 @@ const AiReadinessPage = () => {
   };
 
   const handleBack = () => {
+    // A pending Q4 auto-advance must not fire after the visitor already chose to go back.
+    window.clearTimeout(timerRef.current);
+    setAdvancing(false);
     backByButtonRef.current = true;
     trackAiReadiness(AI_READINESS_EVENTS.backClicked, { from_step: step, to_step: step - 1, via: 'button' });
     // Pop history when this entry was pushed by the flow itself; otherwise replace, so Back
@@ -155,28 +182,50 @@ const AiReadinessPage = () => {
   };
 
   const handleRetake = () => {
+    clearProgress();
     setAnswers(EMPTY_ANSWERS);
+    setSubmission(null);
     completedRef.current = new Set();
     scoreShownForRef.current = null;
-    goTo(INTRO, { replace: true });
+    backByButtonRef.current = true; // not a "back" the visitor made; don't log one
+    // Return to the original intro entry (dropping Q1..result from Back's path), so the phone's
+    // Back gesture afterwards leaves the page instead of walking through emptied questions.
+    const currentIdx = window.history.state && window.history.state.idx;
+    if (Number.isInteger(introIdxRef.current) && Number.isInteger(currentIdx) && currentIdx > introIdxRef.current) {
+      navigate(introIdxRef.current - currentIdx);
+    } else {
+      goTo(INTRO, { replace: true });
+    }
   };
 
   const handleEmailSubmit = async (email, website) => {
-    const payload = buildSubmissionPayload({ email, answers, result, funnel: getFunnelContext(), website });
+    // One id per address: a retry after a slow/failed reply re-sends the same id, which the
+    // backend uses to avoid saving (and emailing about) the same lead twice.
+    const normalized = email.trim().toLowerCase();
+    if (submissionIdRef.current.email !== normalized) submissionIdRef.current = { email: normalized, id: newSubmissionId() };
+    const payload = buildSubmissionPayload({
+      email, answers, result, funnel: getFunnelContext(), website, submissionId: submissionIdRef.current.id,
+    });
     const outcome = await submitAssessment(payload);
+    // Only a real, confirmed lead counts as a LinkedIn conversion (no-op until configured).
+    const linkedinConversion = outcome.status === 'sent' ? trackLinkedInLead() : false;
     // The email itself is intentionally NOT sent to PostHog.
     trackAiReadiness(AI_READINESS_EVENTS.emailSubmitted, {
       ...answerProperties(answers),
       ...resultProperties(result),
       delivery: outcome.status, // sent | not_configured | error
+      linkedin_conversion: linkedinConversion,
     });
+    if (outcome.status !== 'error') setSubmission({ delivery: outcome.status, email: email.trim() });
     return outcome.status;
   };
 
   const progress = question ? step / QUESTION_COUNT : 0;
 
   return (
-    <div className="relative min-h-screen min-h-[100dvh] overflow-x-hidden bg-dark-bg text-dark-text">
+    // overflow-x-clip, not -hidden: "hidden" turns this element into a scroll container, and then the
+    // sticky Continue bar sticks to it instead of the screen (i.e. never sticks at all).
+    <div className="ai-shell relative overflow-x-clip bg-dark-bg text-dark-text">
       <Seo
         title="How AI-ready is your test bench? | Plotune"
         description="Four quick questions to assess how accessible your test environment is to AI-agent-driven testing."
@@ -189,7 +238,7 @@ const AiReadinessPage = () => {
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(38,166,154,0.12),transparent_45%)]" aria-hidden="true" />
 
-      <div className="relative mx-auto flex min-h-screen min-h-[100dvh] w-full max-w-xl flex-col px-5">
+      <div className="ai-shell relative mx-auto flex w-full max-w-xl flex-col px-5">
         {/* Selective attention: no site header/footer here. The only chrome is Back + progress. */}
         <header className="flex h-14 shrink-0 items-center justify-between">
           {question || step === RESULT ? (
@@ -209,9 +258,12 @@ const AiReadinessPage = () => {
               to={withFunnelParams('/nexus')}
               onClick={() => trackAiReadiness(AI_READINESS_EVENTS.nexusClicked, { from: 'logo' })}
               aria-label="Plotune Nexus"
-              className="-ml-1 inline-flex min-h-[44px] items-center rounded-lg px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="-ml-1 inline-flex min-h-[44px] items-center gap-2 rounded-lg px-1 text-lg font-semibold tracking-tight text-light-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
+              {/* Wordmark, not just the icon: visitors from an ad have never heard of Plotune, and
+                  the page later asks for their work email. */}
               <img src={logo} alt="" className="h-8 w-auto" />
+              <span aria-hidden="true">Plotune</span>
             </Link>
           )}
           {question && (
@@ -286,6 +338,7 @@ const AiReadinessPage = () => {
               headingRef={headingRef}
               onEmailStarted={() => trackAiReadiness(AI_READINESS_EVENTS.emailStarted, resultProperties(result))}
               onEmailSubmit={handleEmailSubmit}
+              submission={submission}
               nexusTo={withFunnelParams('/nexus')}
               onNexusClick={() => trackAiReadiness(AI_READINESS_EVENTS.nexusClicked, { from: 'email_confirmation', ...resultProperties(result) })}
               onRetake={handleRetake}

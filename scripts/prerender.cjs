@@ -55,6 +55,9 @@ const routes = [
   '/', '/research', '/research/reports', '/research/methodology', '/faq',
   '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases',
   '/solutions/agentic-test-development', '/contact',
+  // Paid-ad landing page: prerendered so the intro paints before JS runs and so link
+  // unfurlers (LinkedIn's ad/post preview) read its own title and description.
+  '/ai-readiness',
 ];
 fs.readdirSync(articlesDir)
   .filter((file) => file.endsWith('.mdx'))
@@ -111,6 +114,9 @@ const serveStatic = () =>
   const browser = await chromium.launch();
   const context = await browser.newContext();
   await context.addInitScript(forceInView);
+  // Never let a build-time render count as a real visit in analytics or ad tracking (PostHog
+  // via its proxy, the LinkedIn Insight Tag). The snapshot doesn't need them.
+  await context.route(/^https?:\/\/(t\.plotune\.net|[a-z0-9.-]*posthog\.com|snap\.licdn\.com|px\.ads\.linkedin\.com)\//, (route) => route.abort());
 
   let done = 0;
   for (const route of [...new Set(routes)]) {

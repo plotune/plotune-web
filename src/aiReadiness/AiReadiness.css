@@ -1,6 +1,15 @@
 /* Doherty Threshold: step transitions are a short fade + 8px rise (<= 180ms) -- enough to read
    as "next screen", too short to make anyone wait. Selection feedback is instant (no animation
    on the state change itself). Everything is disabled under prefers-reduced-motion. */
+/* Full-height shell. 100vh is the fallback; 100dvh (where supported) is the *visible* height, which
+   in iOS Safari and the LinkedIn in-app browser is smaller than 100vh -- with 100vh alone the
+   intro's Start button can sit partly below the fold. Declared here, not as two Tailwind classes,
+   because Tailwind's output order would let min-h-screen override the dvh rule. */
+.ai-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 @keyframes ai-step-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }

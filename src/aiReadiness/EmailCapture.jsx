@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowRight, FiCheck } from 'react-icons/fi';
 import { isValidEmail } from './submission';
@@ -13,13 +13,26 @@ const BENEFITS = [
 // The score is already on screen before this appears (peak first, ask second), and this card is
 // the only competing action on the result screen -- the final peak of the experience. Rendered
 // as one tidy unit: promise, the single field it needs, one dominant button.
-const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
+// `submission` ({ delivery, email } or null) is owned by the page and persisted there, so after a
+// reload a visitor who already sent their email sees the confirmation, not an empty form.
+const EmailCapture = ({ onFirstInput, onSubmit, submission, nexusTo, onNexusClick }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [status, setStatus] = useState('idle'); // idle | sending | done
-  const [delivery, setDelivery] = useState(null);
+  const [status, setStatus] = useState('idle'); // idle | sending
   const startedRef = useRef(false);
   const honeypotRef = useRef(null);
+  const inputRef = useRef(null);
+  const confirmationRef = useRef(null);
+  const justSubmittedRef = useRef(false);
+
+  // After a fresh send the form unmounts; move focus to the confirmation so keyboard and
+  // screen-reader users aren't left on nothing (not on a restored confirmation after a reload).
+  useEffect(() => {
+    if (submission && justSubmittedRef.current && confirmationRef.current) {
+      justSubmittedRef.current = false;
+      confirmationRef.current.focus({ preventScroll: false });
+    }
+  }, [submission]);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -35,21 +48,23 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
     if (status === 'sending') return;
     if (!isValidEmail(email)) {
       setError('Enter a valid email, like name@company.com');
+      if (inputRef.current) inputRef.current.focus();
       return;
     }
     setStatus('sending');
+    justSubmittedRef.current = true;
     const outcome = await onSubmit(email, honeypotRef.current ? honeypotRef.current.value : '');
+    setStatus('idle');
     if (outcome === 'error') {
-      setStatus('idle');
-      setError('We couldn’t send that just now. Please try again.');
-      return;
+      justSubmittedRef.current = false;
+      setError('We couldn’t send that just now. Please check your connection and try again.');
+      if (inputRef.current) inputRef.current.focus();
     }
-    setDelivery(outcome);
-    setStatus('done');
+    // On success the page records the submission, which switches this card to the confirmation.
   };
 
-  if (status === 'done') {
-    const preview = delivery === 'not_configured';
+  if (submission) {
+    const preview = submission.delivery === 'not_configured';
     return (
       <div className="ai-step rounded-2xl border border-primary/40 bg-primary/10 p-6 text-center">
         <div role="status">
@@ -58,16 +73,17 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
           </span>
           {preview ? (
             <>
-              <h2 className="mt-4 text-xl font-semibold text-light-text">Preview only: nothing was sent</h2>
+              <h2 ref={confirmationRef} tabIndex={-1} className="mt-4 text-xl font-semibold text-light-text outline-none">Preview only: nothing was sent</h2>
               <p className="mt-2 text-base leading-7 text-gray-text">
                 Email delivery isn’t connected in this version, so your address wasn’t stored or sent anywhere.
               </p>
             </>
           ) : (
             <>
-              <h2 className="mt-4 text-xl font-semibold text-light-text">Request received</h2>
+              <h2 ref={confirmationRef} tabIndex={-1} className="mt-4 text-xl font-semibold text-light-text outline-none">Request received</h2>
               <p className="mt-2 text-base leading-7 text-gray-text">
-                We’ll send your detailed assessment to <span className="break-all text-light-text">{email.trim()}</span>.
+                We’ll send your detailed assessment to {/* ph-no-capture: keep the address out of session replays (inputs are masked; text is not). */}
+                <span className="ph-no-capture break-all text-light-text">{submission.email}</span>.
               </p>
             </>
           )}
@@ -94,7 +110,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
       <h2 className="text-xl font-semibold leading-snug text-light-text sm:text-2xl">
         Want to know what’s holding your setup back?
       </h2>
-      <p className="mt-2 text-base text-gray-text">Get your detailed assessment, including:</p>
+      <p className="mt-2 text-base text-gray-text">Get your detailed assessment from the Plotune team, including:</p>
       <ul className="mt-4 space-y-3">
         {BENEFITS.map((benefit) => (
           <li key={benefit} className="flex gap-3 text-base leading-snug text-dark-text">
@@ -105,11 +121,13 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
       </ul>
 
       {/* Honeypot: invisible to people and assistive tech, tempting to bots. The server discards
-          any submission where it is filled. */}
+          any submission where it is filled. Deliberately NOT named like a real field ("website",
+          "url", "company"...) so browser/password-manager autofill can't fill it and silently
+          drop a genuine lead. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>
-          Website
-          <input ref={honeypotRef} type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+          Leave this field empty
+          <input ref={honeypotRef} type="text" name="hp_extra_field" tabIndex={-1} autoComplete="off" defaultValue="" />
         </label>
       </div>
 
@@ -125,6 +143,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
         spellCheck={false}
         enterKeyHint="send"
         placeholder="name@company.com"
+        ref={inputRef}
         value={email}
         onChange={handleChange}
         aria-invalid={error ? 'true' : undefined}
@@ -141,18 +160,37 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="mt-4 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-primary px-6 text-base font-semibold text-white transition-colors duration-100 hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-card disabled:cursor-wait disabled:bg-primary-dark"
+        // px-4 + 15px text on phones keeps the label on one line at 360-375px widths.
+        className="mt-4 flex min-h-[56px] w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-[15px] font-semibold sm:gap-2 sm:px-6 sm:text-base text-white transition-colors duration-100 hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-card disabled:cursor-wait disabled:bg-primary-dark"
       >
         {status === 'sending' ? 'Sending…' : 'Get my detailed assessment'}
         {status !== 'sending' && <FiArrowRight aria-hidden="true" />}
       </button>
+      {status === 'sending' && (
+        <p className="mt-2 text-center text-xs text-gray-text" role="status">This can take a few seconds.</p>
+      )}
 
+      {/* Plain, accurate disclosure: the email IS used for follow-up, so it must not say "only". */}
       <p className="mt-4 text-center text-xs leading-5 text-gray-text">
-        Your email is used only to prepare and send this assessment.{' '}
-        <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-light-text">
-          Privacy
-        </a>
+        We’ll use your email to send your assessment and follow up about it.
       </p>
+      <details className="mt-2 text-center text-xs leading-5 text-gray-text">
+        <summary className="inline-flex min-h-[44px] cursor-pointer items-center underline underline-offset-2 hover:text-light-text">
+          How we handle your data
+        </summary>
+        <div className="mt-1 space-y-2 text-left">
+          <p>Your email, answers and score are stored in Plotune’s Google Workspace so our team can prepare your assessment and reply to you.</p>
+          <p>Anonymous usage analytics record which options are chosen and the score, never your email address.</p>
+          <p>
+            To see or delete your data, email{' '}
+            <a href="mailto:contact@plotune.net" className="underline underline-offset-2 hover:text-light-text">contact@plotune.net</a>.
+            {' '}
+            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-light-text">
+              Privacy policy
+            </a>
+          </p>
+        </div>
+      </details>
     </form>
   );
 };

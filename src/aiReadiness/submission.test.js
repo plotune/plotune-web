@@ -65,3 +65,10 @@ test('email validation catches typos but not valid addresses', () => {
   ['name@company.com', ' a.b+c@sub.example.org '].forEach((e) => expect(isValidEmail(e)).toBe(true));
   ['nope', 'a@b', 'a@b.c', '@x.com', 'a b@c.com'].forEach((e) => expect(isValidEmail(e)).toBe(false));
 });
+
+test('submission ids are unique and carried in the payload', () => {
+  const { newSubmissionId, buildSubmissionPayload } = loadWithEndpoint(undefined);
+  const a = newSubmissionId(); const b = newSubmissionId();
+  expect(a).toBeTruthy(); expect(a).not.toBe(b);
+  expect(buildSubmissionPayload({ email: 'a@b.co', answers, result, submissionId: a }).submissionId).toBe(a);
+});
