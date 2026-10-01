@@ -83,13 +83,17 @@ const worksToday = [
   'ETAS ES581, ES582 and ES584',
   'SLCAN adapters such as CANable',
   'Any ECU or gateway reachable over DoIP',
+  'Any CAN, Ethernet or serial connection you can reach with the above, whatever else is on that bench',
 ];
 
+// Closed vendor stacks: things that only work through the vendor's own driver or software.
+// A bench that happens to contain this hardware is still reachable over its standard
+// CAN / Ethernet / serial connections; it is the vendor stack itself that is not supported.
 const notYet = [
-  'Vector interfaces',
-  'NI-XNET',
-  'dSPACE bench and HIL systems',
+  'Vector interfaces (through the Vector driver)',
+  'NI-XNET (through the NI driver)',
   'J2534 and D-PDU tools',
+  "dSPACE's own HIL runtime and toolchain",
 ];
 
 const dataPoints = [
@@ -323,7 +327,7 @@ const Nexus = () => {
               </ul>
             </div>
             <div className="rounded-2xl bg-dark-card/80 p-6 shadow-custom">
-              <h3 className="text-xl font-semibold text-light-text">Not supported directly yet</h3>
+              <h3 className="text-xl font-semibold text-light-text">Closed vendor stacks, not supported yet</h3>
               <ul className="mt-4 space-y-3">
                 {notYet.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm leading-7 text-gray-text">
@@ -333,7 +337,7 @@ const Nexus = () => {
                 ))}
               </ul>
               <p className="mt-4 text-sm leading-7 text-gray-text">
-                These would need a separate integration project.
+                These only work through the vendor’s own driver or software, so they would need a separate integration project. A CAN, Ethernet or serial connection on the same bench still works.
               </p>
             </div>
           </div>
