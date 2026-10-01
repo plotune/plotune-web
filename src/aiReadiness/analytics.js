@@ -9,12 +9,12 @@ import { SCORING_VERSION } from './scoring';
 // query string intact for the whole visit (steps live in router history *state*, not in the
 // URL) so those params are never lost mid-flow.
 //
-// PRIVACY: the visitor's email address is never passed to PostHog, and neither is any
-// free-text "Other" answer -- only a boolean saying whether they typed something. Free text
-// and email travel only through submission.js, to the (future) first-party endpoint.
+// PRIVACY: the visitor's email address is never passed to PostHog. The optional free-text
+// "Other" answers are (on the question events only) so the options can be improved from data;
+// no identity is attached to them. The email travels only through submission.js, to the
+// (future) first-party endpoint.
 
 export const AI_READINESS_EVENTS = {
-  viewed: 'ai_readiness_viewed',
   started: 'ai_readiness_started',
   questionCompleted: (n) => `ai_readiness_q${n}_completed`,
   scoreShown: 'ai_readiness_score_shown',
@@ -32,6 +32,9 @@ export const trackAiReadiness = (event, properties = {}) => {
   });
 };
 
+// The funnel's first step is the standard $pageview on /ai-readiness (it already carries UTM and
+// referrer), so there is deliberately no separate "viewed" event.
+//
 // First-touch attribution for the session (utm_source / ref / referrer host), same helper the
 // solution and article pages use.
 export const captureAssessmentEntry = () => captureFunnelTouch({});
@@ -47,16 +50,22 @@ export const answerProperties = (answers) => ({
   automation_level: answers.automation,
 });
 
+// The optional free-text "Other" answer, only when one was actually typed (max 120 chars, the
+// input's own limit). It is sent on the question events so the form's options can be improved
+// from real data; it is never attached to the email-submission event.
+const otherTextProperties = (questionId, answers) => {
+  const text = answers.otherText[questionId].trim();
+  return { [`${questionId}_other_provided`]: Boolean(text), ...(text ? { [`${questionId}_other_text`]: text } : {}) };
+};
+
 // Only the properties relevant to the question that was just completed, so each q-event is a
-// clean slice of the funnel (and "other" detail stays a boolean).
+// clean slice of the funnel.
 export const questionProperties = (questionId, answers) => {
   switch (questionId) {
     case 'interfaces':
-      return { interfaces: answers.interfaces, interfaces_other_provided: Boolean(answers.otherText.interfaces.trim()) };
     case 'tools':
-      return { tools: answers.tools, tools_other_provided: Boolean(answers.otherText.tools.trim()) };
     case 'bottlenecks':
-      return { bottlenecks: answers.bottlenecks, bottlenecks_other_provided: Boolean(answers.otherText.bottlenecks.trim()) };
+      return { [questionId]: answers[questionId], ...otherTextProperties(questionId, answers) };
     case 'automation':
       return { automation_level: answers.automation };
     default:

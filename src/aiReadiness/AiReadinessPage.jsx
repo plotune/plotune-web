@@ -72,7 +72,6 @@ const AiReadinessPage = () => {
 
   useEffect(() => {
     captureAssessmentEntry();
-    trackAiReadiness(AI_READINESS_EVENTS.viewed);
   }, []);
 
   // New screen: reset scroll instantly (smooth-scroll would make the new step feel laggy),

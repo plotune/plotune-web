@@ -56,7 +56,8 @@ test('entry screen shows one dominant action and no assessment questions yet', (
   expect(text()).toContain('4 questions. ~30 seconds.');
   expect(button('Start assessment')).toBeTruthy();
   expect(container.querySelectorAll('[role="checkbox"]').length).toBe(0);
-  expect(events()).toEqual(['ai_readiness_viewed']);
+  expect(events()).toEqual([]); // the standard $pageview is the funnel's first step
+  expect(events()).not.toContain('ai_readiness_viewed');
 });
 
 test('multi-select needs an explicit Continue, and Continue is disabled until something is selected', () => {
@@ -127,10 +128,9 @@ test('single-select question auto-advances to the score, which appears before th
   expect(container.innerHTML.indexOf('data-score')).toBeLessThan(container.innerHTML.indexOf('Work email'));
 });
 
-test('funnel events fire in order with structured, PII-free properties', () => {
+test('funnel events fire in order with structured properties and no other-text when none was typed', () => {
   completeAll();
   expect(events()).toEqual([
-    'ai_readiness_viewed',
     'ai_readiness_started',
     'ai_readiness_q1_completed',
     'ai_readiness_q2_completed',
@@ -139,13 +139,14 @@ test('funnel events fire in order with structured, PII-free properties', () => {
     'ai_readiness_score_shown',
   ]);
   expect(propsOf('ai_readiness_q1_completed')).toMatchObject({ interfaces: ['peak_pcan'], interfaces_other_provided: false });
+  expect(propsOf('ai_readiness_q1_completed')).not.toHaveProperty('interfaces_other_text');
   expect(propsOf('ai_readiness_q4_completed')).toMatchObject({ automation_level: 'partial' });
   const shown = propsOf('ai_readiness_score_shown');
   expect(shown).toMatchObject({ assessment_coverage: '4/4', automation_level: 'partial' });
   expect(Number.isInteger(shown.readiness_score)).toBe(true);
 });
 
-test('custom "Other" text is never sent to PostHog, only that it was provided', () => {
+test('optional "Other" text is sent on the question event (and only there) so the form can be improved', () => {
   click(button('Start assessment'));
   click(card('Other / Custom hardware'));
   const input = container.querySelector('input[type="text"]');
@@ -155,8 +156,14 @@ test('custom "Other" text is never sent to PostHog, only that it was provided', 
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
   click(button('Continue'));
-  expect(propsOf('ai_readiness_q1_completed')).toMatchObject({ interfaces: ['other'], interfaces_other_provided: true });
-  expect(JSON.stringify(posthog.capture.mock.calls)).not.toContain('secret proprietary rig');
+  expect(propsOf('ai_readiness_q1_completed')).toMatchObject({
+    interfaces: ['other'],
+    interfaces_other_provided: true,
+    interfaces_other_text: 'secret proprietary rig',
+  });
+  // Other events carry only the boolean, never the text.
+  const others = posthog.capture.mock.calls.filter(([name]) => name !== 'ai_readiness_q1_completed');
+  expect(JSON.stringify(others)).not.toContain('secret proprietary rig');
 });
 
 test('email: validates, never reaches PostHog, and is honest that nothing was sent without an endpoint', async () => {
