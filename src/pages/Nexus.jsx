@@ -57,9 +57,10 @@ const outcomes = [
 ];
 
 const Nexus = () => {
+  // Only the two contact CTAs are measured (hero = the copy test, bottom = whether people reach
+  // the end). The secondary buttons beside them share a viewport with them and would just fire
+  // the same impression at the same moment.
   const heroContactCta = useCtaTracking('nexus_hero_contact');
-  const heroConnectivityCta = useCtaTracking('nexus_hero_connectivity');
-  const bottomUseCasesCta = useCtaTracking('nexus_bottom_use_cases');
   const bottomContactCta = useCtaTracking('nexus_bottom_contact');
 
   return (
@@ -93,7 +94,6 @@ const Nexus = () => {
                 </Link>
                 <Link
                   to="/nexus/connectivity"
-                  ref={heroConnectivityCta.ref}
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
                 >
                   See How It Connects
@@ -223,7 +223,6 @@ const Nexus = () => {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/nexus/use-cases"
-                ref={bottomUseCasesCta.ref}
                 className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
               >
                 View Use Cases

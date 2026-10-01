@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { posthog } from '../posthog';
 import { getFunnelContext } from './funnel';
@@ -11,26 +11,35 @@ import { getFunnelContext } from './funnel';
 // and its text) without any custom event, so a duplicate cta_clicked event here would just
 // be redundant. Impression carries the same funnel context as the rest of the site
 // (segment/article/entry_source), so it can be sliced the same way as everything else.
+//
+// `ref` is a callback ref, not an object ref: a CTA that mounts after the first render
+// (e.g. an article CTA that only renders once its MDX body has loaded) is observed as soon
+// as it attaches. It re-arms when `ctaId` or the pathname changes.
+//
+// Track the CTAs you actually want to measure, not every button: two CTAs in the same
+// viewport fire together on load and add no information over one.
 export const useCtaTracking = (ctaId, properties = {}) => {
   const { pathname } = useLocation();
-  const ref = useRef(null);
-  const firedRef = useRef(false);
+  const observerRef = useRef(null);
+  const propertiesRef = useRef(properties);
+  propertiesRef.current = properties;
 
-  useEffect(() => {
-    firedRef.current = false;
-    const node = ref.current;
-    if (!node || typeof IntersectionObserver === 'undefined') return undefined;
+  const ref = useCallback((node) => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+      observerRef.current = null;
+    }
+    if (!node || typeof IntersectionObserver === 'undefined') return;
 
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !firedRef.current) {
-        firedRef.current = true;
-        posthog.capture('cta_impression', { cta_id: ctaId, path: pathname, ...getFunnelContext(), ...properties });
-        observer.disconnect();
-      }
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      observerRef.current = null;
+      posthog.capture('cta_impression', { cta_id: ctaId, path: pathname, ...getFunnelContext(), ...propertiesRef.current });
     }, { threshold: 0.5 });
 
     observer.observe(node);
-    return () => observer.disconnect();
+    observerRef.current = observer;
   }, [ctaId, pathname]);
 
   return { ref };
