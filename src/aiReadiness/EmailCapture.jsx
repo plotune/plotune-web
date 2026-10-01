@@ -19,6 +19,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
   const [status, setStatus] = useState('idle'); // idle | sending | done
   const [delivery, setDelivery] = useState(null);
   const startedRef = useRef(false);
+  const honeypotRef = useRef(null);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -37,7 +38,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
       return;
     }
     setStatus('sending');
-    const outcome = await onSubmit(email);
+    const outcome = await onSubmit(email, honeypotRef.current ? honeypotRef.current.value : '');
     if (outcome === 'error') {
       setStatus('idle');
       setError('We couldn’t send that just now. Please try again.');
@@ -88,7 +89,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-2xl border border-primary/40 bg-dark-card p-6 shadow-custom"
+      className="relative rounded-2xl border border-primary/40 bg-dark-card p-6 shadow-custom"
     >
       <h2 className="text-xl font-semibold leading-snug text-light-text sm:text-2xl">
         Want to know what’s holding your setup back?
@@ -102,6 +103,15 @@ const EmailCapture = ({ onFirstInput, onSubmit, nexusTo, onNexusClick }) => {
           </li>
         ))}
       </ul>
+
+      {/* Honeypot: invisible to people and assistive tech, tempting to bots. The server discards
+          any submission where it is filled. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label>
+          Website
+          <input ref={honeypotRef} type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
+      </div>
 
       <label htmlFor="ai-readiness-email" className="mt-6 block text-sm font-medium text-light-text">
         Work email

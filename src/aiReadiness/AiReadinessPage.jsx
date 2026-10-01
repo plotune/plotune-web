@@ -161,8 +161,8 @@ const AiReadinessPage = () => {
     goTo(INTRO, { replace: true });
   };
 
-  const handleEmailSubmit = async (email) => {
-    const payload = buildSubmissionPayload({ email, answers, result, funnel: getFunnelContext() });
+  const handleEmailSubmit = async (email, website) => {
+    const payload = buildSubmissionPayload({ email, answers, result, funnel: getFunnelContext(), website });
     const outcome = await submitAssessment(payload);
     // The email itself is intentionally NOT sent to PostHog.
     trackAiReadiness(AI_READINESS_EVENTS.emailSubmitted, {

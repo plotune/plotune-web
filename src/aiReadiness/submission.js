@@ -11,18 +11,26 @@ import { SCORING_VERSION } from './scoring';
 //   'sent'           -- the configured endpoint accepted the payload (HTTP 2xx).
 //   'error'          -- the endpoint is configured but the request failed; the UI offers a retry.
 //
-// To wire the real flow later, set REACT_APP_AI_READINESS_ENDPOINT at build time to a
-// first-party URL that accepts the JSON payload below (e.g. an Apps Script / serverless
-// function that stores the lead and kicks off the analysis agent). Nothing secret may live in
-// this client bundle: the endpoint must authenticate/rate-limit server-side, and any API keys
-// (LLM, mail provider, ...) belong behind it, never here.
+// The real flow is wired by setting REACT_APP_AI_READINESS_ENDPOINT at build time (see
+// .env.production) to the deployed Google Apps Script web app in
+// integrations/ai-readiness-apps-script/Code.gs, which writes the lead to a Google Sheet and
+// sends the emails. Nothing secret may live in this client bundle: the endpoint URL is public by
+// nature, so spam protection lives server-side (honeypot, size and email validation), and any
+// API keys (LLM, mail provider, ...) belong behind the endpoint, never here.
+//
+// Transport notes (Apps Script specific):
+//  - The body is JSON but sent as Content-Type text/plain. That makes it a CORS "simple request"
+//    (no preflight), because Apps Script web apps cannot answer a preflight OPTIONS request.
+//  - Apps Script replies HTTP 200 even for its own errors, so success is only ever
+//    { "ok": true } in the JSON reply; anything else is treated as a failed send.
 //
 // Payload shape (this is the contract the future backend should accept):
 //   {
 //     email, answers: { interfaces[], tools[], bottlenecks[], automation, otherText{...} },
 //     result: { score, assessedAreas, totalAreas, confidence, band, areas },
 //     attribution: { entry_source, utm_* , referrer, ... },
-//     versions: { assessment, scoring }, submittedAt
+//     versions: { assessment, scoring }, submittedAt,
+//     website   <- hidden honeypot field; always empty for real visitors
 //   }
 // ---------------------------------------------------------------------------------------------
 
@@ -40,7 +48,7 @@ const readAttribution = (funnel) => {
   return { ...funnel, ...utm, referrer: document.referrer || null, landing_path: window.location.pathname };
 };
 
-export const buildSubmissionPayload = ({ email, answers, result, funnel = {} }) => ({
+export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, website = '' }) => ({
   email: email.trim(),
   answers,
   result: {
@@ -54,6 +62,7 @@ export const buildSubmissionPayload = ({ email, answers, result, funnel = {} }) 
   attribution: readAttribution(funnel),
   versions: { assessment: ASSESSMENT_VERSION, scoring: SCORING_VERSION },
   submittedAt: new Date().toISOString(),
+  website,
 });
 
 export const isSubmissionConfigured = () => Boolean(ENDPOINT);
@@ -66,11 +75,13 @@ export const submitAssessment = async (payload) => {
   try {
     const response = await fetch(ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload),
       signal: controller.signal,
     });
-    return { status: response.ok ? 'sent' : 'error' };
+    if (!response.ok) return { status: 'error' };
+    const reply = await response.json().catch(() => null);
+    return { status: reply && reply.ok === true ? 'sent' : 'error' };
   } catch {
     return { status: 'error' };
   } finally {
