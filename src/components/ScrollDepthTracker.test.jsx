@@ -3,7 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
-jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }), { virtual: true });
+// Not { virtual: true }: ../posthog is a real module, and a virtual mock of a real module is
+// intermittently not applied (the real client then loads and capture() is never the mock).
+jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }));
 
 const { posthog } = require('../posthog');
 const ScrollDepthTracker = require('./ScrollDepthTracker').default;

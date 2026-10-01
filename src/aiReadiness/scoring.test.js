@@ -79,3 +79,10 @@ test('score never reports false precision and carries a one-sentence interpretat
   expect(r.coverageNote).toBe('');
   expect(AREA_IDS).toHaveLength(r.totalAreas);
 });
+
+test('Serial / UART / RS-485 is a native, high-accessibility interface and leads Q1, followed by ROS 2 / DDS', () => {
+  expect(QUESTIONS[0].options.slice(0, 2).map((o) => o.id)).toEqual(['serial_uart', 'ros2_dds']);
+  const serial = scoreAssessment(answers({ interfaces: ['serial_uart'] }));
+  expect(serial.areas.interfaces.assessed).toBe(true);
+  expect(serial.areas.interfaces.score).toBeGreaterThanOrEqual(85);
+});

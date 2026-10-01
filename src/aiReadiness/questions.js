@@ -17,13 +17,14 @@ export const QUESTIONS = [
     type: 'multi',
     layout: 'grid',
     options: [
+      { id: 'serial_uart', label: 'Serial / UART / RS-485' },
+      { id: 'ros2_dds', label: 'ROS 2 / DDS' },
       { id: 'peak_pcan', label: 'PEAK / PCAN' },
       { id: 'kvaser_ixxat', label: 'Kvaser / IXXAT' },
       { id: 'vector', label: 'Vector' },
       { id: 'etas', label: 'ETAS' },
       { id: 'dspace_ni', label: 'dSPACE / NI' },
       { id: 'ethernet_doip', label: 'Ethernet / DoIP' },
-      { id: 'ros2_dds', label: 'ROS 2 / DDS' },
       { id: OTHER_ID, label: 'Other / Custom hardware' },
     ],
     other: {

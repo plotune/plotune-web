@@ -50,6 +50,7 @@ export const BEST_PATH_WEIGHT = 0.6;
 
 // How reachable the system under test is for an agent through this interface.
 export const INTERFACE_SCORES = {
+  serial_uart: 88,     // generic UART incl. RS-485 half-duplex -- native Nexus transport
   peak_pcan: 90,       // Linux SocketCAN -- native today
   kvaser_ixxat: 88,    // Linux SocketCAN for the CAN path -- native today
   ethernet_doip: 85,   // plain IP reachability, no extra dongle

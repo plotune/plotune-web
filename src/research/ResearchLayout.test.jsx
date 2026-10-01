@@ -11,7 +11,7 @@ jest.mock('react-router-dom', () => {
     Link: ({ to, children, ...props }) => React.createElement('a', { href: to, ...props }, children),
     useLocation: () => mockLocation,
   };
-}, { virtual: true });
+});
 
 jest.mock('../context/AuthContext', () => {
   const React = require('react');

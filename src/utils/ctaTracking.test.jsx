@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { useCtaTracking } from './ctaTracking';
 import { posthog } from '../posthog';
 
-jest.mock('react-router-dom', () => ({ useLocation: () => ({ pathname: '/nexus' }) }), { virtual: true });
+jest.mock('react-router-dom', () => ({ useLocation: () => ({ pathname: '/nexus' }) }));
 jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }));
 
 global.IS_REACT_ACT_ENVIRONMENT = true;
