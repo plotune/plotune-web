@@ -16,6 +16,8 @@ let root;
 beforeEach(() => {
   jest.useFakeTimers();
   window.scrollTo = jest.fn();
+  // funnel.js infers entry_source from window.location (the MemoryRouter URL below is separate).
+  window.history.replaceState({}, '', '/ai-readiness?utm_source=linkedin');
   posthog.capture.mockClear();
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -185,5 +187,37 @@ test('email: validates, never reaches PostHog, and is honest that nothing was se
   await act(async () => { container.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
   expect(text()).toContain('nothing was sent');
   expect(propsOf('ai_readiness_email_submitted')).toMatchObject({ delivery: 'not_configured' });
+  expect(JSON.stringify(posthog.capture.mock.calls)).not.toContain('eng@example.com');
+});
+
+test('the intro logo leads to Nexus (carrying funnel context) and is tracked', () => {
+  const logo = container.querySelector('a[aria-label="Plotune Nexus"]');
+  expect(logo).toBeTruthy();
+  expect(logo.getAttribute('href')).toMatch(/^\/nexus(\?|$)/);
+  expect(logo.getAttribute('href')).toContain('entry_source=linkedin');
+  click(logo);
+  expect(propsOf('ai_readiness_nexus_clicked')).toMatchObject({ from: 'logo' });
+});
+
+test('the logo is not shown mid-assessment (Back + progress only)', () => {
+  click(button('Start assessment'));
+  expect(container.querySelector('a[aria-label="Plotune Nexus"]')).toBeNull();
+});
+
+test('after sending the email a quiet Nexus button appears; the page itself stays put', async () => {
+  completeAll();
+  expect(text()).not.toContain('Learn about Plotune Nexus');
+  const input = container.querySelector('#ai-readiness-email');
+  act(() => {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    setter.call(input, 'eng@example.com');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await act(async () => { container.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
+  expect(container.querySelector('[data-score]')).toBeTruthy(); // still on the result
+  const link = [...container.querySelectorAll('a')].find((a) => a.textContent.includes('Learn about Plotune Nexus'));
+  expect(link.getAttribute('href')).toMatch(/^\/nexus/);
+  click(link);
+  expect(propsOf('ai_readiness_nexus_clicked')).toMatchObject({ from: 'email_confirmation' });
   expect(JSON.stringify(posthog.capture.mock.calls)).not.toContain('eng@example.com');
 });

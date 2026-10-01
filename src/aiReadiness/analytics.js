@@ -21,6 +21,7 @@ export const AI_READINESS_EVENTS = {
   emailStarted: 'ai_readiness_email_started',
   emailSubmitted: 'ai_readiness_email_submitted',
   backClicked: 'ai_readiness_back_clicked',
+  nexusClicked: 'ai_readiness_nexus_clicked', // from: 'logo' | 'email_confirmation'
 };
 
 export const trackAiReadiness = (event, properties = {}) => {

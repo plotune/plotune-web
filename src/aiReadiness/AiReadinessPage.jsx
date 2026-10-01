@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Seo from '../components/Seo';
 import logo from '../assets/logo.png';
-import { getFunnelContext } from '../utils/funnel';
+import { getFunnelContext, withFunnelParams } from '../utils/funnel';
 import './AiReadiness.css';
 import QuestionScreen from './QuestionScreen';
 import ResultScreen from './ResultScreen';
@@ -202,7 +202,17 @@ const AiReadinessPage = () => {
               Back
             </button>
           ) : (
-            <img src={logo} alt="Plotune" className="h-8 w-auto" />
+            // On this page the logo leads to Plotune Nexus (the product behind the assessment),
+            // not the homepage. It only appears on the intro screen, before any answer exists,
+            // so following it never costs the visitor progress.
+            <Link
+              to={withFunnelParams('/nexus')}
+              onClick={() => trackAiReadiness(AI_READINESS_EVENTS.nexusClicked, { from: 'logo' })}
+              aria-label="Plotune Nexus"
+              className="-ml-1 inline-flex min-h-[44px] items-center rounded-lg px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <img src={logo} alt="" className="h-8 w-auto" />
+            </Link>
           )}
           {question && (
             // Goal-gradient: the counter and bar are always visible, and the bar starts
@@ -276,6 +286,8 @@ const AiReadinessPage = () => {
               headingRef={headingRef}
               onEmailStarted={() => trackAiReadiness(AI_READINESS_EVENTS.emailStarted, resultProperties(result))}
               onEmailSubmit={handleEmailSubmit}
+              nexusTo={withFunnelParams('/nexus')}
+              onNexusClick={() => trackAiReadiness(AI_READINESS_EVENTS.nexusClicked, { from: 'email_confirmation', ...resultProperties(result) })}
               onRetake={handleRetake}
             />
           </main>

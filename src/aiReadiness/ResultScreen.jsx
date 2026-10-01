@@ -82,7 +82,7 @@ const Coverage = ({ assessed, total }) => (
   </div>
 );
 
-const ResultScreen = ({ result, headingRef, onEmailStarted, onEmailSubmit, onRetake }) => (
+const ResultScreen = ({ result, headingRef, onEmailStarted, onEmailSubmit, nexusTo, onNexusClick, onRetake }) => (
   <div className="ai-step pb-10">
     <div className="pt-2 text-center">
       <h1 ref={headingRef} tabIndex={-1} className="text-lg font-medium text-gray-text outline-none">
@@ -102,7 +102,7 @@ const ResultScreen = ({ result, headingRef, onEmailStarted, onEmailSubmit, onRet
     </div>
 
     <div className="mt-10">
-      <EmailCapture onFirstInput={onEmailStarted} onSubmit={onEmailSubmit} />
+      <EmailCapture onFirstInput={onEmailStarted} onSubmit={onEmailSubmit} nexusTo={nexusTo} onNexusClick={onNexusClick} />
     </div>
 
     <div className="mt-6 text-center">
