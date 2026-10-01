@@ -1,0 +1,25 @@
+/* Doherty Threshold: step transitions are a short fade + 8px rise (<= 180ms) -- enough to read
+   as "next screen", too short to make anyone wait. Selection feedback is instant (no animation
+   on the state change itself). Everything is disabled under prefers-reduced-motion. */
+@keyframes ai-step-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ai-step {
+  animation: ai-step-in 180ms ease-out both;
+}
+
+.ai-progress-fill {
+  transition: width 220ms ease-out;
+}
+
+.ai-ring-progress {
+  transition: stroke-dashoffset 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-step { animation: none; }
+  .ai-progress-fill,
+  .ai-ring-progress { transition: none; }
+}

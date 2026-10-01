@@ -56,6 +56,7 @@ const PackageMirror = lazy(() => import('./pages/PackageMirror'));
 const Embeddings = lazy(() => import('./pages/Embeddings'));
 const SolutionPage = lazy(() => import('./pages/SolutionPage'));
 const AgenticTestDevelopmentPage = lazy(() => import('./pages/AgenticTestDevelopmentPage'));
+const AiReadinessPage = lazy(() => import('./aiReadiness/AiReadinessPage'));
 const StreamOverviewPage = lazy(() => import('./components/streams/StreamOverviewPage'));
 const ResearchOverview = lazy(() => import('./research/ResearchOverview'));
 const ResearchArticle = lazy(() => import('./research/ResearchArticle'));
@@ -121,8 +122,12 @@ const ScrollToTop = () => {
 
 const NavigationWrapper = ({ children }) => {
   const location = useLocation();
-  const hideLayoutPaths = ['/streams/connect'];
-  const shouldHide = hideLayoutPaths.includes(location.pathname);
+  // '/ai-readiness' is a standalone, chrome-free assessment flow (no site Header/Footer).
+  const hideLayoutPaths = ['/streams/connect', '/ai-readiness'];
+  // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
+  // either form, so the layout check has to as well.
+  const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
+  const shouldHide = hideLayoutPaths.includes(normalizedPath);
 
   if (location.pathname.startsWith('/research')) {
     return <ResearchLayout>{children}</ResearchLayout>;
@@ -190,6 +195,7 @@ function App() {
               <Route path="/research/methodology" element={<ResearchMethodology />} />
               <Route path="/research/articles/:slug" element={<ResearchArticle />} />
               <Route path="/streams/connect" element={<StreamOverviewPage />} />
+              <Route path="/ai-readiness" element={<AiReadinessPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             </Suspense>
