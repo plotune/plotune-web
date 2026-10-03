@@ -16,7 +16,7 @@ function extractAgentContent() {
     if (tag === 'a') {
       const href = node.getAttribute('href');
       if (!href || !/^(https?:|\/|#)/.test(href)) return children();
-      return `[${inline(node)}](${new URL(href, canonical || location.href).href})`;
+      return `[${inline(node)}](${new URL(href, canonical || `https://www.plotune.net${location.pathname}`).href})`;
     }
     if (tag === 'table') {
       const rows = Array.from(node.querySelectorAll('tr')).map(row => Array.from(row.querySelectorAll('th,td')).map(cell => inline(cell).replace(/\|/g, '\\|')));

@@ -10,6 +10,7 @@ assert.equal(paths.size, pages.length);
 for (const page of pages) {
   assert(!/^\/(dashboard|profile|login|register|streams|storage|mirror|embed|dns|partner-portal)(\/|$)/.test(page.path), page.path);
   assert(page.markdown.startsWith('# '), page.path);
+  assert(!/\]\(https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|\))/.test(page.markdown), `${page.path}: preview link leaked into export`);
   assert(page.markdown.length > 200, page.path);
   const file = path.join(build, new URL(page.markdownUrl).pathname);
   assert(fs.readFileSync(file, 'utf8').includes(`Source: ${page.url}`), page.path);
