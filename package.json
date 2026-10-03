@@ -36,13 +36,14 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs && node scripts/prerender.cjs",
+    "build": "node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs && node scripts/prerender.cjs && node scripts/check-agent-content.cjs",
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build && cp CNAME build/CNAME",
     "deploy": "gh-pages -d build",
     "generate:research-rss": "node scripts/generate-research-rss.cjs",
-    "webvitals": "node scripts/check-web-vitals.cjs"
+    "webvitals": "node scripts/check-web-vitals.cjs",
+    "check:agent-content": "node scripts/check-agent-content.cjs"
   },
   "browserslist": {
     "production": [

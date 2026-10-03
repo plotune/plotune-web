@@ -27,6 +27,7 @@ const path = require('path');
 const http = require('http');
 const matter = require('gray-matter');
 const { chromium } = require('playwright');
+const { extractAgentContent, writeAgentContent } = require('./agent-content.cjs');
 
 const root = path.resolve(__dirname, '..');
 const buildDir = path.join(root, 'build');
@@ -55,6 +56,8 @@ const routes = [
   '/', '/research', '/research/reports', '/research/methodology', '/faq',
   '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases',
   '/solutions/agentic-test-development', '/contact',
+  '/about', '/careers', '/download', '/extensions', '/legal', '/privacy', '/docs',
+  '/research/results',
   // Paid-ad landing page: prerendered so the intro paints before JS runs and so link
   // unfurlers (LinkedIn's ad/post preview) read its own title and description.
   '/ai-readiness',
@@ -119,22 +122,35 @@ const serveStatic = () =>
   await context.route(/^https?:\/\/(t\.plotune\.net|[a-z0-9.-]*posthog\.com|snap\.licdn\.com|px\.ads\.linkedin\.com)\//, (route) => route.abort());
 
   let done = 0;
+  const pages = [];
+  const failures = [];
   for (const route of [...new Set(routes)]) {
     const page = await context.newPage();
     try {
       await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle', timeout: 30000 });
+      if (route.startsWith('/docs/nexus/')) await page.waitForSelector('.nexus-doc-body h2');
+      if (route.startsWith('/research/articles/')) await page.waitForSelector('.research-article h2');
       // MDX articles and chart data load as a separate async chunk after the
       // route itself resolves; wait for that real content instead of a fixed
       // delay, since article length varies a lot.
       await page.waitForFunction(() => document.body.innerText.trim().length > 300, { timeout: 15000 }).catch(() => {});
       await page.waitForTimeout(500);
 
+      const content = await page.evaluate(extractAgentContent);
+      if (content.markdown.length < 200 || /We couldn't find that page|Unable to load|Failed to load/i.test(content.markdown)) {
+        throw new Error('Missing or failed public content');
+      }
+      const canonicalPath = content.canonical ? new URL(content.canonical).pathname.replace(/\/+$/, '') || '/' : route;
+      if (canonicalPath === route) {
+        pages.push({ path: route, ...content });
+      }
       const html = await page.content();
       const outPath = path.join(buildDir, route.replace(/^\//, ''), 'index.html');
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
       fs.writeFileSync(outPath, `<!DOCTYPE html>\n${html}`);
       done += 1;
     } catch (err) {
+      failures.push(route);
       console.error(`prerender: FAILED ${route}: ${err.message}`);
     } finally {
       await page.close();
@@ -143,5 +159,10 @@ const serveStatic = () =>
 
   await browser.close();
   server.close();
+  if (failures.length) {
+    process.exitCode = 1;
+    return;
+  }
+  writeAgentContent(buildDir, pages);
   console.log(`prerender: rendered ${done}/${new Set(routes).size} routes into build/.`);
 })();

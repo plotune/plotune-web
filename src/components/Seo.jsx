@@ -19,6 +19,7 @@ const Seo = ({ title, description, path = '/', tag }) => {
       <title>{pageTitle}</title>
       {description && <meta name="description" content={description} />}
       <link rel="canonical" href={url} />
+      <link rel="alternate" type="text/markdown" href={`${SITE}${path === "/" ? "" : path}/index.md`} />
 
       <meta property="og:title" content={pageTitle} />
       {description && <meta property="og:description" content={description} />}
