@@ -43,7 +43,8 @@
     "deploy": "gh-pages -d build",
     "generate:research-rss": "node scripts/generate-research-rss.cjs",
     "webvitals": "node scripts/check-web-vitals.cjs",
-    "check:agent-content": "node scripts/check-agent-content.cjs"
+    "check:agent-content": "node scripts/check-agent-content.cjs",
+    "check:webmcp": "node scripts/check-webmcp.cjs"
   },
   "browserslist": {
     "production": [

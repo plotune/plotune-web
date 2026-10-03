@@ -12,3 +12,15 @@ The root HTML advertises `llms.txt` with `rel="describedby"`. Pages using `Seo` 
 Generated content covers public information only. It never reads account state, credentials, submissions, device data, or authenticated API responses. Research and documentation retain their published qualifications and dates. This does not change crawler access rules in `robots.txt` or guarantee that any particular AI service will use the files.
 
 References: [llms.txt proposal](https://llmstxt.org/) and [WebMCP draft](https://webmachinelearning.github.io/webmcp/).
+
+## WebMCP
+
+`src/agents/webmcp.js` registers three read-only browser tools:
+
+- `plotune_list_public_pages`: public sources and canonical/Markdown URLs.
+- `plotune_search_public_content`: ranked full-text matches and excerpts; maximum 20 results.
+- `plotune_get_public_page`: full Markdown for an exact catalog path.
+
+Registration prefers the current draft's `document.modelContext.registerTool`, falling back to the earlier `navigator.modelContext.registerTool`. Unsupported browsers do nothing. There is no polyfill, global MCP server, authenticated operation, or UI change. The public catalog is fetched only when a tool executes, with credentials omitted. This WebMCP interface is separate from Nexus's device MCP endpoints.
+
+Run `CI=true npm test -- --watchAll=false --runInBand` for unit checks and `npm run check:webmcp` after building for production browser checks. The browser checks use API stubs to verify both registration surfaces, real production search/retrieval and static files; they do not certify native browser or agent support. WebMCP is evolving, so native discovery also depends on the user's browser and agent implementation.
