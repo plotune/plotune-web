@@ -1,0 +1,123 @@
+# Agentic Testing for ROS 2 & DDS Systems
+
+ROS 2 / DDS Testing
+
+
+
+ROS 2 / DDS Testing  4 min read  Published 2026-09-18
+
+ Shape of the thing 
+
+## An agentic ROS 2 test isn't one action. It's a sequence with a verdict.
+
+Discovery, command, gate, record, verdict. Each step depends on the one before it, and the artifact at the end is the record of all five.
+
+ 
+
+## Testing a DDS graph is different from testing an API
+
+ 
+
+A ROS 2 system doesn't expose a single endpoint you can call and check. It's a graph of participants publishing and subscribing across topics, with no central authority saying what should currently be true. Traditional ROS2 testing usually assumes a human who already knows the graph: which node publishes odometry, which topic carries the command, roughly how long to wait before checking. DDS testing without that person in the loop means an agent has to establish all of that itself, every time, before it can trust anything it commands or observes.
+
+ 
+
+This is what a full agentic ROS 2 test suite looks like end to end:
+
+ 
+
+One test sequence, five stages
+
+1 Discover the graph
+
+2 Prove readiness
+
+3 Command and verify
+
+4 Record evidence
+
+5 Report verdict
+
+ 
+
+## Discovery and readiness come first
+
+ 
+
+Before an agent commands anything, it joins the robot's DDS domain over the bench network and enumerates what's actually there: every participant, every topic, without needing a matching ROS environment installed locally. A real discovery pass on a running robot looks like this:
+
+ 
+
+Discovery pass on a live domain
+
+Topics visible  332
+
+Bridge topics  /nexus/* pub=1
+
+Transport  dds_udp
+
+Session readiness  ready
+
+ 
+
+The bridge's own topics reporting back confirm the agent's own presence on the graph, not just the robot's.  Readiness  is a separate check from  reachability : confirming middleware, clock, and interfaces are actually up, not just that the network responds.
+
+ 
+
+That readiness gate matters more than it looks. A command sent to a domain that hasn't finished discovery, or a clock that hasn't synced, doesn't usually fail loudly. It just produces a result that  looks plausible and is wrong . Checking readiness first turns that silent failure mode into a hard stop.
+
+ 
+
+## Commanding and proving the effect
+
+ 
+
+Once the graph is confirmed ready, the agent can act on it, but acting on it and confirming it worked are two different steps. Treating them as one is where most flaky ROS 2 test automation comes from. Publishing a command onto the graph, such as a `Twist` message combining forward, lateral, and yaw velocity, changes the robot's state; it doesn't by itself prove the robot moved correctly. The agent has to gate the pass/fail decision on live telemetry, watching odometry until it reports the expected pose, rather than sleeping a fixed interval and hoping.
+
+ 
+
+In practice that means publishing the drive command, then waiting on the resulting pose: a run might land at `(3.45, 0.57)` with heading `θ = 2.87 rad`, matched against what the commanded velocities and duration predict. The procedure also includes a deliberate zero-command stop and a check that odometry actually returns to rest. A run showing `odom → 3.3e-16` after a zero command is the difference between "the robot stopped" and "the robot is still drifting and nobody noticed."
+
+ 
+
+The same command-then-gate pattern extends to requirement checks that don't involve motion at all: publish nothing, just wait for a signal already on the graph to hit a target condition with `wait_dds_signal`. A long-lived session participant can reuse discovery it already completed, so that gate matches reliably even across hosts:
+
+ 
+
+Requirement-verdict gate, 15 runs
+
+Runs  15 / 15 PASS
+
+Gate evaluations  30 / 30 matched
+
+Match latency  0.26 – 0.37 s
+
+Flakes  0
+
+ 
+
+## Recording the graph, not just one topic
+
+ 
+
+A single topic rarely tells the whole story of what happened during a test. Recording several topics into one MCAP artifact, each topic its own channel, captures the full picture: a scan topic like `/scan` alongside the bridge's own `/nexus/*` topics, all in one bounded, asynchronous recording job that runs for a fixed window. The rate isn't assumed; it's  derived  from the actual message count over the window. 194 messages across 30 seconds works out to 6.47 Hz, checked against an expected band of 2–10 Hz. The output is a single MCAP file a reviewer can open independently of whoever ran the test.
+
+ 
+
+## Wrapping it into one sequence
+
+ 
+
+The individual pieces, join, command or wait, record, leave, become useful as ROS2 test automation only once they're wrapped into a single bounded sequence with an ordered verdict: join the domain, start recording, publish or wait on the condition, confirm the telemetry check (a `scan_min` of 1.748 m and a rate check landing at 6.47 Hz, both passing), then leave the domain cleanly. The sequence reports  pass 1/1 , and the MCAP recorded during the run is the evidence attached to that verdict, not a summary written afterward, but the actual data the check was made against.
+
+  What this buys you 
+
+## Every step in the sequence is something a machine can re-run identically.
+
+Discovery, readiness, command-and-gate, and multi-topic recording aren't separate tools bolted together. They're stages of one repeatable test that produces the same kind of evidence on every run, against every build.
+
+ROS 2 / DDS Testing: Run unattended ROS 2 hardware tests without ROS tooling on your side
+
+[See how this workflow can be automated →](https://www.plotune.net/solutions/ros2-dds-testing?segment=ros2-dds-testing&article=agentic-testing-ros2-dds-systems&entry_source=direct)
+
+Source: https://www.plotune.net/research/articles/agentic-testing-ros2-dds-systems

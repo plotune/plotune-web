@@ -1,0 +1,109 @@
+# AI Hardware-in-the-Loop Testing: Giving AI Agents Access to Real Hardware
+
+AI Hardware-in-the-Loop Testing
+
+
+
+AI Hardware-in-the-Loop Testing  5 min read  Published 2026-09-18
+
+ The real question 
+
+## It's not whether the agent can run the test. It's what happens when it's wrong.
+
+Every HIL team that has looked at AI agents has already answered "can it work." Yes, obviously. The question that actually stalls the rollout is what the agent can touch, and what backstops that the moment it touches the wrong thing.
+
+ 
+
+## Why most HIL rigs keep AI out entirely
+
+ 
+
+Talk to a team running hardware-in-the-loop today and you'll hear a familiar shape of problem. The simulator and the controller under test run on whichever engineer's machine last got them configured. Restart it and you're hoping they remember how. Virtual and real hardware get bridged by hand, with no enforced boundary on what actually crosses from one side to the other. And when AI agents come up, the answer tends to be binary: full shell access to the rig, or none at all. No middle option, so most teams default to none.
+
+ 
+
+That default isn't caution about whether an agent can drive a HIL sequence correctly. It's caution about what a general-purpose agent with shell access to a bench full of real hardware can do when something goes wrong: a malformed command, a misread instruction, a plausible-looking action taken against the wrong target. On a rig where "real" means real ECUs, real actuators, sometimes a real vehicle on the other end of a bus, "full access" and "no access" are the only two settings most setups have, and only one of them is defensible.
+
+ 
+
+## The gap isn't capability, it's a boundary
+
+ 
+
+This is why AI HIL adoption looks so different from AI adoption elsewhere in the test stack. Teams are comfortable letting an agent draft test cases or triage a failing CI run, since none of that touches hardware. Hardware in the loop is different because the cost of being wrong isn't a bad summary, it's a command that reaches a real bus, a real actuator, or a real bench someone else depends on.
+
+ 
+
+The problem isn't "can an agent run a HIL sequence." It can. The real problem is "what's the smallest, most provable set of things the agent is ever allowed to do, and how do we know it never did anything outside that set." Without an answer, every run comes down to trusting that the output "looks right," and that isn't a boundary you can point to.  It's a hope.
+
+ 
+
+## What a bounded-access architecture actually looks like
+
+ 
+
+The fix isn't a smarter agent. It's an architecture that makes "smarter" beside the point, because the agent was never in a position to do damage outside a defined set of moves.
+
+ 
+
+Concretely, that means the controller or simulator runs as a staged container rather than a process only one laptop knows how to restart, so the environment is reproducible instead of tribal knowledge. Virtual and real CAN are bridged through a policy gateway: it's not "the bridge lets everything through and we trust the agent to behave," it's that  only approved frames cross the boundary , full stop, regardless of what the agent asks for. The agent itself gets a bounded operation set: acquire, capture, wait, send only approved frames, stop, package, not raw shell access to the rig. And the whole thing connects over MCP with OAuth and delegated access, so what the agent can touch is a policy decision made in advance, not a trust exercise repeated on every run.
+
+ 
+
+Bounded-access workflow for AI HIL
+
+1 Staged container
+
+2 Virtual CAN + policy gateway
+
+3 Bounded operation set
+
+4 MCP + OAuth
+
+ 
+
+Notice what changes in that description: nothing about the agent's intelligence. What changes is that "full access or no access" stops being the only choice. There's now a real middle: an agent capable of running the sequence, inside a boundary decided by  policy  rather than assumed from good behavior.
+
+ 
+
+## What that boundary looks like in practice
+
+ 
+
+One concrete shape of this is a containerized simulation running on virtual CAN. The controller under test runs as a staged container, connected to a virtual CAN bus rather than a physical one. A policy gateway sits between the virtual bus and real CAN, so only frames that were explicitly approved are allowed to cross from simulation into anything that touches real hardware. When that boundary is crossed, meaning a frame actually moves from virtual to real, the crossing itself gets captured as proof. That's not a claim that it happened correctly. It's an artifact that shows exactly what crossed, when, and under what approval.
+
+ 
+
+Containerized sim on virtual CAN
+
+Controller  Staged container
+
+Bus  Virtual CAN
+
+Gateway  Approved frames only
+
+Boundary proof  Captured
+
+ 
+
+That's the difference between "the run looked fine" and "here's the boundary, and here's what crossed it." The first is a judgment call made after the fact. The second is something a reviewer, an auditor, or a safety engineer can actually inspect.
+
+  What this replaces 
+
+## A policy decision, not a trust exercise.
+
+The old choice was full shell access or none. A policy gateway between virtual and real CAN, a bounded operation set instead of a shell, and delegated access over MCP with OAuth turn "how much do we trust the agent" into "what does policy allow": a question you can answer in advance and prove afterward.
+
+ 
+
+## The tension this resolves
+
+ 
+
+Hardware-in-the-loop testing was never short on reasons to bring AI in. The repetition, the overnight runs, the regression suites nobody wants to babysit are exactly the work agents are good at. What kept AI out was that nobody had a bounded way to let an agent near a simulator, a virtual bus, or a real bench without betting the rig on the agent never making a mistake. A policy gateway, a bounded operation set, and delegated access don't make the agent  smarter : they make the question of trust unnecessary, because the boundary was never the agent's to define in the first place.
+
+AI Hardware-in-the-Loop Testing: Give AI agents access to real hardware without giving up control of the boundary
+
+[See how this workflow can be automated →](https://www.plotune.net/solutions/hil-testing?segment=hil-testing&article=ai-hardware-in-the-loop-testing&entry_source=direct)
+
+Source: https://www.plotune.net/research/articles/ai-hardware-in-the-loop-testing

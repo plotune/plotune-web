@@ -1,0 +1,173 @@
+# System Architecture
+
+[← Nexus documentation](https://www.plotune.net/docs/nexus)
+
+Architecture
+
+
+
+The three-plane model behind Nexus: what runs on the device, what runs in Plotune’s cloud, and the exact boundary between them, including where the design is still hardening.
+
+Architecture  7 min read  Updated 2026-09-26
+
+## System boundary
+
+ 
+
+Plotune Nexus is an appliance-style DAQ and MCP server, built around three planes rather than one monolithic service:
+
+ 
+
+- Device plane : runs on the Nexus appliance itself, on customer premises, and owns hardware interaction.
+ 
+- Control plane : runs in Plotune's cloud and owns device registration, remote routing, and policy.
+ 
+- Data plane : owns recorded artifacts, specifically where they land, how they move, and how long they're kept.
+
+ 
+
+The standard deployment model is Plotune-defined hardware plus Plotune-managed software lifecycle, not software a customer self-installs on an arbitrary bench PC. That contract is what the rest of this document explains and protects.
+
+ 
+
+## What the customer gets
+
+ 
+
+```
+Plotune standard product
+
+    +----------------------------------------------+
+    | Plotune-defined Nexus appliance               |
+    | - qualified hardware                          |
+    | - Nexus software pre-integrated               |
+    | - updates, support, and lifecycle handling    |
+    +----------------------+-----------------------+
+                           |
+                           v
+    +----------------------------------------------+
+    | One managed box for real hardware workflows   |
+    | - local UI for setup and access               |
+    | - MCP/API surface for agents and tools        |
+    | - async jobs for capture, send, record        |
+    +----------------------+-----------------------+
+                           |
+                           v
+    +----------------------------------------------+
+    | Bench, rig, or vehicle interfaces             |
+    | - CAN (classical + CAN FD)                    |
+    | - UART (RS-485, modem-control lines)          |
+    | - XCP-on-CAN and XCP-on-Ethernet              |
+    | - UDS-over-DoIP                               |
+    +----------------------------------------------+
+```
+
+ 
+
+## What stays local vs. what touches Plotune cloud
+
+ 
+
+```
+customer site boundary
+
+  +---------------------------------------------------------------+
+  | Plotune Nexus appliance                                       |
+  |                                                                |
+  |  operators / local browser / MCP clients                      |
+  |                 |                                              |
+  |                 v                                              |
+  |         local UI + local API (auth session + job control)      |
+  |                 |                                              |
+  |                 v                                              |
+  |         CAN / UART / XCP / DoIP  -----> real hardware          |
+  |                 |                                              |
+  |                 v                                              |
+  |         local artifacts first (logs, traces, recordings)       |
+  +-----------------------|----------------------------------------+
+                          |
+                          | optional routing, identity, export
+                          v
+  +---------------------------------------------------------------+
+  | Plotune cloud / customer-selected storage                     |
+  | - remote MCP routing and policy                               |
+  | - identity and entitlement integration                        |
+  | - transfer-cloud handoff or configured artifact drives         |
+  +---------------------------------------------------------------+
+```
+
+ 
+
+The rule this diagram is drawn to protect:  hardware interaction and first-write artifacts happen on the device.  Cloud services help with routing, identity, licensing, and export, but Nexus is designed to stay useful even when the cloud path is degraded.
+
+ 
+
+## The three planes in detail
+
+ 
+
+### Device plane
+
+ 
+
+Runs on the appliance. Owns local MCP tools for DAQ actions, the shipped hardware adapters (see [Hardware & Protocol Compatibility](https://www.plotune.net/docs/nexus/hardware-compatibility)), job execution, local buffering and session state, device lifecycle (deployment, update, rollback, recovery), and uploads to object storage.
+
+ 
+
+### Control plane
+
+ 
+
+Runs in Plotune's cloud. Owns device registration and device-signed verification, reachability/heartbeat, remote MCP routing, authorization checks before routing MCP traffic, and license/entitlement integration. External identity providers stay outside this layer; the control plane integrates with them rather than reimplementing authentication.
+
+ 
+
+### Data plane
+
+ 
+
+Owns recorded artifacts and analysis handoff: upload targets for raw recordings, presigned upload/download URLs, retention policy, and the metadata returned to an agent once a job completes. See [Data Handling & Deployment Model](https://www.plotune.net/docs/nexus/data-handling) for the full artifact lifecycle.
+
+ 
+
+## Core flows
+
+ 
+
+Device registration and owner bootstrap , covered in full in [Security & Trust Model](https://www.plotune.net/docs/nexus/security-model): a locally generated keypair, router registration of public identity, and ownership established by the first verified local login.
+
+ 
+
+Recording : an agent calls a local or routed MCP tool; the device starts an async job; the job writes local temporary data first; large or binary outputs move through transfer-cloud handoff or a configured artifact drive as needed; the MCP response returns status, metadata, and a retrieval path.
+
+ 
+
+Remote MCP access : the user authenticates against Plotune-managed identity services; the router resolves the correct device route, applies policy, and preserves device-scoped OAuth; the router forwards MCP traffic to the correct device session.
+
+ 
+
+## Stated constraints, not hidden ones
+
+ 
+
+The device runtime currently runs with broad host privileges. Reducing this to explicit, minimal device capabilities over time is acknowledged, ongoing engineering work, not a finished guarantee. Offline trust policy for a degraded control-plane connection is likewise still being formally defined, even though local operation already continues without it (see Data Handling & Deployment Model). Recording is deliberately modeled as async work rather than a blocking call specifically because DAQ operations don't fit a synchronous request lifecycle.
+
+ 
+
+## References
+
+ 
+
+- [Model Context Protocol architecture overview](https://modelcontextprotocol.io/docs/learn/architecture)
+ 
+- [Linux SocketCAN documentation](https://www.kernel.org/doc/html/latest/networking/can.html)
+
+Plotune Nexus: the appliance this architecture describes.
+
+[See the product page](https://www.plotune.net/nexus?article=architecture&entry_source=direct)
+
+More Nexus documentation
+
+[SecuritySecurity & Trust Model](https://www.plotune.net/docs/nexus/security-model)[CompatibilityHardware & Protocol Compatibility](https://www.plotune.net/docs/nexus/hardware-compatibility)[API ReferenceMCP Tools & API Reference](https://www.plotune.net/docs/nexus/mcp-api)[DeploymentData Handling & Deployment Model](https://www.plotune.net/docs/nexus/data-handling)[ProtocolsProtocol Notes: CAN, UDS, DoIP, XCP](https://www.plotune.net/docs/nexus/protocols)[OnboardingQuick Start](https://www.plotune.net/docs/nexus/quick-start)
+
+Source: https://www.plotune.net/docs/nexus/architecture

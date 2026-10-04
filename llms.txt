@@ -1,0 +1,59 @@
+# Plotune
+
+> Plotune provides a DataOps platform and Plotune Nexus, an appliance connecting AI agents to bounded engineering and hardware test workflows.
+
+Technical documentation describes implementation status and limitations. Research includes benchmarks and illustrative workflows; retain its dates, methodology, and qualifications when citing claims. Website WebMCP tools search and retrieve public content; Nexus MCP tools operate the product and are a separate interface.
+
+## Product and workflows
+
+- [One platform to run your data and connect to your test systems.](https://www.plotune.net/index.md): Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.
+- [Plotune Nexus](https://www.plotune.net/nexus/index.md): Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours.
+- [One connection point for your entire test environment.](https://www.plotune.net/nexus/connectivity/index.md): Connect Plotune Nexus to the test systems your team already uses: CAN, UART, XCP on CAN and Ethernet, ROS 2 / DDS over CycloneDDS, and raw UDS and DoIP.
+- [Plotune Stream Integration](https://www.plotune.net/nexus/stream/index.md): Plotune Stream monitors live signals and validates requirements continuously, close to your hardware, so teams get results the moment something happens.
+- [Use Cases](https://www.plotune.net/nexus/use-cases/index.md): See how Plotune Nexus runs bounded, AI-ready workflows across automotive validation, robotics, ROS 2 / DDS supervision, ECU and gateway integration, field diagnostics, and HIL automation.
+- [What is agentic test & development?](https://www.plotune.net/solutions/agentic-test-development/index.md): Traditional test automation runs a fixed script: the same steps, in the same order, against the same fixture, every time. Agentic test & development is a different approach: an AI agent reads the current state of a real system and takes the next bounded, pre-approved action, rather than following a script that breaks the moment reality doesn't match it exactly.
+- [Automate CAN-based ECU testing without losing the engineer in the loop](https://www.plotune.net/solutions/can-ecu-testing/index.md): A CAN or ECU test procedure is never just "send a frame." It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day.
+- [Run unattended ROS 2 hardware tests without ROS tooling on your side](https://www.plotune.net/solutions/ros2-dds-testing/index.md): Testing a ROS 2 robot usually means SSHing into the robot, running ros2 CLI commands by hand, and eyeballing topic echoes to decide whether a requirement passed, a process that does not scale past the one person who knows the stack.
+- [Why test automation still requires an engineer in the loop](https://www.plotune.net/solutions/test-orchestration/index.md): Most test automation stops at "run the script." The real bottleneck is upstream: someone still decides which sequence to run, watches it for faults, and re-runs it by hand when a build changes. Automation that still needs a person standing next to it is a faster way to wait, not less waiting.
+- [Give AI agents access to real hardware without giving up control of the boundary](https://www.plotune.net/solutions/hil-testing/index.md): Giving an AI agent access to real hardware raises a different question than giving it access to a shell: what happens when it's wrong? Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely.
+
+## Technical documentation
+
+- [Plotune Documentation](https://www.plotune.net/docs/index.md): Documentation for Plotune and Plotune Nexus: components, extensions, calculations, and workflows.
+- [Plotune Nexus Documentation](https://www.plotune.net/docs/nexus/index.md): Technical reference documentation for Plotune Nexus: security model, hardware and protocol compatibility, the MCP tool surface, system architecture, and deployment.
+- [Security & Trust Model](https://www.plotune.net/docs/nexus/security-model/index.md): How device ownership, key custody, and access boundaries work: what stays on the device, what a compromised session can and cannot do, and what is still being hardened.
+- [Hardware & Protocol Compatibility](https://www.plotune.net/docs/nexus/hardware-compatibility/index.md): Which CAN, UART, XCP, and DoIP hardware families run natively on Nexus today, which need a container, and which are not yet supported, stated without inflating the claim.
+- [MCP Tools & API Reference](https://www.plotune.net/docs/nexus/mcp-api/index.md): The actual MCP tool surface an agent calls: real tool names, read-only resources, authentication, and the client setup commands for Claude Code, Codex, Cursor, VS Code, and n8n.
+- [System Architecture](https://www.plotune.net/docs/nexus/architecture/index.md): The three-plane model behind Nexus: what runs on the device, what runs in Plotune’s cloud, and the exact boundary between them, including where the design is still hardening.
+- [Data Handling & Deployment Model](https://www.plotune.net/docs/nexus/data-handling/index.md): Where recorded data lands first, how it leaves the device, the bring-your-own-cloud model, and the checklist for deploying into a closed network with no internet access.
+- [Protocol Notes: CAN, UDS, DoIP, XCP](https://www.plotune.net/docs/nexus/protocols/index.md): Transport-level detail for the four protocols Nexus speaks today: addressing modes, discovery mechanics, and exactly what is production-qualified versus implemented-but-unqualified.
+- [Quick Start](https://www.plotune.net/docs/nexus/quick-start/index.md): From power-on to your first bounded hardware workflow: network setup, owner bootstrap, connecting an MCP client, and three runnable simulator-based examples that need no hardware yet.
+
+## Research
+
+- [Agentic Test & Validation](https://www.plotune.net/research/index.md): Visual comparisons from Plotune's final agentic engineering test and validation benchmark.
+- [Research reports](https://www.plotune.net/research/reports/index.md): Monthly reports and reading for Plotune Research.
+- [Agentic Test & Validation Protocol](https://www.plotune.net/research/methodology/index.md): Agentic Test and Validation Protocol.
+- [Agentic ECU Testing: From CAN Signals to Autonomous Test Execution](https://www.plotune.net/research/articles/agentic-ecu-testing-can-to-execution/index.md): A look at the decode layer underneath CAN test automation: why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy.
+- [September 2026: Agentic Testing Environments Monthly Benchmark Review](https://www.plotune.net/research/articles/agentic-test-validation-model-comparison/index.md): A category-normalized review of 13 models across six agentic engineering workflows, with final validation index, cost, and duration context.
+- [Agentic Testing for ROS 2 & DDS Systems](https://www.plotune.net/research/articles/agentic-testing-ros2-dds-systems/index.md): A walkthrough of how an AI agent runs ROS2 test automation end to end: discovering the DDS graph, commanding and gating on telemetry, recording multi-topic evidence, and producing a verdict.
+- [How AI Agents Can Control Real Test Benches with MCP](https://www.plotune.net/research/articles/ai-agents-control-test-benches-with-mcp/index.md): Why MCP hardware test automation works where raw shell access doesn't: a narrow, typed, authorized set of operations is what makes AI agent hardware control safe to approve.
+- [AI Agents vs. Traditional Test Automation: What Should Actually Be Autonomous?](https://www.plotune.net/research/articles/ai-agents-vs-traditional-test-automation/index.md): A framework for AI test automation that scopes autonomous testing by how bounded and reviewable an action is, not by how capable the underlying model happens to be.
+- [AI Hardware-in-the-Loop Testing: Giving AI Agents Access to Real Hardware](https://www.plotune.net/research/articles/ai-hardware-in-the-loop-testing/index.md): Why most HIL rigs keep AI agents out entirely, and what a bounded-access architecture for AI HIL testing looks like once it stops being a trust exercise.
+- [Automating CAN-based ECU tests with AI agents](https://www.plotune.net/research/articles/automating-can-ecu-tests-with-ai-agents/index.md): Why a CAN or ECU test procedure is a lifecycle, not a single frame send, and how an agent-driven workflow keeps that lifecycle bounded and reviewable.
+- [From Manual Test Benches to Unattended Testing: Building a 24/7 Hardware Test Lab](https://www.plotune.net/research/articles/building-a-24-7-unattended-test-lab/index.md): A practical look at what it takes to turn a manual test bench into an automated test bench that supports unattended testing and remote hardware testing around the clock.
+- [Using a Decision Model as an Agent's Guardrail, Not Its Judgment](https://www.plotune.net/research/articles/decision-model-agent-guardrails/index.md): Two simulated control systems, 88 real paid model calls, and one consistent finding: a fast decision model is a real safety win behind a rule, and a measurable safety regression left to decide on its own.
+- [Running unattended ROS 2 hardware tests](https://www.plotune.net/research/articles/running-unattended-ros2-hardware-tests/index.md): Why most ROS 2 hardware testing is bottlenecked on a terminal and a person watching it, and what it takes to make a DDS-based test run unattended.
+- [Why test automation still requires an engineer in the loop](https://www.plotune.net/research/articles/test-automation-engineer-in-the-loop/index.md): Automation that stops at "run the script" still needs a person standing next to it: a look at where test automation actually breaks down and what closes the gap.
+- [What Is Agentic Test & Development? From Test Scripts to Autonomous Engineering](https://www.plotune.net/research/articles/what-is-agentic-test-development/index.md): What "agentic testing" actually means, and how agentic test automation differs from a fixed test script by deciding its next bounded action instead of replaying a fixed one.
+
+## Optional
+
+- [Questions about Plotune and Nexus.](https://www.plotune.net/faq/index.md): Answers to common questions about Plotune Nexus and the Plotune DataOps platform: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation.
+- [Tell us about your test environment.](https://www.plotune.net/contact/index.md): Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps.
+- [Building the Future of Data Operations](https://www.plotune.net/about/index.md): Plotune helps engineering teams orchestrate, process, and govern their data, and builds Plotune Nexus for controlled, AI-ready work on real test hardware.
+- [Careers at Plotune](https://www.plotune.net/careers/index.md): Published page content.
+- [Download Plotune](https://www.plotune.net/download/index.md): Download the Plotune desktop app for Windows and Linux and bring DataOps workflows to your own machine.
+- [Extensions Marketplace](https://www.plotune.net/extensions/index.md): Extend Plotune with a growing marketplace of integrations and tools for data sources, processing, and export.
+- [Legal Information](https://www.plotune.net/legal/index.md): Published page content.
+- [Privacy Policy](https://www.plotune.net/privacy/index.md): Published page content.

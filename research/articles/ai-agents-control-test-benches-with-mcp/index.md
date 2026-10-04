@@ -1,0 +1,109 @@
+# How AI Agents Can Control Real Test Benches with MCP
+
+MCP for Hardware Testing
+
+
+
+MCP for Hardware Testing  5 min read  Published 2026-09-18
+
+ Reframe 
+
+## The question isn't whether an agent can reach the hardware. It's what it's allowed to do once it's there.
+
+Giving an AI agent a shell on a test rig is easy and reckless. MCP exists to make the useful version of that possible: a narrow, typed set of operations, authorized like anything else on the network, instead of general-purpose access to a machine wired into physical equipment.
+
+ 
+
+## The actual problem with "just give the agent a shell"
+
+ 
+
+The obvious way to let an AI agent drive a test bench is also the wrong one: SSH into the machine running the DAQ, hand the agent a terminal, let it figure out the rest. It would work, in the sense that the agent could probably get a CAN frame onto the bus or read back a signal. It would also mean the agent can run arbitrary commands on a machine wired to physical hardware. It could rewrite the bitrate config, kill someone else's session, or brick a UART line mid-flash. "Authorized" isn't a concept a raw shell has; there's a command history if you're lucky, but not an audit trail of intent.
+
+ 
+
+That's not a risk most teams will sign off on, which is why "AI agent controls test hardware" has mostly stayed a demo rather than something running in a CI pipeline. The blocker was never model capability. It was that nobody had a sane interface to hand the model.
+
+ 
+
+## What MCP actually changes
+
+ 
+
+MCP, the Model Context Protocol, solves a narrower problem than people sometimes assume: it standardizes how a client (the agent) discovers and calls a fixed set of typed tools exposed by a server, with an auth handshake in front of the connection. That's it. It's not a general remote-execution protocol, and that's exactly the point for hardware.
+
+ 
+
+Applied to a test bench, MCP hardware test automation means the agent  never sees a shell . It sees a tool list scoped to CAN, DDS, UART, or XCP, and a single CAN operation walks through it as a fixed sequence:
+
+ 
+
+A CAN operation through MCP
+
+1 Acquire the interface
+
+2 Send an approved message
+
+3 Wait for the signal
+
+4 Release the interface
+
+ 
+
+Each tool has a defined input schema and a defined effect: the agent can call `send_dbc_message` with a specific, approved message, but it cannot construct an arbitrary frame the way it could from a terminal, because there is no terminal. This is the same distinction already used to describe a bounded test run:
+
+ 
+
+Bounded by design
+
+Tools  Bounded set
+
+Raw shell access  None
+
+Approval  Operational
+
+Audit  Per run
+
+ 
+
+MCP is the transport that makes that bounded set enforceable, rather than a policy written down and hoped for.
+
+ 
+
+Authorization rides along with the protocol instead of being bolted on afterward. Standing up an MCP surface for a bench goes through an OAuth browser flow, with the client dynamically registered and access delegated to a specific device rather than a shared API key sitting in a config file. The agent authenticates the way a person would connecting to any other OAuth-protected service, so the access it has is reviewable in the terms security teams already use: who's authorized, for what scope, since when.
+
+ 
+
+## Why this specific shape fits hardware control
+
+ 
+
+General-purpose AI agent hardware control proposals tend to fail on one of two things: either the interface is too permissive to approve, or it's so bespoke that nobody outside the team that built it can reason about what the agent can and can't do. MCP's tool-and-schema model avoids both: it's narrow enough to review line by line (acquire, capture, wait, send an approved frame, stop, package), and standard enough that a security or test-infrastructure reviewer doesn't have to learn a proprietary protocol to audit it.
+
+ 
+
+It also composes across the protocols a real bench uses. An agent can acquire a CAN interface and release it cleanly when the run ends, join a robot's DDS domain and gate the next step on live telemetry rather than a fixed wait, or open a UART session and capture a bounded exchange instead of streaming raw serial into a log nobody reads. It can chain several of those into one multi-step sequence with a single pass/fail verdict at the end. None of that requires the agent to understand sockets, drivers, or bus timing. It requires calling the right tool with the right arguments, which is precisely what an LLM is good at and precisely what MCP is built to expose safely.
+
+  What MCP is standing in for 
+
+## Not 'the agent can reach the hardware.' 'The agent can do exactly this, and we can prove it.'
+
+A bounded tool, real OAuth-based authorization, and a per-run audit trail turn "an AI touched the bench" from a liability into a procedure a test team can actually sign off on.
+
+ 
+
+## What a run leaves behind
+
+ 
+
+The other half of trusting an agent-run bench is what comes out of it. A run through an MCP-exposed tool set produces local artifacts first: the CAN trace, the DDS snapshot, the UART capture, the XCP readback, all inspectable before anything leaves the machine, with export going through a controlled transfer or handed off to storage the customer already controls. Raw bench data doesn't default to a vendor cloud just because an agent was in the loop. That matters because the value of an agent-run test isn't "the model says it passed." It's the same evidence a bench engineer would want: the live trace, the decoded signal, the calibration readback, and a packaged artifact explaining the verdict.
+
+ 
+
+That combination of a narrow typed surface, real authorization in front of it, and evidence a person can independently check is what makes an AI agent on a test bench something a team can actually  run , not just something a team can  demo .
+
+AI Hardware-in-the-Loop Testing: Give AI agents access to real hardware without giving up control of the boundary
+
+[See how this workflow can be automated →](https://www.plotune.net/solutions/hil-testing?segment=hil-testing&article=ai-agents-control-test-benches-with-mcp&entry_source=direct)
+
+Source: https://www.plotune.net/research/articles/ai-agents-control-test-benches-with-mcp
