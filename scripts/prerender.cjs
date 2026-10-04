@@ -129,6 +129,16 @@ const serveStatic = () =>
       await page.waitForFunction(() => document.body.innerText.trim().length > 300, { timeout: 15000 }).catch(() => {});
       await page.waitForTimeout(500);
 
+      // Tracking snippets in index.html inject their own <script src> tags at runtime (the LinkedIn
+      // Insight Tag, PostHog's remote config). Captured into the snapshot, those tags load AGAIN on a
+      // real visit on top of the ones the snippets inject, so the Insight Tag ran twice on every
+      // prerendered page -- risking double-counted visits and conversions. Strip them; the inline
+      // snippets still add each one exactly once when the page actually runs.
+      await page.evaluate(() => {
+        document
+          .querySelectorAll('script[src*="snap.licdn.com"], script[src*="t.plotune.net"], script[src*="posthog"]')
+          .forEach((el) => el.remove());
+      });
       const html = await page.content();
       const outPath = path.join(buildDir, route.replace(/^\//, ''), 'index.html');
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
