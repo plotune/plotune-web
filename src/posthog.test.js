@@ -25,7 +25,7 @@ describe('filterAssessmentNoise', () => {
 
   test('is registered as before_send', () => {
     initializePostHog();
-    expect(posthog.init).toHaveBeenLastCalledWith(expect.any(String), expect.objectContaining({ before_send: filterAssessmentNoise }));
+    expect(posthog.init).toHaveBeenLastCalledWith(expect.any(String), expect.objectContaining({ before_send: initializePostHog.beforeSend }));
   });
 
   test('drops $autocapture only on the assessment page', () => {
@@ -69,5 +69,40 @@ describe('filterAssessmentNoise', () => {
       expect(filterAssessmentNoise(view1)).toBe(view1);
       expect(filterAssessmentNoise(view2)).toBe(view2);
     });
+  });
+});
+
+describe('beforeSend: noise filter + visit attribution', () => {
+  const { beforeSend, resetAssessmentNoiseFilter } = initializePostHog;
+  const { resetAttributionCache } = require('./utils/attribution');
+  const at = (url) => window.history.pushState({}, '', url);
+  beforeEach(() => { resetAssessmentNoiseFilter(); resetAttributionCache(); window.sessionStorage.clear(); });
+
+  test('a Google Ads landing is remembered and stamped on later pages, e.g. /contact', () => {
+    at('/nexus/?gad_source=5&gad_campaignid=24328199458&gclid=Cj0KCQ');
+    initializePostHog(); // captures attribution from the landing URL
+    at('/contact');
+    const ev = beforeSend({ event: '$pageview', properties: { $current_url: 'https://www.plotune.net/contact' } });
+    expect(ev.properties).toMatchObject({
+      attr_platform: 'google_ads',
+      attr_gad_campaignid: '24328199458',
+      attr_gad_source: '5',
+      attr_gclid: 'Cj0KCQ',
+      attr_landing_path: '/nexus/',
+      $current_url: 'https://www.plotune.net/contact',
+    });
+  });
+
+  test('a dropped event stays dropped (assessment autocapture)', () => {
+    at('/ai-readiness?utm_source=linkedin');
+    initializePostHog();
+    expect(beforeSend({ event: '$autocapture', properties: {} })).toBeNull();
+  });
+
+  test('no campaign params: events pass through untouched', () => {
+    at('/about');
+    initializePostHog();
+    const ev = { event: '$pageview', properties: { a: 1 } };
+    expect(beforeSend(ev).properties).toEqual({ a: 1 });
   });
 });

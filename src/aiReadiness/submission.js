@@ -1,5 +1,6 @@
 import { ASSESSMENT_VERSION } from './questions';
 import { SCORING_VERSION } from './scoring';
+import { ATTRIBUTION_KEYS, getAttribution } from '../utils/attribution';
 
 // ---------------------------------------------------------------------------------------------
 // Email submission boundary -- V1
@@ -44,14 +45,20 @@ const TIMEOUT_MS = 25000;
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export const isValidEmail = (value) => EMAIL_PATTERN.test(value.trim());
 
-const CLICK_ID_KEYS = ['ref', 'li_fat_id', 'gclid', 'fbclid'];
-
 const readAttribution = (funnel) => {
+  // The visit's ad attribution (captured on the landing page, even if the visitor arrived at this
+  // page later), then anything on the current URL, which wins. Click ids are kept for a later
+  // offline-conversion upload.
+  const { landing_path: adLandingPath, ...visit } = getAttribution() || {};
   const params = new URLSearchParams(window.location.search);
-  const utm = {};
-  // utm_* plus ad click ids (LinkedIn's li_fat_id etc.), kept for later offline-conversion upload.
-  params.forEach((value, key) => { if (key.startsWith('utm_') || CLICK_ID_KEYS.includes(key)) utm[key] = value.slice(0, 300); });
-  return { ...funnel, ...utm, referrer: document.referrer || null, landing_path: window.location.pathname };
+  const current = {};
+  params.forEach((value, key) => { if (ATTRIBUTION_KEYS.includes(key) || key.startsWith('utm_') || key === 'ref') current[key] = value.slice(0, 300); });
+  return {
+    ...visit, ...funnel, ...current,
+    ad_landing_path: adLandingPath || null,
+    referrer: document.referrer || null,
+    landing_path: window.location.pathname,
+  };
 };
 
 export const newSubmissionId = () => {

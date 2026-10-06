@@ -1,3 +1,5 @@
+import { getAttribution } from './attribution';
+
 const STORAGE_KEY = 'plotune_funnel';
 const TRACKED_KEYS = ['segment', 'article', 'solution', 'entry_source'];
 
@@ -22,6 +24,12 @@ const inferEntrySource = () => {
   const params = new URLSearchParams(window.location.search);
   const explicit = params.get('utm_source') || params.get('ref');
   if (explicit) return explicit;
+  // Ad clicks without utm_source (Google Ads auto-tagging: gclid / gad_*), or a page reached
+  // after the landing page: fall back to the visit's stored attribution.
+  if (params.get('gclid') || params.get('gbraid') || params.get('wbraid') || params.get('gad_source') || params.get('gad_campaignid')) return 'google_ads';
+  if (params.get('li_fat_id')) return 'linkedin';
+  const visit = getAttribution();
+  if (visit && (visit.utm_source || visit.platform)) return visit.utm_source || visit.platform;
   if (!document.referrer) return 'direct';
   try {
     const referrerHost = new URL(document.referrer).hostname;

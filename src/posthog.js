@@ -1,5 +1,6 @@
 const posthogModule = require('posthog-js');
 const posthog = posthogModule.default || posthogModule;
+const { attributionEventProperties, captureAttribution } = require('./utils/attribution');
 
 // The AI readiness assessment emits its own structured events (answers included), so on that
 // page (and only that page):
@@ -31,12 +32,30 @@ function filterAssessmentNoise(captureResult) {
 // Test hook: the filter keeps one bit of module state.
 const resetAssessmentNoiseFilter = () => { lastPageviewWasAssessment = false; };
 
+// Every event carries the visit's ad/campaign attribution as attr_* properties (see
+// utils/attribution.js), so pages reached after the landing page -- /contact, the email click,
+// a lead -- can still be broken down by platform, campaign and click id.
+function addAttribution(captureResult) {
+  if (!captureResult) return captureResult;
+  const props = attributionEventProperties();
+  // Object.assign, not object spread: spread makes Babel inject an ES `import` helper into this
+  // CommonJS file, which turns it into an ES module and silently drops its module.exports.
+  if (Object.keys(props).length) captureResult.properties = Object.assign({}, props, captureResult.properties || {});
+  return captureResult;
+}
+
+function beforeSend(captureResult) {
+  return addAttribution(filterAssessmentNoise(captureResult));
+}
+
 function initializePostHog() {
+  // Before init, so even the landing $pageview carries attr_* properties.
+  captureAttribution();
   posthog.init('phc_oYVUYaQPBDJCHgaEgooHE2wSb9AeSWbwxeg5x3WAS4Je', {
     api_host: 'https://t.plotune.net',
     ui_host: 'https://us.posthog.com',
     defaults: '2026-05-30',
-    before_send: filterAssessmentNoise,
+    before_send: beforeSend,
   });
 }
 
@@ -45,4 +64,5 @@ module.exports = initializePostHog;
 // same client instance instead of re-requiring posthog-js and redoing the ESM/CJS interop above.
 module.exports.posthog = posthog;
 module.exports.filterAssessmentNoise = filterAssessmentNoise;
+module.exports.beforeSend = beforeSend;
 module.exports.resetAssessmentNoiseFilter = resetAssessmentNoiseFilter;

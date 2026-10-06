@@ -72,3 +72,14 @@ test('submission ids are unique and carried in the payload', () => {
   expect(a).toBeTruthy(); expect(a).not.toBe(b);
   expect(buildSubmissionPayload({ email: 'a@b.co', answers, result, submissionId: a }).submissionId).toBe(a);
 });
+
+test('a lead carries the visit attribution even when submitted away from the landing page', () => {
+  const { buildSubmissionPayload } = loadWithEndpoint(undefined);
+  const attribution = require('../utils/attribution');
+  attribution.resetAttributionCache();
+  window.sessionStorage.clear();
+  attribution.captureAttribution({ pathname: '/nexus/', search: '?gad_source=5&gad_campaignid=24328199458&gclid=abc' });
+  window.history.pushState({}, '', '/contact');
+  const { attribution: a } = buildSubmissionPayload({ email: 'a@b.co', answers, result });
+  expect(a).toMatchObject({ platform: 'google_ads', gad_campaignid: '24328199458', gclid: 'abc', ad_landing_path: '/nexus/', landing_path: '/contact' });
+});
