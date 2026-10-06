@@ -119,7 +119,9 @@ const serveStatic = () =>
   await context.addInitScript(forceInView);
   // Never let a build-time render count as a real visit in analytics or ad tracking (PostHog
   // via its proxy, the LinkedIn Insight Tag). The snapshot doesn't need them.
-  await context.route(/^https?:\/\/(t\.plotune\.net|[a-z0-9.-]*posthog\.com|snap\.licdn\.com|px\.ads\.linkedin\.com)\//, (route) => route.abort());
+  // Google tag hosts are blocked for the same reason; since gtag.js then never runs, it injects
+  // nothing, and the static Google tag <script> from public/index.html stays in each snapshot.
+  await context.route(/^https?:\/\/(t\.plotune\.net|[a-z0-9.-]*posthog\.com|snap\.licdn\.com|px\.ads\.linkedin\.com|www\.googletagmanager\.com|[a-z0-9.-]*google-analytics\.com|[a-z0-9.-]*googleadservices\.com|[a-z0-9.-]*doubleclick\.net|www\.google\.com)\//, (route) => route.abort());
 
   let done = 0;
   const pages = [];

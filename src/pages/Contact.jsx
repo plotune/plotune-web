@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { FiArrowRight, FiClock, FiMail, FiMapPin } from 'react-icons/fi';
 import Seo from '../components/Seo';
 import { getSolutionSegment } from '../content/solutions';
+import { trackGoogleAdsContactConversion } from '../utils/googleAds';
 
 const nextSteps = [
   ['You tell us about your setup', 'What you’re testing, what’s already on your bench, and where the manual work is.'],
@@ -80,6 +81,7 @@ const ContactPage = () => {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href={mailto}
+                onClick={trackGoogleAdsContactConversion}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
                 <FiMail />
