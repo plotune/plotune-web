@@ -8,7 +8,7 @@ Plotune SandBox Extension
 
 ### Plotune SandBox Extension
 
- v1.0.0
+ —
 
 by Plotune SDK Team
 
@@ -17,8 +17,6 @@ Random data generator for SandBox environment in Plotune
 verified  core
 
 🖥️  Linux • Windows
-
-Updated: Dec 1, 2025
 
 Plotune Relay Extension
 
