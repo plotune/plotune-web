@@ -42,6 +42,7 @@
 .mvp-app .sw-sidebar-footer p { color: #a0adaa; font-size: 9px; }
 .mvp-app .sw-main-footer { color: #a0adaa; }
 .mvp-app .sw-page-actions { display: none; }
+.mvp-brand-logo { width:28px; height:28px; flex:none; object-fit:contain; }
 .mvp-usage {
   margin-top: auto;
   padding: 24px 21px 0;
@@ -392,6 +393,43 @@
 .mvp-member-list .sw-link { font-size:10px; }
 .mvp-role.owner { color:#648a73; background:#edf5ef; padding:5px 8px; border-radius:3px; }
 .mvp-members-note { padding:13px 23px 17px; color:#92a09a; font-size:9px; line-height:1.7; }
+.mvp-pagination { display:flex; align-items:center; justify-content:center; gap:14px; padding:14px 0 4px; color:#879a99; font-size:10px; }
+.mvp-pagination .sw-button { min-height:34px; padding:6px 13px; font-size:10px; }
+.mvp-pagination .sw-button:disabled { cursor:default; opacity:.45; }
+.mvp-dashboard { display:flex; flex-direction:column; gap:16px; }
+.mvp-dashboard-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.mvp-dashboard-toolbar p { color:#829599; font-size:11px; }
+.mvp-dashboard-toolbar .sw-button { min-height:38px; font-size:10px; }
+.mvp-dashboard-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.mvp-dashboard-graph { min-width:0; }
+.mvp-dashboard-graph-wide { grid-column:1/-1; }
+.mvp-dashboard-graph .sw-panel-head > .sw-icon-button { margin-left:auto; }
+.mvp-graph-chart { padding:14px 17px 0; }
+.mvp-graph-chart .sw-trend { display:block; width:100%; height:auto; min-height:170px; }
+.mvp-graph-legend { display:flex; flex-wrap:wrap; gap:8px 18px; padding:0 20px 17px; }
+.mvp-graph-legend span { display:inline-flex; align-items:center; gap:7px; color:#70858a; font-size:10px; }
+.mvp-graph-color { width:8px; height:8px; border-radius:50%; background:#00796b; }
+.mvp-graph-color.color-1 { background:#b17a2c; }
+.mvp-graph-color.color-2 { background:#6266ad; }
+.mvp-graph-color.color-3 { background:#b34540; }
+.mvp-graph-color.color-4 { background:#3d8295; }
+.mvp-graph-color.color-5 { background:#73864b; }
+.mvp-graph-empty { padding:48px 20px; color:#899b9d; text-align:center; font-size:11px; }
+.mvp-dashboard-empty { display:flex; flex-direction:column; align-items:center; gap:10px; padding:65px 24px; border:1px dashed #d8e4df; border-radius:6px; background:#fff; text-align:center; }
+.mvp-dashboard-empty h2 { color:#526b69; font-size:16px; font-weight:550; }
+.mvp-dashboard-empty p { max-width:420px; color:#87999a; font-size:11px; line-height:1.8; }
+.mvp-dashboard-empty .sw-button { margin-top:6px; }
+.mvp-add-graph { display:flex; flex-direction:column; gap:19px; max-height:min(72vh,680px); overflow:auto; }
+.mvp-add-graph fieldset { padding:0; border:0; min-width:0; }
+.mvp-add-graph legend, .mvp-graph-select { display:block; margin-bottom:8px; color:#617d78; font-size:11px; font-weight:550; }
+.mvp-graph-kind { display:flex; gap:8px; }
+.mvp-graph-kind button { min-height:38px; padding:8px 12px; border:1px solid #dce7e2; border-radius:4px; background:#fff; color:#718782; font-size:10px; }
+.mvp-graph-kind button.active { border-color:#9bc4b2; background:#eef6f1; color:#3e7662; }
+.mvp-graph-kind button:disabled { opacity:.45; cursor:not-allowed; }
+.mvp-series-options { max-height:240px; overflow:auto; }
+.mvp-series-options .sw-check { gap:9px; border-bottom:1px solid #eef2ef; }
+.mvp-series-options code { color:#516e68; font-size:10px; }
+.mvp-graph-select select { display:block; width:100%; min-height:40px; margin-top:8px; padding:8px 10px; border:1px solid #dce7e2; border-radius:4px; background:#fff; color:#526b67; font:inherit; }
 .mvp-integration {
   padding: 23px;
 }
@@ -486,6 +524,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
+.mvp-api-credentials { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .mvp-connection label {
   font-size: 10px;
   color: #78918c;
@@ -800,6 +839,7 @@
   }
 }
 @media (max-width: 800px) {
+  .mvp-api-credentials { grid-template-columns:1fr 1fr; }
   .mvp-app .sw-sidebar {
     width: 238px;
   }
@@ -864,6 +904,10 @@
   }
 }
 @media (max-width: 540px) {
+  .mvp-dashboard-toolbar { align-items:flex-start; flex-direction:column; }
+  .mvp-dashboard-grid { grid-template-columns:1fr; }
+  .mvp-dashboard-graph-wide { grid-column:auto; }
+  .mvp-api-credentials { grid-template-columns:1fr; }
   .mvp-invite-prompt { align-items:flex-start; flex-wrap:wrap; }
   .mvp-invite-prompt > div { flex-basis:100%; }
   .mvp-invite-form { grid-template-columns:1fr 1fr; padding:16px; }

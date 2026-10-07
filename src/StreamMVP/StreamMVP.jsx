@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   FiActivity,
   FiArrowRight,
+  FiBarChart2,
   FiCheck,
   FiChevronRight,
   FiCode,
@@ -19,6 +20,8 @@ import {
   FiX,
 } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
+import Dashboard from "./Dashboard";
+import plotuneLogo from "../assets/logo.png";
 import "../StreamWorkspace/workspace.css";
 import "./mvp.css";
 import {
@@ -26,6 +29,8 @@ import {
   CAPTURE_ENDPOINT,
   MCP_ENDPOINT,
   SNAPSHOT,
+  EVENTS_PER_PAGE,
+  cursorPage,
   previewValue,
   filterEvents,
   ingestionSnippet,
@@ -34,6 +39,7 @@ import {
 
 const navigation = [
   ["events", "Events", FiActivity],
+  ["dashboards", "Dashboards", FiBarChart2],
   ["api", "API setup", FiCode],
   ["mcp", "MCP setup", FiTerminal],
   ["settings", "Project Settings", FiSettings],
@@ -61,6 +67,8 @@ export default function StreamMVP() {
   const [search, setSearch] = useState("");
   const [name, setName] = useState("All events");
   const [range, setRange] = useState("24h");
+  const [cursorStack, setCursorStack] = useState([null]);
+  const [dashboardGraphs, setDashboardGraphs] = useState({});
   const [language, setLanguage] = useState("curl");
   const [revealed, setRevealed] = useState(false);
   const [dialog, setDialog] = useState(null);
@@ -92,6 +100,10 @@ export default function StreamMVP() {
       }),
     [project.events, search, name, range, clock],
   );
+  const page = useMemo(
+    () => cursorPage(filtered, cursorStack[cursorStack.length - 1], EVENTS_PER_PAGE),
+    [filtered, cursorStack],
+  );
   const eventNames = [...new Set(project.events.map((e) => e.event))].sort();
   const pendingEvents = pending[projectId] || [];
   const latest = [...project.events].sort(
@@ -108,6 +120,7 @@ export default function StreamMVP() {
     setDialog(null);
     setSearch("");
     setName("All events");
+    setCursorStack([null]);
     setRevealed(false);
     window.scrollTo({ top: 0 });
   };
@@ -131,6 +144,7 @@ export default function StreamMVP() {
     setRevealed(false);
     setSearch("");
     setName("All events");
+    setCursorStack([null]);
     setAccepting(false);
     setProjectName(project.name);
   }, [projectId, project.name]);
@@ -160,6 +174,7 @@ export default function StreamMVP() {
       setSearch("");
       setName("All events");
       setRange("24h");
+      setCursorStack([null]);
       setParams(projectId === "first" ? {} : { project: projectId });
       if (project.events.length === 0) setInvitePrompt((prev) => ({ ...prev, [projectId]: true }));
       notify("First event received · test.started");
@@ -182,30 +197,23 @@ export default function StreamMVP() {
     setSearch("");
     setName("All events");
     setRange("24h");
+    setCursorStack([null]);
   };
   const queuePreviewEvent = () => {
     const count = pendingEvents.length;
     const stamp = clock + (count + 1) * 1000;
     const candidates = [
       {
-        event: "firmware.booted",
-        properties: {
-          board: "sensor-node",
-          boot_count: 175 + count,
-          reset_reason: "watchdog",
-        },
+        event: "sensor.reading",
+        properties: { range_m: 2.6 + count * 0.1, confidence: 0.91 + count * 0.01, state: "valid" },
       },
       {
-        event: "simulation.completed",
-        properties: {
-          model: "thermal_model",
-          iterations: 240,
-          converged: true,
-        },
+        event: "test.failed",
+        properties: { suite: "sensor_check", result: "failed", attempt: count + 1 },
       },
       {
-        event: "test.completed",
-        properties: { script: "validate.py", result: "passed", checks: 12 },
+        event: "environment",
+        properties: { temperature: 21.8 + count * 0.1, humidity: 40.2, state: "stable" },
       },
     ];
     const e = {
@@ -359,13 +367,19 @@ export default function StreamMVP() {
               aria-label="Search events and properties"
               placeholder="Search event names and properties…"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCursorStack([null]);
+              }}
             />
           </label>
           <select
             aria-label="Filter event name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setCursorStack([null]);
+            }}
           >
             <option>All events</option>
             {eventNames.map((n) => (
@@ -375,7 +389,10 @@ export default function StreamMVP() {
           <select
             aria-label="Event time range"
             value={range}
-            onChange={(e) => setRange(e.target.value)}
+            onChange={(e) => {
+              setRange(e.target.value);
+              setCursorStack([null]);
+            }}
           >
             <option value="1h">Last hour</option>
             <option value="24h">Last 24 hours</option>
@@ -389,7 +406,7 @@ export default function StreamMVP() {
           )}
         </div>
         <div className="mvp-list-status">
-          <span>{filtered.length} events · newest first · UTC</span>
+          <span>{page.items.length} events on this page · {EVENTS_PER_PAGE} per page · newest first · UTC</span>
           <button className="sw-link" onClick={queuePreviewEvent}>
             <FiPlus />
             Simulate incoming event
@@ -416,7 +433,7 @@ export default function StreamMVP() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((e) => (
+                  {page.items.map((e) => (
                     <tr key={e.id}>
                       <td>
                         <button
@@ -496,6 +513,25 @@ export default function StreamMVP() {
             </div>
           )}
         </div>
+        {(page.nextCursor || cursorStack.length > 1) && (
+          <nav className="mvp-pagination" aria-label="Event pages">
+            <button
+              className="sw-button"
+              disabled={cursorStack.length === 1}
+              onClick={() => setCursorStack((current) => current.slice(0, -1))}
+            >
+              Previous
+            </button>
+            <span>{EVENTS_PER_PAGE} events per page</span>
+            <button
+              className="sw-button"
+              disabled={!page.nextCursor}
+              onClick={() => page.nextCursor && setCursorStack((current) => [...current, page.nextCursor])}
+            >
+              Next
+            </button>
+          </nav>
+        )}
         <p className="mvp-explorer-foot">
           Event names and properties are defined by your systems. No schema
           configuration is required.
@@ -506,9 +542,26 @@ export default function StreamMVP() {
   function apiSetup() {
     return (
       <>
-        <Panel title="Project connection" meta={project.name}>
-          <div className="mvp-connection">
-            <label>Project API key{apiKey}</label>
+        <Panel
+          title="Project connection"
+          meta={project.name}
+          action={<button className="sw-link" onClick={() => setDialog({ kind: "regenerate" })}>Regenerate key</button>}
+        >
+          <div className="mvp-connection mvp-api-credentials">
+            <label>
+              Project ID
+              <div className="mvp-endpoint">
+                <code>{project.id}</code>
+                <button
+                  className="sw-icon-button"
+                  aria-label="Copy project ID"
+                  onClick={() => copy(project.id, "Project ID")}
+                >
+                  <FiCopy />
+                </button>
+              </div>
+            </label>
+            <label>Tracker key{apiKey}</label>
             <label>
               Ingestion endpoint
               <div className="mvp-endpoint">
@@ -660,8 +713,8 @@ export default function StreamMVP() {
               />
             </label>
             <p>
-              Event properties remain unrestricted. Projects do not define an
-              event schema.
+              This project keeps its event history together. Event properties
+              remain unrestricted.
             </p>
             <button
               className="sw-button sw-primary"
@@ -695,23 +748,6 @@ export default function StreamMVP() {
             </>}
           </div>)}</div>
           <p className="mvp-members-note">Owners control project and membership settings. Admins manage the project and members. Members can inspect and query events.</p>
-        </Panel>
-        <Panel title="Project API key">
-          <div className="mvp-settings-key">
-            {apiKey}
-            <div>
-              <p>
-                This is a mock project key. Regenerating it only updates the
-                examples in this preview.
-              </p>
-              <button
-                className="sw-button"
-                onClick={() => setDialog({ kind: "regenerate" })}
-              >
-                Regenerate key
-              </button>
-            </div>
-          </div>
         </Panel>
       </>
     );
@@ -897,9 +933,7 @@ export default function StreamMVP() {
           <FiMenu />
         </button>
         <a className="sw-brand" href="/stream/workspace/">
-          <span className="sw-brand-symbol">
-            <FiActivity />
-          </span>
+          <img className="mvp-brand-logo" src={plotuneLogo} alt="" />
           <strong>
             Plotune <span>Stream</span>
           </strong>
@@ -963,18 +997,21 @@ export default function StreamMVP() {
         </div>
         <nav aria-label="Workspace navigation">
           <div className="sw-nav-group">
-            <button
-              className={view === "events" ? "active" : ""}
-              aria-current={view === "events" ? "page" : undefined}
-              onClick={() => setLocation("events")}
-            >
-              <FiActivity />
-              Events
-            </button>
+            {navigation.slice(0, 2).map(([id, label, Icon]) => (
+              <button
+                key={id}
+                className={view === id ? "active" : ""}
+                aria-current={view === id ? "page" : undefined}
+                onClick={() => setLocation(id)}
+              >
+                <Icon />
+                {label}
+              </button>
+            ))}
           </div>
           <div className="sw-nav-group">
             <p>SETUP</p>
-            {navigation.slice(1, 3).map(([id, name, Icon]) => (
+            {navigation.slice(2, 4).map(([id, name, Icon]) => (
               <button
                 key={id}
                 className={view === id ? "active" : ""}
@@ -995,9 +1032,6 @@ export default function StreamMVP() {
             Project Settings
           </button>
         </nav>
-        <div className="sw-sidebar-footer">
-          <p>Preview · changes reset on reload</p>
-        </div>
       </aside>
       <main className="sw-main">
         <div className="sw-breadcrumb">
@@ -1013,11 +1047,13 @@ export default function StreamMVP() {
             <p>
               {view === "events"
                 ? "Inspect what your systems send. Event names, timestamps, and properties."
+                : view === "dashboards"
+                  ? "Graph numeric event properties and event counts over a bounded time range."
                 : view === "api"
                   ? "Send the first event from any system that can make an HTTP request."
                   : view === "mcp"
                     ? "Query this project’s events from your AI agent."
-                    : "A name, a key, and a project for your event history."}
+                    : "Manage the project and the people who can access it."}
             </p>
           </div>
           <div className="sw-page-actions" />
@@ -1025,6 +1061,21 @@ export default function StreamMVP() {
         <div className="sw-content">
           {view === "events"
             ? explorer()
+            : view === "dashboards"
+              ? <Dashboard
+                  projectId={projectId}
+                  events={project.events}
+                  now={new Date(clock).toISOString()}
+                  graphs={dashboardGraphs[projectId] || []}
+                  onAddGraph={(graph) => setDashboardGraphs((prev) => ({
+                    ...prev,
+                    [projectId]: [...(prev[projectId] || []), graph],
+                  }))}
+                  onRemoveGraph={(graphId) => setDashboardGraphs((prev) => ({
+                    ...prev,
+                    [projectId]: (prev[projectId] || []).filter((graph) => graph.id !== graphId),
+                  }))}
+                />
             : view === "api"
               ? apiSetup()
               : view === "mcp"
