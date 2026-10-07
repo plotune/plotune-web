@@ -25,7 +25,6 @@ import {
   initialProjects,
   CAPTURE_ENDPOINT,
   MCP_ENDPOINT,
-  FREE_ALLOWANCE,
   SNAPSHOT,
   previewValue,
   filterEvents,
@@ -57,7 +56,7 @@ export default function StreamMVP() {
   const [projects, setProjects] = useState(initialProjects);
   const projectId = projects.some((p) => p.id === params.get("project"))
     ? params.get("project")
-    : "battery";
+    : "first";
   const project = projects.find((p) => p.id === projectId);
   const [search, setSearch] = useState("");
   const [name, setName] = useState("All events");
@@ -73,6 +72,12 @@ export default function StreamMVP() {
   const [accepting, setAccepting] = useState(false);
   const [clock, setClock] = useState(Date.parse(SNAPSHOT));
   const [monthlyAccepted, setMonthlyAccepted] = useState(15320);
+  const [members, setMembers] = useState(() => Object.fromEntries(initialProjects.map((p, i) => [p.id, [
+    { id: `${p.id}-owner`, name: i === 0 ? "Vera K. (you)" : "You", email: "engineer@example.test", role: "Owner" },
+  ]])));
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("Member");
+  const [invitePrompt, setInvitePrompt] = useState({});
   const [mcpStates, setMcpStates] = useState({});
   const [accountOpen, setAccountOpen] = useState(false);
   const mcpState = mcpStates[projectId] || "Not checked";
@@ -96,7 +101,7 @@ export default function StreamMVP() {
   const setLocation = (nextView, nextProject = projectId) => {
     setParams({
       ...(nextView !== "events" ? { view: nextView } : {}),
-      ...(nextProject !== "battery" ? { project: nextProject } : {}),
+      ...(nextProject !== "first" ? { project: nextProject } : {}),
     });
     setNavOpen(false);
     setAccountOpen(false);
@@ -155,10 +160,9 @@ export default function StreamMVP() {
       setSearch("");
       setName("All events");
       setRange("24h");
-      setParams(projectId === "battery" ? {} : { project: projectId });
-      notify(
-        "First-event flow demonstrated: test.started appears below. No HTTP request was sent.",
-      );
+      setParams(projectId === "first" ? {} : { project: projectId });
+      if (project.events.length === 0) setInvitePrompt((prev) => ({ ...prev, [projectId]: true }));
+      notify("First event received · test.started");
     }, 700);
     return () => clearTimeout(t);
   }, [accepting, clock, projectId, setParams]);
@@ -304,46 +308,27 @@ export default function StreamMVP() {
       <span className="mvp-first-icon">
         <FiTerminal />
       </span>
-      <p className="sw-eyebrow">YOUR PROJECT IS READY</p>
-      <h2>Send your first event</h2>
+      <p className="sw-eyebrow">PROJECT CREATED</p>
+      <h2>Waiting for your first event</h2>
       <p>
-        Copy an example into your test system. Its event name and properties
-        will appear here.
+        Stream is listening. Send an HTTP event from any system to see it arrive here.
       </p>
-      <div className="mvp-activation-steps">
-        <span>
-          <i>1</i>Create project <FiCheck />
-        </span>
-        <FiChevronRight />
-        <span>
-          <i>2</i>Send event
-        </span>
-        <FiChevronRight />
-        <span>
-          <i>3</i>Inspect properties
-        </span>
+      <div className={`mvp-listening ${accepting ? "receiving" : ""}`} role="status">
+        <span className="mvp-listening-dot" />
+        {accepting ? "Receiving test.started…" : "Listening for events"}
       </div>
       {example(true)}
       <div className="mvp-activation-preview">
-        <div>
-          <strong>See the activation flow</strong>
-          <p>Simulate receipt of the example above in this browser.</p>
-        </div>
         <button
           className="sw-button sw-primary"
           disabled={accepting}
           onClick={sendPreview}
         >
-          {accepting ? "Receiving demo event…" : "Simulate first event"}
+          {accepting ? "Receiving event…" : "Simulate event received"}
           <FiArrowRight />
         </button>
       </div>
-      <p className="mvp-first-foot">
-        Want to query history from an agent?{" "}
-        <button className="sw-link" onClick={() => setLocation("mcp")}>
-          Set up MCP <FiArrowRight />
-        </button>
-      </p>
+      <p className="mvp-first-foot">Use the example above to send your first event. The simulation demonstrates the experience in this browser.</p>
     </div>
   );
 
@@ -351,6 +336,13 @@ export default function StreamMVP() {
     if (!hasEvents) return firstEvent;
     return (
       <>
+        {invitePrompt[projectId] && (
+          <div className="mvp-invite-prompt">
+            <div><strong>First event received</strong><span>test.started · just now</span></div>
+            <button className="sw-button sw-primary" onClick={() => { setInvitePrompt((prev) => ({ ...prev, [projectId]: false })); setLocation("settings"); }}>Invite your colleagues</button>
+            <button className="sw-link" onClick={() => setInvitePrompt((prev) => ({ ...prev, [projectId]: false }))}>Skip</button>
+          </div>
+        )}
         <div className="mvp-event-summary">
           <span>
             <strong>{project.events.length}</strong> demo events in this project
@@ -359,9 +351,6 @@ export default function StreamMVP() {
             Last received{" "}
             <strong>{latest ? eventTime(latest.timestamp) : "—"}</strong> UTC
           </span>
-          <button className="sw-link" onClick={() => setLocation("api")}>
-            Send an event <FiArrowRight />
-          </button>
         </div>
         <div className="sw-toolbar mvp-filters">
           <label className="sw-search">
@@ -546,14 +535,6 @@ export default function StreamMVP() {
               Use HTTP from CAPL, C/C++, Python, ROS, MATLAB, Nexus, or any
               other system. No source registration is needed.
             </p>
-            <button
-              className="sw-button sw-primary"
-              disabled={accepting}
-              onClick={sendPreview}
-            >
-              {accepting ? "Receiving demo event…" : "Simulate example event"}
-              <FiArrowRight />
-            </button>
           </div>
         </Panel>
       </>
@@ -693,6 +674,28 @@ export default function StreamMVP() {
             </button>
           </form>
         </Panel>
+        <Panel title="Project members" meta={`${(members[projectId] || []).length} people`}>
+          <form className="mvp-invite-form" onSubmit={(e) => {
+            e.preventDefault();
+            const email = inviteEmail.trim().toLowerCase();
+            if (!email) return;
+            setMembers((prev) => ({ ...prev, [projectId]: [...(prev[projectId] || []), { id: `${projectId}-${Date.now()}`, name: email.split("@")[0], email, role: inviteRole }] }));
+            setInviteEmail("");
+            notify("Colleague added to this preview.");
+          }}>
+            <label>Email<input type="email" required placeholder="colleague@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} /></label>
+            <label>Role<select value={inviteRole} onChange={(e) => setInviteRole(e.target.value)}><option>Admin</option><option>Member</option></select></label>
+            <button className="sw-button sw-primary" type="submit">Invite colleague</button>
+          </form>
+          <div className="mvp-member-list">{(members[projectId] || []).map((member) => <div key={member.id}>
+            <div><strong>{member.name}</strong><span>{member.email}</span></div>
+            {member.role === "Owner" ? <span className="mvp-role owner">Owner</span> : <>
+              <select aria-label={`Role for ${member.email}`} value={member.role} onChange={(e) => setMembers((prev) => ({ ...prev, [projectId]: prev[projectId].map((m) => m.id === member.id ? { ...m, role: e.target.value } : m) }))}><option>Admin</option><option>Member</option></select>
+              <button className="sw-link" onClick={() => setMembers((prev) => ({ ...prev, [projectId]: prev[projectId].filter((m) => m.id !== member.id) }))}>Remove</button>
+            </>}
+          </div>)}</div>
+          <p className="mvp-members-note">Owners control project and membership settings. Admins manage the project and members. Members can inspect and query events.</p>
+        </Panel>
         <Panel title="Project API key">
           <div className="mvp-settings-key">
             {apiKey}
@@ -706,24 +709,6 @@ export default function StreamMVP() {
                 onClick={() => setDialog({ kind: "regenerate" })}
               >
                 Regenerate key
-              </button>
-            </div>
-          </div>
-        </Panel>
-        <Panel title="Connection details">
-          <div className="mvp-settings-connections">
-            <div>
-              <span>HTTP event ingestion</span>
-              <code>{CAPTURE_ENDPOINT}</code>
-              <button className="sw-link" onClick={() => setLocation("api")}>
-                API setup <FiArrowRight />
-              </button>
-            </div>
-            <div>
-              <span>Event history through MCP</span>
-              <code>{MCP_ENDPOINT}</code>
-              <button className="sw-link" onClick={() => setLocation("mcp")}>
-                MCP setup <FiArrowRight />
               </button>
             </div>
           </div>
@@ -828,6 +813,7 @@ export default function StreamMVP() {
                 ...prev,
                 { id, name: creatingName.trim(), key: mockKey(id), events: [] },
               ]);
+              setMembers((prev) => ({ ...prev, [id]: [{ id: `${id}-owner`, name: "You", email: "engineer@example.test", role: "Owner" }] }));
               setLocation("events", id);
               notify(
                 "Demo project created. Send your first event to explore the flow.",
@@ -921,7 +907,6 @@ export default function StreamMVP() {
         <span className="sw-top-divider" />
         <span className="mvp-top-project">{project.name}</span>
         <div className="sw-top-end">
-          <span className="mvp-preview-label">MVP preview · mock data</span>
           <button
             className="sw-avatar mvp-account"
             aria-label="Demo account"
@@ -935,7 +920,8 @@ export default function StreamMVP() {
           <div className="mvp-account-menu">
             <strong>Demo engineer</strong>
             <span>engineer@example.test</span>
-            <p>Account placeholder. No authentication or account changes.</p>
+            <p>Usage · {monthlyAccepted.toLocaleString("en-US")} / 100,000 events this month</p>
+            <small>Preview data · changes reset on reload</small>
             <button className="sw-link" onClick={() => setAccountOpen(false)}>
               Close
             </button>
@@ -1009,29 +995,8 @@ export default function StreamMVP() {
             Project Settings
           </button>
         </nav>
-        <div className="mvp-usage">
-          <span className="sw-small-label">FREE MONTHLY ALLOWANCE</span>
-          <div>
-            <strong>{monthlyAccepted.toLocaleString("en-US")}</strong>
-            <span>/ 100,000</span>
-          </div>
-          <progress
-            max={FREE_ALLOWANCE}
-            value={monthlyAccepted}
-            aria-label="Monthly accepted event usage"
-          />
-          <p>
-            Accepted events · account total
-            <br />
-            Resets 1 Nov · demo usage
-          </p>
-        </div>
         <div className="sw-sidebar-footer">
-          <p>
-            Frontend preview.
-            <br />
-            Changes reset on reload.
-          </p>
+          <p>Preview · changes reset on reload</p>
         </div>
       </aside>
       <main className="sw-main">
@@ -1055,14 +1020,7 @@ export default function StreamMVP() {
                     : "A name, a key, and a project for your event history."}
             </p>
           </div>
-          <div className="sw-page-actions">
-            {view === "events" && hasEvents && (
-              <button className="sw-button" onClick={() => setLocation("api")}>
-                <FiCode />
-                API setup
-              </button>
-            )}
-          </div>
+          <div className="sw-page-actions" />
         </div>
         <div className="sw-content">
           {view === "events"
@@ -1074,7 +1032,7 @@ export default function StreamMVP() {
                 : settings()}
         </div>
         <footer className="sw-main-footer">
-          <span>SAMPLE DATA · 7 OCT 2026 · UTC</span>
+          <span>DEMO DATA · UTC</span>
           <span>Events from physical systems. Properties defined by you.</span>
         </footer>
       </main>
