@@ -50,7 +50,7 @@ export function Empty({
     </div>
   );
 }
-export function Dialog({ title, subtitle, onClose, children, wide = false }) {
+export function Dialog({ title, subtitle, onClose, children, wide = false, className = "" }) {
   const ref = useRef(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -66,7 +66,7 @@ export function Dialog({ title, subtitle, onClose, children, wide = false }) {
   return (
     <dialog
       ref={ref}
-      className={`sw-dialog ${wide ? "sw-dialog-wide" : ""}`}
+      className={`sw-dialog ${wide ? "sw-dialog-wide" : ""} ${className}`}
       aria-labelledby="sw-dialog-title"
       onCancel={(e) => {
         e.preventDefault();
@@ -104,6 +104,8 @@ export function Trend({
   label,
   compact = false,
   threshold,
+  activeIndex = null,
+  onInspectPoint,
 }) {
   const palette = ["#00796b", "#b17a2c", "#6266ad", "#b34540", "#3d8295", "#73864b"];
   const plotted = series?.length
@@ -136,11 +138,35 @@ export function Trend({
     : "";
   const firstPoint = plotted[0]?.points?.[0];
   const lastPoint = plotted[0]?.points?.[plotted[0].points.length - 1];
+  const inspectPointer = (event) => {
+    if (!onInspectPoint) return;
+    const svg = event.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    let x = ((event.clientX - rect.left) / rect.width) * 480;
+    try {
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      x = point.matrixTransform(svg.getScreenCTM().inverse()).x;
+    } catch {
+      // Bounding-rect mapping above covers browsers without SVG point transforms.
+    }
+    const fraction = Math.max(0, Math.min(1, (x - 40) / 420));
+    onInspectPoint(Math.round(fraction * (pointCount - 1)));
+  };
   return (
     <svg
       className={`sw-trend ${compact ? "sw-trend-compact" : ""}`}
       viewBox="0 0 480 150"
       role="img"
+      onPointerMove={onInspectPoint ? inspectPointer : undefined}
+      onPointerDown={onInspectPoint ? (event) => {
+        if (event.pointerType === "touch") inspectPointer(event);
+      } : undefined}
+      onPointerLeave={onInspectPoint ? (event) => {
+        if (event.pointerType !== "touch") onInspectPoint(null);
+      } : undefined}
+      style={onInspectPoint ? { touchAction: "pan-y" } : undefined}
       aria-label={series?.length
         ? `Time series: ${series.map((item) => item.label).join(", ")}`
         : `${label}: ${values.join(", ")} ${unit}`}
@@ -182,6 +208,31 @@ export function Trend({
           {lastIndex >= 0 && <circle cx={40 + (lastIndex / Math.max(1, pointCount - 1)) * 420} cy={y(seriesValues[lastIndex])} r="3.5" fill={item.color} />}
         </g>;
       })}
+      {onInspectPoint && Number.isInteger(activeIndex) && activeIndex < pointCount && (
+        <g className="sw-trend-inspection" pointerEvents="none">
+          <line
+            x1={40 + (activeIndex / Math.max(1, pointCount - 1)) * 420}
+            x2={40 + (activeIndex / Math.max(1, pointCount - 1)) * 420}
+            y1="25"
+            y2="118"
+          />
+          {plotted.map((item, index) => {
+            const value = item.values?.[activeIndex];
+            if (!Number.isFinite(value)) return null;
+            return (
+              <circle
+                key={item.key || item.label || index}
+                cx={40 + (activeIndex / Math.max(1, pointCount - 1)) * 420}
+                cy={y(value)}
+                r="5"
+                fill={item.color}
+                stroke="#fff"
+                strokeWidth="2"
+              />
+            );
+          })}
+        </g>
+      )}
     </svg>
   );
 }

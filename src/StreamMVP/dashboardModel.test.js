@@ -1,6 +1,9 @@
 import {
   buildGraphSeries,
   discoverNumericSeries,
+  getEventNames,
+  getNumericProperties,
+  searchEventNames,
 } from "./dashboardModel";
 import { cursorPage, EVENTS_PER_PAGE } from "./eventModel";
 
@@ -30,6 +33,62 @@ test("discovers numeric properties as event.property series and ignores strings 
     "motor.temp",
   ]);
   expect(discovered.some(({ label }) => label === "motor.state")).toBe(false);
+});
+
+test("event names are independently discoverable and searchable without listing properties", () => {
+  const events = [
+    event("1", "motor.sample", "2026-10-07T10:00:00.000Z", { temperature: 72.4 }),
+    event("2", "test.failed", "2026-10-07T10:01:00.000Z", { attempt: 2 }),
+    event("3", "motor.sample", "2026-10-07T10:02:00.000Z", { rpm: 1840 }),
+  ];
+  const names = getEventNames(events);
+
+  expect(names).toEqual(["motor.sample", "test.failed"]);
+  expect(searchEventNames(names, "MOTOR")).toEqual(["motor.sample"]);
+  expect(searchEventNames(names, "missing")).toEqual([]);
+});
+
+test("numeric property discovery is scoped to the selected event and excludes strings", () => {
+  const events = [
+    event("1", "motor.sample", "2026-10-07T10:00:00.000Z", {
+      temperature: 72.4,
+      oil_temperature: 68.1,
+      state: "running",
+    }),
+    event("2", "battery.sample", "2026-10-07T10:01:00.000Z", {
+      voltage: 12.6,
+      current: 1.8,
+    }),
+  ];
+
+  expect(getNumericProperties(events, "motor.sample")).toEqual([
+    "oil_temperature",
+    "temperature",
+  ]);
+  expect(getNumericProperties(events, "motor.sample")).not.toContain("voltage");
+  expect(getNumericProperties(events, "motor.sample")).not.toContain("state");
+});
+
+test("a numeric graph combines selected properties from one event only", () => {
+  const events = [
+    event("1", "motor.sample", "2026-10-07T10:45:00.000Z", { temperature: 72.4, rpm: 1840 }),
+    event("2", "battery.sample", "2026-10-07T10:45:00.000Z", { voltage: 12.6 }),
+  ];
+  const graph = {
+    kind: "numeric",
+    eventName: "motor.sample",
+    propertyNames: ["temperature", "rpm"],
+    range: "15m",
+  };
+  const result = buildGraphSeries(events, graph, "2026-10-07T10:46:00.000Z");
+
+  expect(result.map(({ key }) => key)).toEqual([
+    "motor.sample.temperature",
+    "motor.sample.rpm",
+  ]);
+  expect(result).toHaveLength(2);
+  expect(result.flatMap(({ points }) => points.map(({ value }) => value)).filter(Number.isFinite)).toEqual([72.4, 1840]);
+  expect(result.some(({ key }) => key.includes("battery"))).toBe(false);
 });
 
 test("builds several numeric property series as bounded time buckets", () => {

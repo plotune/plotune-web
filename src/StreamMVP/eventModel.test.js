@@ -5,6 +5,8 @@ import {
   ingestionSnippet,
   mcpSnippet,
   SNAPSHOT,
+  ONBOARDING_EVENT_NAME,
+  createSimulatedFirstEvent,
 } from "./eventModel";
 
 const events = initialProjects[0].events;
@@ -50,16 +52,27 @@ test("property previews preserve scalar meaning while compacting nested JSON", (
   expect(previewValue(["a", "b"])).toBe("[2 items]");
 });
 test("all setup examples use the current project key and remain illustrative", () => {
-  for (const language of ["curl", "Python", "C", "CAPL"]) {
+  for (const language of ["curl", "Python", "C/C++", "Arduino / ESP32", "MATLAB", "ROS 2", "CAPL"]) {
     expect(ingestionSnippet(language, "plt_demo_changed")).toContain(
       "plt_demo_changed",
     );
     expect(ingestionSnippet(language, "plt_demo_changed")).toContain(
-      "test.started",
+      ONBOARDING_EVENT_NAME,
     );
+    expect(ingestionSnippet(language, "plt_demo_changed")).toContain("temperature");
+    expect(ingestionSnippet(language, "plt_demo_changed")).toContain("running");
   }
   const config = JSON.parse(mcpSnippet("plt_demo_changed"));
   expect(config.mcpServers["plotune-stream"].headers.Authorization).toBe(
     "Bearer plt_demo_changed",
   );
+});
+
+test("simulated first event matches the schemaless onboarding example", () => {
+  expect(createSimulatedFirstEvent("preview-event", SNAPSHOT)).toEqual({
+    id: "preview-event",
+    event: "motor.sample",
+    timestamp: SNAPSHOT,
+    properties: { temperature: 72.4, rpm: 1840, state: "running" },
+  });
 });

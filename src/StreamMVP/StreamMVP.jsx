@@ -33,6 +33,7 @@ import {
   SNAPSHOT,
   EVENTS_PER_PAGE,
   cursorPage,
+  createSimulatedFirstEvent,
   previewValue,
   filterEvents,
   ingestionSnippet,
@@ -161,12 +162,10 @@ export default function StreamMVP() {
     if (!accepting) return;
     const t = setTimeout(() => {
       const stamp = clock + 1000;
-      const event = {
-        id: `local-${stamp}-${projectId}`,
-        event: "test.started",
-        timestamp: new Date(stamp).toISOString(),
-        properties: { source: "my-test-system" },
-      };
+      const event = createSimulatedFirstEvent(
+        `local-${stamp}-${projectId}`,
+        new Date(stamp).toISOString(),
+      );
       setProjects((prev) =>
         prev.map((p) =>
           p.id === projectId ? { ...p, events: [event, ...p.events] } : p,
@@ -181,7 +180,7 @@ export default function StreamMVP() {
       setCursorStack([null]);
       setParams(projectId === "first" ? {} : { project: projectId });
       if (project.events.length === 0) setInvitePrompt((prev) => ({ ...prev, [projectId]: true }));
-      notify("First event received · test.started");
+      notify(`First event received · ${event.event}`);
     }, 700);
     return () => clearTimeout(t);
   }, [accepting, clock, projectId, setParams]);
@@ -275,7 +274,7 @@ export default function StreamMVP() {
         <span>Any language. Any JSON properties.</span>
       </div>
       <div className="sw-tabs" role="group" aria-label="Integration language">
-        {["curl", "Python", "C", "CAPL"].map((l) => (
+        {["curl", "Python", "C/C++", "Arduino / ESP32", "MATLAB", "ROS 2", "CAPL"].map((l) => (
           <button
             key={l}
             className={language === l ? "active" : ""}
@@ -311,7 +310,9 @@ export default function StreamMVP() {
       <p className="mvp-contract-note">
         Illustrative API contract · demo key · no requests are sent by this
         preview.
-        {language === "CAPL" ? " CAPL example uses adapter pseudocode." : ""}
+        {language === "CAPL" ? " CAPL uses adapter pseudocode for your test environment." : ""}
+        {language === "Arduino / ESP32" ? " Configure TLS with the server CA certificate." : ""}
+        {language === "ROS 2" ? " Example code belongs inside an rclpy subscription callback." : ""}
       </p>
     </div>
   );
@@ -327,7 +328,7 @@ export default function StreamMVP() {
       </p>
       <div className={`mvp-listening ${accepting ? "receiving" : ""}`} role="status">
         <span className="mvp-listening-dot" />
-        {accepting ? "Receiving test.started…" : "Listening for events"}
+        {accepting ? "Receiving motor.sample…" : "Listening for events"}
       </div>
       {example(true)}
       <div className="mvp-activation-preview">
@@ -350,7 +351,7 @@ export default function StreamMVP() {
       <>
         {invitePrompt[projectId] && (
           <div className="mvp-invite-prompt">
-            <div><strong>First event received</strong><span>test.started · just now</span></div>
+            <div><strong>First event received</strong><span>motor.sample · just now</span></div>
             <button className="sw-button sw-primary" onClick={() => { setInvitePrompt((prev) => ({ ...prev, [projectId]: false })); setLocation("settings"); }}>Invite your colleagues</button>
             <button className="sw-link" onClick={() => setInvitePrompt((prev) => ({ ...prev, [projectId]: false }))}>Skip</button>
           </div>

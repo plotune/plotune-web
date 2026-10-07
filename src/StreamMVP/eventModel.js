@@ -3,6 +3,7 @@ export const CAPTURE_ENDPOINT = "https://stream.plotune.net/capture";
 export const MCP_ENDPOINT = "https://stream.plotune.net/mcp";
 export const FREE_ALLOWANCE = 100000;
 export const SNAPSHOT = "2026-10-07T10:46:00.000Z";
+export const ONBOARDING_EVENT_NAME = "motor.sample";
 export const initialProjects = [
   {
     id: "battery",
@@ -254,18 +255,34 @@ export function cursorPage(events, cursor = null, limit = EVENTS_PER_PAGE) {
         : null,
   };
 }
+export function createSimulatedFirstEvent(id, timestamp) {
+  return {
+    id,
+    event: ONBOARDING_EVENT_NAME,
+    timestamp,
+    properties: { temperature: 72.4, rpm: 1840, state: "running" },
+  };
+}
+
 export function ingestionSnippet(language, apiKey) {
   const payload = {
     api_key: apiKey,
-    event: "test.started",
-    properties: { source: "my-test-system" },
+    event: ONBOARDING_EVENT_NAME,
+    properties: { temperature: 72.4, rpm: 1840, state: "running" },
   };
+  const body = JSON.stringify(payload);
   if (language === "Python")
-    return `import requests\n\nrequests.post(\n    "${CAPTURE_ENDPOINT}",\n    json=${JSON.stringify(payload, null, 4)}\n)`;
-  if (language === "C")
-    return `/* Illustrative libcurl example; handle errors in your application. */\nCURL *request = curl_easy_init();\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, "Content-Type: application/json");\ncurl_easy_setopt(request, CURLOPT_URL, "${CAPTURE_ENDPOINT}");\ncurl_easy_setopt(request, CURLOPT_HTTPHEADER, headers);\ncurl_easy_setopt(request, CURLOPT_POSTFIELDS,\n    "{\\\"api_key\\\":\\\"${apiKey}\\\",\\\"event\\\":\\\"test.started\\\","\n    "\\\"properties\\\":{\\\"source\\\":\\\"my-test-system\\\"}}");\ncurl_easy_perform(request);\ncurl_slist_free_all(headers);\ncurl_easy_cleanup(request);`;
+    return `import json\nfrom urllib.request import Request, urlopen\n\npayload = ${JSON.stringify(payload, null, 4)}\nrequest = Request(\n    "${CAPTURE_ENDPOINT}",\n    data=json.dumps(payload).encode("utf-8"),\n    headers={"Content-Type": "application/json"},\n    method="POST",\n)\nwith urlopen(request, timeout=10) as response:\n    print(response.status)`;
+  if (language === "C/C++")
+    return `/* Illustrative libcurl example; handle errors in your application. */\nCURL *request = curl_easy_init();\nstruct curl_slist *headers = NULL;\nconst char *payload = ${JSON.stringify(body)};\nheaders = curl_slist_append(headers, "Content-Type: application/json");\ncurl_easy_setopt(request, CURLOPT_URL, "${CAPTURE_ENDPOINT}");\ncurl_easy_setopt(request, CURLOPT_HTTPHEADER, headers);\ncurl_easy_setopt(request, CURLOPT_POSTFIELDS, payload);\ncurl_easy_perform(request);\ncurl_slist_free_all(headers);\ncurl_easy_cleanup(request);`;
+  if (language === "Arduino / ESP32")
+    return `// ESP32 Arduino core example, after Wi-Fi connects.\n// Define rootCACertificate as the CA certificate for stream.plotune.net.\n#include <WiFiClientSecure.h>\n#include <HTTPClient.h>\nWiFiClientSecure tls;\ntls.setCACert(rootCACertificate);\nHTTPClient http;\nhttp.begin(tls, "${CAPTURE_ENDPOINT}");\nhttp.addHeader("Content-Type", "application/json");\nconst char *payload = R"json(${body})json";\nint status = http.POST(payload);\nhttp.end();`;
+  if (language === "MATLAB")
+    return `payload = struct( ...\n    'api_key', '${apiKey}', ...\n    'event', 'motor.sample', ...\n    'properties', struct('temperature', 72.4, 'rpm', 1840, 'state', 'running'));\noptions = weboptions('MediaType', 'application/json');\nresponse = webwrite('${CAPTURE_ENDPOINT}', payload, options);`;
+  if (language === "ROS 2")
+    return `# Inside an rclpy subscription callback, with sensor message "msg"\nimport json\nfrom urllib.request import Request, urlopen\n\npayload = {\n    "api_key": "${apiKey}",\n    "event": "motor.sample",\n    "properties": {"temperature": float(msg.data), "rpm": 1840, "state": "running"},\n}\nrequest = Request(\n    "${CAPTURE_ENDPOINT}",\n    data=json.dumps(payload).encode("utf-8"),\n    headers={"Content-Type": "application/json"},\n    method="POST",\n)\nwith urlopen(request, timeout=10) as response:\n    print(response.status)`;
   if (language === "CAPL")
-    return `// Illustrative HTTP adapter pseudocode, not native CAPL functions.\n// Use an HTTP-capable adapter appropriate for your test environment.\nhttpPost(\n  "${CAPTURE_ENDPOINT}",\n  "application/json",\n  "{\\\"api_key\\\":\\\"${apiKey}\\\",\\\"event\\\":\\\"test.started\\\","\n  "\\\"properties\\\":{\\\"source\\\":\\\"my-test-system\\\"}}"\n);`;
+    return `// Illustrative HTTP adapter pseudocode, not native CAPL functions.\n// Map this request to an HTTP-capable adapter in your test environment.\nhttpPost(\n  "${CAPTURE_ENDPOINT}",\n  "application/json",\n  ${JSON.stringify(body)}\n);`;
   return `curl ${CAPTURE_ENDPOINT} \\\n  -H 'Content-Type: application/json' \\\n  -d '${JSON.stringify(payload, null, 2)}'`;
 }
 export function mcpSnippet(apiKey) {

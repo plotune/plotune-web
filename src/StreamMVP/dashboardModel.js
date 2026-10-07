@@ -17,15 +17,34 @@ function visitNumbers(value, path, visit) {
   });
 }
 
-export function discoverNumericSeries(events) {
-  const series = new Map();
+export function getEventNames(events) {
+  return [...new Set(events.map((event) => event.event))].sort();
+}
+
+export function searchEventNames(eventNames, query = "") {
+  const normalized = query.trim().toLowerCase();
+  return normalized
+    ? eventNames.filter((name) => name.toLowerCase().includes(normalized))
+    : eventNames;
+}
+
+export function getNumericProperties(events, eventName) {
+  const properties = new Set();
   events.forEach((event) => {
-    visitNumbers(event.properties || {}, "", (property) => {
-      const key = `${event.event}.${property}`;
-      series.set(key, { key, event: event.event, property, label: key });
-    });
+    if (event.event === eventName) {
+      visitNumbers(event.properties || {}, "", (property) => properties.add(property));
+    }
   });
-  return [...series.values()].sort((a, b) => a.label.localeCompare(b.label));
+  return [...properties].sort((a, b) => a.localeCompare(b));
+}
+
+export function discoverNumericSeries(events) {
+  return getEventNames(events).flatMap((eventName) =>
+    getNumericProperties(events, eventName).map((property) => {
+      const key = `${eventName}.${property}`;
+      return { key, event: eventName, property, label: key };
+    }),
+  );
 }
 
 function readProperty(properties, path) {
@@ -61,8 +80,18 @@ export function buildGraphSeries(events, graph, now) {
     }];
   }
 
-  const discovered = new Map(discoverNumericSeries(events).map((item) => [item.key, item]));
-  return (graph.seriesKeys || []).flatMap((key) => {
+  const selectedKeys = graph.propertyNames
+    ? graph.propertyNames.map((property) => `${graph.eventName}.${property}`)
+    : graph.seriesKeys || [];
+  const candidates = graph.eventName
+    ? getNumericProperties(events, graph.eventName).map((property) => ({
+        key: `${graph.eventName}.${property}`,
+        event: graph.eventName,
+        property,
+      }))
+    : discoverNumericSeries(events);
+  const discovered = new Map(candidates.map((item) => [item.key, item]));
+  return selectedKeys.flatMap((key) => {
     const selected = discovered.get(key);
     if (!selected) return [];
     const values = buckets.map((bucket) => ({ ...bucket, sum: 0, count: 0 }));
@@ -86,5 +115,6 @@ export function buildGraphSeries(events, graph, now) {
 }
 
 export function graphIsWide(graph) {
-  return graph.kind === "numeric" && (graph.seriesKeys || []).length > 2;
+  const count = graph.propertyNames?.length ?? graph.seriesKeys?.length ?? 0;
+  return graph.kind === "numeric" && count > 2;
 }
