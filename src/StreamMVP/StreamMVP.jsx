@@ -15,12 +15,14 @@ import {
   FiMenu,
   FiPlus,
   FiSearch,
+  FiSend,
   FiSettings,
   FiTerminal,
   FiX,
 } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import Dashboard from "./Dashboard";
+import Webhooks from "./Webhooks";
 import plotuneLogo from "../assets/logo.png";
 import "../StreamWorkspace/workspace.css";
 import "./mvp.css";
@@ -42,6 +44,7 @@ const navigation = [
   ["dashboards", "Dashboards", FiBarChart2],
   ["api", "API setup", FiCode],
   ["mcp", "MCP setup", FiTerminal],
+  ["webhooks", "Webhooks", FiSend],
   ["settings", "Project Settings", FiSettings],
 ];
 const eventTime = (value) => new Date(value).toISOString().slice(11, 23);
@@ -69,6 +72,7 @@ export default function StreamMVP() {
   const [range, setRange] = useState("24h");
   const [cursorStack, setCursorStack] = useState([null]);
   const [dashboardGraphs, setDashboardGraphs] = useState({});
+  const [webhooks, setWebhooks] = useState({});
   const [language, setLanguage] = useState("curl");
   const [revealed, setRevealed] = useState(false);
   const [dialog, setDialog] = useState(null);
@@ -1011,7 +1015,7 @@ export default function StreamMVP() {
           </div>
           <div className="sw-nav-group">
             <p>SETUP</p>
-            {navigation.slice(2, 4).map(([id, name, Icon]) => (
+            {navigation.slice(2, 5).map(([id, name, Icon]) => (
               <button
                 key={id}
                 className={view === id ? "active" : ""}
@@ -1053,7 +1057,9 @@ export default function StreamMVP() {
                   ? "Send the first event from any system that can make an HTTP request."
                   : view === "mcp"
                     ? "Query this project’s events from your AI agent."
-                    : "Manage the project and the people who can access it."}
+                    : view === "webhooks"
+                      ? "Forward selected events to any HTTPS endpoint."
+                      : "Manage the project and the people who can access it."}
             </p>
           </div>
           <div className="sw-page-actions" />
@@ -1080,6 +1086,28 @@ export default function StreamMVP() {
               ? apiSetup()
               : view === "mcp"
                 ? mcpSetup()
+                : view === "webhooks"
+                  ? <Webhooks
+                      projectId={projectId}
+                      events={project.events}
+                      webhooks={webhooks[projectId] || []}
+                      onCreate={(webhook) => setWebhooks((prev) => ({
+                        ...prev,
+                        [projectId]: [...(prev[projectId] || []), webhook],
+                      }))}
+                      onToggle={(webhookId) => setWebhooks((prev) => ({
+                        ...prev,
+                        [projectId]: (prev[projectId] || []).map((webhook) =>
+                          webhook.id === webhookId
+                            ? { ...webhook, enabled: !webhook.enabled }
+                            : webhook,
+                        ),
+                      }))}
+                      onDelete={(webhookId) => setWebhooks((prev) => ({
+                        ...prev,
+                        [projectId]: (prev[projectId] || []).filter((webhook) => webhook.id !== webhookId),
+                      }))}
+                    />
                 : settings()}
         </div>
         <footer className="sw-main-footer">
