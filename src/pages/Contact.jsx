@@ -62,13 +62,15 @@ const otherChannels = [
 const ContactPage = () => {
   const { topic, mailto } = useContactContext();
 
-  // Layout (mobile first): heading -> form -> quieter alternatives -> "what happens next".
-  // On large screens the form sits in the right column and the explanation on the left.
-  // Laws of UX: one primary action (the form's solid button, Von Restorff); the alternatives are
-  // text / outline only so they don't compete (Hick, selective attention); familiar labelled form
-  // (Jakob); large targets (Fitts).
+  // Layout (mobile first): short intro -> form -> "Not ready to talk yet?" card -> "what happens
+  // next" -> a quiet email line. On large screens the form and the card sit in the right column;
+  // intro, steps and the email line stack on the left.
+  // Laws of UX: the form's button is the only solid one (Von Restorff). The assessment card is the
+  // second funnel, so it gets a large outline button right under the form, where a visitor who
+  // isn't ready to write looks next (proximity, Fitts), without competing with "Send message".
+  // The steps and the email line are plain text (Hick, selective attention).
   return (
-    <section className="relative overflow-hidden bg-dark-bg py-16 text-dark-text md:py-28">
+    <section className="relative overflow-hidden bg-dark-bg pb-16 pt-28 text-dark-text md:pb-28 md:pt-32">
       <Seo
         title="Contact Plotune"
         description="Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
@@ -77,38 +79,30 @@ const ContactPage = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
 
       <div className="relative container mx-auto max-w-6xl px-5">
-        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-12 lg:gap-y-10">
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto_1fr] lg:gap-x-16 lg:gap-y-10">
           <div className="max-w-xl lg:col-start-1 lg:row-start-1">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Contact</p>
-            <h1 className="mt-5 text-4xl font-semibold leading-tight text-light-text md:text-5xl">
+            <h1 className="mt-4 text-4xl font-semibold leading-tight text-light-text md:text-5xl">
               Tell us about your test environment.
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-text">
-              Send us a message and we&apos;ll walk you through how Plotune Nexus fits your bench and
-              your team, with integration details, a timeline, and clear next steps in our first reply.
+            <p className="mt-4 text-lg leading-8 text-gray-text">
+              We reply with integration details, a timeline, and clear next steps.
             </p>
           </div>
 
-          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <div className="lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:self-start">
             <ContactForm topic={topic} />
 
-            <p className="mt-5 text-center text-sm text-gray-text">
-              Prefer email?{' '}
-              <a href={mailto} className="font-medium text-light-text underline underline-offset-4 hover:text-primary">
-                {CONTACT_EMAIL}
-              </a>
-            </p>
-
-            {/* For visitors who aren't ready to talk to anyone yet: a lower-commitment first step. */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-              <p className="font-semibold text-light-text">Not ready to talk yet?</p>
+            {/* Second funnel: visitors not ready to talk take the assessment instead of leaving. */}
+            <div className="mt-5 rounded-2xl border border-primary/30 bg-primary/[0.07] p-5 md:p-6">
+              <p className="text-base font-semibold text-light-text">Not ready to talk yet?</p>
               <p className="mt-1 text-sm leading-6 text-gray-text">
                 See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
               </p>
               <Link
                 to={withFunnelParams('/ai-readiness')}
                 onClick={() => posthog.capture('contact_assessment_clicked', { ...getFunnelContext(), path: '/contact', topic })}
-                className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-white/20 px-5 text-sm font-semibold text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-auto"
+                className="mt-4 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border-2 border-primary px-5 text-base font-semibold text-primary transition-colors duration-100 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg"
               >
                 Check your test bench
                 <FiArrowRight aria-hidden="true" />
@@ -116,8 +110,8 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="rounded-[2rem] bg-dark-card/60 p-6 md:p-7 lg:col-start-1 lg:row-start-2 lg:self-start">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-text">What happens next</p>
+          <div className="lg:col-start-1 lg:row-start-2">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-text">What happens next</h2>
             <ol className="mt-5 space-y-5">
               {nextSteps.map(([title, copy], index) => (
                 <li key={title} className="flex gap-4">
@@ -132,9 +126,16 @@ const ContactPage = () => {
               ))}
             </ol>
           </div>
+
+          <p className="flex flex-wrap items-center gap-x-1.5 border-t border-white/10 pt-4 text-sm text-gray-text lg:col-start-1 lg:row-start-3 lg:self-start">
+            Prefer email?
+            <a href={mailto} className="inline-flex min-h-[44px] items-center font-medium text-light-text underline underline-offset-4 hover:text-primary">
+              {CONTACT_EMAIL}
+            </a>
+          </p>
         </div>
 
-        <div className="mt-20 border-t border-white/10 pt-12">
+        <div className="mt-14 border-t border-white/10 pt-12">
           <p className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-gray-text">
             Other ways to reach us
           </p>

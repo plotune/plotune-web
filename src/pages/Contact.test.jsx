@@ -89,3 +89,56 @@ test('a failed send keeps the text, offers retry and the email fallback, fires n
   expect(postLead.mock.calls[1][0].submissionId).toBe(postLead.mock.calls[0][0].submissionId);
   expect(trackGoogleAdsContactConversion).toHaveBeenCalledTimes(1);
 });
+
+const blur = (sel) => act(() => { container.querySelector(sel).dispatchEvent(new FocusEvent('focusout', { bubbles: true })); });
+const buttonByText = (text) => [...container.querySelectorAll('button')].find((b) => b.textContent.trim() === text);
+
+test('starter chips fill an editable opening, disappear once the visitor writes their own text, and are reported by id only', async () => {
+  postLead.mockResolvedValue({ status: 'sent' });
+  render();
+  act(() => { buttonByText('Book a demo').dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+  const box = container.querySelector('#contact-message');
+  expect(box.value).toMatch(/^We'd like a short demo of Plotune Nexus/);
+  expect(buttonByText('Book a demo').getAttribute('aria-pressed')).toBe('true');
+  expect(events()).toContain('contact_starter_selected');
+  type('#contact-message', `${box.value}Tuesday afternoon`);
+  expect(buttonByText('Pricing')).toBeUndefined();
+  type('#contact-email', 'eng@corp.com');
+  await submit();
+  const submitted = posthog.capture.mock.calls.find(([e]) => e === 'contact_form_submitted')[1];
+  expect(submitted.starter).toBe('demo');
+  expect(JSON.stringify(posthog.capture.mock.calls)).not.toContain('Tuesday afternoon');
+});
+
+test('the email is checked on leaving the field, and a provider typo gets a one-tap fix', () => {
+  render();
+  type('#contact-email', 'nope');
+  blur('#contact-email');
+  expect(container.textContent).toContain('Enter a valid email');
+  type('#contact-email', 'Ayse@gmial.com');
+  blur('#contact-email');
+  const fix = buttonByText('Ayse@gmail.com');
+  expect(fix).toBeTruthy();
+  act(() => { fix.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+  expect(container.querySelector('#contact-email').value).toBe('Ayse@gmail.com');
+  expect(events()).toContain('contact_email_fix_accepted');
+  expect(JSON.stringify(posthog.capture.mock.calls)).not.toContain('Ayse@');
+  type('#contact-email', 'eng@bosch.com');
+  blur('#contact-email');
+  expect(container.textContent).not.toContain('Did you mean');
+});
+
+test('the reply time is stated, and the confirmation ends on a next step', async () => {
+  postLead.mockResolvedValue({ status: 'sent' });
+  render('/contact?utm_source=google');
+  expect(container.textContent).toContain('We reply within 1 business day');
+  type('#contact-email', 'eng@corp.com');
+  type('#contact-message', 'Hello');
+  await submit();
+  expect(container.textContent).toContain('within 1 business day.');
+  expect(container.textContent).toContain('While you wait');
+  const next = [...container.querySelectorAll('[role="status"] a')].find((a) => a.textContent.includes('Check your test bench'));
+  expect(next.getAttribute('href')).toMatch(/^\/ai-readiness\?.*entry_source=google/);
+  act(() => { next.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+  expect(posthog.capture.mock.calls.find(([e]) => e === 'contact_sent_next_clicked')[1]).toMatchObject({ target: 'ai_readiness' });
+});
