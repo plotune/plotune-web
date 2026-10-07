@@ -39,6 +39,9 @@
   margin-top: 0;
   padding-top: 15px;
 }
+.mvp-app .sw-sidebar-footer p { color: #a0adaa; font-size: 9px; }
+.mvp-app .sw-main-footer { color: #a0adaa; }
+.mvp-app .sw-page-actions { display: none; }
 .mvp-usage {
   margin-top: auto;
   padding: 24px 21px 0;
@@ -114,6 +117,7 @@
 .mvp-account-menu p {
   line-height: 1.8;
 }
+.mvp-account-menu small { color: #a0adaa; font-size: 9px; }
 .mvp-event-summary {
   display: flex;
   gap: 24px;
@@ -367,6 +371,27 @@
 .mvp-activation-steps span > svg {
   color: #578e72;
 }
+.mvp-listening { display:flex; align-items:center; gap:9px; padding:12px 14px; margin:19px 0; border:1px solid #e2ebe6; border-radius:4px; background:#fbfdfb; color:#68837a; font-size:11px; }
+.mvp-listening-dot { width:8px; height:8px; border-radius:50%; background:#71a58b; box-shadow:0 0 0 3px #e8f2eb; }
+.mvp-listening.receiving .mvp-listening-dot { background:#d09a50; box-shadow:0 0 0 3px #f7eddf; }
+.mvp-invite-prompt { display:flex; align-items:center; gap:13px; padding:14px 17px; margin-bottom:14px; background:#f4f8f5; border:1px solid #dce9df; border-radius:5px; }
+.mvp-invite-prompt > div { display:flex; flex:1; flex-direction:column; gap:4px; }
+.mvp-invite-prompt strong { color:#50745f; font-size:11px; font-weight:550; }
+.mvp-invite-prompt span { color:#85978b; font-size:10px; }
+.mvp-invite-prompt .sw-button { min-height:34px; font-size:10px; }
+.mvp-invite-form { display:grid; grid-template-columns:minmax(180px,1fr) 140px auto; align-items:end; gap:12px; padding:20px 23px; border-bottom:1px solid #e8eeea; }
+.mvp-invite-form label { display:flex; flex-direction:column; gap:7px; color:#78918c; font-size:10px; }
+.mvp-invite-form input, .mvp-invite-form select, .mvp-member-list select { min-height:38px; border:1px solid #dde7e2; border-radius:4px; background:#fff; color:#4c6560; padding:7px 9px; font:inherit; }
+.mvp-invite-form .sw-button { min-height:38px; font-size:10px; }
+.mvp-member-list { padding:0 23px; }
+.mvp-member-list > div { display:flex; align-items:center; gap:12px; min-height:59px; border-bottom:1px solid #edf1ee; }
+.mvp-member-list > div > div { display:flex; flex:1; flex-direction:column; gap:4px; }
+.mvp-member-list strong { color:#526d67; font-size:11px; font-weight:500; }
+.mvp-member-list span { color:#91a09a; font-size:9px; }
+.mvp-member-list select { min-height:31px; font-size:10px; }
+.mvp-member-list .sw-link { font-size:10px; }
+.mvp-role.owner { color:#648a73; background:#edf5ef; padding:5px 8px; border-radius:3px; }
+.mvp-members-note { padding:13px 23px 17px; color:#92a09a; font-size:9px; line-height:1.7; }
 .mvp-integration {
   padding: 23px;
 }
@@ -839,6 +864,14 @@
   }
 }
 @media (max-width: 540px) {
+  .mvp-invite-prompt { align-items:flex-start; flex-wrap:wrap; }
+  .mvp-invite-prompt > div { flex-basis:100%; }
+  .mvp-invite-form { grid-template-columns:1fr 1fr; padding:16px; }
+  .mvp-invite-form label:first-child { grid-column:1/-1; }
+  .mvp-invite-form .sw-button { grid-column:1/-1; }
+  .mvp-member-list { padding:0 16px; }
+  .mvp-member-list > div { flex-wrap:wrap; padding:10px 0; }
+  .mvp-member-list > div > div { flex-basis:calc(100% - 80px); }
   .mvp-app .sw-topbar {
     gap: 8px;
     padding: 0 10px;
