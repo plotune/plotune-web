@@ -1,39 +1,52 @@
-// Google Ads "Kişi" (contact) conversion, sent through the Google tag (gtag.js) loaded in
-// public/index.html. Fired on real contact intent only: the contact-email buttons on /contact and
-// /nexus/use-cases, and a confirmed AI-readiness lead. Not on support / privacy / partner mailto
-// links, which aren't leads.
+// Google Ads conversions, sent through the Google tag (gtag.js) loaded in public/index.html.
 //
-// At most once per browser session, so double clicks or "emailed us AND took the assessment"
-// count as one contact. Inactive (no-op) when the send_to value isn't configured or the tag is
-// blocked (ad blockers), and never throws into the click handler that calls it.
+//   "Kişi" (contact)          -- the contact-email buttons on /contact and /nexus/use-cases. Not on
+//                                support / privacy / partner mailto links, which aren't leads.
+//   "AI Readiness Lead"       -- a confirmed AI-readiness lead (email saved by the backend). Its own
+//                                action, so Google Ads can value and report it apart from Kişi.
+//
+// Values are not sent from here: each action's default value (set in Google Ads) applies.
+// Each action counts at most once per browser session, so double clicks or a retried submit don't
+// count twice. Inactive (no-op) when the send_to value isn't configured or the tag is blocked
+// (ad blockers), and never throws into the handler that calls it.
 const CONTACT_SEND_TO = process.env.REACT_APP_GOOGLE_ADS_CONTACT_SEND_TO || '';
-const SESSION_KEY = 'plotune_gads_contact_converted';
+const AI_READINESS_SEND_TO = process.env.REACT_APP_GOOGLE_ADS_AI_READINESS_SEND_TO || '';
 
-const alreadyConverted = () => {
+const alreadyConverted = (key) => {
   try {
-    return window.sessionStorage.getItem(SESSION_KEY) === '1';
+    return window.sessionStorage.getItem(key) === '1';
   } catch {
     return false;
   }
 };
 
-const markConverted = () => {
+const markConverted = (key) => {
   try {
-    window.sessionStorage.setItem(SESSION_KEY, '1');
+    window.sessionStorage.setItem(key, '1');
   } catch {
     // storage blocked: may count again on a later click, acceptable
   }
 };
 
-export const trackGoogleAdsContactConversion = () => {
-  if (!CONTACT_SEND_TO || typeof window === 'undefined' || typeof window.gtag !== 'function') return false;
-  if (alreadyConverted()) return false;
+const trackConversion = (sendTo, sessionKey, extra = {}) => {
+  if (!sendTo || typeof window === 'undefined' || typeof window.gtag !== 'function') return false;
+  if (alreadyConverted(sessionKey)) return false;
   try {
-    // beacon transport: the mail client opening must not cancel the request
-    window.gtag('event', 'conversion', { send_to: CONTACT_SEND_TO, transport_type: 'beacon' });
-    markConverted();
+    // beacon transport: a mail client opening or the page changing must not cancel the request
+    window.gtag('event', 'conversion', Object.assign({ send_to: sendTo, transport_type: 'beacon' }, extra));
+    markConverted(sessionKey);
     return true;
   } catch {
     return false;
   }
 };
+
+export const trackGoogleAdsContactConversion = () => trackConversion(CONTACT_SEND_TO, 'plotune_gads_contact_converted');
+
+// transaction_id lets Google drop a duplicate of the same lead (e.g. the same submission sent from
+// a second tab).
+export const trackGoogleAdsAiReadinessConversion = (submissionId) => trackConversion(
+  AI_READINESS_SEND_TO,
+  'plotune_gads_ai_readiness_converted',
+  submissionId ? { transaction_id: submissionId } : {},
+);
