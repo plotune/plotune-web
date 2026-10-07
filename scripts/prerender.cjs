@@ -126,8 +126,13 @@ const serveStatic = () =>
   let done = 0;
   const pages = [];
   const failures = [];
-  for (const route of [...new Set(routes)]) {
+  const uniqueRoutes = [...new Set(routes)];
+  // One route at a time, with a progress line each, so a slow machine doesn't look stuck. A route
+  // that fails is tried once more on a fresh page before it fails the build: on a slow or busy
+  // machine an article's content chunk can miss a timeout once without anything being wrong.
+  const renderRoute = async (route) => {
     const page = await context.newPage();
+    let agentPage = null;
     try {
       await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle', timeout: 30000 });
       if (route.startsWith('/docs/nexus/')) await page.waitForSelector('.nexus-doc-body h2');
@@ -149,7 +154,7 @@ const serveStatic = () =>
         }
         const canonicalPath = content.canonical ? new URL(content.canonical).pathname.replace(/\/+$/, '') || '/' : route;
         if (canonicalPath === route) {
-          pages.push({ path: route, ...content });
+          agentPage = { path: route, ...content };
         }
       }
       // Tracking snippets in index.html inject their own <script src> tags at runtime (the LinkedIn
@@ -166,12 +171,30 @@ const serveStatic = () =>
       const outPath = path.join(buildDir, route.replace(/^\//, ''), 'index.html');
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
       fs.writeFileSync(outPath, `<!DOCTYPE html>\n${html}`);
-      done += 1;
-    } catch (err) {
-      failures.push(route);
-      console.error(`prerender: FAILED ${route}: ${err.message}`);
+      return agentPage;
     } finally {
       await page.close();
+    }
+  };
+
+  for (const [index, route] of uniqueRoutes.entries()) {
+    const label = `prerender: [${index + 1}/${uniqueRoutes.length}] ${route}`;
+    try {
+      const agentPage = await renderRoute(route);
+      if (agentPage) pages.push(agentPage);
+      done += 1;
+      console.log(label);
+    } catch (firstErr) {
+      console.warn(`${label} -- retrying once (${firstErr.message.split('\n')[0]})`);
+      try {
+        const agentPage = await renderRoute(route);
+        if (agentPage) pages.push(agentPage);
+        done += 1;
+        console.log(`${label} (ok on retry)`);
+      } catch (err) {
+        failures.push(route);
+        console.error(`prerender: FAILED ${route}: ${err.message}`);
+      }
     }
   }
 
