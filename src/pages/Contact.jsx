@@ -62,11 +62,13 @@ const otherChannels = [
 const ContactPage = () => {
   const { topic, mailto } = useContactContext();
 
-  // Layout (mobile first): short intro -> form -> "what happens next" -> two quiet text links.
-  // On large screens the form sits in the right column; intro, steps and links stack on the left.
-  // Laws of UX: one boxed, solid-button element on the page -- the form (Von Restorff); the steps
-  // and the alternatives are plain text so they don't compete with it (Hick, selective attention);
-  // the form is reached with little scrolling on a phone (Fitts, goal-gradient).
+  // Layout (mobile first): short intro -> form -> "Not ready to talk yet?" card -> "what happens
+  // next" -> a quiet email line. On large screens the form and the card sit in the right column;
+  // intro, steps and the email line stack on the left.
+  // Laws of UX: the form's button is the only solid one (Von Restorff). The assessment card is the
+  // second funnel, so it gets a large outline button right under the form, where a visitor who
+  // isn't ready to write looks next (proximity, Fitts), without competing with "Send message".
+  // The steps and the email line are plain text (Hick, selective attention).
   return (
     <section className="relative overflow-hidden bg-dark-bg pb-16 pt-28 text-dark-text md:pb-28 md:pt-32">
       <Seo
@@ -77,7 +79,7 @@ const ContactPage = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
 
       <div className="relative container mx-auto max-w-6xl px-5">
-        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-16 lg:gap-y-10">
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto_1fr] lg:gap-x-16 lg:gap-y-10">
           <div className="max-w-xl lg:col-start-1 lg:row-start-1">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Contact</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight text-light-text md:text-5xl">
@@ -90,6 +92,22 @@ const ContactPage = () => {
 
           <div className="lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:self-start">
             <ContactForm topic={topic} />
+
+            {/* Second funnel: visitors not ready to talk take the assessment instead of leaving. */}
+            <div className="mt-5 rounded-2xl border border-primary/30 bg-primary/[0.07] p-5 md:p-6">
+              <p className="text-base font-semibold text-light-text">Not ready to talk yet?</p>
+              <p className="mt-1 text-sm leading-6 text-gray-text">
+                See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
+              </p>
+              <Link
+                to={withFunnelParams('/ai-readiness')}
+                onClick={() => posthog.capture('contact_assessment_clicked', { ...getFunnelContext(), path: '/contact', topic })}
+                className="mt-4 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border-2 border-primary px-5 text-base font-semibold text-primary transition-colors duration-100 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg"
+              >
+                Check your test bench
+                <FiArrowRight aria-hidden="true" />
+              </Link>
+            </div>
           </div>
 
           <div className="lg:col-start-1 lg:row-start-2">
@@ -109,26 +127,12 @@ const ContactPage = () => {
             </ol>
           </div>
 
-          {/* Quieter alternatives: plain text links, so the form stays the one primary action. */}
-          <div className="space-y-1 border-t border-white/10 pt-6 text-sm text-gray-text lg:col-start-1 lg:row-start-3">
-            <p className="flex flex-wrap items-center gap-x-1.5">
-              Prefer email?
-              <a href={mailto} className="inline-flex min-h-[44px] items-center font-medium text-light-text underline underline-offset-4 hover:text-primary">
-                {CONTACT_EMAIL}
-              </a>
-            </p>
-            <p className="flex flex-wrap items-center gap-x-1.5">
-              Not ready to talk yet?
-              <Link
-                to={withFunnelParams('/ai-readiness')}
-                onClick={() => posthog.capture('contact_assessment_clicked', { ...getFunnelContext(), path: '/contact', topic })}
-                className="inline-flex min-h-[44px] items-center gap-1.5 font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Check your test bench
-                <FiArrowRight aria-hidden="true" />
-              </Link>
-            </p>
-          </div>
+          <p className="flex flex-wrap items-center gap-x-1.5 border-t border-white/10 pt-4 text-sm text-gray-text lg:col-start-1 lg:row-start-3 lg:self-start">
+            Prefer email?
+            <a href={mailto} className="inline-flex min-h-[44px] items-center font-medium text-light-text underline underline-offset-4 hover:text-primary">
+              {CONTACT_EMAIL}
+            </a>
+          </p>
         </div>
 
         <div className="mt-14 border-t border-white/10 pt-12">
