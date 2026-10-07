@@ -4,11 +4,13 @@ Contact
 
 
 
-Send us a message and we'll walk you through how Plotune Nexus fits your bench and your team. You'll get integration details, a timeline, and clear next steps in that first reply.
+Send us a message and we'll walk you through how Plotune Nexus fits your bench and your team, with integration details, a timeline, and clear next steps in our first reply.
 
-Email contact@plotune.net
+Work emailHow can we help?
 
-We read every message ourselves.
+We'll use your email to reply to your request. [Privacy](https://www.plotune.net/privacy)
+
+Prefer email? contact@plotune.net
 
 Not ready to talk yet?
 
