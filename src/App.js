@@ -51,6 +51,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Streams = lazy(() => import('./pages/Streams'));
 const StreamWorkspace = lazy(() => import('./StreamWorkspace/StreamWorkspace'));
+const StreamMVP = lazy(() => import('./StreamMVP/StreamMVP'));
 const DnsPage = lazy(() => import('./pages/DnsPage'));
 const Partnership = lazy(() => import('./pages/Partnership'));
 const PartnerApplication = lazy(() => import('./pages/PartnerApplication'));
@@ -126,7 +127,7 @@ const ScrollToTop = () => {
 const NavigationWrapper = ({ children }) => {
   const location = useLocation();
   // '/ai-readiness' is a standalone, chrome-free assessment flow (no site Header/Footer).
-  const hideLayoutPaths = ['/streams/connect', '/ai-readiness', '/stream/workspace'];
+  const hideLayoutPaths = ['/streams/connect', '/ai-readiness', '/stream/workspace', '/stream/prototypes/vision'];
   // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
@@ -178,7 +179,8 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/streams" element={<Streams />} />
-              <Route path="/stream/workspace" element={<StreamWorkspace />} />
+              <Route path="/stream/workspace" element={<StreamMVP />} />
+              <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
               <Route path="/dns" element={<DnsPage />} />
               <Route path="/partners" element={<Partnership />} />
               <Route path="/partner-portal" element={<PartnerPortal />} />

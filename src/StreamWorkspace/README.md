@@ -1,6 +1,6 @@
-# Plotune Stream workspace preview
+# Plotune Stream future-product reference
 
-Route: `/stream/workspace` (also accepts a trailing slash). The route is lazy loaded,
+Reference route: `/stream/prototypes/vision` (also accepts a trailing slash). The route is lazy loaded,
 uses a separate light application shell, and is emitted as a real static route by
 the existing GitHub Pages build. The existing `/streams` page is unchanged.
 
@@ -53,3 +53,6 @@ Before publishing, inspect desktop/tablet/mobile, try the interactions above, en
 no horizontal document overflow or runtime errors, and verify `/streams` still
 renders its original application. `/stream` itself was not an existing route and
 is intentionally not added or redirected by this feature.
+
+The shipped-MVP exploration is separate in `src/StreamMVP` at `/stream/workspace`.
+This richer reference is intentionally absent from MVP navigation.

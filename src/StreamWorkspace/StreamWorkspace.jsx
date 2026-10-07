@@ -1788,7 +1788,7 @@ export default function StreamWorkspace() {
         >
           <FiMenu />
         </button>
-        <a className="sw-brand" href="/stream/workspace">
+        <a className="sw-brand" href="/stream/prototypes/vision">
           <span className="sw-brand-symbol">
             <FiActivity />
           </span>
