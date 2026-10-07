@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { FiX, FiArrowUpRight } from "react-icons/fi";
+import { getTrendGeometry } from "./trendModel";
 
 export function Badge({ children, tone }) {
   const kind =
@@ -121,18 +122,6 @@ export function Trend({
   const span = ceiling - floor || 1;
   const y = (v) => 112 - ((v - floor) / span) * 80;
   const pointCount = Math.max(1, ...plotted.map((item) => item.values?.length || 0));
-  const pathFor = (seriesValues) => {
-    let connected = false;
-    return seriesValues.map((value, index) => {
-      if (!Number.isFinite(value)) {
-        connected = false;
-        return "";
-      }
-      const command = connected ? "L" : "M";
-      connected = true;
-      return `${command}${40 + (index / Math.max(1, pointCount - 1)) * 420},${y(value)}`;
-    }).join(" ");
-  };
   const formatTime = (point) => point?.timestamp
     ? new Date(point.timestamp).toISOString().slice(11, 16)
     : "";
@@ -202,10 +191,12 @@ export function Trend({
       )}
       {plotted.map((item, index) => {
         const seriesValues = item.values || [];
-        const lastIndex = seriesValues.map(Number.isFinite).lastIndexOf(true);
+        const geometry = getTrendGeometry(seriesValues, pointCount, y);
         return <g key={item.key || item.label || index}>
-          <path d={pathFor(seriesValues)} fill="none" stroke={item.color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-          {lastIndex >= 0 && <circle cx={40 + (lastIndex / Math.max(1, pointCount - 1)) * 420} cy={y(seriesValues[lastIndex])} r="3.5" fill={item.color} />}
+          <path d={geometry.path} fill="none" stroke={item.color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+          {geometry.points.map((point) => (
+            <circle key={point.index} cx={point.x} cy={point.y} r="3.5" fill={item.color} />
+          ))}
         </g>;
       })}
       {onInspectPoint && Number.isInteger(activeIndex) && activeIndex < pointCount && (

@@ -173,7 +173,10 @@ export default function Dashboard({ projectId, events, now, graphs, onAddGraph, 
                   <fieldset className="mvp-series-options mvp-event-properties">
                     <legend>Values</legend>
                     {numericProperties.length ? numericProperties.map((property) => (
-                      <label className="sw-check" key={property}>
+                      <label
+                        className={`sw-check mvp-property-option ${propertyNames.includes(property) ? "selected" : ""}`}
+                        key={property}
+                      >
                         <input
                           type="checkbox"
                           checked={propertyNames.includes(property)}

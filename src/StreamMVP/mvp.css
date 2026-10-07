@@ -443,6 +443,21 @@
 .mvp-graph-kind label.active { border-color:#9bc4b2; background:#eef6f1; color:#3e7662; }
 .mvp-graph-kind input { accent-color:#318273; }
 .mvp-event-properties { max-height:none; overflow:visible; }
+.mvp-event-properties .mvp-property-option {
+  box-sizing:border-box;
+  min-height:44px;
+  gap:11px;
+  padding:9px 10px;
+  border:1px solid #e3ebe7;
+  border-radius:4px;
+  background:#fff;
+  color:#526b67;
+  cursor:pointer;
+}
+.mvp-event-properties .mvp-property-option:hover { border-color:#bfd8cb; background:#f7faf8; }
+.mvp-event-properties .mvp-property-option.selected { border-color:#9bc4b2; background:#eef6f1; color:#3e7662; }
+.mvp-event-properties .mvp-property-option input { width:15px; height:15px; margin:0; accent-color:#318273; }
+.mvp-event-properties .mvp-property-option code { font-size:11px; }
 .mvp-graph-stage { position:relative; }
 .mvp-graph-stage .sw-trend { cursor:crosshair; }
 .sw-trend-inspection line { stroke:#657d7b; stroke-width:1; stroke-dasharray:3 3; opacity:.8; }
