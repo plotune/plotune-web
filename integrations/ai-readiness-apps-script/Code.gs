@@ -1,11 +1,10 @@
 /**
  * Plotune AI Readiness: lead collector (Google Apps Script web app)
  *
- * Two kinds of submissions, filed in separate tabs of the Google Sheet this script is attached to:
- *   - AI readiness assessment leads (https://www.plotune.net/ai-readiness)  -> "Leads" tab
- *   - Contact-form messages (https://www.plotune.net/contact, kind: 'contact') -> "Contact" tab
- * For each: 1. add one row to its tab, 2. email NOTIFY_EMAIL a summary (Reply goes straight to the
- * visitor), 3. optionally email the visitor a short confirmation (SEND_CONFIRMATION_TO_VISITOR).
+ * What it does, for every submission from https://www.plotune.net/ai-readiness:
+ *   1. Adds one row to the "Leads" tab of the Google Sheet this script is attached to.
+ *   2. Emails NOTIFY_EMAIL a summary (Reply goes straight to the visitor).
+ *   3. Optionally emails the visitor a short confirmation (SEND_CONFIRMATION_TO_VISITOR).
  *
  * The lead is saved FIRST. If an email fails (quota, typo), the row is still there and the
  * visitor still sees success. The only thing that makes the site show an error is not being
@@ -19,8 +18,7 @@
 // ---- Settings you may want to change ---------------------------------------------------
 const NOTIFY_EMAIL = 'contact@plotune.net';       // who gets "new lead" emails
 const SEND_CONFIRMATION_TO_VISITOR = true;        // false = only you are emailed
-const SHEET_NAME = 'Leads';                       // assessment leads tab (created automatically)
-const CONTACT_SHEET_NAME = 'Contact';             // contact-form messages tab (created automatically)
+const SHEET_NAME = 'Leads';                       // tab name (created automatically)
 // -----------------------------------------------------------------------------------------
 
 const MAX_BODY_CHARS = 20000;
@@ -28,8 +26,6 @@ const MAX_CONFIRMATIONS_PER_HOUR = 20;  // global cap: the endpoint is public, s
                                         // usable to make us email arbitrary addresses at volume
 const DEDUPE_SECONDS = 21600;           // CacheService maximum (6 h)
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const MAX_MESSAGE_CHARS = 3000;
-const SCRIPT_VERSION = 2; // shown by doGet, so a deploy can be checked from a browser
 
 const HEADERS = [
   'Received at', 'Email', 'Score %', 'Areas assessed', 'Confidence', 'Band',
@@ -43,17 +39,9 @@ const HEADERS = [
 ];
 const EMAILS_COLUMN = HEADERS.length; // 1-based index of the 'Emails' status column
 
-const CONTACT_HEADERS = [
-  'Received at', 'Email', 'Message', 'Topic', 'Page',
-  'Platform', 'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term',
-  'Google click id', 'Google campaign id', 'LinkedIn click id', 'Ad landing page', 'Referrer',
-  'Submission ID', 'Emails', 'Raw JSON',
-];
-const CONTACT_EMAILS_COLUMN = CONTACT_HEADERS.indexOf('Emails') + 1;
-
 /** Opening the web app URL in a browser lands here: a quick "is it deployed?" check. */
 function doGet() {
-  return json_({ ok: true, service: 'plotune-ai-readiness-leads', version: SCRIPT_VERSION, kinds: ['assessment', 'contact'] });
+  return json_({ ok: true, service: 'plotune-ai-readiness-leads' });
 }
 
 /** The website posts here. */
@@ -70,8 +58,6 @@ function doPost(e) {
     const email = clean_(data.email, 254).toLowerCase();
     if (!EMAIL_RE.test(email)) return json_({ ok: false, error: 'invalid_email' });
 
-    if (data.kind === 'contact') return handleContact_(data, email, raw);
-
     const lead = toLead_(data, email);
     const row = saveLead_(lead, raw);  // if this throws, the site shows an error (nothing was saved)
     if (row === 0) return json_({ ok: true }); // duplicate of a submission already saved (a retry)
@@ -85,111 +71,6 @@ function doPost(e) {
   } catch (err) {
     console.error(err);
     return json_({ ok: false, error: 'server_error' });
-  }
-}
-
-// ---- Contact-form messages ---------------------------------------------------------------
-
-function handleContact_(data, email, raw) {
-  const message = clean_(data.message, MAX_MESSAGE_CHARS);
-  if (!message) return json_({ ok: false, error: 'missing_message' });
-  const attr = data.attribution || {};
-  const c = {
-    receivedAt: new Date(),
-    email: email,
-    message: message,
-    topic: clean_(data.topic, 120),
-    page: clean_(data.page, 120),
-    platform: clean_(attr.platform, 40),
-    entrySource: clean_(attr.entry_source, 80),
-    utmSource: clean_(attr.utm_source, 80),
-    utmMedium: clean_(attr.utm_medium, 80),
-    utmCampaign: clean_(attr.utm_campaign, 120),
-    utmContent: clean_(attr.utm_content, 120),
-    utmTerm: clean_(attr.utm_term, 120),
-    gclid: clean_(attr.gclid || attr.gbraid || attr.wbraid, 300),
-    gadCampaignId: clean_(attr.gad_campaignid, 40),
-    liFatId: clean_(attr.li_fat_id, 300),
-    adLandingPath: clean_(attr.ad_landing_path, 120),
-    referrer: clean_(attr.referrer, 300),
-    submissionId: clean_(data.submissionId, 64),
-  };
-  const row = saveRow_(CONTACT_SHEET_NAME, CONTACT_HEADERS, c.submissionId, [
-    c.receivedAt, c.email, c.message, c.topic, c.page,
-    c.platform, c.entrySource, c.utmSource, c.utmMedium, c.utmCampaign, c.utmContent, c.utmTerm,
-    c.gclid, c.gadCampaignId, c.liFatId, c.adLandingPath, c.referrer,
-    c.submissionId, 'sending…', raw.slice(0, 5000),
-  ]);
-  if (row === 0) return json_({ ok: true }); // retry of a message already saved
-
-  const owner = notifyOwnerContact_(c);
-  const visitor = confirmContactVisitor_(c);
-  setCell_(CONTACT_SHEET_NAME, CONTACT_HEADERS, row, CONTACT_EMAILS_COLUMN, 'owner: ' + owner + ' / visitor: ' + visitor);
-  return json_({ ok: true });
-}
-
-/** Returns 'sent' or 'failed'. */
-function notifyOwnerContact_(c) {
-  try {
-    MailApp.sendEmail({
-      to: NOTIFY_EMAIL,
-      replyTo: c.email,
-      name: 'Plotune Contact',
-      subject: 'New contact message: ' + c.email + (c.topic ? ' (' + c.topic + ')' : ''),
-      body: [
-        'New message from the contact form on plotune.net.',
-        '',
-        'Email:            ' + c.email,
-        c.topic ? 'Topic:            ' + c.topic : '',
-        '',
-        c.message,
-        '',
-        '---',
-        'Came from:        ' + (c.platform || c.entrySource || 'unknown') + (c.gadCampaignId ? '  (Google campaign ' + c.gadCampaignId + ')' : ''),
-        'UTM:              ' + [c.utmSource, c.utmMedium, c.utmCampaign, c.utmContent].filter(String).join(' / '),
-        'First page:       ' + c.adLandingPath,
-        '',
-        'All messages: ' + SpreadsheetApp.getActiveSpreadsheet().getUrl(),
-        '',
-        'Hit Reply to answer the sender directly.',
-      ].join('\n'),
-    });
-    return 'sent';
-  } catch (err) {
-    console.error('notifyOwnerContact_ failed: ' + err);
-    return 'failed';
-  }
-}
-
-/** Returns 'sent', 'off', 'skipped (...)' or 'failed'. */
-function confirmContactVisitor_(c) {
-  if (!SEND_CONFIRMATION_TO_VISITOR) return 'off';
-  try {
-    const skip = confirmationLimit_('contact-confirmed:', c.email);
-    if (skip) return skip;
-    MailApp.sendEmail({
-      to: c.email,
-      replyTo: NOTIFY_EMAIL,
-      name: 'Plotune',
-      subject: 'We received your message',
-      body: [
-        'Hi,',
-        '',
-        'Thanks for contacting Plotune. We received your message and will reply to this address.',
-        '',
-        'Your message:',
-        c.message,
-        '',
-        'If you would like to add anything, just reply to this email.',
-        '',
-        'The Plotune team',
-        'https://www.plotune.net',
-      ].join('\n'),
-    });
-    return 'sent';
-  } catch (err) {
-    console.error('confirmContactVisitor_ failed: ' + err);
-    return 'failed';
   }
 }
 
@@ -232,30 +113,24 @@ function toLead_(data, email) {
 
 /** Appends the lead and returns its row number, or 0 if this submission was already saved. */
 function saveLead_(lead, raw) {
-  return saveRow_(SHEET_NAME, HEADERS, lead.submissionId, [
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    // The site re-sends the same submissionId when a visitor retries after a slow reply, so a
+    // retry of a lead that was in fact saved doesn't create a second row and second emails.
+    const cache = CacheService.getScriptCache();
+    const dedupeKey = lead.submissionId ? 'sub:' + hashKey_(lead.submissionId) : '';
+    if (dedupeKey && cache.get(dedupeKey)) return 0;
+
+    const sheet = getSheet_();
+    const cells = [
       lead.receivedAt, lead.email, lead.score, lead.assessed + ' of ' + lead.total,
       lead.confidence, lead.band, lead.interfaces, lead.tools, lead.bottlenecks, lead.automation,
       lead.otherInterfaces, lead.otherTools, lead.otherBottlenecks,
       lead.entrySource, lead.utmSource, lead.utmMedium, lead.utmCampaign, lead.referrer,
       lead.assessmentVersion, lead.scoringVersion, raw.slice(0, 5000),
       lead.submissionId, lead.utmContent, lead.utmTerm, lead.liFatId, 'sending…',
-  ]);
-}
-
-/**
- * Appends one row to a tab and returns its row number, or 0 if this submissionId was already
- * saved. The site re-sends the same submissionId when a visitor retries after a slow reply, so a
- * retry of something that was in fact saved doesn't create a second row and second emails.
- */
-function saveRow_(sheetName, headers, submissionId, cells) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
-  try {
-    const cache = CacheService.getScriptCache();
-    const dedupeKey = submissionId ? 'sub:' + hashKey_(submissionId) : '';
-    if (dedupeKey && cache.get(dedupeKey)) return 0;
-
-    const sheet = getSheet_(sheetName, headers);
+    ];
     // EVERY text cell is neutralised: all of it arrives from a public endpoint, and appendRow
     // would otherwise evaluate a value like =IMPORTXML(...) as a live formula in this sheet.
     sheet.appendRow(cells.map(function (v) { return typeof v === 'string' ? sheetSafe_(v) : v; }));
@@ -268,30 +143,24 @@ function saveRow_(sheetName, headers, submissionId, cells) {
 }
 
 function recordEmailStatus_(row, text) {
-  setCell_(SHEET_NAME, HEADERS, row, EMAILS_COLUMN, text);
-}
-
-function setCell_(sheetName, headers, row, column, text) {
   try {
-    getSheet_(sheetName, headers).getRange(row, column).setValue(text);
+    getSheet_().getRange(row, EMAILS_COLUMN).setValue(text);
   } catch (err) {
-    console.error('setCell_ failed: ' + err);
+    console.error('recordEmailStatus_ failed: ' + err);
   }
 }
 
-function getSheet_(sheetName, headers) {
-  const name = sheetName || SHEET_NAME;
-  const cols = headers || HEADERS;
+function getSheet_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(name);
-  if (!sheet) sheet = ss.insertSheet(name);
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(cols);
+    sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
-    sheet.getRange(1, 1, 1, cols.length).setFontWeight('bold');
-  } else if (sheet.getLastColumn() < cols.length) {
-    // Tab created by an earlier version of this script: add the newer column headers.
-    sheet.getRange(1, 1, 1, cols.length).setValues([cols]).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  } else if (sheet.getLastColumn() < HEADERS.length) {
+    // Sheet created by an earlier version of this script: add the newer column headers.
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
   }
   return sheet;
 }
@@ -338,8 +207,18 @@ function notifyOwner_(lead) {
 function confirmVisitor_(lead) {
   if (!SEND_CONFIRMATION_TO_VISITOR) return 'off';
   try {
-    const skip = confirmationLimit_('confirmed:', lead.email);
-    if (skip) return skip;
+    // Abuse limits (the endpoint is public, so anyone could script it to make us email others):
+    //  - at most one confirmation per mailbox per 6 h; name+tag@x and name@x count as one mailbox,
+    //  - at most MAX_CONFIRMATIONS_PER_HOUR confirmations in total per hour.
+    // Your own notification is always sent, so a skipped confirmation never hides a lead.
+    const cache = CacheService.getScriptCache();
+    const mailboxKey = 'confirmed:' + hashKey_(lead.email.replace(/\+[^@]*@/, '@'));
+    if (cache.get(mailboxKey)) return 'skipped (already confirmed recently)';
+    const hourKey = 'confirmations:' + Utilities.formatDate(new Date(), 'UTC', 'yyyyMMddHH');
+    const sentThisHour = Number(cache.get(hourKey) || 0);
+    if (sentThisHour >= MAX_CONFIRMATIONS_PER_HOUR) return 'skipped (hourly limit)';
+    cache.put(hourKey, String(sentThisHour + 1), 3600);
+    cache.put(mailboxKey, '1', DEDUPE_SECONDS);
 
     MailApp.sendEmail({
       to: lead.email,
@@ -364,25 +243,6 @@ function confirmVisitor_(lead) {
     console.error('confirmVisitor_ failed: ' + err);
     return 'failed';
   }
-}
-
-/**
- * Abuse limits for visitor confirmations (the endpoint is public, so anyone could script it to
- * make us email others): at most one confirmation per mailbox per kind per 6 h (name+tag@x and
- * name@x count as one mailbox), and at most MAX_CONFIRMATIONS_PER_HOUR in total per hour across
- * both kinds. Returns null if a confirmation may be sent (and counts it), else the skip reason.
- * Your own notification is always sent, so a skipped confirmation never hides a lead.
- */
-function confirmationLimit_(prefix, email) {
-  const cache = CacheService.getScriptCache();
-  const mailboxKey = prefix + hashKey_(email.replace(/\+[^@]*@/, '@'));
-  if (cache.get(mailboxKey)) return 'skipped (already confirmed recently)';
-  const hourKey = 'confirmations:' + Utilities.formatDate(new Date(), 'UTC', 'yyyyMMddHH');
-  const sentThisHour = Number(cache.get(hourKey) || 0);
-  if (sentThisHour >= MAX_CONFIRMATIONS_PER_HOUR) return 'skipped (hourly limit)';
-  cache.put(hourKey, String(sentThisHour + 1), 3600);
-  cache.put(mailboxKey, '1', DEDUPE_SECONDS);
-  return null;
 }
 
 // ---- Small helpers ---------------------------------------------------------------------
@@ -434,21 +294,6 @@ function runTest() {
     attribution: { entry_source: 'TEST', utm_source: 'test', referrer: '' },
     versions: { assessment: 'v1', scoring: 'v1' },
     submissionId: 'test-' + new Date().getTime(),
-  };
-  const out = doPost({ postData: { contents: JSON.stringify(sample) } });
-  Logger.log(out.getContent());
-}
-
-/** Like runTest, for the contact form: adds one TEST row to the "Contact" tab (delete it after). */
-function runTestContact() {
-  const sample = {
-    kind: 'contact',
-    email: NOTIFY_EMAIL,
-    message: 'TEST message from runTestContact()',
-    topic: 'TEST',
-    page: '/contact',
-    attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/nexus/' },
-    submissionId: 'test-contact-' + new Date().getTime(),
   };
   const out = doPost({ postData: { contents: JSON.stringify(sample) } });
   Logger.log(out.getContent());
