@@ -12,7 +12,10 @@ test("event history searches arbitrary nested properties and orders timestamps n
   const nested = filterEvents(events, { search: "validation", range: "all" });
   expect(nested.map((e) => e.event)).toEqual(["calibration.loaded"]);
   const result = filterEvents([...events].reverse(), { range: "all" });
-  expect(result[0].event).toBe("test.failed");
+  expect(result[0].event).toBe("motor");
+  expect(Date.parse(result[0].timestamp)).toBeGreaterThan(
+    Date.parse(result[1].timestamp),
+  );
   expect(result[result.length - 1].event).toBe("firmware.booted");
 });
 test("time and event-name filters combine without requiring a hardware schema", () => {
@@ -29,7 +32,7 @@ test("time and event-name filters combine without requiring a hardware schema", 
       range: "all",
       now: SNAPSHOT,
     }),
-  ).toHaveLength(2);
+  ).toHaveLength(3);
   const generic = [
     {
       id: "arbitrary",

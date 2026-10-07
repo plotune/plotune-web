@@ -135,6 +135,20 @@ function seedEvents(project) {
               diagnostics: { watchdog: false, boot_count: 174 },
             },
           ],
+          ["motor", "2026-10-07T10:45:40.000Z", { temp: 82.1, oil_temp: 76.4, cell_temp: 67.8, rpm: 3800, state: "running" }],
+          ["motor", "2026-10-07T10:42:10.000Z", { temp: 83.7, oil_temp: 77.1, cell_temp: 68.2, rpm: 4120, state: "running" }],
+          ["motor", "2026-10-07T10:37:20.000Z", { temp: 85.3, oil_temp: 78.6, cell_temp: 69.1, rpm: 4350, state: "running" }],
+          ["motor", "2026-10-07T10:28:00.000Z", { temp: 84.2, oil_temp: 78.1, cell_temp: 68.9, rpm: 3980, state: "idle" }],
+          ["motor", "2026-10-07T10:12:00.000Z", { temp: 81.8, oil_temp: 75.9, cell_temp: 67.2, rpm: 3650, state: "running" }],
+          ["motor", "2026-10-07T09:48:00.000Z", { temp: 79.5, oil_temp: 74.2, cell_temp: 65.8, rpm: 3420, state: "running" }],
+          ["environment", "2026-10-07T10:43:10.000Z", { temperature: 22.4, humidity: 41.2, state: "stable" }],
+          ["environment", "2026-10-07T10:20:10.000Z", { temperature: 22.1, humidity: 42.0, state: "stable" }],
+          ["test.failed", "2026-10-07T10:44:20.000Z", { suite: "thermal_cycle", attempt: 2, result: "failed" }],
+          ["test.failed", "2026-10-07T10:16:20.000Z", { suite: "sensor_check", attempt: 1, result: "failed" }],
+          ["can.timeout", "2026-10-07T10:05:12.000Z", { channel: "CAN 1", wait_ms: 200, retries: 1 }],
+          ["sensor.reading", "2026-10-07T09:58:00.000Z", { temperature: 31.6, pressure: 100.8, unit: "mixed" }],
+          ["simulation.completed", "2026-10-07T09:32:41.119Z", { model: "thermal_model", iterations: 240, converged: true }],
+          ["firmware.booted", "2026-10-07T09:05:19.005Z", { version: "1.2.1", boot_count: 175, reset_reason: "watchdog" }],
         ]
       : [
           [
@@ -167,6 +181,22 @@ function seedEvents(project) {
             "2026-10-07T09:58:19.005Z",
             { board: "motor-driver", build: 214, bus: "RS485" },
           ],
+          ["robot.position", "2026-10-07T10:45:50.000Z", { x: 4.2, y: 1.8, heading: 92.1, state: "moving" }],
+          ["robot.position", "2026-10-07T10:43:50.000Z", { x: 4.8, y: 2.1, heading: 96.4, state: "moving" }],
+          ["robot.position", "2026-10-07T10:40:50.000Z", { x: 5.3, y: 2.7, heading: 101.2, state: "turning" }],
+          ["robot.position", "2026-10-07T10:35:50.000Z", { x: 6.1, y: 3.0, heading: 108.5, state: "moving" }],
+          ["robot.position", "2026-10-07T10:30:50.000Z", { x: 6.8, y: 3.9, heading: 114.0, state: "moving" }],
+          ["environment", "2026-10-07T10:44:10.000Z", { temperature: 21.8, humidity: 38.4, state: "stable" }],
+          ["environment", "2026-10-07T10:26:10.000Z", { temperature: 22.0, humidity: 39.1, state: "stable" }],
+          ["test.failed", "2026-10-07T10:39:20.000Z", { suite: "navigation_check", result: "failed", attempt: 1 }],
+          ["test.started", "2026-10-07T10:36:20.000Z", { suite: "obstacle_course", attempt: 3 }],
+          ["can.timeout", "2026-10-07T10:32:12.000Z", { channel: "CAN 2", wait_ms: 160, retries: 2 }],
+          ["sensor.reading", "2026-10-07T10:28:00.000Z", { range_m: 2.8, confidence: 0.94, state: "valid" }],
+          ["simulation.completed", "2026-10-07T10:20:41.119Z", { model: "warehouse_route", iterations: 180, converged: true }],
+          ["firmware.booted", "2026-10-07T10:10:19.005Z", { version: "2.1.4", boot_count: 64, reset_reason: "power_on" }],
+          ["robot.position", "2026-10-07T09:48:50.000Z", { x: 7.4, y: 4.2, heading: 120.2, state: "stopped" }],
+          ["test.failed", "2026-10-07T09:42:20.000Z", { suite: "sensor_check", result: "failed", attempt: 2 }],
+          ["environment", "2026-10-07T09:28:10.000Z", { temperature: 21.4, humidity: 39.9, state: "stable" }],
         ];
   return entries.map(([event, timestamp, properties], i) => ({
     id: `${project}-${i}`,
@@ -199,6 +229,30 @@ export function filterEvents(
         Date.parse(e.timestamp) <= current,
     )
     .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
+}
+
+export const EVENTS_PER_PAGE = 20;
+
+const compareEventsNewestFirst = (a, b) => {
+  const byTime = Date.parse(b.timestamp) - Date.parse(a.timestamp);
+  return byTime || String(a.id).localeCompare(String(b.id));
+};
+
+// A cursor is the last event rendered on the current page. The local fixture
+// array stands in for a bounded backend response during this frontend-only MVP.
+export function cursorPage(events, cursor = null, limit = EVENTS_PER_PAGE) {
+  const ordered = [...events].sort(compareEventsNewestFirst);
+  const remaining = cursor
+    ? ordered.filter((event) => compareEventsNewestFirst(event, cursor) > 0)
+    : ordered;
+  const items = remaining.slice(0, limit);
+  return {
+    items,
+    nextCursor:
+      remaining.length > limit && items.length
+        ? { id: items[items.length - 1].id, timestamp: items[items.length - 1].timestamp }
+        : null,
+  };
 }
 export function ingestionSnippet(language, apiKey) {
   const payload = {
