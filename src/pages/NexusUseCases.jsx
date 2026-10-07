@@ -6,7 +6,6 @@ import { ReactComponent as DiffSvg } from '../assets/use-case-diff.svg';
 import { ReactComponent as TimelineSvg } from '../assets/use-case-timeline.svg';
 import { ReactComponent as MeshSvg } from '../assets/use-case-mesh.svg';
 import { ReactComponent as DocumentSvg } from '../assets/use-case-document.svg';
-import { trackGoogleAdsContactConversion } from '../utils/googleAds';
 
 const publicBase = process.env.PUBLIC_URL || '';
 
@@ -1129,7 +1128,6 @@ const NexusUseCases = () => {
               <div className="mt-8">
                 <a
                   href={contactMailto('Plotune Nexus')}
-                  onClick={trackGoogleAdsContactConversion}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
                 >
                   Contact Us
@@ -1268,7 +1266,6 @@ const NexusUseCases = () => {
                 </div>
                 <a
                   href={contactMailto(activeIndustryConfig.label)}
-                  onClick={trackGoogleAdsContactConversion}
                   className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-gray-text transition-all duration-300 hover:border-primary/40 hover:text-white"
                 >
                   Contact Us
@@ -1307,7 +1304,6 @@ const NexusUseCases = () => {
               </div>
               <a
                 href={contactMailto('Plotune Nexus')}
-                onClick={trackGoogleAdsContactConversion}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
                 Contact Us

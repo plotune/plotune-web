@@ -1,7 +1,8 @@
 // Google Ads conversions, sent through the Google tag (gtag.js) loaded in public/index.html.
 //
-//   "Kişi" (contact)          -- the contact-email buttons on /contact and /nexus/use-cases. Not on
-//                                support / privacy / partner mailto links, which aren't leads.
+//   "Kişi" (contact)          -- a contact-form message confirmed saved by the backend
+//                                (src/components/ContactForm.jsx): a real conversation, not a tap
+//                                on a mailto: link (15 such taps produced 1 email).
 //   "AI Readiness Lead"       -- a confirmed AI-readiness lead (email saved by the backend). Its own
 //                                action, so Google Ads can value and report it apart from Kişi.
 //
