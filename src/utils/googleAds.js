@@ -1,7 +1,8 @@
 // Google Ads "Kişi" (contact) conversion, sent through the Google tag (gtag.js) loaded in
-// public/index.html. Fired on real contact intent only: the contact-email buttons on /contact and
-// /nexus/use-cases, and a confirmed AI-readiness lead. Not on support / privacy / partner mailto
-// links, which aren't leads.
+// public/index.html. Fired only when a contact-form message is confirmed saved
+// (src/components/ContactForm.jsx): a real conversation, not a tap on a mailto: link (15 such taps
+// produced 1 email) and not an AI-readiness lead (that would need its own conversion action, so
+// the two signals don't mix in Google's bidding).
 //
 // At most once per browser session, so double clicks or "emailed us AND took the assessment"
 // count as one contact. Inactive (no-op) when the send_to value isn't configured or the tag is

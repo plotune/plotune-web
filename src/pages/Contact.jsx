@@ -1,9 +1,11 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { FiArrowRight, FiClock, FiMail, FiMapPin } from 'react-icons/fi';
+import { Link, useLocation } from 'react-router-dom';
+import { FiArrowRight, FiClock, FiMapPin } from 'react-icons/fi';
 import Seo from '../components/Seo';
+import ContactForm from '../components/ContactForm';
 import { getSolutionSegment } from '../content/solutions';
-import { trackGoogleAdsContactConversion } from '../utils/googleAds';
+import { posthog } from '../posthog';
+import { getFunnelContext, withFunnelParams } from '../utils/funnel';
 
 const nextSteps = [
   ['You tell us about your setup', 'What you’re testing, what’s already on your bench, and where the manual work is.'],
@@ -25,7 +27,7 @@ const CONTACT_EMAIL = 'contact@plotune.net';
 // solution page doesn't have to re-explain what they're reaching out about;
 // the subject/body already name the workflow they were just reading about.
 // Falls back to a plain, undirected inquiry when there's no funnel context.
-const useContactMailto = () => {
+const useContactContext = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const solutionSlug = params.get('solution') || params.get('segment');
@@ -36,7 +38,10 @@ const useContactMailto = () => {
     ? `Hi Plotune team,\n\nI was reading about ${solution.label} and wanted to talk through how it would fit our setup.\n\n`
     : `Hi Plotune team,\n\nI wanted to talk through how Plotune Nexus would fit our setup.\n\n`;
 
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return {
+    topic: solution ? solution.label : null,
+    mailto: `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+  };
 };
 
 const otherChannels = [
@@ -55,10 +60,15 @@ const otherChannels = [
 ];
 
 const ContactPage = () => {
-  const mailto = useContactMailto();
+  const { topic, mailto } = useContactContext();
 
+  // Layout (mobile first): heading -> form -> quieter alternatives -> "what happens next".
+  // On large screens the form sits in the right column and the explanation on the left.
+  // Laws of UX: one primary action (the form's solid button, Von Restorff); the alternatives are
+  // text / outline only so they don't compete (Hick, selective attention); familiar labelled form
+  // (Jakob); large targets (Fitts).
   return (
-    <section className="relative overflow-hidden bg-dark-bg py-20 text-dark-text md:py-28">
+    <section className="relative overflow-hidden bg-dark-bg py-16 text-dark-text md:py-28">
       <Seo
         title="Contact Plotune"
         description="Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
@@ -67,32 +77,46 @@ const ContactPage = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
 
       <div className="relative container mx-auto max-w-6xl px-5">
-        <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="max-w-xl">
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-12 lg:gap-y-10">
+          <div className="max-w-xl lg:col-start-1 lg:row-start-1">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Contact</p>
             <h1 className="mt-5 text-4xl font-semibold leading-tight text-light-text md:text-5xl">
               Tell us about your test environment.
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-text">
-              Send us a message and we'll walk you through how Plotune Nexus fits your bench and
-              your team. You'll get integration details, a timeline, and clear next steps in
-              that first reply.
+              Send us a message and we&apos;ll walk you through how Plotune Nexus fits your bench and
+              your team, with integration details, a timeline, and clear next steps in our first reply.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href={mailto}
-                onClick={trackGoogleAdsContactConversion}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
-              >
-                <FiMail />
-                Email {CONTACT_EMAIL}
-                <FiArrowRight />
+          </div>
+
+          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <ContactForm topic={topic} />
+
+            <p className="mt-5 text-center text-sm text-gray-text">
+              Prefer email?{' '}
+              <a href={mailto} className="font-medium text-light-text underline underline-offset-4 hover:text-primary">
+                {CONTACT_EMAIL}
               </a>
-              <p className="text-sm text-gray-text">We read every message ourselves.</p>
+            </p>
+
+            {/* For visitors who aren't ready to talk to anyone yet: a lower-commitment first step. */}
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="font-semibold text-light-text">Not ready to talk yet?</p>
+              <p className="mt-1 text-sm leading-6 text-gray-text">
+                See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
+              </p>
+              <Link
+                to={withFunnelParams('/ai-readiness')}
+                onClick={() => posthog.capture('contact_assessment_clicked', { ...getFunnelContext(), path: '/contact', topic })}
+                className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-white/20 px-5 text-sm font-semibold text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-auto"
+              >
+                Check your test bench
+                <FiArrowRight aria-hidden="true" />
+              </Link>
             </div>
           </div>
 
-          <div className="rounded-[2rem] bg-dark-card/80 p-6 shadow-2xl backdrop-blur-xl md:p-7">
+          <div className="rounded-[2rem] bg-dark-card/60 p-6 md:p-7 lg:col-start-1 lg:row-start-2 lg:self-start">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-text">What happens next</p>
             <ol className="mt-5 space-y-5">
               {nextSteps.map(([title, copy], index) => (

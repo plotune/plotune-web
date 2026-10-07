@@ -5,7 +5,6 @@ import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import Seo from '../components/Seo';
 import logo from '../assets/logo.png';
 import { getFunnelContext, withFunnelParams } from '../utils/funnel';
-import { trackGoogleAdsContactConversion } from '../utils/googleAds';
 import './AiReadiness.css';
 import QuestionScreen from './QuestionScreen';
 import ResultScreen from './ResultScreen';
@@ -210,14 +209,12 @@ const AiReadinessPage = () => {
     const outcome = await submitAssessment(payload);
     // Only a real, confirmed lead counts as a LinkedIn conversion (no-op until configured).
     const linkedinConversion = outcome.status === 'sent' ? trackLinkedInLead() : false;
-    const googleAdsConversion = outcome.status === 'sent' ? trackGoogleAdsContactConversion() : false;
     // The email itself is intentionally NOT sent to PostHog.
     trackAiReadiness(AI_READINESS_EVENTS.emailSubmitted, {
       ...answerProperties(answers),
       ...resultProperties(result),
       delivery: outcome.status, // sent | not_configured | error
       linkedin_conversion: linkedinConversion,
-      google_ads_conversion: googleAdsConversion,
     });
     if (outcome.status !== 'error') setSubmission({ delivery: outcome.status, email: email.trim() });
     return outcome.status;
