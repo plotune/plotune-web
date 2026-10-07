@@ -4,21 +4,13 @@ Contact
 
 
 
-Send us a message and we'll walk you through how Plotune Nexus fits your bench and your team, with integration details, a timeline, and clear next steps in our first reply.
+We reply with integration details, a timeline, and clear next steps.
 
 Work emailHow can we help?
 
 We'll use your email to reply to your request. [Privacy](https://www.plotune.net/privacy)
 
-Prefer email? contact@plotune.net
-
-Not ready to talk yet?
-
-See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
-
-[Check your test bench](https://www.plotune.net/ai-readiness?entry_source=direct)
-
-What happens next
+## What happens next
 
 - 1
 
@@ -37,6 +29,10 @@ Which interfaces apply, what a first bounded workflow looks like on your equipme
 You get a straight answer
 
 Whether it fits, and what setting it up on your bench would actually take.
+
+Prefer email?contact@plotune.net
+
+Not ready to talk yet?[Check your test bench](https://www.plotune.net/ai-readiness?entry_source=direct)
 
 Other ways to reach us
 

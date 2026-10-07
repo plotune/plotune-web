@@ -1039,21 +1039,13 @@ Contact
 
 
 
-Send us a message and we'll walk you through how Plotune Nexus fits your bench and your team, with integration details, a timeline, and clear next steps in our first reply.
+We reply with integration details, a timeline, and clear next steps.
 
 Work emailHow can we help?
 
 We'll use your email to reply to your request. [Privacy](https://www.plotune.net/privacy)
 
-Prefer email? contact@plotune.net
-
-Not ready to talk yet?
-
-See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
-
-[Check your test bench](https://www.plotune.net/ai-readiness?entry_source=direct)
-
-What happens next
+## What happens next
 
 - 1
 
@@ -1072,6 +1064,10 @@ Which interfaces apply, what a first bounded workflow looks like on your equipme
 You get a straight answer
 
 Whether it fits, and what setting it up on your bench would actually take.
+
+Prefer email?contact@plotune.net
+
+Not ready to talk yet?[Check your test bench](https://www.plotune.net/ai-readiness?entry_source=direct)
 
 Other ways to reach us
 
@@ -1304,7 +1300,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 1 Dec 2025
+Updated: Dec 1, 2025
 
 Plotune Relay Extension
 
@@ -1320,7 +1316,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 22 Dec 2025
+Updated: Dec 22, 2025
 
 Plotune Arduino Extension
 
@@ -1336,7 +1332,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 19 Dec 2025
+Updated: Dec 19, 2025
 
 Plotune Simple Reader
 
@@ -1352,7 +1348,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 3 Jan 2026
+Updated: Jan 3, 2026
 
 Plotune Stream Extension
 
@@ -1368,7 +1364,7 @@ verified  core  stream
 
 🖥️  Linux • Windows
 
-Updated: 23 Dec 2025
+Updated: Dec 23, 2025
 
 Plotune MQTT Extension
 
@@ -1384,7 +1380,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 31 Dec 2025
+Updated: Dec 31, 2025
 
 Automotive File Extension
 
