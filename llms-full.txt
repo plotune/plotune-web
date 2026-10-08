@@ -562,7 +562,11 @@ Connect. Access. Automate.
 
 Plotune Nexus is the hardware and software hub at the center of your test environment. It connects your bench, your tools, and your team, and lets you control everything from anywhere.
 
-[Get Your Integration Plan](https://www.plotune.net/contact)[See How It Connects](https://www.plotune.net/nexus/connectivity)
+[Check Your AI Readiness](https://www.plotune.net/ai-readiness?entry_source=direct)
+
+4 quick questions · about 30 seconds · no sign-up
+
+[See How It Connects](https://www.plotune.net/nexus/connectivity)
 
 Hardware
 
@@ -640,7 +644,7 @@ Set up recurring or condition-triggered test jobs. Run them overnight, remotely,
 
 See how Plotune Nexus fits your bench, vehicle, or validation team.
 
-[View Use Cases](https://www.plotune.net/nexus/use-cases)[Contact Us](https://www.plotune.net/contact)
+[View Use Cases](https://www.plotune.net/nexus/use-cases)[Get Your Integration Plan](https://www.plotune.net/contact)
 
 Already evaluating the technical fit? [Read the Nexus documentation](https://www.plotune.net/docs/nexus) for the security model, hardware compatibility, and MCP API reference.
 
@@ -1294,7 +1298,7 @@ Plotune SandBox Extension
 
 ### Plotune SandBox Extension
 
- v1.0.0
+ —
 
 by Plotune SDK Team
 
@@ -1303,8 +1307,6 @@ Random data generator for SandBox environment in Plotune
 verified  core
 
 🖥️  Linux • Windows
-
-Updated: 1 Dec 2025
 
 Plotune Relay Extension
 
@@ -1320,7 +1322,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 22 Dec 2025
+Updated: Dec 22, 2025
 
 Plotune Arduino Extension
 
@@ -1336,7 +1338,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 19 Dec 2025
+Updated: Dec 19, 2025
 
 Plotune Simple Reader
 
@@ -1352,13 +1354,13 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 3 Jan 2026
+Updated: Jan 3, 2026
 
 Plotune Stream Extension
 
 ### Plotune Stream Extension
 
- v1.0.0
+ —
 
 by Plotune SDK Team
 
@@ -1367,8 +1369,6 @@ Plotune Stream - Producer and Consumer Extension
 verified  core  stream
 
 🖥️  Linux • Windows
-
-Updated: 23 Dec 2025
 
 Plotune MQTT Extension
 
@@ -1384,7 +1384,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 31 Dec 2025
+Updated: Dec 31, 2025
 
 Automotive File Extension
 

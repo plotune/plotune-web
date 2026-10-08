@@ -6,7 +6,11 @@ Connect. Access. Automate.
 
 Plotune Nexus is the hardware and software hub at the center of your test environment. It connects your bench, your tools, and your team, and lets you control everything from anywhere.
 
-[Get Your Integration Plan](https://www.plotune.net/contact)[See How It Connects](https://www.plotune.net/nexus/connectivity)
+[Check Your AI Readiness](https://www.plotune.net/ai-readiness?entry_source=direct)
+
+4 quick questions · about 30 seconds · no sign-up
+
+[See How It Connects](https://www.plotune.net/nexus/connectivity)
 
 Hardware
 
@@ -84,7 +88,7 @@ Set up recurring or condition-triggered test jobs. Run them overnight, remotely,
 
 See how Plotune Nexus fits your bench, vehicle, or validation team.
 
-[View Use Cases](https://www.plotune.net/nexus/use-cases)[Contact Us](https://www.plotune.net/contact)
+[View Use Cases](https://www.plotune.net/nexus/use-cases)[Get Your Integration Plan](https://www.plotune.net/contact)
 
 Already evaluating the technical fit? [Read the Nexus documentation](https://www.plotune.net/docs/nexus) for the security model, hardware compatibility, and MCP API reference.
 

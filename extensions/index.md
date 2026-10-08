@@ -8,7 +8,7 @@ Plotune SandBox Extension
 
 ### Plotune SandBox Extension
 
- v1.0.0
+ —
 
 by Plotune SDK Team
 
@@ -17,8 +17,6 @@ Random data generator for SandBox environment in Plotune
 verified  core
 
 🖥️  Linux • Windows
-
-Updated: 1 Dec 2025
 
 Plotune Relay Extension
 
@@ -34,7 +32,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 22 Dec 2025
+Updated: Dec 22, 2025
 
 Plotune Arduino Extension
 
@@ -50,7 +48,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 19 Dec 2025
+Updated: Dec 19, 2025
 
 Plotune Simple Reader
 
@@ -66,13 +64,13 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 3 Jan 2026
+Updated: Jan 3, 2026
 
 Plotune Stream Extension
 
 ### Plotune Stream Extension
 
- v1.0.0
+ —
 
 by Plotune SDK Team
 
@@ -81,8 +79,6 @@ Plotune Stream - Producer and Consumer Extension
 verified  core  stream
 
 🖥️  Linux • Windows
-
-Updated: 23 Dec 2025
 
 Plotune MQTT Extension
 
@@ -98,7 +94,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: 31 Dec 2025
+Updated: Dec 31, 2025
 
 Automotive File Extension
 
