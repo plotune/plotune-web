@@ -1308,7 +1308,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: Dec 1, 2025
+Updated: 1 Dec 2025
 
 Plotune Relay Extension
 
@@ -1324,7 +1324,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: Dec 22, 2025
+Updated: 22 Dec 2025
 
 Plotune Arduino Extension
 
@@ -1340,7 +1340,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: Dec 19, 2025
+Updated: 19 Dec 2025
 
 Plotune Simple Reader
 
@@ -1356,7 +1356,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: Jan 3, 2026
+Updated: 3 Jan 2026
 
 Plotune Stream Extension
 
@@ -1372,7 +1372,7 @@ verified  core  stream
 
 🖥️  Linux • Windows
 
-Updated: Dec 23, 2025
+Updated: 23 Dec 2025
 
 Plotune MQTT Extension
 
@@ -1388,7 +1388,7 @@ verified  core
 
 🖥️  Linux • Windows
 
-Updated: Dec 31, 2025
+Updated: 31 Dec 2025
 
 Automotive File Extension
 
