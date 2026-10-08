@@ -1,47 +1,50 @@
-# Plotune Stream MVP exploration
+# Plotune Stream workspace preview
 
-`/stream/workspace` is the small event-infrastructure prototype. Events is the
-project's default surface. Navigation contains only Events, API setup, MCP setup,
-and Project Settings. The original public `/streams` page remains unchanged;
-`/stream` is still not a public route in this repository.
+`/stream/workspace` is a frontend-only project event workspace. The MVP routes
+cover Events, Dashboards, API Setup, MCP Setup, Webhooks, and Project Settings.
+The richer future workspace remains separate at `/stream/prototypes/vision`.
 
-The richer engineering workspace remains at `/stream/prototypes/vision` in
-`src/StreamWorkspace`. It is absent from MVP navigation and independently lazy loaded.
+## Events and shared filters
 
-## Activation and exploration
+Events keep the generic envelope (`id`, `event`, `timestamp`, `properties`). The
+Explorer combines event name, time range, search, and property conditions through
+`filterModel.js`; its cursor pagination is applied after the common query. Filter
+conditions support nested property paths and strict value types. Saved Filters are
+project-scoped definitions referenced by ID from Dashboard widgets.
 
-Create a project (or select My first project), copy its curl example, and use
-Simulate first event to demonstrate receipt in the explorer. Language alternatives
-are compact examples; the CAPL example is explicitly HTTP-adapter pseudocode.
+`FilterControls.jsx` manages temporary conditions and project Saved Filters.
+`projectResourceStore.js` stores Saved Filter definitions and Dashboard widget
+configuration in browser `localStorage`. This persistence is local to the current
+browser profile, not shared server storage. Event fixtures and Explorer state remain
+in-memory and reset on reload. If a referenced Saved Filter is deleted, the widget
+shows an unavailable-filter state and does not broaden to unfiltered data.
 
-Events contain only a name, timestamp, and arbitrary JSON properties. There is no
-configured hardware schema or built-in meaning for event names. The explorer shows
-three discovered properties per row, summarizes nested JSON, and exposes everything
-in a detail drawer. Search includes nested properties. Filters cover event name and
-time; timestamps use UTC and results are newest first. New-event preview requires
-an explicit simulate action and holds received events behind an indication so the
-list does not move during inspection. Showing those events resets filters explicitly.
+`eventQueryService.js` is the mock retrieval boundary for filtered cursor pages.
+Explorer and Dashboard queries use the pure evaluator in `filterModel.js`. Export
+uses the same query, retrieves all mock matches rather than the current page, then
+serializes JSON, CSV, or TSV in the browser. The mock exporter caps each export at
+10,000 matches and yields between chunks; a production paginated source can replace
+the mock retrieval adapter.
 
-API setup and project settings share a mock project key. Reveal, copy, and confirmed
-regeneration are local. Regeneration also updates all examples and resets MCP's mock
-connection status. MCP describes querying project event history only.
+## Dashboard widgets
 
-Usage is a mock account-wide allowance of 100,000 accepted events per month. It
-increments when preview events are accepted. There is no billing UI.
+`WidgetEditor.jsx` configures a numeric-property line chart or event-count chart,
+optional Saved Filter, custom-property breakdown, title, and bounded time range.
+`widgetModel.js` evaluates the referenced Saved Filter by ID at render time, so
+editing that definition updates its widgets. A widget whose filter was deleted
+remains visible with a recovery action. The existing Plotune chart components render
+bucketed frontend fixture data; there is no backend query, persistence, or live
+transport.
 
-Everything is frontend state and resets on reload. No endpoint is contacted, no real
-key is issued, no model is called, and nothing is stored remotely. Endpoint addresses
-and capture/MCP formats are illustrative contracts, not promises of released APIs.
+## Prototype boundaries
 
-## UX and checks
+API keys, ingestion, MCP, Webhooks, project members, event sources, Saved Filters,
+Dashboard widgets, and exports are illustrative frontend behavior. Saved metadata
+survives reloads only through browser `localStorage`; no server sharing or backend
+event retrieval is connected. The seeded events include generic custom properties
+for real/simulation contexts, versions, dates, nested values, nulls, mixed types,
+and drone errors. These are example properties, not required Stream schema.
 
-The small navigation minimizes decisions. Empty projects show the activation path
-instead of dashboard widgets. Code examples, key controls, and connection details
-are grouped; complete JSON and key regeneration use progressive disclosure. The
-existing light Plotune shell, scoped styles, and native dialog focus handling are
-reused. Phone event rows show the event, time, and properties without a desktop table
-squeeze. Desktop and tablet retain the compact table.
-
-Run `npm test -- --watchAll=false --runInBand` and `npm run build`. The build's existing
-prerender pipeline needs Playwright Chromium and network access for the Download
-page's release lookup. Publish through the existing gh-pages deployment command.
+Run `CI=true npm test -- --watchAll=false --runInBand` and `npm run build`. The
+production build prerender step binds a temporary local server and may require local
+port permissions in a restricted environment.
