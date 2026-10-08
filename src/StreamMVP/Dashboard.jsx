@@ -1,214 +1,78 @@
 import React, { useMemo, useState } from "react";
-import { FiPlus } from "react-icons/fi";
-import { Dialog } from "../StreamWorkspace/WorkspaceUI";
+import { FiArrowLeft, FiMoreHorizontal, FiPlus } from "react-icons/fi";
+import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import DashboardGraph from "./DashboardGraph";
-import {
-  DASHBOARD_RANGES,
-  getEventNames,
-  getNumericProperties,
-  searchEventNames,
-} from "./dashboardModel";
+import WidgetEditor from "./WidgetEditor";
 
-const MAX_EVENT_RESULTS = 6;
+function stamp(value) {
+  if (!value) return "Just now";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "Recently" : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
 
-export default function Dashboard({ projectId, events, now, graphs, onAddGraph, onRemoveGraph }) {
-  const [adding, setAdding] = useState(false);
-  const [kind, setKind] = useState("numeric");
-  const [eventName, setEventName] = useState("");
-  const [eventSearch, setEventSearch] = useState("");
-  const [propertyNames, setPropertyNames] = useState([]);
-  const [range, setRange] = useState("1h");
-  const eventNames = useMemo(() => getEventNames(events), [events]);
-  const matchingEvents = useMemo(
-    () => searchEventNames(eventNames, eventSearch),
-    [eventNames, eventSearch],
-  );
-  const numericProperties = useMemo(
-    () => (eventName ? getNumericProperties(events, eventName) : []),
-    [events, eventName],
-  );
+export default function Dashboard({
+  projectId, events, now, dashboards, filters, selectedDashboardId,
+  onOpen, onBack, onCreate, onRename, onDelete, onSaveWidget, onRemoveWidget,
+}) {
+  const [createOpen, setCreateOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [editingWidget, setEditingWidget] = useState(null);
+  const [widgetOpen, setWidgetOpen] = useState(false);
+  const dashboard = dashboards.find((item) => item.id === selectedDashboardId);
+  const ordered = useMemo(() => [...dashboards].sort((a, b) => Date.parse(b.updatedAt || 0) - Date.parse(a.updatedAt || 0)), [dashboards]);
 
-  const openAddGraph = () => {
-    setKind("numeric");
-    setEventName("");
-    setEventSearch("");
-    setPropertyNames([]);
-    setRange("1h");
-    setAdding(true);
-  };
-
-  const selectEvent = (name) => {
-    setEventName(name);
-    setPropertyNames([]);
-    setKind(getNumericProperties(events, name).length ? "numeric" : "count");
-  };
-
-  const toggleProperty = (property) => {
-    setPropertyNames((current) => current.includes(property)
-      ? current.filter((item) => item !== property)
-      : [...current, property]);
-  };
-
-  const addGraph = (event) => {
+  const create = (event) => {
     event.preventDefault();
-    if (!eventName) return;
-    if (kind === "numeric" && !propertyNames.length) return;
-    onAddGraph({
-      id: `${projectId}-graph-${Date.now()}`,
-      kind,
-      eventName,
-      propertyNames: kind === "numeric" ? propertyNames : [],
-      range,
-    });
-    setAdding(false);
+    const newDashboard = {
+      id: `${projectId}-dashboard-${Date.now()}`,
+      name: name.trim(), description: description.trim(), widgets: [], updatedAt: new Date().toISOString(),
+    };
+    onCreate(newDashboard);
+    setName(""); setDescription(""); setCreateOpen(false); onOpen(newDashboard.id);
   };
+  const editWidget = (widget = null) => { setEditingWidget(widget); setWidgetOpen(true); };
+  const saveWidget = (widget) => { onSaveWidget(dashboard.id, widget); setWidgetOpen(false); };
 
-  return (
-    <div className="mvp-dashboard">
-      <div className="mvp-dashboard-toolbar">
-        <p>{graphs.length
-          ? "Hover or tap graph points to inspect values."
-          : "Choose one event to graph its numeric values or event count."}</p>
-        <button className="sw-button sw-primary" onClick={openAddGraph}>
-          <FiPlus /> Add graph
-        </button>
+  if (!dashboard) {
+    return <section className="mvp-dashboard-collection" aria-label="Project dashboards">
+      <div className="mvp-dashboard-collection-head">
+        <span>{dashboards.length} project dashboard{dashboards.length === 1 ? "" : "s"}</span>
+        <button className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(true)}><FiPlus /> New dashboard</button>
       </div>
-      {graphs.length ? (
-        <div className="mvp-dashboard-grid">
-          {graphs.map((graph) => (
-            <DashboardGraph
-              key={graph.id}
-              graph={graph}
-              events={events}
-              now={now}
-              onRemove={() => onRemoveGraph(graph.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="mvp-dashboard-empty">
-          <span className="mvp-first-icon"><FiPlus /></span>
-          <h2>No graphs yet</h2>
-          <p>Select an event, then graph its numeric values or count its occurrences over time.</p>
-          <button className="sw-button sw-primary" onClick={openAddGraph}><FiPlus /> Add graph</button>
-        </div>
-      )}
+      {dashboards.length ? <div className="mvp-dashboard-list">
+        {ordered.map((item) => <Panel key={item.id} title={item.name} meta={`${item.widgets?.length || 0} widgets · Updated ${stamp(item.updatedAt)}`} className="mvp-dashboard-list-item" action={(
+          <details className="mvp-dashboard-menu"><summary aria-label={`Options for ${item.name}`}><FiMoreHorizontal /></summary><div>
+            <button type="button" onClick={() => onOpen(item.id)}>Open dashboard</button>
+            <button type="button" onClick={() => { const next = window.prompt("Rename dashboard", item.name); if (next?.trim()) onRename(item.id, next.trim(), item.description); }}>Rename</button>
+            <button type="button" className="danger" onClick={() => { if (window.confirm(`Delete “${item.name}” and its widgets?`)) onDelete(item.id); }}>Delete</button>
+          </div></details>
+        )}>
+          <button className="mvp-dashboard-open" type="button" onClick={() => onOpen(item.id)}>
+            {item.description && <span>{item.description}</span>}<strong>Open dashboard <span aria-hidden="true">→</span></strong>
+          </button>
+        </Panel>)}
+      </div> : <div className="mvp-dashboard-empty mvp-dashboard-collection-empty"><h2>No dashboards yet</h2><p>Create a project dashboard to keep useful event views together.</p></div>}
+      {createOpen && <Dialog title="New dashboard" subtitle="Create a shared dashboard for this project." onClose={() => setCreateOpen(false)}>
+        <form className="sw-detail-body mvp-dashboard-create" onSubmit={create}>
+          <label>Name<input autoFocus required maxLength={64} value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Robot validation" /></label>
+          <label>Description <span>Optional</span><textarea maxLength={180} rows={3} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="What should this dashboard help you observe?" /></label>
+          <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={() => setCreateOpen(false)}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!name.trim()}>Create dashboard</button></div>
+        </form>
+      </Dialog>}
+    </section>;
+  }
 
-      {adding && (
-        <Dialog
-          title="Add graph"
-          subtitle="Choose an event, then what to graph."
-          onClose={() => setAdding(false)}
-          className="mvp-add-graph-dialog"
-        >
-          <form className="sw-detail-body mvp-add-graph" onSubmit={addGraph}>
-            <section className="mvp-event-picker" aria-labelledby="mvp-event-picker-label">
-              <label id="mvp-event-picker-label" htmlFor="mvp-event-search">Event</label>
-              <input
-                id="mvp-event-search"
-                type="search"
-                aria-label="Search events"
-                placeholder="Search events…"
-                value={eventSearch}
-                onChange={(e) => setEventSearch(e.target.value)}
-                disabled={!eventNames.length}
-              />
-              {matchingEvents.length ? (
-                <div className="mvp-event-results" role="listbox" aria-label="Matching event names">
-                  {matchingEvents.slice(0, MAX_EVENT_RESULTS).map((name) => (
-                    <button
-                      key={name}
-                      type="button"
-                      role="option"
-                      aria-selected={eventName === name}
-                      className={eventName === name ? "selected" : ""}
-                      onClick={() => selectEvent(name)}
-                    >
-                      {name}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="mvp-event-picker-empty">
-                  {eventNames.length ? "No events match. Try another search." : "Send an event to this project before adding a graph."}
-                </p>
-              )}
-              {matchingEvents.length > MAX_EVENT_RESULTS && (
-                <p className="mvp-event-picker-hint">
-                  Showing {MAX_EVENT_RESULTS} of {matchingEvents.length}. Search to narrow the list.
-                </p>
-              )}
-            </section>
-
-            {eventName && (
-              <>
-                <fieldset className="mvp-graph-measure">
-                  <legend>Measure</legend>
-                  <div className="mvp-graph-kind">
-                    <label className={kind === "numeric" ? "active" : ""}>
-                      <input
-                        type="radio"
-                        name="graph-measure"
-                        value="numeric"
-                        checked={kind === "numeric"}
-                        disabled={!numericProperties.length}
-                        onChange={() => setKind("numeric")}
-                      />
-                      Numeric properties
-                    </label>
-                    <label className={kind === "count" ? "active" : ""}>
-                      <input
-                        type="radio"
-                        name="graph-measure"
-                        value="count"
-                        checked={kind === "count"}
-                        onChange={() => setKind("count")}
-                      />
-                      Event count
-                    </label>
-                  </div>
-                </fieldset>
-
-                {kind === "numeric" && (
-                  <fieldset className="mvp-series-options mvp-event-properties">
-                    <legend>Values</legend>
-                    {numericProperties.length ? numericProperties.map((property) => (
-                      <label
-                        className={`sw-check mvp-property-option ${propertyNames.includes(property) ? "selected" : ""}`}
-                        key={property}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={propertyNames.includes(property)}
-                          onChange={() => toggleProperty(property)}
-                        />
-                        <code>{property}</code>
-                      </label>
-                    )) : <p className="sw-muted">This event has no numeric properties. Choose Event count instead.</p>}
-                  </fieldset>
-                )}
-
-                <label className="mvp-graph-select">Time range
-                  <select value={range} onChange={(e) => setRange(e.target.value)}>
-                    {DASHBOARD_RANGES.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-                  </select>
-                </label>
-              </>
-            )}
-
-            <div className="sw-dialog-actions">
-              <button className="sw-button" type="button" onClick={() => setAdding(false)}>Cancel</button>
-              <button
-                className="sw-button sw-primary"
-                type="submit"
-                disabled={!eventName || (kind === "numeric" && !propertyNames.length)}
-              >
-                Add graph
-              </button>
-            </div>
-          </form>
-        </Dialog>
-      )}
+  return <section className="mvp-dashboard-detail" aria-label={dashboard.name}>
+    <div className="mvp-dashboard-detail-head">
+      <button className="sw-link" type="button" onClick={onBack}><FiArrowLeft /> Dashboards</button>
+      <div className="mvp-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) onRename(dashboard.id, next.trim(), dashboard.description); }}>Edit dashboard</button><button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button></div>
     </div>
-  );
+    {dashboard.description && <p className="mvp-dashboard-description">{dashboard.description}</p>}
+    {dashboard.widgets?.length ? <div className="mvp-dashboard-grid">
+      {dashboard.widgets.map((widget) => <DashboardGraph key={widget.id} widget={widget} events={events} filters={filters} now={now}
+        onEdit={() => editWidget(widget)} onRemove={() => { if (window.confirm(`Remove “${widget.title || widget.eventName}” from this dashboard?`)) onRemoveWidget(dashboard.id, widget.id); }} />)}
+    </div> : <div className="mvp-dashboard-empty"><h2>Your dashboard is empty.</h2><p>Add a chart to monitor selected engineering events.</p></div>}
+    {widgetOpen && <WidgetEditor widget={editingWidget} events={events} filters={filters} now={now} onSave={saveWidget} onClose={() => setWidgetOpen(false)} />}
+  </section>;
 }

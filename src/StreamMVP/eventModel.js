@@ -198,6 +198,11 @@ function seedEvents(project) {
           ["robot.position", "2026-10-07T09:48:50.000Z", { x: 7.4, y: 4.2, heading: 120.2, state: "stopped" }],
           ["test.failed", "2026-10-07T09:42:20.000Z", { suite: "sensor_check", result: "failed", attempt: 2 }],
           ["environment", "2026-10-07T09:28:10.000Z", { temperature: 21.4, humidity: 39.9, state: "stable" }],
+          ["robot.sample", "2026-10-07T10:44:40.000Z", { robot_id: "R-01", environment: "real", sw_version: "v1.4", test_date: "2026-10-07", position: { x: 4.2, y: 1.8 }, motor: { temperature: 71.8 }, rpm: 1680 }],
+          ["robot.sample", "2026-10-07T10:38:40.000Z", { robot_id: "R-01", environment: "simulation", sw_version: "v1.5-rc1", test_date: "2026-10-06", position: { x: 4.8, y: 2.1 }, motor: { temperature: 69.4 }, rpm: 1720 }],
+          ["robot.sample", "2026-10-07T10:23:40.000Z", { robot_id: "R-01", environment: "real", sw_version: "v1.3", test_date: "2026-10-05", position: { x: 5.3, y: 2.7 }, motor: { temperature: null }, rpm: "1710" }],
+          ["drone.error", "2026-10-07T10:18:20.000Z", { drone_id: "D-04", sw_version: "flight-2.7", error_code: 42, message: "GPS lock lost", diagnostic: { satellites: 3, retry: true } }],
+          ["drone.error", "2026-10-07T09:54:20.000Z", { drone_id: "D-04", sw_version: "flight-2.6", error_code: "E42", message: "GPS lock lost", diagnostic: null }],
         ];
   return entries.map(([event, timestamp, properties], i) => ({
     id: `${project}-${i}`,

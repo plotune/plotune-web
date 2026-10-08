@@ -76,3 +76,15 @@ test("simulated first event matches the schemaless onboarding example", () => {
     properties: { temperature: 72.4, rpm: 1840, state: "running" },
   });
 });
+
+test("robot and drone fixtures exercise arbitrary mixed engineering properties", () => {
+  const robotEvents = initialProjects.find((project) => project.id === "robot").events;
+  const robotSamples = robotEvents.filter((item) => item.event === "robot.sample");
+  expect(new Set(robotSamples.map((item) => item.properties.robot_id))).toEqual(new Set(["R-01"]));
+  expect(new Set(robotSamples.map((item) => item.properties.environment))).toEqual(new Set(["real", "simulation"]));
+  expect(new Set(robotSamples.map((item) => item.properties.sw_version)).size).toBeGreaterThan(1);
+  expect(new Set(robotSamples.map((item) => item.properties.test_date)).size).toBeGreaterThan(1);
+  expect(robotSamples.some((item) => item.properties.motor.temperature === null)).toBe(true);
+  expect(robotSamples.some((item) => typeof item.properties.rpm === "string")).toBe(true);
+  expect(robotEvents.filter((item) => item.event === "drone.error")).toHaveLength(2);
+});

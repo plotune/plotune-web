@@ -22,7 +22,12 @@ import {
 } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import Dashboard from "./Dashboard";
+import FilterPopover from "./FilterPopover";
+import ExportMenu from "./ExportMenu";
 import Webhooks from "./Webhooks";
+import { queryEvents } from "./filterModel";
+import { loadProjectResources, saveProjectResources } from "./projectResourceStore";
+import { deleteDashboard as deleteDashboardResource, removeDashboardWidget, saveDashboardWidget, updateDashboard as updateDashboardResource, upsertDashboard } from "./dashboardResourceModel";
 import plotuneLogo from "../assets/logo.png";
 import "../StreamWorkspace/workspace.css";
 import "./mvp.css";
@@ -35,7 +40,6 @@ import {
   cursorPage,
   createSimulatedFirstEvent,
   previewValue,
-  filterEvents,
   ingestionSnippet,
   mcpSnippet,
 } from "./eventModel";
@@ -72,7 +76,9 @@ export default function StreamMVP() {
   const [name, setName] = useState("All events");
   const [range, setRange] = useState("24h");
   const [cursorStack, setCursorStack] = useState([null]);
-  const [dashboardGraphs, setDashboardGraphs] = useState({});
+  const [resources, setResources] = useState(loadProjectResources);
+  const [filterId, setFilterId] = useState(null);
+  const [conditions, setConditions] = useState([]);
   const [webhooks, setWebhooks] = useState({});
   const [language, setLanguage] = useState("curl");
   const [revealed, setRevealed] = useState(false);
@@ -93,17 +99,20 @@ export default function StreamMVP() {
   const [invitePrompt, setInvitePrompt] = useState({});
   const [mcpStates, setMcpStates] = useState({});
   const [accountOpen, setAccountOpen] = useState(false);
+  const projectFilters = resources.filters[projectId] || [];
+  const projectDashboards = resources.dashboards[projectId] || [];
   const mcpState = mcpStates[projectId] || "Not checked";
   const hasEvents = project.events.length > 0;
   const filtered = useMemo(
     () =>
-      filterEvents(project.events, {
+      queryEvents(project.events, {
         search,
         name,
         range,
         now: new Date(clock).toISOString(),
+        conditions,
       }),
-    [project.events, search, name, range, clock],
+    [project.events, search, name, range, clock, conditions],
   );
   const page = useMemo(
     () => cursorPage(filtered, cursorStack[cursorStack.length - 1], EVENTS_PER_PAGE),
@@ -125,6 +134,9 @@ export default function StreamMVP() {
     setDialog(null);
     setSearch("");
     setName("All events");
+    setRange("24h");
+    setFilterId(null);
+    setConditions([]);
     setCursorStack([null]);
     setRevealed(false);
     window.scrollTo({ top: 0 });
@@ -151,8 +163,11 @@ export default function StreamMVP() {
     setName("All events");
     setCursorStack([null]);
     setAccepting(false);
+    setFilterId(null);
+    setConditions([]);
     setProjectName(project.name);
   }, [projectId, project.name]);
+  useEffect(() => { saveProjectResources(resources); }, [resources]);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 4500);
@@ -200,7 +215,44 @@ export default function StreamMVP() {
     setSearch("");
     setName("All events");
     setRange("24h");
+    setFilterId(null);
+    setConditions([]);
     setCursorStack([null]);
+  };
+  const applyPropertyFilter = (nextConditions, nextFilterId) => {
+    setConditions(nextConditions);
+    setFilterId(nextFilterId || null);
+    setCursorStack([null]);
+  };
+  const saveFilter = (filterName, nextConditions, existingId = null) => {
+    let selectedId = existingId;
+    if (!selectedId) selectedId = `${projectId}-filter-${Date.now()}`;
+    setResources((current) => {
+      const currentFilters = current.filters[projectId] || [];
+      const nextFilters = existingId
+        ? currentFilters.map((item) => item.id === existingId ? { ...item, conditions: nextConditions.map((condition) => ({ ...condition })) } : item)
+        : [...currentFilters, { id: selectedId, name: filterName, conditions: nextConditions.map((condition) => ({ ...condition })) }];
+      return { ...current, filters: { ...current.filters, [projectId]: nextFilters } };
+    });
+    if (!existingId) setFilterId(selectedId);
+  };
+  const renameFilter = (id, nextName) => setResources((current) => ({
+    ...current,
+    filters: { ...current.filters, [projectId]: (current.filters[projectId] || []).map((item) => item.id === id ? { ...item, name: nextName } : item) },
+  }));
+  const deleteFilter = (id) => {
+    setResources((current) => ({ ...current, filters: { ...current.filters, [projectId]: (current.filters[projectId] || []).filter((item) => item.id !== id) } }));
+    if (filterId === id) { setFilterId(null); setConditions([]); }
+  };
+  const openDashboard = (dashboardId) => setParams({ view: "dashboards", ...(projectId !== "first" ? { project: projectId } : {}), dashboard: dashboardId });
+  const createDashboard = (dashboard) => setResources((current) => ({ ...current, dashboards: { ...current.dashboards, [projectId]: upsertDashboard(current.dashboards[projectId] || [], dashboard) } }));
+  const updateDashboard = (id, update) => setResources((current) => ({
+    ...current,
+    dashboards: { ...current.dashboards, [projectId]: updateDashboardResource(current.dashboards[projectId] || [], id, update) },
+  }));
+  const deleteDashboard = (id) => {
+    setResources((current) => ({ ...current, dashboards: { ...current.dashboards, [projectId]: deleteDashboardResource(current.dashboards[projectId] || [], id) } }));
+    if (params.get("dashboard") === id) setLocation("dashboards");
   };
   const queuePreviewEvent = () => {
     const count = pendingEvents.length;
@@ -404,7 +456,23 @@ export default function StreamMVP() {
             <option value="7d">Last 7 days</option>
             <option value="all">All time</option>
           </select>
-          {(search || name !== "All events" || range !== "24h") && (
+          <FilterPopover
+            events={project.events}
+            filters={projectFilters}
+            activeFilterId={filterId}
+            conditions={conditions}
+            onApply={applyPropertyFilter}
+            onSave={saveFilter}
+            onRename={renameFilter}
+            onDelete={deleteFilter}
+            referenceCount={(id) => (projectDashboards || []).flatMap((dashboard) => dashboard.widgets || []).filter((widget) => widget.filterId === id).length}
+          />
+          <ExportMenu
+            events={project.events}
+            query={{ search, name, range, now: new Date(clock).toISOString(), conditions }}
+            projectName={project.name}
+          />
+          {(search || name !== "All events" || range !== "24h" || conditions.length > 0) && (
             <button className="sw-link" onClick={resetFilters}>
               Clear filters
             </button>
@@ -921,7 +989,9 @@ export default function StreamMVP() {
       </Dialog>
     );
   }
-  const title = navigation.find(([id]) => id === view)[1];
+  const dashboardId = params.get("dashboard");
+  const selectedDashboard = projectDashboards.find((item) => item.id === dashboardId);
+  const title = view === "dashboards" ? selectedDashboard?.name || "Dashboards" : navigation.find(([id]) => id === view)[1];
   return (
     <div className="sw-app mvp-app">
       <Helmet>
@@ -1053,7 +1123,7 @@ export default function StreamMVP() {
               {view === "events"
                 ? "Inspect what your systems send. Event names, timestamps, and properties."
                 : view === "dashboards"
-                  ? "Graph numeric event properties and event counts over a bounded time range."
+                  ? selectedDashboard?.description || (selectedDashboard ? "Project dashboard" : "Project dashboards for recurring event views.")
                 : view === "api"
                   ? "Send the first event from any system that can make an HTTP request."
                   : view === "mcp"
@@ -1071,17 +1141,19 @@ export default function StreamMVP() {
             : view === "dashboards"
               ? <Dashboard
                   projectId={projectId}
+                  projectName={project.name}
                   events={project.events}
                   now={new Date(clock).toISOString()}
-                  graphs={dashboardGraphs[projectId] || []}
-                  onAddGraph={(graph) => setDashboardGraphs((prev) => ({
-                    ...prev,
-                    [projectId]: [...(prev[projectId] || []), graph],
-                  }))}
-                  onRemoveGraph={(graphId) => setDashboardGraphs((prev) => ({
-                    ...prev,
-                    [projectId]: (prev[projectId] || []).filter((graph) => graph.id !== graphId),
-                  }))}
+                  dashboards={projectDashboards}
+                  filters={projectFilters}
+                  selectedDashboardId={dashboardId}
+                  onOpen={openDashboard}
+                  onBack={() => setLocation("dashboards")}
+                  onCreate={createDashboard}
+                  onRename={(id, name, description) => updateDashboard(id, { name, description })}
+                  onDelete={deleteDashboard}
+                  onSaveWidget={(id, widget) => setResources((current) => ({ ...current, dashboards: { ...current.dashboards, [projectId]: saveDashboardWidget(current.dashboards[projectId] || [], id, widget) } }))}
+                  onRemoveWidget={(id, widgetId) => setResources((current) => ({ ...current, dashboards: { ...current.dashboards, [projectId]: removeDashboardWidget(current.dashboards[projectId] || [], id, widgetId) } }))}
                 />
             : view === "api"
               ? apiSetup()
