@@ -89,7 +89,7 @@ const QuestionScreen = ({
     ? ''
     : question.max
       ? `${count} of ${question.max} selected`
-      : count ? `${count} selected` : 'Select at least one';
+      : count ? `${count} selected` : 'Select one or more to continue';
 
   return (
     <div className="flex flex-1 flex-col">
@@ -188,8 +188,10 @@ const QuestionScreen = ({
               onClick={onContinue}
               disabled={count === 0}
               className={`flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full px-6 text-base font-semibold transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg ${
+                // Before a selection the button must still read as THE way forward (a grey slab on the
+                // dark page looked like empty space in replays): teal outline + text, not filled.
                 count === 0
-                  ? 'cursor-not-allowed bg-white/10 text-gray-text'
+                  ? 'cursor-not-allowed border-2 border-primary/70 bg-primary/10 text-primary'
                   : 'bg-primary text-white hover:bg-primary-dark active:bg-primary-dark'
               }`}
             >
