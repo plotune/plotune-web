@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
+import { posthog } from '../posthog';
 import { useCtaTracking } from '../utils/ctaTracking';
+import { getFunnelContext, withFunnelParams } from '../utils/funnel';
 import {
   FiActivity,
   FiArrowRight,
@@ -57,10 +59,13 @@ const outcomes = [
 ];
 
 const Nexus = () => {
-  // Only the two contact CTAs are measured (hero = the copy test, bottom = whether people reach
-  // the end). The secondary buttons beside them share a viewport with them and would just fire
-  // the same impression at the same moment.
-  const heroContactCta = useCtaTracking('nexus_hero_contact');
+  // Only the two primary CTAs are measured (hero = first step, bottom = whether people reach the
+  // end). The secondary buttons beside them share a viewport with them and would just fire the
+  // same impression at the same moment.
+  // The hero CTA is the low-commitment first step (the AI readiness assessment): visitors arriving
+  // from "AI agents for hardware" searches tapped "contact" here and left the form unanswered. The
+  // bottom CTA, for people who read the whole page, is the integration-plan request on /contact.
+  const heroAssessmentCta = useCtaTracking('nexus_hero_assessment');
   const bottomContactCta = useCtaTracking('nexus_bottom_contact');
 
   return (
@@ -83,18 +88,24 @@ const Nexus = () => {
                 Plotune Nexus is the hardware and software hub at the center of your test environment.
                 It connects your bench, your tools, and your team, and lets you control everything from anywhere.
               </p>
-              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <Link
-                  to="/contact"
-                  ref={heroContactCta.ref}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
-                >
-                  Get Your Integration Plan
-                  <FiArrowRight />
-                </Link>
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-start">
+                {/* The expectation line sits right under the button it describes (proximity): it sets
+                    the cost of the click (30 s, no sign-up), so it reads as a quick check, not a sales form. */}
+                <div className="flex flex-col">
+                  <Link
+                    to={withFunnelParams('/ai-readiness')}
+                    ref={heroAssessmentCta.ref}
+                    onClick={() => posthog.capture('nexus_assessment_clicked', { ...getFunnelContext(), path: '/nexus' })}
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg"
+                  >
+                    Check Your AI Readiness
+                    <FiArrowRight />
+                  </Link>
+                  <p className="mt-2 text-center text-sm text-gray-text">4 quick questions · about 30 seconds · no sign-up</p>
+                </div>
                 <Link
                   to="/nexus/connectivity"
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
+                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
                 >
                   See How It Connects
                 </Link>
@@ -232,7 +243,7 @@ const Nexus = () => {
                 ref={bottomContactCta.ref}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
               >
-                Contact Us
+                Get Your Integration Plan
                 <FiArrowRight />
               </Link>
             </div>
