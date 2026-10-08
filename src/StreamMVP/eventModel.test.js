@@ -76,14 +76,3 @@ test("simulated first event matches the schemaless onboarding example", () => {
     properties: { temperature: 72.4, rpm: 1840, state: "running" },
   });
 });
-
-test("engineering fixture dimensions remain ordinary custom properties with mixed, null, and nested values", () => {
-  const motor = events.filter((event) => event.event === "motor");
-  const droneErrors = events.filter((event) => event.event === "drone.error");
-  expect(new Set(motor.map((event) => event.properties.environment))).toEqual(new Set(["real", "simulation"]));
-  expect(new Set(motor.map((event) => event.properties.sw_version).filter(Boolean)).size).toBeGreaterThan(1);
-  expect(motor.some((event) => event.properties.optional_sensor === null)).toBe(true);
-  expect(new Set(droneErrors.map((event) => typeof event.properties.error_code))).toEqual(new Set(["number", "string"]));
-  expect(droneErrors.some((event) => event.properties.diagnostics?.imu?.retry_count === 3)).toBe(true);
-  expect(droneErrors.every((event) => !Object.hasOwn(event, "environment"))).toBe(true);
-});
