@@ -30,23 +30,23 @@ pass 1/1
 
 ## The workflow today
 
-- A person kicks off each test sequence and stays to watch it run
+- 01  A person kicks off each test sequence and stays to watch it run
 
-- Faults are triaged live, in the moment, by whoever is on the bench
+- 02  Faults are triaged live, in the moment, by whoever is on the bench
 
-- Regression checks are re-run by hand against every new build
+- 03  Regression checks are re-run by hand against every new build
 
-- Overnight or long-running coverage simply does not happen
+- 04  Overnight or long-running coverage simply does not happen
 
 ## With Plotune Nexus
 
-- Orchestrate multi-step sequences across CAN, UART, DBC, XCP, and DDS as one bounded run
+- 01  Orchestrate multi-step sequences across CAN, UART, DBC, XCP, and DDS as one bounded run
 
-- Leave a bounded fault watch running as an async job, so a 2am fault is captured, not missed
+- 02  Leave a bounded fault watch running as an async job, so a 2am fault is captured, not missed
 
-- Diff a fresh run against a validated baseline to catch regressions automatically
+- 03  Diff a fresh run against a validated baseline to catch regressions automatically
 
-- Every sequence ends with a packaged, reviewable artifact, not a person's notes
+- 04  Every sequence ends with a packaged, reviewable artifact, not a person's notes
 
 ## Supported integrations
 

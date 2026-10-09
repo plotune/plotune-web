@@ -6,203 +6,106 @@ Technical documentation describes implementation status and limitations. Researc
 
 ---
 
-# One platform to run your data and connect to your test systems.
+# From the physical world.Into your workflow.
 
-Plotune
+Plotune / Engineering systems, connected.
 
 
 
-Teams use Plotune to orchestrate, process, and govern data across their tools. Nexus, our flagship appliance, extends that same controlled, AI-ready approach to real hardware and test benches, so automation runs on your equipment while your data stays yours.
+We build tools that connect engineering hardware, data and AI agents. Start at the test bench. Keep control of the operation. Work from the evidence.
 
-[Contact Us](https://www.plotune.net/contact)[Explore Nexus](https://www.plotune.net/nexus)
+[Explore the products](https://www.plotune.net/#nexus-product)
 
-### Plotune Nexus
+01 / Hardware + software  Plotune Nexus
 
- Flagship
+The local-first appliance
 
-Reach your systems
+## A connection tothe real bench.
 
-Work from the lab, the office, or right at the vehicle
+Nexus gives AI agents a controlled MCP surface for physical test systems. Connect engineering interfaces, execute bounded operations and return structured results.
 
-Move faster
+[Explore Nexus](https://www.plotune.net/nexus)[Check your AI readiness →](https://www.plotune.net/ai-readiness?entry_source=direct)
 
-Turn repeatable checks into automated, hands-off runs
+Agent interface
 
-Stay in control
+MCP
 
-AI acts through safe, bounded steps and your data stays yours
+Deployment
 
-Our flagship · Plotune Nexus
+Local-first
 
-## One controlled surface for hardware-facing work.
+Connections
 
-### Local-first by design
+CAN · UART · XCP · ROS 2 / DDS
 
-Runs on Plotune-defined hardware. Raw artifacts stay on the device and move only to storage you already control.
+NEXUS / hardware overview  Plotune Nexus appliance with a finned enclosure and physical connectors 
 
-### Bounded, not raw
+One appliance. A controlled connection to your test environment.
 
-AI-assisted work runs through a narrow set of safe, approved actions instead of direct hardware access, so you always know what an agent can and cannot do.
+Architecture / request → result
 
-### Repeatable evidence
+01 / MCP  AI agent 
 
-Recurring capture and stimulation move from operator memory into reusable jobs and test sequences that leave a packaged artifact behind.
+Requests a bounded operation
 
-### Works with your setup
+02 / Local appliance  Plotune Nexus 
 
-Connects to the real test systems your benches, vehicles, and rigs already use, with broad support that ships today.
+Applies access and execution controls
 
-Claude & Codex, on the bench
+03 / CAN · UART · ROS 2 / DDS  Physical test system 
 
-## Watch an agent run the bounded workflow and leave the proof.
+Interfaces with connected equipment
 
-Real example runs on Plotune Nexus. The agent acquires the interface, runs the procedure, gates on live signals, and packages the artifact. See the full animated runtime on the Use Cases page.
+Structured results & recorded evidence
 
-Claude · ROS 2
+Explore by workflow [CAN / ECU testing ↗](https://www.plotune.net/solutions/can-ecu-testing)[ROS 2 / DDS testing ↗](https://www.plotune.net/solutions/ros2-dds-testing)[Hardware-in-the-loop ↗](https://www.plotune.net/solutions/hil-testing)[All use cases ↗](https://www.plotune.net/nexus/use-cases)
 
- Gate passed
+02 / Event infrastructure  Plotune Stream
 
-### DDS requirement gate, 15 for 15
+Any source that speaks HTTP
 
-Gated a requirement on live robot telemetry across a reliability soak, and every run matched with no flakes.
+## The event isthe starting point.
 
-15/15 PASS  0 flakes  ~0.3 s match
+Bring events from Python, C/C++, CAPL, MATLAB, ROS, shell scripts or Nexus into an inspectable history. Stream is independent of the hardware that sends it.
 
-Claude · ROS 2
+[Explore Stream ↗](https://www.plotune.net/stream)[Open the MVP demo →](https://www.plotune.net/stream/workspace)
 
- Effect proven
+Event structure / illustrative
 
-### Command, then measure
+```
+{
+  "event": "test.completed",
+  "device_id": "bench-01",
+  "session_id": "run-01",
+  "properties": {
+    "outcome": "passed"
+  }
+}
+```
 
-Published a scalar Twist onto the ROS 2 graph, then gated on live odometry to prove the effect.
+Sender → HTTP → event history → inspection
 
-Twist → pose  θ 2.87  stop ~0 (exact)
+ Optional context. Arbitrary JSON properties.
 
-Claude · ROS 2
+03 / Research & evidence  Plotune Research
 
- Recorded
+## Engineering needsevidence.
 
-### Multi-topic evidence to one MCAP
+Read the technical studies. Inspect the benchmark data. Understand the methodology behind agentic test and validation workflows.
 
-Recorded several ROS 2 topics into a single MCAP as an async job, within the expected rate window.
+[Explore the research →](https://www.plotune.net/research)
 
-6.47 Hz  rate in expected window  194 / 30 s
+[PublicationTechnical reports](https://www.plotune.net/research/reports)[DataModel results & comparisons](https://www.plotune.net/research)[ProtocolEvaluation methodology](https://www.plotune.net/research/methodology)
 
-Codex · XCP
+04 / The wider toolkit  Data operations
 
- Margin restored
+[01DesktopLocal visualization and engineering data workflows.](https://www.plotune.net/download)[02ExtensionsComponents and integrations for your existing tools.](https://www.plotune.net/extensions)[03DocumentationInterfaces, setup guides and technical reference.](https://www.plotune.net/docs)
 
-### XCP calibration, margin restored
+Start with your system
 
-Ran the acceptance gate, applied a bounded XCP calibration change, and reran it to confirm the margin.
+## One real workflow.A clear next step.
 
-438 → 428 A  2.4 → 8.7 A  note ready
-
-Codex · CAN + UART
-
- Window found
-
-### Field triage to a fault window
-
-Recorded CAN and UART through a warm restart and pinned the root-cause window from the captured evidence.
-
-47.6 V  P0D67:28  22.184–22.432 s
-
-[Use CasesSee these runs animate end to end, plus the full industry set.See it run in Use Cases](https://www.plotune.net/nexus/use-cases)
-
-Example outcomes from illustrative runs. Readings: θ = final heading error (rad) · Hz = recording rate within its expected window · P0D67:28 = logged fault code with subcode · A and V = measured current and voltage before → after.
-
-Scenarios by industry
-
-## See how Plotune Nexus works in your world.
-
-From automotive validation and autonomous robotics to ECU integration, field diagnostics, and test automation, each scenario shows the workflows Nexus runs on real hardware and the evidence each one leaves behind.
-
-Automotive & Mobility  Robotics  Autonomous Systems  ECU & Gateway  Field Diagnostics  HIL & Test Automation
-
-[Explore the Use Cases](https://www.plotune.net/nexus/use-cases)
-
-[ConnectivityOne connection point for the test systems and tools your team already uses.](https://www.plotune.net/nexus/connectivity)[StreamMonitor live signals and validate requirements continuously, as your tests run.](https://www.plotune.net/nexus/stream)
-
-The Plotune platform
-
-## A complete DataOps platform.
-
-Beyond the bench, Plotune helps teams orchestrate, process, and govern their data across three planes that work together as one.
-
-### Plotune Core
-
-Control Plane
-
-Orchestrate, monitor, and manage your entire data ecosystem through a unified interface. The brain of your data operations.
-
-- Data Orchestration
-
-- Unified UI/UX
-
-- Real-time Monitoring
-
-- Workflow Management
-
-### Plotune Stream
-
-Execution Plane
-
-Real-time ETL and event operations with lightning-fast data processing. Transform and move data as it happens.
-
-- Real-time ETL
-
-- Event Operations
-
-- Stream Processing
-
-- Low-latency Execution
-
-### Plotune Cloud
-
-Data Governance Plane
-
-Scalable storage, comprehensive metadata management, and enterprise-grade data governance policies.
-
-- Data Storage
-
-- Metadata Management
-
-- Policy Enforcement
-
-- Scalable Infrastructure
-
-Ready to modernize your data operations? See how the integrated platform can work for your team.
-
-[Contact Us](https://www.plotune.net/contact)
-
-## Transform Your Data Operations
-
-Join forward-thinking companies that use Plotune to modernize their data infrastructure and drive better business outcomes.
-
-### Accelerate Time to Insight
-
-Go from raw data to actionable insights in hours, not weeks. Streamline your entire data operations pipeline.
-
-### Simplify Complex Workflows
-
-Orchestrate multiple data sources and processes through a unified interface that your team can actually use.
-
-### Enterprise-Grade Governance
-
-Maintain compliance and data quality while scaling your operations with built-in governance and security.
-
-More from Plotune
-
-## There is more to explore.
-
-[Plotune Desktop AppRun it locally on your own machine. Available for Windows and Linux.](https://www.plotune.net/download)[ExtensionsAdd capabilities from a growing marketplace of integrations and tools.](https://www.plotune.net/extensions)
-
-## See what Plotune can do for your team.
-
-From data operations to the test bench, start with one real workflow and see the platform, and our flagship Nexus appliance, work for you.
-
-[Contact Us](https://www.plotune.net/contact)[Explore Nexus](https://www.plotune.net/nexus)
+[Contact Us ↗](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
 
 Source: https://www.plotune.net/
 
@@ -434,7 +337,7 @@ Source: https://www.plotune.net/research/methodology
 
 # Questions about Plotune and Nexus.
 
-Frequently Asked Questions
+Plotune / Frequently asked questions  16 answers
 
 
 
@@ -480,11 +383,13 @@ Use signal-wait conditions as verdict gates. Plotune Nexus supports decoded-sign
 
 Move recurring capture and stimulation steps out of one-off scripts and into reusable jobs and test sequences. Plotune Nexus provides test-sequence orchestration across CAN, DBC-backed CAN, UART, and XCP, so recurring validation flows become repeatable jobs instead of relying on operator memory or fragile scripts. Artifacts are captured locally and handed off cleanly for review.
 
+Not covered here
+
 ## Still have a question?
 
 Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow would fit your setup.
 
-[Explore Nexus](https://www.plotune.net/nexus)[Contact Us](https://www.plotune.net/contact)
+[Contact Us](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
 
 ## What is a DataOps platform?
 
@@ -554,99 +459,189 @@ Source: https://www.plotune.net/faq
 
 ---
 
-# Plotune Nexus
+# Your systems emit events.Make them useful.
 
-Connect. Access. Automate.
+Plotune Stream / Event infrastructure
 
 
 
-Plotune Nexus is the hardware and software hub at the center of your test environment. It connects your bench, your tools, and your team, and lets you control everything from anywhere.
+Event history for physical engineering systems. Send from the tools you already use; inspect names, timestamps, optional device and session context, and arbitrary JSON properties.
 
-[Check Your AI Readiness](https://www.plotune.net/ai-readiness?entry_source=direct)
+[Explore the MVP demo ↗](https://www.plotune.net/stream/workspace)[Discuss your integration →](https://www.plotune.net/contact)
+
+The workspace is a local frontend demo with synthetic data. Capture endpoints and setup examples are illustrative; no production event service is connected.
+
+01 / Source-agnostic ingestion  HTTP
+
+## Your tools.
+
+Python · C/C++ · CAPL · MATLAB
+ROS · shell · Nexus · HTTP clients
+
+## Event history.
+
+Event name · timestamp
+Optional identifiers · JSON properties
+
+## Inspection.
+
+Search · filters · event details
+Local dashboard and export exploration
+
+02 / Start with an event
+
+## Context from the sender.Clarity in the explorer.
+
+Device and session identifiers are optional, supplied by your application. Event properties carry the context you need without a predefined hardware schema.
+
+[Inspect the example setup →](https://www.plotune.net/stream/workspace?view=api)
+
+Illustrative payload / not a live event 
+
+```
+{
+  "event": "motor.started",
+  "device_id": "motor-01",
+  "session_id": "test-01",
+  "properties": {
+    "rpm": 1200
+  }
+}
+```
+
+03 / Choose your experience  Existing routes, distinct capabilities
+
+[MVP demoEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/workspace)[Account toolsStream managementThe existing authenticated stream and network management experience.↗](https://www.plotune.net/streams)[Live connectionSignal inspectionThe existing connection interface for configured streams.↗](https://www.plotune.net/streams/connect)
+
+A separate [future-product reference](https://www.plotune.net/stream/prototypes/vision) explores synthetic runs, measurements and processors. These are prototype capabilities.
+
+Source: https://www.plotune.net/stream
+
+---
+
+# Real hardware.Controlled operations.
+
+Plotune Nexus / Local-first appliance  Hardware + software
+
+The agent meets the bench.
+
+
+
+Nexus connects AI agents to physical engineering and test systems through MCP. Hardware interaction and first-write artifacts happen on the appliance; cloud services support routing, identity and export.
+
+[Check Your AI Readiness ↗](https://www.plotune.net/ai-readiness?entry_source=direct)
 
 4 quick questions · about 30 seconds · no sign-up
 
-[See How It Connects](https://www.plotune.net/nexus/connectivity)
+[See How It Connects →](https://www.plotune.net/nexus/connectivity)
 
-Hardware
+NEXUS / hardware overview  Plotune Nexus appliance with a finned enclosure and physical connectors 
 
-## Compact test environment hub
+Plotune-defined hardware. Pre-integrated software. Managed lifecycle.
 
-Plotune Nexus hardware
+01 / System architecture  Request, operation, evidence
 
-## Built for your test bench. Ready for everything connected to it.
+## One controlled surface.A physical result.
 
-Plotune Nexus speaks the same language as your test systems, out of the box, without adapters or workarounds.
+Architecture / request → result
 
-### DAQ Connections
+01 / MCP  AI agent 
 
-Connects to your data acquisition systems via CAN, UART, and XCP. Read signals, trigger measurements, and log data directly.
+Requests a bounded operation
 
-### Secure File Transfer
+02 / Local appliance  Plotune Nexus 
 
-Move calibration files, test scripts, and results between systems safely. Encrypted. Reliable. No manual copying required.
+Applies access and execution controls
 
-### Cloud Sync
+03 / CAN · UART · ROS 2 / DDS  Physical test system 
 
-Sync test data and configurations to your team's shared environment. Store results and access them from anywhere.
+Interfaces with connected equipment
 
-### Remote Access
+Structured results & recorded evidence
 
-Connect to Plotune Nexus and your test bench from any location. Run tests from the office, home, or another site entirely.
+Conceptual workflow. No hardware is connected.
 
-## From requirement to result, automatically.
+Conceptual flow. Available operations depend on transport, connected hardware, access and configuration.
 
-Define what you need to test. Plotune Nexus handles the rest.
+02 / Engineering interfaces [Compatibility matrix ↗](https://www.plotune.net/docs/nexus/hardware-compatibility)
 
-Plotune Nexus connects your company's engineering data, your test environment, and an AI agent that understands automotive validation. When a requirement comes in, Plotune Nexus figures out what to run, executes it, and delivers the result, whether that's a test run, a software update, a diagnostic check, or a scheduled routine.
+## Speak the languageof your system.
 
-Powered by Automotive Context Skills
+Use the supported transports on your bench, rig or vehicle. Check the documented native, container and scale-up tiers before choosing hardware.
 
-Plotune Nexus understands the full scope of automotive validation, from ADAS and thermal behavior to diagnostics, compliance, testing, and legislation requirements.
+[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
 
-Requirement
+01 
 
-↓
+CAN / CAN FD
 
-Company Database + AI Agent
+Linux CAN transports for bus interaction and capture.
 
-↓
+02 
 
-Plotune Nexus
+UART
 
-Test run report
+Serial interfaces, including RS-485 and modem-control lines.
 
-Updated ECU or calibration
+03 
 
-Diagnostic log
+XCP
 
-Scheduled job status
+CAN and Ethernet transports with different supported operations.
 
-## What Plotune Nexus can do for your team
+04 
 
-### Test Execution
+UDS / DoIP
 
-Run test routines automatically. No manual triggering.
+Diagnostics through reachable network and CAN transports.
 
-### Software & Calibration Updates
+05 
 
-Push updates to ECUs and calibration targets directly from Plotune Nexus.
+ROS 2 / DDS
 
-### Diagnostic Checks
+Join an existing DDS domain, discover topics and record evidence.
 
-Perform diagnostic routines on connected systems. Monitor and log results.
+03 / From requirement to evidence  A bounded workflow
 
-### Scheduling
+## Discover. Execute.Record what happened.
 
-Set up recurring or condition-triggered test jobs. Run them overnight, remotely, or on demand.
+- 01 
 
-### Ready to connect your test environment?
+### Inspect the system
 
-See how Plotune Nexus fits your bench, vehicle, or validation team.
+Discover the available interfaces and current state before requesting an operation.
 
-[View Use Cases](https://www.plotune.net/nexus/use-cases)[Get Your Integration Plan](https://www.plotune.net/contact)
+- 02 
 
-Already evaluating the technical fit? [Read the Nexus documentation](https://www.plotune.net/docs/nexus) for the security model, hardware compatibility, and MCP API reference.
+### Run a bounded operation
+
+Use the relevant MCP tools and job controls within the configured access and execution limits.
+
+- 03 
+
+### Keep the evidence
+
+Return status, metadata and retrieval paths for locally recorded logs, traces and artifacts.
+
+[CAN / ECU testing ↗](https://www.plotune.net/solutions/can-ecu-testing)[ROS 2 / DDS testing ↗](https://www.plotune.net/solutions/ros2-dds-testing)[Stream integration ↗](https://www.plotune.net/nexus/stream)[View Use Cases ↗](https://www.plotune.net/nexus/use-cases)
+
+04 / Read the engineering details
+
+## Know the boundary.
+
+Local-first operation is documented alongside cloud dependencies, hardware compatibility and current constraints. Start with the architecture and security model.
+
+[Read the Nexus documentation →](https://www.plotune.net/docs/nexus)
+
+[Security model ↗](https://www.plotune.net/docs/nexus/security-model)[Data handling ↗](https://www.plotune.net/docs/nexus/data-handling)[Protocols ↗](https://www.plotune.net/docs/nexus/protocols)
+
+Start with your test environment
+
+## Map Nexusto your bench.
+
+Tell us about your hardware, interfaces and first workflow.
+
+[Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
 
 Source: https://www.plotune.net/nexus
 
@@ -776,155 +771,92 @@ Source: https://www.plotune.net/nexus/connectivity
 
 ---
 
-# Plotune Stream Integration
+# From the bench.Into the event history.
 
-Plotune Nexus
+Nexus / Stream integration
 
 
 
-Turn live test data into continuous validation.
+Nexus connects to physical test systems. Stream provides an independent event model for the software around them. Bring the context of an operation into an inspectable timeline.
 
-Monitor signals, trigger routines, and validate requirements as your tests run, not after the fact.
+[Contact Us ↗](https://www.plotune.net/contact?entry_source=direct)[Learn More →](https://www.plotune.net/nexus/connectivity)
 
-Plotune Stream keeps validation running in the background, 24 hours a day, so your team gets results the moment something happens, or the moment it should have happened but didn't.
+The Stream workspace in this repository is a local MVP demo. Continuous validation, automated actions and richer measurement workflows are explored in the separate future-product reference.
 
-[Contact Us](https://www.plotune.net/contact)[Learn More](https://www.plotune.net/nexus/connectivity)
+01 / Integration model  Illustrative workflow
 
-Always-on
+## Test system
 
- Illustrative diagram
+CAN · XCP · ROS 2 / DDS
+Connected through supported Nexus interfaces
 
-Monitor, trigger, and validate as your tests run. Around the clock, close to your data.
+ → 
 
-## How Plotune Stream works
+## Event source
 
-Step 1
+Nexus or your application
+Sender-supplied context
 
-### Stream live test data
+ → 
 
-Your test environment sends live signals from Plotune Nexus to the validation system. CAN, XCP, Ethernet, all supported.
+## Stream
 
-Step 2
+Event name · timestamp · properties
+Inspection and event history
 
-### Monitor conditions continuously
+02 / Context travels with the event [Stream overview ↗](https://www.plotune.net/stream)
 
-Validation logic runs around the clock on incoming data. No one needs to be watching.
+01 
 
-Step 3
+### Generate
 
-### Trigger actions automatically
+Nexus or your own application produces an event with the engineering context it knows.
 
-When a condition is met, a threshold crossed, or a signal pattern matched, the system starts logging, runs a test, or applies a change. Automatically.
+02 
 
-Step 4
+### Send
 
-### Analyze and validate results
+A source that can make HTTP requests can send event data; Nexus is one possible source.
 
-Results are checked against your defined requirements. Pass, fail, deviation, all captured and categorized.
+03 
 
-Step 5
+### Inspect
 
-### Notify and report instantly
+Use the MVP demo to explore event history, filters and the complete JSON payload.
 
-Alerts, logs, and structured reports are generated and sent to your team the moment validation is complete.
+04 
 
-## Live data to validated results
+### Investigate
 
-### YOUR TEST ENVIRONMENT
+Follow a device or session across events. Keep the distinction between event history and raw measurements clear.
 
-Vehicle / ECU
+03 / Read, then explore
 
-Test Bench / HiL
+## Understand the data.Try the interface.
 
-Measurement Devices
+Nexus documentation describes local artifacts and result retrieval. The Stream demo shows a source-agnostic event envelope and example setup contracts.
 
-Other Sources
+[Open the MVP demo ↗](https://www.plotune.net/stream/workspace)[Data handling →](https://www.plotune.net/docs/nexus/data-handling)
 
-↓
+Illustrative event / not a live result 
 
-### PLOTUNE NEXUS
+```
+{
+  "event": "test.completed",
+  "device_id": "nexus-bench-01",
+  "session_id": "example-run",
+  "properties": {
+    "artifact": "local-recording",
+    "outcome": "passed"
+  }
+}
+```
 
-Live data collection: CAN, XCP, Ethernet
+Map an integration to your system
 
-Secure connection & data streaming
+## Start with the source.Keep the context.
 
-↓
-
-### PLOTUNE STREAM
-
-Stream Workers: always-on validation logic
-
-↓
-
-### AI VALIDATION AGENTS
-
-Monitor Conditions
-
-Run Actions
-
-Analyze Results
-
-Generate Reports
-
-Send Notifications
-
-↓
-
-### RESULTS & ACTIONS
-
-Real-time Dashboards
-
-Reports & Logs
-
-Alerts & Notifications
-
-Your Database / Data Lake
-
-External Systems (via integration)
-
-### Always-on, 24/7
-
-Validation doesn't stop when your team does.
-
-### Secure by design
-
-Your test data stays protected throughout the pipeline.
-
-### Scalable & resilient
-
-Grows with your test volume. Built to handle real production workloads.
-
-### Low latency & responsive
-
-Validation results arrive when they're still actionable.
-
-## How teams use Plotune Stream today
-
-### Night Validation Runs
-
-Set up your validation routines before you leave for the day. Plotune Stream runs them overnight and your results are waiting when you arrive in the morning.
-
-### Calibration Change Validation
-
-Apply a calibration change, then let Plotune Stream monitor the system response automatically. Verify expected behavior without watching the screen.
-
-### Fault-Triggered Recording
-
-Define a fault condition. When a signal crosses your threshold, Plotune Stream immediately starts logging and notifies your team, so you never miss a critical event.
-
-### Requirement Regression Checks
-
-When a requirement changes, Plotune Stream automatically re-runs the relevant validation routines. Your test coverage stays current without manual effort.
-
-### Remote Expert Support
-
-Your on-site team runs the vehicle. A remote validation expert monitors and validates from another location in real time, using the same live data stream.
-
-## Set up once. Let validation run continuously.
-
-Stream workers monitor, trigger, and validate, without manual intervention. Your team stays focused on engineering, not on watching test screens.
-
-[Contact Us](https://www.plotune.net/contact)
+[Contact Us ↗](https://www.plotune.net/contact?entry_source=direct)[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
 
 Source: https://www.plotune.net/nexus/stream
 
@@ -937,6 +869,8 @@ Plotune Nexus
 
 
 Switch between Claude and Codex, follow the full runtime on Plotune Nexus, and read the artifacts that come out of each case. Then jump to the scenarios built for your industry.
+
+Illustrative, prerecorded scenarios. No live hardware is connected to this page.
 
 Contact Us
 
@@ -1085,65 +1019,59 @@ Source: https://www.plotune.net/contact
 
 ---
 
-# Building the Future of Data Operations
+# Engineering systems.Connected with intent.
 
-Plotune was founded in  2025  to solve a critical challenge: modern data teams needed a unified platform to orchestrate, process, and govern their entire data lifecycle. We saw the gap between complex data infrastructure and the need for simple, powerful operations.
+Plotune / Founded in 2025
 
-Our platform brings together  orchestration, real-time processing, and data governance  into one seamless experience. Every component is designed for scalability, performance, and enterprise-grade reliability.
 
-We empower organizations to transform raw data into strategic assets, enabling faster decisions and driving business innovation through superior DataOps practices.
 
-[Partner With Us](https://www.plotune.net/partners)[Our Mission](https://www.plotune.net/about#mission)
+Plotune builds tools for engineering data operations, physical test infrastructure and controlled AI-agent integration.
 
-### Our DataOps Philosophy
+Our work spans a local-first Nexus appliance, Stream event infrastructure, desktop visualization and technical research. Each product addresses a different part of the engineering workflow.
 
-Modular by Design
+[Partner With Us ↗](https://www.plotune.net/partners)[Our Mission →](https://www.plotune.net/about#mission)
 
-Every component connects seamlessly, building your perfect data workflow
+01 / Physical systems
 
-Real-Time Native
+[Plotune Nexus ↗](https://www.plotune.net/nexus)
 
-Built for streaming data and instant insights from day one
+02 / Event infrastructure
 
-Enterprise Scalable
+[Plotune Stream ↗](https://www.plotune.net/stream)
 
-Grow from startup to enterprise without changing platforms
+03 / Data operations
 
-Engineering data platform
+[Plotune Desktop ↗](https://www.plotune.net/download)
 
-## Our Mission & Vision
+04 / Technical publication
 
-Driving the future of data operations through innovation and partnership
+[Plotune Research ↗](https://www.plotune.net/research)
 
-### Our Core Mission
+02 / Mission  How we build
 
-At Plotune, our mission is to  democratize DataOps excellence  by providing organizations with the tools to orchestrate, process, and govern their data with unprecedented simplicity and power.
+## Make physical engineering work inspectable.
 
-We believe that  every organization deserves enterprise-grade data operations , regardless of size or technical maturity. Our platform bridges the gap between complex data infrastructure and the need for streamlined, actionable insights.
+Engineering teams already have the hardware, the scripts and the data. What is usually missing is a controlled way to connect them. Plotune builds that connection and keeps the operator in charge of it.
 
-#### Our Vision
+- 01 
 
-A world where data operations are seamless, intelligent, and accessible to every organization driving innovation.
+### Bounded
 
-#### Our Promise
+Agents and scripts act through defined operations with access and execution limits, not open shells on the bench.
 
-To be your trusted DataOps partner, delivering solutions that grow and evolve with your business needs.
+- 02 
 
-### Accessibility
+### Local-first
 
-Making advanced DataOps capabilities accessible to teams of all sizes and technical backgrounds.
+Hardware interaction and first-write data stay on your side. Cloud services support routing, identity and export.
 
-### Reliability
+- 03 
 
-Building trust through robust, secure, and enterprise-ready data operations platforms.
+### Evidence
 
-### Innovation
+A run should leave results, logs and artifacts that an engineer can inspect and a reviewer can approve.
 
-Continuously pushing boundaries to solve tomorrow's data challenges today.
-
-Ready to transform your data operations with a partner who shares your vision?
-
-[Start Your DataOps Journey](https://www.plotune.net/contact)
+[Talk to the team](https://www.plotune.net/contact)[Partnership →](https://www.plotune.net/partners)
 
 Source: https://www.plotune.net/about
 
@@ -1151,19 +1079,21 @@ Source: https://www.plotune.net/about
 
 # Careers at Plotune
 
+Plotune / Careers  No open roles
+
+
+
 We’re not actively hiring at the moment, but we’re always on the lookout for passionate individuals to help shape the future of real-time data visualization. Check back soon for new opportunities!
 
-JOIN US
+Talent pool
 
-## Be Part of Our Journey
+## Be part of the work.
 
 Interested in shaping the future of data streaming with Plotune? Join our talent pool to get notified about opportunities matching your expertise.
 
-Express Interest
+Express Interest [or use the contact form →](https://www.plotune.net/contact)
 
-We'll review your profile
-
-[or use the contact form](https://www.plotune.net/contact)
+We'll review your profile and keep it on file for matching roles.
 
 Source: https://www.plotune.net/careers
 
@@ -1171,118 +1101,139 @@ Source: https://www.plotune.net/careers
 
 # Download Plotune
 
+Plotune / Desktop  Windows · Linux
+
+
+
 Get started with Plotune today. Choose your operating system and version to download the software that fits your needs.
+
+- 01 / deb 
 
 ### Debian/Ubuntu (.deb)
 
- DEB
-
-v1.0.58.3  8.5 MB  curl -fsSL https://plotune.net/install.sh | bash
-
 Recommended for Debian-based distributions. Easy installation with APT package manager.
 
-#### Installation Steps:
+Version
 
-- 1  Option 1: Click Download for .deb package
+v1.0.58.3
 
-- 2  Option 2: Run install script: curl -fsSL https://plotune.net/install.sh | bash
+Size
 
-- 3  Install with: sudo dpkg -i plotune*.deb
+8.5 MB
 
-- 4  Fix dependencies: sudo apt-get install -f
+```
+$ curl -fsSL https://plotune.net/install.sh | bash
+```
 
-[Download Now](https://github.com/plotune/plotune-dl/releases/download/v1.0.58.3/plotune-linux-x86_64.deb)[View Install Script](https://plotune.net/install.sh)
+Installation steps
+
+- Option 1: Click Download for .deb package
+
+- Option 2: Run install script: curl -fsSL https://plotune.net/install.sh | bash
+
+- Install with: sudo dpkg -i plotune*.deb
+
+- Fix dependencies: sudo apt-get install -f
+
+[Download Now](https://github.com/plotune/plotune-dl/releases/download/v1.0.58.3/plotune-linux-x86_64.deb)[View Install Script ↗](https://plotune.net/install.sh)
+
+- 02 / aur 
 
 ### Arch Linux (AUR)
 
- AUR
-
-v1.0.58.3  Auto  yay -S plotune-bin
-
 For Arch and Arch-based distributions. Install via AUR helper with automatic updates.
 
-#### Installation Steps:
+Version
 
-- 1  Using AUR helper (recommended): yay -S plotune-bin
+v1.0.58.3
 
-- 2  Manual install: git clone https://aur.archlinux.org/plotune-bin.git
+Size
 
-- 3  cd plotune-bin && makepkg -si
+Auto
 
-- 4  Run: plotune
+```
+$ yay -S plotune-bin
+```
 
-[Download Now](https://aur.archlinux.org/packages/plotune-bin)[AUR Help](https://wiki.archlinux.org/title/Arch_User_Repository)
+Installation steps
+
+- Using AUR helper (recommended): yay -S plotune-bin
+
+- Manual install: git clone https://aur.archlinux.org/plotune-bin.git
+
+- cd plotune-bin && makepkg -si
+
+- Run: plotune
+
+[Download Now](https://aur.archlinux.org/packages/plotune-bin)[AUR Help ↗](https://wiki.archlinux.org/title/Arch_User_Repository)
+
+- 03 / snap 
 
 ### Snap Package
 
- SNAP
-
-v1.0.58.3  sudo snap install plotune
-
 Universal package for most Linux distributions. Sandboxed and auto-updating.
 
-#### Installation Steps:
+Version
 
-- 1  Open terminal
+v1.0.58.3
 
-- 2  Run: sudo snap install plotune
+```
+$ sudo snap install plotune
+```
 
-- 3  Or click below for Snap Store
+Installation steps
 
-- 4  Launch from applications menu
+- Open terminal
 
-[Download Now](https://snapcraft.io/plotune)[Snap Guide](https://snapcraft.io/docs)
+- Run: sudo snap install plotune
+
+- Or click below for Snap Store
+
+- Launch from applications menu
+
+[Download Now](https://snapcraft.io/plotune)[Snap Guide ↗](https://snapcraft.io/docs)
+
+- 04 / binary 
 
 ### Standalone Binary
 
- BINARY
-
-v1.0.58.3  8.5 MB  ./plotune
-
 Generic Linux binary. No installation needed - download and run directly.
 
-#### Installation Steps:
+Version
 
-- 1  wget https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz
+v1.0.58.3
 
-- 2  Extract: tar -xzf plotune-linux-x86_64.tar.gz
+Size
 
-- 3  cd plotune-linux-x86_64
+8.5 MB
 
-- 4  Run: chmod +x plotune && ./plotune
+```
+$ ./plotune
+```
+
+Installation steps
+
+- wget https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz
+
+- Extract: tar -xzf plotune-linux-x86_64.tar.gz
+
+- cd plotune-linux-x86_64
+
+- Run: chmod +x plotune && ./plotune
 
 [Download Now](https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz)
 
-#### Latest Release: v1.0.58.3
+Latest release  v1.0.58.3  Released March 28, 2026 · 2 packages available
 
-Released March 28, 2026 • 2 packages available
+[View Release Notes ↗](https://github.com/plotune/plotune-dl/releases/tag/v1.0.58.3)[All Releases on GitHub ↗](https://github.com/plotune/plotune-dl/releases)
 
-[View Release Notes](https://github.com/plotune/plotune-dl/releases/tag/v1.0.58.3)
-
-Open-source installer scripts
-
-Fast installation
-
-[All Releases on GitHub](https://github.com/plotune/plotune-dl/releases)
-
-Need help?  Check out our [documentation](https://www.plotune.net/docs) or join our [community Discord](https://discord.gg/plotune) for support.
+Need help?  Check out our [documentation](https://www.plotune.net/docs) or join our [community Discord](https://discord.gg/plotune) for support. Installer scripts are open source.
 
 Linux is the primary supported platform. Windows builds are provided on a best-effort basis.
-© 2026 Plotune. All rights reserved.
+
+Download / Questions  4 answers
 
 ## Download FAQs
-
-Common questions about installing and using Plotune
-
-###
-
-###
-
-###
-
-###
-
-###
 
 Source: https://www.plotune.net/download
 
@@ -1290,119 +1241,193 @@ Source: https://www.plotune.net/download
 
 # Extensions Marketplace
 
+Plotune / Extensions  Plotune Core
+
+
+
 Enhance your Plotune experience with powerful extensions. Add new capabilities, connect to more data sources, and customize your workflow.
 
 Showing 7 of 7 extensions
 
-Plotune SandBox Extension
+- 01 
 
 ### Plotune SandBox Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_sandbox_extension`
 
 Random data generator for SandBox environment in Plotune
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 1 Dec 2025
+Platform
 
-Plotune Relay Extension
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+1 Dec 2025
+
+- 02 
 
 ### Plotune Relay Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_relay_ext`
 
 Universal data relay extension for Plotune Core. Supports WebSocket and HTTP polling sources.
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 22 Dec 2025
+Platform
 
-Plotune Arduino Extension
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+22 Dec 2025
+
+- 03 
 
 ### Plotune Arduino Extension
 
- v0.1.0
-
 by Plotune SDK Team
+
+`plotune_arduino_ext`
 
 Plug-and-play Arduino serial data acquisition and real-time streaming for Plotune Core.
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 19 Dec 2025
+Platform
 
-Plotune Simple Reader
+Linux · Windows
+
+Release
+
+v0.1.0
+
+Updated
+
+19 Dec 2025
+
+- 04 
 
 ### Plotune Simple Reader
 
- v1.0.2
-
 by Plotune SDK Team
+
+`plotune_simple_reader_ext`
 
 File reader, PLTX, HDF5, Arrow, CSV, XLSX
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 3 Jan 2026
+Platform
 
-Plotune Stream Extension
+Linux · Windows
+
+Release
+
+v1.0.2
+
+Updated
+
+3 Jan 2026
+
+- 05 
 
 ### Plotune Stream Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_stream_ext`
 
 Plotune Stream - Producer and Consumer Extension
 
-verified  core  stream
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 23 Dec 2025
+- stream
 
-Plotune MQTT Extension
+Platform
+
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+23 Dec 2025
+
+- 06 
 
 ### Plotune MQTT Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_mqtt_extension`
 
 Industrial MQTT data bridge and monitor for Plotune industrial data flows
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 31 Dec 2025
+Platform
 
-Automotive File Extension
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+31 Dec 2025
+
+- 07 
 
 ### Automotive File Extension
 
- —
-
 by Plotune SDK Team
+
+`plotune_file_automotive_ext`
 
 CAN / MDF Data Reader and Converter Extension
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
+
+Platform
+
+Linux · Windows
+
+Release
+
+—
 
 Source: https://www.plotune.net/extensions
 
@@ -1410,15 +1435,11 @@ Source: https://www.plotune.net/extensions
 
 # Legal Information
 
+Plotune / Legal  Terms · Privacy · License
+
+
+
 Understanding the terms, licenses, and policies that govern the use of Plotune and its extensions
-
-### Navigation
-
-- Terms of Service
-
-- Privacy Policy
-
-- Software License
 
 ## Terms of Service
 
@@ -1502,29 +1523,11 @@ Source: https://www.plotune.net/legal
 
 # Privacy Policy
 
+Plotune / Privacy  GDPR · KVKK
+
+
+
 Plotune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
-
-### Navigation
-
-- Overview
-
-- Data We Collect
-
-- Cookies & Tracking
-
-- How We Use Data
-
-- Telemetry Data
-
-- Data Sharing
-
-- Your Rights
-
-- Data Security
-
-- Compliance
-
-- Contact Us
 
 ## Overview
 
@@ -1714,7 +1717,7 @@ UART  CAN Bus  Bluetooth  CSV Files  Network Streams  Simulation
 
 ## Extensibility & Plugins
 
-Plotune offers a flexible  Extension SDK for building plugins that extend both frontend and backend capabilities.
+Plotune offers a flexible  Extension SDK  for building plugins that extend both frontend and backend capabilities.
 
 #### Plugin Capabilities
 
@@ -3428,23 +3431,23 @@ release evidence ready
 
 ## The workflow today
 
-- Attach the adapter and bring the bus up manually before every run
+- 01  Attach the adapter and bring the bus up manually before every run
 
-- Hand-craft or replay raw frames from a DBC, one test at a time
+- 02  Hand-craft or replay raw frames from a DBC, one test at a time
 
-- Watch signals in a scope tool and decide pass/fail by eye
+- 03  Watch signals in a scope tool and decide pass/fail by eye
 
-- Write up what happened afterward, from memory or screenshots
+- 04  Write up what happened afterward, from memory or screenshots
 
 ## With Plotune Nexus
 
-- Acquire the CAN interface as a bounded operation, released when the run ends
+- 01  Acquire the CAN interface as a bounded operation, released when the run ends
 
-- Encode and send only the approved message from your DBC, at the required cycle time
+- 02  Encode and send only the approved message from your DBC, at the required cycle time
 
-- Gate the next step on a decoded signal condition instead of a fixed wait
+- 03  Gate the next step on a decoded signal condition instead of a fixed wait
 
-- Package the run as one reviewable artifact: trace, decoded signals, and verdict together
+- 04  Package the run as one reviewable artifact: trace, decoded signals, and verdict together
 
 ## Supported integrations
 
@@ -3500,23 +3503,23 @@ Flakes
 
 ## The workflow today
 
-- SSH into the robot and run ros2 topic echo / ros2 service call by hand
+- 01  SSH into the robot and run ros2 topic echo / ros2 service call by hand
 
-- Eyeball telemetry in a terminal to judge whether a requirement passed
+- 02  Eyeball telemetry in a terminal to judge whether a requirement passed
 
-- Re-run the same manual steps for every regression check
+- 03  Re-run the same manual steps for every regression check
 
-- No artifact: the "evidence" is whoever happened to be watching the terminal
+- 04  No artifact: the "evidence" is whoever happened to be watching the terminal
 
 ## With Plotune Nexus
 
-- Join the robot's DDS domain over the network, no ROS tooling needed on your side
+- 01  Join the robot's DDS domain over the network, no ROS tooling needed on your side
 
-- Publish a bounded command and gate the next step on live telemetry, not a fixed wait
+- 02  Publish a bounded command and gate the next step on live telemetry, not a fixed wait
 
-- Record multiple topics into a single MCAP artifact as an unattended, bounded job
+- 03  Record multiple topics into a single MCAP artifact as an unattended, bounded job
 
-- Wrap join → command → gate → record into one repeatable sequence with a pass/fail verdict
+- 04  Wrap join → command → gate → record into one repeatable sequence with a pass/fail verdict
 
 ## Supported integrations
 
@@ -3572,23 +3575,23 @@ pass 1/1
 
 ## The workflow today
 
-- A person kicks off each test sequence and stays to watch it run
+- 01  A person kicks off each test sequence and stays to watch it run
 
-- Faults are triaged live, in the moment, by whoever is on the bench
+- 02  Faults are triaged live, in the moment, by whoever is on the bench
 
-- Regression checks are re-run by hand against every new build
+- 03  Regression checks are re-run by hand against every new build
 
-- Overnight or long-running coverage simply does not happen
+- 04  Overnight or long-running coverage simply does not happen
 
 ## With Plotune Nexus
 
-- Orchestrate multi-step sequences across CAN, UART, DBC, XCP, and DDS as one bounded run
+- 01  Orchestrate multi-step sequences across CAN, UART, DBC, XCP, and DDS as one bounded run
 
-- Leave a bounded fault watch running as an async job, so a 2am fault is captured, not missed
+- 02  Leave a bounded fault watch running as an async job, so a 2am fault is captured, not missed
 
-- Diff a fresh run against a validated baseline to catch regressions automatically
+- 03  Diff a fresh run against a validated baseline to catch regressions automatically
 
-- Every sequence ends with a packaged, reviewable artifact, not a person's notes
+- 04  Every sequence ends with a packaged, reviewable artifact, not a person's notes
 
 ## Supported integrations
 
@@ -3642,23 +3645,23 @@ captured
 
 ## The workflow today
 
-- Run the simulator and controller on whichever engineer's machine last set it up
+- 01  Run the simulator and controller on whichever engineer's machine last set it up
 
-- Bridge virtual and real hardware by hand, with no enforced boundary on what crosses
+- 02  Bridge virtual and real hardware by hand, with no enforced boundary on what crosses
 
-- Give an AI agent either full shell access or no access at all, with no middle ground
+- 03  Give an AI agent either full shell access or no access at all, with no middle ground
 
-- Trust a "looks right" run instead of a boundary you can point to and prove
+- 04  Trust a "looks right" run instead of a boundary you can point to and prove
 
 ## With Plotune Nexus
 
-- Run the controller or simulator as a staged container, not a laptop only one person can restart
+- 01  Run the controller or simulator as a staged container, not a laptop only one person can restart
 
-- Bridge virtual and real CAN through a policy gateway that lets only approved frames cross
+- 02  Bridge virtual and real CAN through a policy gateway that lets only approved frames cross
 
-- Give the agent a bounded operation set (acquire, capture, wait, send only approved frames, stop, package), not raw shell access
+- 03  Give the agent a bounded operation set (acquire, capture, wait, send only approved frames, stop, package), not raw shell access
 
-- Connect over MCP with OAuth and delegated access, so what the agent can touch is a policy decision, not a trust exercise
+- 04  Connect over MCP with OAuth and delegated access, so what the agent can touch is a policy decision, not a trust exercise
 
 ## Supported integrations
 

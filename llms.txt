@@ -6,10 +6,10 @@ Technical documentation describes implementation status and limitations. Researc
 
 ## Product and workflows
 
-- [One platform to run your data and connect to your test systems.](https://www.plotune.net/index.md): Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.
-- [Plotune Nexus](https://www.plotune.net/nexus/index.md): Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours.
+- [From the physical world.Into your workflow.](https://www.plotune.net/index.md): Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.
+- [Real hardware.Controlled operations.](https://www.plotune.net/nexus/index.md): Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours.
 - [One connection point for your entire test environment.](https://www.plotune.net/nexus/connectivity/index.md): Connect Plotune Nexus to the test systems your team already uses: CAN, UART, XCP on CAN and Ethernet, ROS 2 / DDS over CycloneDDS, and raw UDS and DoIP.
-- [Plotune Stream Integration](https://www.plotune.net/nexus/stream/index.md): Plotune Stream monitors live signals and validates requirements continuously, close to your hardware, so teams get results the moment something happens.
+- [From the bench.Into the event history.](https://www.plotune.net/nexus/stream/index.md): Explore the Nexus and Stream integration model for engineering events, with a separate local MVP workspace and future-product reference.
 - [Use Cases](https://www.plotune.net/nexus/use-cases/index.md): See how Plotune Nexus runs bounded, AI-ready workflows across automotive validation, robotics, ROS 2 / DDS supervision, ECU and gateway integration, field diagnostics, and HIL automation.
 - [What is agentic test & development?](https://www.plotune.net/solutions/agentic-test-development/index.md): Traditional test automation runs a fixed script: the same steps, in the same order, against the same fixture, every time. Agentic test & development is a different approach: an AI agent reads the current state of a real system and takes the next bounded, pre-approved action, rather than following a script that breaks the moment reality doesn't match it exactly.
 - [Automate CAN-based ECU testing without losing the engineer in the loop](https://www.plotune.net/solutions/can-ecu-testing/index.md): A CAN or ECU test procedure is never just "send a frame." It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day.
@@ -50,8 +50,9 @@ Technical documentation describes implementation status and limitations. Researc
 ## Optional
 
 - [Questions about Plotune and Nexus.](https://www.plotune.net/faq/index.md): Answers to common questions about Plotune Nexus and the Plotune DataOps platform: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation.
+- [Your systems emit events.Make them useful.](https://www.plotune.net/stream/index.md): Explore source-agnostic engineering event infrastructure and the local Plotune Stream MVP demo. Send events from any system that can make HTTP requests.
 - [Tell us about your test environment.](https://www.plotune.net/contact/index.md): Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps.
-- [Building the Future of Data Operations](https://www.plotune.net/about/index.md): Plotune helps engineering teams orchestrate, process, and govern their data, and builds Plotune Nexus for controlled, AI-ready work on real test hardware.
+- [Engineering systems.Connected with intent.](https://www.plotune.net/about/index.md): Plotune helps engineering teams orchestrate, process, and govern their data, and builds Plotune Nexus for controlled, AI-ready work on real test hardware.
 - [Careers at Plotune](https://www.plotune.net/careers/index.md): Published page content.
 - [Download Plotune](https://www.plotune.net/download/index.md): Download the Plotune desktop app for Windows and Linux and bring DataOps workflows to your own machine.
 - [Extensions Marketplace](https://www.plotune.net/extensions/index.md): Extend Plotune with a growing marketplace of integrations and tools for data sources, processing, and export.

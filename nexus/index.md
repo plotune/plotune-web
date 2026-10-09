@@ -1,95 +1,125 @@
-# Plotune Nexus
+# Real hardware.Controlled operations.
 
-Connect. Access. Automate.
+Plotune Nexus / Local-first appliance  Hardware + software
+
+The agent meets the bench.
 
 
 
-Plotune Nexus is the hardware and software hub at the center of your test environment. It connects your bench, your tools, and your team, and lets you control everything from anywhere.
+Nexus connects AI agents to physical engineering and test systems through MCP. Hardware interaction and first-write artifacts happen on the appliance; cloud services support routing, identity and export.
 
-[Check Your AI Readiness](https://www.plotune.net/ai-readiness?entry_source=direct)
+[Check Your AI Readiness ↗](https://www.plotune.net/ai-readiness?entry_source=direct)
 
 4 quick questions · about 30 seconds · no sign-up
 
-[See How It Connects](https://www.plotune.net/nexus/connectivity)
+[See How It Connects →](https://www.plotune.net/nexus/connectivity)
 
-Hardware
+NEXUS / hardware overview  Plotune Nexus appliance with a finned enclosure and physical connectors 
 
-## Compact test environment hub
+Plotune-defined hardware. Pre-integrated software. Managed lifecycle.
 
-Plotune Nexus hardware
+01 / System architecture  Request, operation, evidence
 
-## Built for your test bench. Ready for everything connected to it.
+## One controlled surface.A physical result.
 
-Plotune Nexus speaks the same language as your test systems, out of the box, without adapters or workarounds.
+Architecture / request → result
 
-### DAQ Connections
+01 / MCP  AI agent 
 
-Connects to your data acquisition systems via CAN, UART, and XCP. Read signals, trigger measurements, and log data directly.
+Requests a bounded operation
 
-### Secure File Transfer
+02 / Local appliance  Plotune Nexus 
 
-Move calibration files, test scripts, and results between systems safely. Encrypted. Reliable. No manual copying required.
+Applies access and execution controls
 
-### Cloud Sync
+03 / CAN · UART · ROS 2 / DDS  Physical test system 
 
-Sync test data and configurations to your team's shared environment. Store results and access them from anywhere.
+Interfaces with connected equipment
 
-### Remote Access
+Structured results & recorded evidence
 
-Connect to Plotune Nexus and your test bench from any location. Run tests from the office, home, or another site entirely.
+Conceptual workflow. No hardware is connected.
 
-## From requirement to result, automatically.
+Conceptual flow. Available operations depend on transport, connected hardware, access and configuration.
 
-Define what you need to test. Plotune Nexus handles the rest.
+02 / Engineering interfaces [Compatibility matrix ↗](https://www.plotune.net/docs/nexus/hardware-compatibility)
 
-Plotune Nexus connects your company's engineering data, your test environment, and an AI agent that understands automotive validation. When a requirement comes in, Plotune Nexus figures out what to run, executes it, and delivers the result, whether that's a test run, a software update, a diagnostic check, or a scheduled routine.
+## Speak the languageof your system.
 
-Powered by Automotive Context Skills
+Use the supported transports on your bench, rig or vehicle. Check the documented native, container and scale-up tiers before choosing hardware.
 
-Plotune Nexus understands the full scope of automotive validation, from ADAS and thermal behavior to diagnostics, compliance, testing, and legislation requirements.
+[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
 
-Requirement
+01 
 
-↓
+CAN / CAN FD
 
-Company Database + AI Agent
+Linux CAN transports for bus interaction and capture.
 
-↓
+02 
 
-Plotune Nexus
+UART
 
-Test run report
+Serial interfaces, including RS-485 and modem-control lines.
 
-Updated ECU or calibration
+03 
 
-Diagnostic log
+XCP
 
-Scheduled job status
+CAN and Ethernet transports with different supported operations.
 
-## What Plotune Nexus can do for your team
+04 
 
-### Test Execution
+UDS / DoIP
 
-Run test routines automatically. No manual triggering.
+Diagnostics through reachable network and CAN transports.
 
-### Software & Calibration Updates
+05 
 
-Push updates to ECUs and calibration targets directly from Plotune Nexus.
+ROS 2 / DDS
 
-### Diagnostic Checks
+Join an existing DDS domain, discover topics and record evidence.
 
-Perform diagnostic routines on connected systems. Monitor and log results.
+03 / From requirement to evidence  A bounded workflow
 
-### Scheduling
+## Discover. Execute.Record what happened.
 
-Set up recurring or condition-triggered test jobs. Run them overnight, remotely, or on demand.
+- 01 
 
-### Ready to connect your test environment?
+### Inspect the system
 
-See how Plotune Nexus fits your bench, vehicle, or validation team.
+Discover the available interfaces and current state before requesting an operation.
 
-[View Use Cases](https://www.plotune.net/nexus/use-cases)[Get Your Integration Plan](https://www.plotune.net/contact)
+- 02 
 
-Already evaluating the technical fit? [Read the Nexus documentation](https://www.plotune.net/docs/nexus) for the security model, hardware compatibility, and MCP API reference.
+### Run a bounded operation
+
+Use the relevant MCP tools and job controls within the configured access and execution limits.
+
+- 03 
+
+### Keep the evidence
+
+Return status, metadata and retrieval paths for locally recorded logs, traces and artifacts.
+
+[CAN / ECU testing ↗](https://www.plotune.net/solutions/can-ecu-testing)[ROS 2 / DDS testing ↗](https://www.plotune.net/solutions/ros2-dds-testing)[Stream integration ↗](https://www.plotune.net/nexus/stream)[View Use Cases ↗](https://www.plotune.net/nexus/use-cases)
+
+04 / Read the engineering details
+
+## Know the boundary.
+
+Local-first operation is documented alongside cloud dependencies, hardware compatibility and current constraints. Start with the architecture and security model.
+
+[Read the Nexus documentation →](https://www.plotune.net/docs/nexus)
+
+[Security model ↗](https://www.plotune.net/docs/nexus/security-model)[Data handling ↗](https://www.plotune.net/docs/nexus/data-handling)[Protocols ↗](https://www.plotune.net/docs/nexus/protocols)
+
+Start with your test environment
+
+## Map Nexusto your bench.
+
+Tell us about your hardware, interfaces and first workflow.
+
+[Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
 
 Source: https://www.plotune.net/nexus

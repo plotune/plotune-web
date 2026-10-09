@@ -1,151 +1,88 @@
-# Plotune Stream Integration
+# From the bench.Into the event history.
 
-Plotune Nexus
+Nexus / Stream integration
 
 
 
-Turn live test data into continuous validation.
+Nexus connects to physical test systems. Stream provides an independent event model for the software around them. Bring the context of an operation into an inspectable timeline.
 
-Monitor signals, trigger routines, and validate requirements as your tests run, not after the fact.
+[Contact Us ↗](https://www.plotune.net/contact?entry_source=direct)[Learn More →](https://www.plotune.net/nexus/connectivity)
 
-Plotune Stream keeps validation running in the background, 24 hours a day, so your team gets results the moment something happens, or the moment it should have happened but didn't.
+The Stream workspace in this repository is a local MVP demo. Continuous validation, automated actions and richer measurement workflows are explored in the separate future-product reference.
 
-[Contact Us](https://www.plotune.net/contact)[Learn More](https://www.plotune.net/nexus/connectivity)
+01 / Integration model  Illustrative workflow
 
-Always-on
+## Test system
 
- Illustrative diagram
+CAN · XCP · ROS 2 / DDS
+Connected through supported Nexus interfaces
 
-Monitor, trigger, and validate as your tests run. Around the clock, close to your data.
+ → 
 
-## How Plotune Stream works
+## Event source
 
-Step 1
+Nexus or your application
+Sender-supplied context
 
-### Stream live test data
+ → 
 
-Your test environment sends live signals from Plotune Nexus to the validation system. CAN, XCP, Ethernet, all supported.
+## Stream
 
-Step 2
+Event name · timestamp · properties
+Inspection and event history
 
-### Monitor conditions continuously
+02 / Context travels with the event [Stream overview ↗](https://www.plotune.net/stream)
 
-Validation logic runs around the clock on incoming data. No one needs to be watching.
+01 
 
-Step 3
+### Generate
 
-### Trigger actions automatically
+Nexus or your own application produces an event with the engineering context it knows.
 
-When a condition is met, a threshold crossed, or a signal pattern matched, the system starts logging, runs a test, or applies a change. Automatically.
+02 
 
-Step 4
+### Send
 
-### Analyze and validate results
+A source that can make HTTP requests can send event data; Nexus is one possible source.
 
-Results are checked against your defined requirements. Pass, fail, deviation, all captured and categorized.
+03 
 
-Step 5
+### Inspect
 
-### Notify and report instantly
+Use the MVP demo to explore event history, filters and the complete JSON payload.
 
-Alerts, logs, and structured reports are generated and sent to your team the moment validation is complete.
+04 
 
-## Live data to validated results
+### Investigate
 
-### YOUR TEST ENVIRONMENT
+Follow a device or session across events. Keep the distinction between event history and raw measurements clear.
 
-Vehicle / ECU
+03 / Read, then explore
 
-Test Bench / HiL
+## Understand the data.Try the interface.
 
-Measurement Devices
+Nexus documentation describes local artifacts and result retrieval. The Stream demo shows a source-agnostic event envelope and example setup contracts.
 
-Other Sources
+[Open the MVP demo ↗](https://www.plotune.net/stream/workspace)[Data handling →](https://www.plotune.net/docs/nexus/data-handling)
 
-↓
+Illustrative event / not a live result 
 
-### PLOTUNE NEXUS
+```
+{
+  "event": "test.completed",
+  "device_id": "nexus-bench-01",
+  "session_id": "example-run",
+  "properties": {
+    "artifact": "local-recording",
+    "outcome": "passed"
+  }
+}
+```
 
-Live data collection: CAN, XCP, Ethernet
+Map an integration to your system
 
-Secure connection & data streaming
+## Start with the source.Keep the context.
 
-↓
-
-### PLOTUNE STREAM
-
-Stream Workers: always-on validation logic
-
-↓
-
-### AI VALIDATION AGENTS
-
-Monitor Conditions
-
-Run Actions
-
-Analyze Results
-
-Generate Reports
-
-Send Notifications
-
-↓
-
-### RESULTS & ACTIONS
-
-Real-time Dashboards
-
-Reports & Logs
-
-Alerts & Notifications
-
-Your Database / Data Lake
-
-External Systems (via integration)
-
-### Always-on, 24/7
-
-Validation doesn't stop when your team does.
-
-### Secure by design
-
-Your test data stays protected throughout the pipeline.
-
-### Scalable & resilient
-
-Grows with your test volume. Built to handle real production workloads.
-
-### Low latency & responsive
-
-Validation results arrive when they're still actionable.
-
-## How teams use Plotune Stream today
-
-### Night Validation Runs
-
-Set up your validation routines before you leave for the day. Plotune Stream runs them overnight and your results are waiting when you arrive in the morning.
-
-### Calibration Change Validation
-
-Apply a calibration change, then let Plotune Stream monitor the system response automatically. Verify expected behavior without watching the screen.
-
-### Fault-Triggered Recording
-
-Define a fault condition. When a signal crosses your threshold, Plotune Stream immediately starts logging and notifies your team, so you never miss a critical event.
-
-### Requirement Regression Checks
-
-When a requirement changes, Plotune Stream automatically re-runs the relevant validation routines. Your test coverage stays current without manual effort.
-
-### Remote Expert Support
-
-Your on-site team runs the vehicle. A remote validation expert monitors and validates from another location in real time, using the same live data stream.
-
-## Set up once. Let validation run continuously.
-
-Stream workers monitor, trigger, and validate, without manual intervention. Your team stays focused on engineering, not on watching test screens.
-
-[Contact Us](https://www.plotune.net/contact)
+[Contact Us ↗](https://www.plotune.net/contact?entry_source=direct)[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
 
 Source: https://www.plotune.net/nexus/stream

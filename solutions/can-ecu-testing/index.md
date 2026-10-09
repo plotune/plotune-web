@@ -30,23 +30,23 @@ release evidence ready
 
 ## The workflow today
 
-- Attach the adapter and bring the bus up manually before every run
+- 01  Attach the adapter and bring the bus up manually before every run
 
-- Hand-craft or replay raw frames from a DBC, one test at a time
+- 02  Hand-craft or replay raw frames from a DBC, one test at a time
 
-- Watch signals in a scope tool and decide pass/fail by eye
+- 03  Watch signals in a scope tool and decide pass/fail by eye
 
-- Write up what happened afterward, from memory or screenshots
+- 04  Write up what happened afterward, from memory or screenshots
 
 ## With Plotune Nexus
 
-- Acquire the CAN interface as a bounded operation, released when the run ends
+- 01  Acquire the CAN interface as a bounded operation, released when the run ends
 
-- Encode and send only the approved message from your DBC, at the required cycle time
+- 02  Encode and send only the approved message from your DBC, at the required cycle time
 
-- Gate the next step on a decoded signal condition instead of a fixed wait
+- 03  Gate the next step on a decoded signal condition instead of a fixed wait
 
-- Package the run as one reviewable artifact: trace, decoded signals, and verdict together
+- 04  Package the run as one reviewable artifact: trace, decoded signals, and verdict together
 
 ## Supported integrations
 

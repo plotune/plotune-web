@@ -6,6 +6,8 @@ Plotune Nexus
 
 Switch between Claude and Codex, follow the full runtime on Plotune Nexus, and read the artifacts that come out of each case. Then jump to the scenarios built for your industry.
 
+Illustrative, prerecorded scenarios. No live hardware is connected to this page.
+
 Contact Us
 
 [Runtime](https://www.plotune.net/nexus/use-cases#runtime)[Artifacts](https://www.plotune.net/nexus/use-cases#artifacts)[By industry](https://www.plotune.net/nexus/use-cases#industries)

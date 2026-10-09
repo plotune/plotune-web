@@ -3,7 +3,9 @@ let running = false;
 let cur = 0;
 let renderQueue = Promise.resolve();
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sleep = ms => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ? Promise.resolve()
+  : new Promise(r => setTimeout(r, ms));
 
 const DEMO_PACING = {
   minScenarioMs: 20000,

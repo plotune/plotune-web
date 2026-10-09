@@ -1,117 +1,191 @@
 # Extensions Marketplace
 
+Plotune / Extensions  Plotune Core
+
+
+
 Enhance your Plotune experience with powerful extensions. Add new capabilities, connect to more data sources, and customize your workflow.
 
 Showing 7 of 7 extensions
 
-Plotune SandBox Extension
+- 01 
 
 ### Plotune SandBox Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_sandbox_extension`
 
 Random data generator for SandBox environment in Plotune
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 1 Dec 2025
+Platform
 
-Plotune Relay Extension
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+1 Dec 2025
+
+- 02 
 
 ### Plotune Relay Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_relay_ext`
 
 Universal data relay extension for Plotune Core. Supports WebSocket and HTTP polling sources.
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 22 Dec 2025
+Platform
 
-Plotune Arduino Extension
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+22 Dec 2025
+
+- 03 
 
 ### Plotune Arduino Extension
 
- v0.1.0
-
 by Plotune SDK Team
+
+`plotune_arduino_ext`
 
 Plug-and-play Arduino serial data acquisition and real-time streaming for Plotune Core.
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 19 Dec 2025
+Platform
 
-Plotune Simple Reader
+Linux · Windows
+
+Release
+
+v0.1.0
+
+Updated
+
+19 Dec 2025
+
+- 04 
 
 ### Plotune Simple Reader
 
- v1.0.2
-
 by Plotune SDK Team
+
+`plotune_simple_reader_ext`
 
 File reader, PLTX, HDF5, Arrow, CSV, XLSX
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 3 Jan 2026
+Platform
 
-Plotune Stream Extension
+Linux · Windows
+
+Release
+
+v1.0.2
+
+Updated
+
+3 Jan 2026
+
+- 05 
 
 ### Plotune Stream Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_stream_ext`
 
 Plotune Stream - Producer and Consumer Extension
 
-verified  core  stream
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 23 Dec 2025
+- stream
 
-Plotune MQTT Extension
+Platform
+
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+23 Dec 2025
+
+- 06 
 
 ### Plotune MQTT Extension
 
- v1.0.0
-
 by Plotune SDK Team
+
+`plotune_mqtt_extension`
 
 Industrial MQTT data bridge and monitor for Plotune industrial data flows
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
 
-Updated: 31 Dec 2025
+Platform
 
-Automotive File Extension
+Linux · Windows
+
+Release
+
+v1.0.0
+
+Updated
+
+31 Dec 2025
+
+- 07 
 
 ### Automotive File Extension
 
- —
-
 by Plotune SDK Team
+
+`plotune_file_automotive_ext`
 
 CAN / MDF Data Reader and Converter Extension
 
-verified  core
+- verified
 
-🖥️  Linux • Windows
+- core
+
+Platform
+
+Linux · Windows
+
+Release
+
+—
 
 Source: https://www.plotune.net/extensions

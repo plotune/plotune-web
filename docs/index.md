@@ -74,7 +74,7 @@ UART  CAN Bus  Bluetooth  CSV Files  Network Streams  Simulation
 
 ## Extensibility & Plugins
 
-Plotune offers a flexible  Extension SDK for building plugins that extend both frontend and backend capabilities.
+Plotune offers a flexible  Extension SDK  for building plugins that extend both frontend and backend capabilities.
 
 #### Plugin Capabilities
 

@@ -1,14 +1,10 @@
 # Legal Information
 
+Plotune / Legal  Terms · Privacy · License
+
+
+
 Understanding the terms, licenses, and policies that govern the use of Plotune and its extensions
-
-### Navigation
-
-- Terms of Service
-
-- Privacy Policy
-
-- Software License
 
 ## Terms of Service
 

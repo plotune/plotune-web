@@ -30,23 +30,23 @@ captured
 
 ## The workflow today
 
-- Run the simulator and controller on whichever engineer's machine last set it up
+- 01  Run the simulator and controller on whichever engineer's machine last set it up
 
-- Bridge virtual and real hardware by hand, with no enforced boundary on what crosses
+- 02  Bridge virtual and real hardware by hand, with no enforced boundary on what crosses
 
-- Give an AI agent either full shell access or no access at all, with no middle ground
+- 03  Give an AI agent either full shell access or no access at all, with no middle ground
 
-- Trust a "looks right" run instead of a boundary you can point to and prove
+- 04  Trust a "looks right" run instead of a boundary you can point to and prove
 
 ## With Plotune Nexus
 
-- Run the controller or simulator as a staged container, not a laptop only one person can restart
+- 01  Run the controller or simulator as a staged container, not a laptop only one person can restart
 
-- Bridge virtual and real CAN through a policy gateway that lets only approved frames cross
+- 02  Bridge virtual and real CAN through a policy gateway that lets only approved frames cross
 
-- Give the agent a bounded operation set (acquire, capture, wait, send only approved frames, stop, package), not raw shell access
+- 03  Give the agent a bounded operation set (acquire, capture, wait, send only approved frames, stop, package), not raw shell access
 
-- Connect over MCP with OAuth and delegated access, so what the agent can touch is a policy decision, not a trust exercise
+- 04  Connect over MCP with OAuth and delegated access, so what the agent can touch is a policy decision, not a trust exercise
 
 ## Supported integrations
 

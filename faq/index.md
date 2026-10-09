@@ -1,6 +1,6 @@
 # Questions about Plotune and Nexus.
 
-Frequently Asked Questions
+Plotune / Frequently asked questions  16 answers
 
 
 
@@ -46,11 +46,13 @@ Use signal-wait conditions as verdict gates. Plotune Nexus supports decoded-sign
 
 Move recurring capture and stimulation steps out of one-off scripts and into reusable jobs and test sequences. Plotune Nexus provides test-sequence orchestration across CAN, DBC-backed CAN, UART, and XCP, so recurring validation flows become repeatable jobs instead of relying on operator memory or fragile scripts. Artifacts are captured locally and handed off cleanly for review.
 
+Not covered here
+
 ## Still have a question?
 
 Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow would fit your setup.
 
-[Explore Nexus](https://www.plotune.net/nexus)[Contact Us](https://www.plotune.net/contact)
+[Contact Us](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
 
 ## What is a DataOps platform?
 

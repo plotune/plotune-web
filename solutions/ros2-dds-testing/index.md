@@ -30,23 +30,23 @@ Flakes
 
 ## The workflow today
 
-- SSH into the robot and run ros2 topic echo / ros2 service call by hand
+- 01  SSH into the robot and run ros2 topic echo / ros2 service call by hand
 
-- Eyeball telemetry in a terminal to judge whether a requirement passed
+- 02  Eyeball telemetry in a terminal to judge whether a requirement passed
 
-- Re-run the same manual steps for every regression check
+- 03  Re-run the same manual steps for every regression check
 
-- No artifact: the "evidence" is whoever happened to be watching the terminal
+- 04  No artifact: the "evidence" is whoever happened to be watching the terminal
 
 ## With Plotune Nexus
 
-- Join the robot's DDS domain over the network, no ROS tooling needed on your side
+- 01  Join the robot's DDS domain over the network, no ROS tooling needed on your side
 
-- Publish a bounded command and gate the next step on live telemetry, not a fixed wait
+- 02  Publish a bounded command and gate the next step on live telemetry, not a fixed wait
 
-- Record multiple topics into a single MCAP artifact as an unattended, bounded job
+- 03  Record multiple topics into a single MCAP artifact as an unattended, bounded job
 
-- Wrap join → command → gate → record into one repeatable sequence with a pass/fail verdict
+- 04  Wrap join → command → gate → record into one repeatable sequence with a pass/fail verdict
 
 ## Supported integrations
 

@@ -1,61 +1,55 @@
-# Building the Future of Data Operations
+# Engineering systems.Connected with intent.
 
-Plotune was founded in  2025  to solve a critical challenge: modern data teams needed a unified platform to orchestrate, process, and govern their entire data lifecycle. We saw the gap between complex data infrastructure and the need for simple, powerful operations.
+Plotune / Founded in 2025
 
-Our platform brings together  orchestration, real-time processing, and data governance  into one seamless experience. Every component is designed for scalability, performance, and enterprise-grade reliability.
 
-We empower organizations to transform raw data into strategic assets, enabling faster decisions and driving business innovation through superior DataOps practices.
 
-[Partner With Us](https://www.plotune.net/partners)[Our Mission](https://www.plotune.net/about#mission)
+Plotune builds tools for engineering data operations, physical test infrastructure and controlled AI-agent integration.
 
-### Our DataOps Philosophy
+Our work spans a local-first Nexus appliance, Stream event infrastructure, desktop visualization and technical research. Each product addresses a different part of the engineering workflow.
 
-Modular by Design
+[Partner With Us ↗](https://www.plotune.net/partners)[Our Mission →](https://www.plotune.net/about#mission)
 
-Every component connects seamlessly, building your perfect data workflow
+01 / Physical systems
 
-Real-Time Native
+[Plotune Nexus ↗](https://www.plotune.net/nexus)
 
-Built for streaming data and instant insights from day one
+02 / Event infrastructure
 
-Enterprise Scalable
+[Plotune Stream ↗](https://www.plotune.net/stream)
 
-Grow from startup to enterprise without changing platforms
+03 / Data operations
 
-Engineering data platform
+[Plotune Desktop ↗](https://www.plotune.net/download)
 
-## Our Mission & Vision
+04 / Technical publication
 
-Driving the future of data operations through innovation and partnership
+[Plotune Research ↗](https://www.plotune.net/research)
 
-### Our Core Mission
+02 / Mission  How we build
 
-At Plotune, our mission is to  democratize DataOps excellence  by providing organizations with the tools to orchestrate, process, and govern their data with unprecedented simplicity and power.
+## Make physical engineering work inspectable.
 
-We believe that  every organization deserves enterprise-grade data operations , regardless of size or technical maturity. Our platform bridges the gap between complex data infrastructure and the need for streamlined, actionable insights.
+Engineering teams already have the hardware, the scripts and the data. What is usually missing is a controlled way to connect them. Plotune builds that connection and keeps the operator in charge of it.
 
-#### Our Vision
+- 01 
 
-A world where data operations are seamless, intelligent, and accessible to every organization driving innovation.
+### Bounded
 
-#### Our Promise
+Agents and scripts act through defined operations with access and execution limits, not open shells on the bench.
 
-To be your trusted DataOps partner, delivering solutions that grow and evolve with your business needs.
+- 02 
 
-### Accessibility
+### Local-first
 
-Making advanced DataOps capabilities accessible to teams of all sizes and technical backgrounds.
+Hardware interaction and first-write data stay on your side. Cloud services support routing, identity and export.
 
-### Reliability
+- 03 
 
-Building trust through robust, secure, and enterprise-ready data operations platforms.
+### Evidence
 
-### Innovation
+A run should leave results, logs and artifacts that an engineer can inspect and a reviewer can approve.
 
-Continuously pushing boundaries to solve tomorrow's data challenges today.
-
-Ready to transform your data operations with a partner who shares your vision?
-
-[Start Your DataOps Journey](https://www.plotune.net/contact)
+[Talk to the team](https://www.plotune.net/contact)[Partnership →](https://www.plotune.net/partners)
 
 Source: https://www.plotune.net/about
