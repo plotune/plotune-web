@@ -23,19 +23,17 @@ const Privacy = () => {
 
   return (
     <>
-      <section className="min-h-[40vh] flex items-center py-36 bg-dark-surface   text-center">
-        <div className="container mx-auto px-5">
-          <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-5">Privacy Policy</h1>
-          <p className="text-lg text-gray-text max-w-2xl mx-auto">
-            Plotune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
-          </p>
-        </div>
+      <section className="design-container page-intro">
+        <div className="section-index"><span>Plotune / Privacy</span><span>GDPR · KVKK</span></div>
+        <h1>Privacy <span>Policy</span></h1>
+        <p>
+          Plotune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
+        </p>
       </section>
-      <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-20">
-        <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
-          <div className="bg-dark-card rounded-custom p-5 border border-ink/15">
-            <h3 className="text-lg font-semibold text-light-text mb-4 border-b border-ink/15 pb-3">Navigation</h3>
-            <ul className="space-y-2">
+      <div className="design-container legal-layout">
+        <nav className="faq-index legal-index" aria-label="Privacy sections">
+          <p className="technical-label">Sections</p>
+            <ul>
               {[
                 { id: 'overview', label: 'Overview' },
                 { id: 'data-collection', label: 'Data We Collect' },
@@ -54,16 +52,15 @@ const Privacy = () => {
                     smooth={true}
                     offset={-100}
                     duration={500}
-                    className={`block py-2 px-3 rounded text-gray-text hover:bg-primary/10 hover:text-primary cursor-pointer transition-all duration-300 ${activeSection === item.id ? 'bg-primary/10 text-primary' : ''}`}
+                    className={activeSection === item.id ? 'is-active' : ''}
                   >
                     {item.label}
                   </ScrollLink>
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-        <div className="flex-1 bg-dark-card rounded-custom p-10 border border-ink/15 ">
+        </nav>
+        <div className="legal-body">
           <Element name="overview" className="privacy-section">
             <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Overview</h2>
             <p className="text-gray-text mb-4">
@@ -117,7 +114,7 @@ const Privacy = () => {
             <p className="text-gray-text mb-4">
               You can opt-out of telemetry data collection through your account settings. Disabling telemetry does not affect your ability to use Plotune.
             </p>
-            <div className="bg-dark-surface  border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="legal-note">
               <p className="text-gray-text"><strong>Note:</strong> Telemetry data is anonymized and cannot be linked to individual users.</p>
             </div>
           </Element>
@@ -182,7 +179,7 @@ const Privacy = () => {
             <p className="text-gray-text mb-4">
               Last updated: August 25, 2025
             </p>
-            <div className="bg-dark-surface  border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="legal-note">
               <p className="text-gray-text"><strong>Effective Date:</strong> August 25, 2025</p>
             </div>
           </Element>

@@ -5,6 +5,7 @@ import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import MD5 from 'crypto-js/md5';
 import { v4 as uuidv4 } from 'uuid';
+import { FiUser, FiKey, FiLock } from 'react-icons/fi';
 
 const Profile = () => {
   const { user, token, logout } = useContext(AuthContext);
@@ -15,7 +16,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('profile');
   const [apiToken, setApiToken] = useState('');
-  const [premiumStatus, setPremiumStatus] = useState(false);
 
   const getGravatarUrl = (email, size = 80) => {
     if (!email) {
@@ -40,12 +40,6 @@ useEffect(() => {
       });
       setUserData(profileResponse.data);
       setSavedSnapshot(profileResponse.data);
-
-      const premiumResponse = await api.get(
-        `/user/premium?cb=${cachebuster}`,
-        { headers: { Authorization: token } }
-      );
-      setPremiumStatus(premiumResponse.data.is_premium || false);
     } catch (err) {
       if (err.response?.status === 401) logout();
     } finally {
@@ -147,21 +141,14 @@ useEffect(() => {
                 <div className="ml-4">
                   <h3 className="text-light-text font-semibold">{userData.full_name || userData.username}</h3>
                   <p className="text-gray-text text-sm">{userData.email}</p>
-                  <div className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
-                    premiumStatus
-                      ? 'bg-dark-surface from-purple-500 to-pink-500 text-white'
-                      : 'bg-gray-600 text-gray-text'
-                  }`}>
-                    {premiumStatus ? 'PREMIUM' : 'FREE'}
-                  </div>
                 </div>
               </div>
 
               <nav className="space-y-2">
                 {[
-                  { id: 'profile', label: 'Profile Information', icon: '👤' },
-                  { id: 'api', label: 'API Access', icon: '🔑' },
-                  { id: 'security', label: 'Security', icon: '🔒' },
+                  { id: 'profile', label: 'Profile Information', icon: FiUser },
+                  { id: 'api', label: 'API Access', icon: FiKey },
+                  { id: 'security', label: 'Security', icon: FiLock },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -172,7 +159,7 @@ useEffect(() => {
                         : 'text-gray-text hover:text-light-text hover:bg-dark-card'
                     }`}
                   >
-                    <span className="mr-3">{item.icon}</span>
+                    <item.icon aria-hidden="true" className="mr-3 h-4 w-4" />
                     {item.label}
                   </button>
                 ))}

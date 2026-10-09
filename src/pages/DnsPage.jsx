@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { FiPlus, FiServer, FiTrash2, FiCopy } from 'react-icons/fi';
 
@@ -67,17 +66,9 @@ const DnsPage = () => {
               <div>
                 <h3 className="text-lg font-semibold text-light-text mb-1">DNS Limits</h3>
                 <p className="text-gray-text text-sm">
-                  {user?.isPlusUser ? 'Plus User' : 'Regular User'}: {domains.length}/{maxDomains} domains
+                  Domains in use: {domains.length}/{maxDomains}
                 </p>
               </div>
-              {!user?.isPlusUser && (
-                <Link
-                  to="/partners"
-                  className="inline-flex min-h-[44px] items-center px-4 py-2 bg-primary text-white rounded-custom text-sm font-medium hover:opacity-90 transition-opacity"
-                >
-                  Upgrade to Plus
-                </Link>
-              )}
             </div>
           </div>
         </div>
@@ -203,8 +194,7 @@ const DnsPage = () => {
             <div>
               <h4 className="text-primary font-medium mb-2">Usage Limits</h4>
               <ul className="text-gray-text text-sm space-y-1">
-                <li>• Regular users: 2 domains</li>
-                <li>• Plus users: 5 domains</li>
+                <li>• Up to 2 domains per account</li>
                 <li>• Updates allowed every 5 minutes</li>
                 <li>• Subdomains must be unique</li>
               </ul>

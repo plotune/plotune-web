@@ -29,31 +29,12 @@ const FaqSection = () => {
       ),
     },
     {
-      question: 'Can I upgrade from Lite to Pro without reinstalling?',
-      answer: (
-        <p>Yes! You can upgrade from Lite to Pro at any time without reinstalling the software. Simply purchase a Pro license and enter your activation key in the application settings.</p>
-      ),
-    },
-    {
       question: "How do I install the Linux version?",
       answer: (
         <>
-          <p>Plotune is currently available on Linux exclusively via <strong>Snap Store</strong>.</p>
-
-          <p>Install using Snap:</p>
-          <pre className="bg-dark-surface  p-3 rounded-custom my-2 text-gray-text">
-            sudo snap install plotune
-          </pre>
-
-          <p>If Snap is not installed on your system, you can enable it:</p>
-          <pre className="bg-dark-surface  p-3 rounded-custom my-2 text-gray-text">
-            sudo apt install snapd
-          </pre>
-
-          <p className="mt-2">After installation, you can run Plotune using:</p>
-          <pre className="bg-dark-surface  p-3 rounded-custom my-2 text-gray-text">
-            plotune
-          </pre>
+          <p>Choose the Linux tab above. Debian and Ubuntu users can install the .deb package or run the install script, Arch users can install <code>plotune-bin</code> from the AUR, and the Snap package and standalone binary work on most other distributions.</p>
+          <pre><code>$ sudo snap install plotune</code></pre>
+          <p>After installation, run Plotune from your applications menu or with <code>plotune</code>.</p>
         </>
       ),
 
@@ -74,35 +55,23 @@ const FaqSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-dark-bg">
-      <div className="container mx-auto px-5">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-light-text mb-3">Download FAQs</h2>
-          <p className="text-gray-text">Common questions about installing and using Plotune</p>
-        </div>
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className={`bg-dark-card rounded-custom p-4 border border-ink/15 ${activeFaq === index ? '' : ''}`}
+    <section className="design-container download-faq">
+      <div className="section-index"><span>Download / Questions</span><span>{faqs.length} answers</span></div>
+      <h2>Download FAQs</h2>
+      <div>
+        {faqs.map((faq, index) => (
+          <article key={faq.question} className="faq-item">
+            <button
+              type="button"
+              aria-expanded={activeFaq === index}
+              onClick={() => setActiveFaq(activeFaq === index ? null : index)}
             >
-              <h3 className="text-lg font-semibold text-light-text">
-                <button
-                  type="button"
-                  className="flex w-full min-h-[44px] justify-between items-center gap-2 cursor-pointer text-left font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-                  aria-expanded={activeFaq === index}
-                  onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                >
-                  <span>{faq.question}</span>
-                  <i className={`fas fa-chevron-down text-primary transition-transform ${activeFaq === index ? 'rotate-180' : ''}`} aria-hidden="true"></i>
-                </button>
-              </h3>
-              {activeFaq === index && (
-                <div className="mt-3 text-gray-text">{faq.answer}</div>
-              )}
-            </div>
-          ))}
-        </div>
+              <h3>{faq.question}</h3>
+              <i className={`fas fa-chevron-down ${activeFaq === index ? 'rotate-180' : ''}`} aria-hidden="true"></i>
+            </button>
+            {activeFaq === index && <div className="faq-answer">{faq.answer}</div>}
+          </article>
+        ))}
       </div>
     </section>
   );

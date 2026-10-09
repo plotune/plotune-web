@@ -9,7 +9,6 @@ import { useAddToHomeScreen } from '../hooks/useAddToHomeScreen';
 
 const Dashboard = () => {
   const { user, token, logout } = useContext(AuthContext);
-  const [premiumStatus, setPremiumStatus] = useState(false);
   const [loading, setLoading] = useState(true);
   const [statsError, setStatsError] = useState(false);
   const [stats, setStats] = useState({
@@ -74,11 +73,6 @@ const Dashboard = () => {
   const fetchData = async () => {
     setStatsError(false);
     try {
-      const premiumResponse = await api.get('/user/premium', {
-        headers: { Authorization: token },
-      });
-      setPremiumStatus(premiumResponse.data.is_premium || false);
-
       const statsResponse = await api.get('/user/stats', {
         headers: { Authorization: token },
       });
@@ -112,10 +106,6 @@ const Dashboard = () => {
 
     if (token) fetchData();
   }, [token, logout, isStandalone]);
-
-  const handleUpgradePremium = () => {
-    toast.info('Upgrade not available currently');
-  };
 
   const handlePWAInstall = () => {
     promptInstall();
@@ -166,7 +156,7 @@ const Dashboard = () => {
           {/* Quick Actions */}
           <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
             <h2 className="text-xl font-semibold text-light-text mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Link
                 to="/extensions"
                 className="p-4 bg-dark-card  rounded-lg border border-ink/15 hover:border-primary/50 transition group"
@@ -198,7 +188,7 @@ const Dashboard = () => {
           {enabledQuickLinks.length > 0 && (
             <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
               <h2 className="text-xl font-semibold text-light-text mb-4">Quick Links</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2 sm:[&>*:last-child:nth-child(odd)]:col-span-1">
                 {enabledQuickLinks.map((link) => (
                   link.external ? (
                     <a
@@ -277,25 +267,6 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* Premium Banner */}
-          {!premiumStatus && (
-            <div className="rounded-sm border border-primary/20 bg-dark-card p-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-light-text mb-2">Unlock Premium Features</h3>
-                  <p className="text-gray-text">
-                    Get access to advanced extensions, priority support, and enhanced capabilities.
-                  </p>
-                </div>
-                <button
-                  onClick={handleUpgradePremium}
-                  className="min-h-[44px] mt-0 px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition"
-                >
-                  Upgrade Now
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

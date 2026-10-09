@@ -24,19 +24,17 @@ const Legal = () => {
 
   return (
     <>
-      <section className="min-h-[40vh] flex items-center py-36 bg-dark-surface   text-center">
-        <div className="container mx-auto px-5">
-          <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-5">Legal Information</h1>
-          <p className="text-lg text-gray-text max-w-2xl mx-auto">
-            Understanding the terms, licenses, and policies that govern the use of Plotune and its extensions
-          </p>
-        </div>
+      <section className="design-container page-intro">
+        <div className="section-index"><span>Plotune / Legal</span><span>Terms · Privacy · License</span></div>
+        <h1>Legal <span>Information</span></h1>
+        <p>
+          Understanding the terms, licenses, and policies that govern the use of Plotune and its extensions
+        </p>
       </section>
-      <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-20">
-        <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
-          <div className="bg-dark-card rounded-custom p-5 border border-ink/15">
-            <h3 className="text-lg font-semibold text-light-text mb-4 border-b border-ink/15 pb-3">Navigation</h3>
-            <ul className="space-y-2">
+      <div className="design-container legal-layout">
+        <nav className="faq-index legal-index" aria-label="Legal sections">
+          <p className="technical-label">Sections</p>
+            <ul>
               {[
                 { id: 'terms', label: 'Terms of Service' },
                 { id: 'privacy', label: 'Privacy Policy' },
@@ -48,16 +46,15 @@ const Legal = () => {
                     smooth={true}
                     offset={-100}
                     duration={500}
-                    className={`block py-2 px-3 rounded text-gray-text hover:bg-primary/10 hover:text-primary cursor-pointer transition-all duration-300 ${activeSection === item.id ? 'bg-primary/10 text-primary' : ''}`}
+                    className={activeSection === item.id ? 'is-active' : ''}
                   >
                     {item.label}
                   </ScrollLink>
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-        <div className="flex-1 bg-dark-card rounded-custom p-10 border border-ink/15 ">
+        </nav>
+        <div className="legal-body">
           <Element name="terms" className="legal-section">
             <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Terms of Service</h2>
             <p className="text-gray-text mb-4">These Terms of Service ("Terms") govern your access to and use of Plotune software, services, and extensions. By accessing or using Plotune, you agree to be bound by these Terms.</p>
@@ -74,7 +71,7 @@ const Legal = () => {
               <li>Upload or transmit viruses or any malicious code</li>
               <li>Interfere with or disrupt the integrity or performance of Plotune</li>
             </ul>
-            <div className="bg-dark-surface  border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="legal-note">
               <p className="text-gray-text"><strong>Important:</strong> Plotune reserves the right to modify or terminate the service for any reason, without notice at any time.</p>
             </div>
           </Element>
@@ -110,28 +107,24 @@ const Legal = () => {
             </ul>
             <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">Subscription Plans</h3>
             <p className="text-gray-text mb-4">Plotune offers different licensing options:</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="bg-dark-surface  rounded-custom p-6 border border-ink/15">
-                <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
-                  <i className="fas fa-gift text-primary"></i> Lite Edition
+            <div className="legal-editions">
+              <div>
+                <h4>Lite Edition
                 </h4>
                 <p className="text-gray-text">Free for personal and non-commercial use. Includes basic functionality with limited features.</p>
               </div>
-              <div className="bg-dark-surface  rounded-custom p-6 border border-ink/15">
-                <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
-                  <i className="fas fa-crown text-primary"></i> Pro Edition
+              <div>
+                <h4>Pro Edition
                 </h4>
                 <p className="text-gray-text">Subscription-based license for individual professionals. Includes all features and priority support.</p>
               </div>
-              <div className="bg-dark-surface  rounded-custom p-6 border border-ink/15">
-                <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
-                  <i className="fas fa-building text-primary"></i> Enterprise Edition
+              <div>
+                <h4>Enterprise Edition
                 </h4>
                 <p className="text-gray-text">Custom licensing for organizations. Includes team management, advanced security, and dedicated support.</p>
               </div>
             </div>
           </Element>
-          {/* Diğer sections (extension-policy, disclaimer, liability, compliance) benzer şekilde ekle. Kısalık için burada kesiyorum, tam kodu kopyala. */}
         </div>
       </div>
     </>

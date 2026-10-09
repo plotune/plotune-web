@@ -124,19 +124,14 @@ export default function Docs() {
   const renderTab = (tab, isSub = false) => {
     const isActive = urlPage === tab.id;
     const baseCls = clsx(
-      "w-full text-left px-4 py-3 rounded-lg transition flex items-center gap-3",
-      isSub ? "pl-12 text-sm" : "font-medium",
-      isActive
-        ? "bg-primary/20 text-primary border-l-4 border-primary"
-        : "text-gray-text hover:text-light-text hover:bg-dark-card"
+      "docs-nav-link",
+      isSub && "is-sub",
+      isActive && "is-active"
     );
 
     if (tab.href) {
       return (
         <Link key={tab.id} to={tab.href} className={baseCls}>
-          {tab.Icon && (
-            <img src={tab.Icon} alt="" className="w-5 h-5 opacity-70" />
-          )}
           {tab.label}
         </Link>
       );
@@ -148,9 +143,6 @@ export default function Docs() {
         onClick={() => selectPage(tab.id)}
         className={baseCls}
       >
-        {tab.Icon && (
-          <img src={tab.Icon} alt="" className="w-5 h-5 opacity-70" />
-        )}
         {tab.label}
       </button>
     );
@@ -164,23 +156,18 @@ export default function Docs() {
         path="/docs"
       />
       {/* ── HERO ── */}
-      <section className="docs-intro min-h-[40vh] flex flex-col justify-center py-16 bg-dark-surface">
-        <div className="container mx-auto px-5">
-          <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-4">
-            Plotune Documentation
-          </h1>
-          <p className="text-lg text-gray-text max-w-2xl mx-auto">
-            Explore components, calculations, extensions and the SDK.
-          </p>
-        </div>
+      <section className="design-container page-intro docs-intro">
+        <div className="section-index"><span>Plotune / Documentation</span><span>Desktop · Extensions · SDK</span></div>
+        <h1>Plotune <span>Documentation</span></h1>
+        <p>Explore components, calculations, extensions and the SDK.</p>
       </section>
 
       {/* ── LAYOUT ── */}
-      <div className="docs-shell container mx-auto px-5 py-12 flex flex-col lg:flex-row gap-8">
+      <div className="docs-shell design-container">
         {/* ── LEFT: Sidebar ── */}
-        <aside className="docs-sidebar lg:w-1/4">
-          <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
-            <nav className="space-y-2">
+        <aside className="docs-sidebar">
+          <div>
+            <nav aria-label="Documentation">
               {tabs.map((tab) => (
                 <div key={tab.id}>
                   {renderTab(tab)}
@@ -196,8 +183,8 @@ export default function Docs() {
         </aside>
 
         {/* ── RIGHT: Content ── */}
-        <main className="docs-main lg:w-3/4">
-          <div className="docs-content bg-dark-card rounded-sm p-8 border border-ink/15 min-h-[600px]">
+        <main className="docs-main">
+          <div className="docs-content legacy-doc">
             <Suspense
               fallback={
                 <div className="flex items-center justify-center h-64">

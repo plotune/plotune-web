@@ -195,7 +195,7 @@ export default function General() {
 
         <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <p className="text-gray-text mb-6">
-            Plotune offers a flexible <strong className="text-light-text">Extension SDK</strong> 
+            Plotune offers a flexible <strong className="text-light-text">Extension SDK</strong>{' '}
             for building plugins that extend both frontend and backend capabilities.
           </p>
           

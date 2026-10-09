@@ -5,7 +5,6 @@ const Partnership = () => {
   const partnershipTiers = [
     {
       name: 'Technology Partner',
-      icon: 'fa-code',
       description: 'Integrate Plotune into your solutions and build complementary technologies',
       benefits: [
         'API Early Access',
@@ -16,7 +15,6 @@ const Partnership = () => {
     },
     {
       name: 'Solution Partner',
-      icon: 'fa-puzzle-piece',
       description: 'Deliver Plotune-powered solutions to your clients with implementation services',
       benefits: [
         'Sales & Technical Training',
@@ -27,7 +25,6 @@ const Partnership = () => {
     },
     {
       name: 'Reseller Partner',
-      icon: 'fa-store',
       description: 'Resell Plotune products and services to your customer base',
       benefits: [
         'Competitive Margins',
@@ -41,161 +38,90 @@ const Partnership = () => {
   const benefits = [
     {
       title: 'Revenue Growth',
-      description: 'Access new revenue streams with competitive margins and recurring revenue models',
-      icon: 'fa-chart-line'
+      description: 'Access new revenue streams with competitive margins and recurring revenue models'
     },
     {
       title: 'Technical Enablement',
-      description: 'Get comprehensive training, certification, and technical resources for your team',
-      icon: 'fa-graduation-cap'
+      description: 'Get comprehensive training, certification, and technical resources for your team'
     },
     {
       title: 'Market Expansion',
-      description: 'Reach new customers and markets with our joint go-to-market strategies',
-      icon: 'fa-globe'
+      description: 'Reach new customers and markets with our joint go-to-market strategies'
     },
     {
       title: 'Product Innovation',
-      description: 'Influence our product roadmap and get early access to new features',
-      icon: 'fa-rocket'
+      description: 'Influence our product roadmap and get early access to new features'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-dark-bg">
-      {/* Hero Section */}
-      <section className="py-20 bg-dark-surface  ">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-light-text mb-6">
-            Plotune Partner Network
-          </h1>
-          <p className="text-xl text-gray-text max-w-3xl mx-auto mb-8 leading-relaxed">
-            Join our ecosystem of technology leaders and drive DataOps transformation together.
-            Build, deliver, and grow with Plotune.
-          </p>
-          <Link
-            to="/partners/apply"
-            className="inline-block bg-primary text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-dark   transition-all duration-300"
-          >
-            Become a Partner
-          </Link>
+    <main className="partner-page">
+      <section className="design-container page-intro">
+        <div className="section-index"><span>Plotune / Partners</span><span>Technology · Solution · Reseller</span></div>
+        <h1>Plotune <span>Partner Network</span></h1>
+        <p>
+          Join our ecosystem of technology leaders and drive DataOps transformation together.
+          Build, deliver, and grow with Plotune.
+        </p>
+        <div className="design-actions">
+          <Link to="/partners/apply" className="design-button">Become a Partner <span aria-hidden="true">→</span></Link>
+          <Link to="/contact" className="text-link">Contact Partnerships →</Link>
         </div>
       </section>
 
-      {/* Partnership Tiers */}
-      <section className="py-20 bg-dark-surface ">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
-              Partnership Programs
-            </h2>
-            <p className="text-gray-text max-w-2xl mx-auto text-lg">
-              Choose the partnership model that aligns with your business goals and technical expertise
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {partnershipTiers.map((tier, index) => (
-              <div key={index} className="bg-dark-card rounded-sm p-8 border border-ink/15 hover:border-primary/30 hover:-translate-y-2 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <i className={`fas ${tier.icon} text-primary text-2xl`}></i>
-                </div>
-                <h3 className="text-2xl font-bold text-light-text mb-4">{tier.name}</h3>
-                <p className="text-gray-text mb-6 leading-relaxed">{tier.description}</p>
-                <ul className="space-y-3">
-                  {tier.benefits.map((benefit, benefitIndex) => (
-                    <li key={benefitIndex} className="flex items-center text-light-text/80">
-                      <i className="fas fa-check text-primary mr-3 text-sm"></i>
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+      <section className="design-container partner-section">
+        <div className="section-index"><span>01 / Partnership programs</span><span>Choose a model</span></div>
+        <h2>Choose the partnership model that aligns with your business goals and technical expertise.</h2>
+        <div className="partner-programs">
+          {partnershipTiers.map((tier, index) => (
+            <article key={tier.name}>
+              <span className="technical-label">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{tier.name}</h3>
+              <p>{tier.description}</p>
+              <ul>
+                {tier.benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}
+              </ul>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-dark-bg">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
-              Why Partner With Plotune?
-            </h2>
-            <p className="text-gray-text max-w-2xl mx-auto text-lg">
-              Join a growing ecosystem of technology innovators and data experts
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start space-x-6 p-6 bg-dark-card rounded-sm border border-ink/15 hover:border-primary/20 transition-all duration-300">
-                <div className="w-14 h-14 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <i className={`fas ${benefit.icon} text-primary text-xl`}></i>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-light-text mb-3">{benefit.title}</h3>
-                  <p className="text-gray-text leading-relaxed">{benefit.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Video Section */}
-      <section className="py-16 bg-dark-surface ">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
-              See Our Partnership in Action
-            </h2>
-            <p className="text-gray-text max-w-2xl mx-auto text-lg">
-              Discover how our partner program drives success and innovation
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <div className="aspect-video rounded-sm overflow-hidden ">
-              <iframe
-                src="https://www.youtube.com/embed/uudw-lsUGC4"
-                title="Plotune Partnership Program"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              ></iframe>
+      <section className="design-container partner-section">
+        <div className="section-index"><span>02 / Why partner with Plotune</span><span>Shared work</span></div>
+        <dl className="partner-benefits">
+          {benefits.map((benefit) => (
+            <div key={benefit.title}>
+              <dt>{benefit.title}</dt>
+              <dd>{benefit.description}</dd>
             </div>
-            <a className="text-link mt-4" href="https://www.youtube.com/watch?v=uudw-lsUGC4" target="_blank" rel="noopener noreferrer">Watch the partnership video on YouTube ↗</a>
-          </div>
+          ))}
+        </dl>
+      </section>
+
+      <section className="design-container partner-section">
+        <div className="section-index"><span>03 / See the partnership in action</span><span>Video</span></div>
+        <div className="partner-video">
+          <iframe
+            src="https://www.youtube.com/embed/uudw-lsUGC4"
+            title="Plotune Partnership Program"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+        <a className="text-link" href="https://www.youtube.com/watch?v=uudw-lsUGC4" target="_blank" rel="noopener noreferrer">Watch the partnership video on YouTube ↗</a>
+      </section>
+
+      <section className="design-container closing-section partner-closing">
+        <p className="technical-label">Apply</p>
+        <h2>Build with Plotune.</h2>
+        <p>Join the Plotune Partner Network and help organizations unlock the full potential of their data operations.</p>
+        <div className="design-actions">
+          <Link to="/partners/apply" className="design-button">Apply Now <span aria-hidden="true">→</span></Link>
+          <Link to="/contact" className="text-link">Contact Partnerships →</Link>
         </div>
       </section>
-      {/* CTA Section */}
-      <section className="py-20 bg-dark-surface  to-blue-500/10">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-6">
-            Ready to Transform DataOps Together?
-          </h2>
-          <p className="text-gray-text text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
-            Join the Plotune Partner Network and help organizations unlock the full potential of their data operations.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              to="/partners/apply"
-              className="bg-primary text-white px-8 py-4 rounded-full font-semibold hover:bg-primary-dark   transition-all duration-300"
-            >
-              Apply Now
-            </Link>
-            <Link
-              to="/contact"
-              className="border-2 border-primary text-primary px-8 py-4 rounded-full font-semibold hover:bg-primary/10  transition-all duration-300"
-            >
-              Contact Partnerships
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+    </main>
   );
 };
 

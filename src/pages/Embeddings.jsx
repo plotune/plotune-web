@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom';
 
 const Embeddings = () => {
   return (
-    <>
+    <main className="embed-page legacy-doc">
       {/* Hero Section - same as before, but I'll keep it */}
       <section className="py-32 md:py-36 bg-dark-bg">
-        <div className="container mx-auto px-5 flex flex-col md:flex-row items-center gap-12">
+        <div className="container mx-auto px-5 flex flex-col lg:flex-row items-center gap-12">
           {/* Left: Text Content */}
           <div className="flex-1 space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold text-light-text leading-tight">
@@ -51,12 +51,9 @@ const Embeddings = () => {
           </div>
 
           {/* Right: Visual Card - API Example (unchanged) */}
-          <div className="flex-1 w-full max-w-lg">
+          <div className="flex-1 w-full min-w-0 lg:max-w-lg">
             <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 ">
               <div className="flex items-start mb-6">
-                <div className="w-3 h-3 rounded-full bg-red-500 mr-2 mt-1"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2 mt-1"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500 mr-4 mt-1"></div>
                 <h3 className="text-light-text font-semibold text-xl">One API Call</h3>
               </div>
 
@@ -147,9 +144,6 @@ const Embeddings = () => {
 
             <div className="bg-dark-card  rounded-sm p-8 border border-ink/15">
               <div className="flex items-start mb-6">
-                <div className="w-3 h-3 rounded-full bg-red-500 mr-2 mt-1"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2 mt-1"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500 mr-4 mt-1"></div>
                 <h3 className="text-light-text font-semibold text-xl">API Example (Node.js)</h3>
               </div>
 
@@ -366,24 +360,24 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
         <div className="container mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <div className="bg-dark-card rounded-sm p-6 border border-ink/15 text-center">
-              <div className="text-2xl mb-3">⚡</div>
+              <p className="technical-label">Vector store</p>
               <h3 className="text-lg font-semibold text-light-text mb-2">Qdrant</h3>
               <p className="text-gray-text text-sm">Recommended for metadata filtering and hybrid search</p>
             </div>
             <div className="bg-dark-card rounded-sm p-6 border border-ink/15 text-center">
-              <div className="text-2xl mb-3">🔍</div>
+              <p className="technical-label">Vector store</p>
               <h3 className="text-lg font-semibold text-light-text mb-2">Pinecone</h3>
               <p className="text-gray-text text-sm">Managed service with built-in hybrid search</p>
             </div>
             <div className="bg-dark-card rounded-sm p-6 border border-ink/15 text-center">
-              <div className="text-2xl mb-3">🗄️</div>
+              <p className="technical-label">Vector store</p>
               <h3 className="text-lg font-semibold text-light-text mb-2">pgvector</h3>
               <p className="text-gray-text text-sm">PostgreSQL extension for existing relational data</p>
             </div>
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 };
 

@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import CreateStreamModal from './CreateStreamModal';
 import StreamManagementModal from './StreamManagementModal';
 import StreamCard from './StreamCard';
-import StreamIcon from '../../assets/icons/stream.svg';
+import { FiActivity } from 'react-icons/fi';
 import {
   FaPlus,
   FaUsers,
@@ -290,7 +290,7 @@ const PlotuneStreams = () => {
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center justify-center gap-2
+          className="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap
                       px-4 py-2 min-h-[44px] rounded-lg
                       bg-blue-600 hover:bg-blue-700
                       text-white text-sm font-medium
@@ -359,7 +359,7 @@ const PlotuneStreams = () => {
 
           {currentStreams.length === 0 && (
             <div className="col-span-full text-center py-12">
-              <img src={StreamIcon} alt="Streams" className="mx-auto mb-4 w-16 h-16 opacity-50" />
+              <FiActivity aria-hidden="true" className="mx-auto mb-4 h-10 w-10 text-primary" />
               <h3 className="text-lg font-medium text-light-text mb-2">
                 {activeTab === 'my' ? 'No streams yet' : 'No shared streams'}
               </h3>

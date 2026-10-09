@@ -158,8 +158,10 @@
   background: var(--sw-border);
 }
 .sw-workspace-select select {
-  border: 0;
-  padding-left: 0;
+  border: 1px solid var(--sw-border);
+  border-radius: 2px;
+  background-color: transparent;
+  padding: 6px 26px 6px 10px;
   font-size: 12px;
   font-weight: 550;
 }
@@ -552,6 +554,12 @@
 }
 .sw-table-wrap {
   overflow: auto;
+  /* Scroll shadows: show that a wide table continues past the card edge. */
+  background:
+    linear-gradient(to right, #fff 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+    linear-gradient(to left, #fff 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(28,36,43,.2), transparent) left / 14px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(28,36,43,.2), transparent) right / 14px 100% no-repeat scroll;
 }
 .sw-table {
   border-collapse: collapse;
@@ -1652,10 +1660,18 @@
   }
   .sw-workspace-select {
     margin-left: auto;
+    margin-right: 8px;
   }
   .sw-workspace-select select {
-    max-width: 135px;
+    width: auto;
+    max-width: 150px;
+    padding: 0 22px 0 8px;
     font-size: 11px;
+  }
+  /* Narrow screens: fade the right edge so wide tables read as horizontally scrollable. */
+  .sw-table-wrap {
+    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent);
+    mask-image: linear-gradient(to right, #000 82%, transparent);
   }
   .sw-top-end {
     margin-left: 0;
