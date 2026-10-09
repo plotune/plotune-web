@@ -10,7 +10,7 @@ Nexus presents controlled MCP operations, physical interfaces and recorded artif
 
 ## Complete route and screenshot coverage
 
-[Route inventory](routes.json) and [coverage matrix](coverage.md). 106 baseline URLs/states × 3 viewports = 318 screenshots. The additive Stream overview brings the final inventory to 107 × 3 = 321 screenshots. Viewports: 390 × 844, 768 × 1024, 1440 × 900. The coverage matrix separates screenshots that were captured from screenshots that were opened and visually inspected, and names the reviewer. Full-resolution PNG evidence is kept locally under `evidence/` and is not committed (it is several hundred megabytes); `scripts/redesign/browser.cjs` regenerates it from a production build. Downscaled per-route previews are committed under `previews/`.
+[Route inventory](routes.json) and [coverage matrix](coverage.md). 106 baseline URLs/states × 3 viewports = 318 screenshots. The additive Stream overview brings the final inventory to 107 × 3 = 321 screenshots. Viewports: 390 × 844, 768 × 1024, 1440 × 900. The coverage matrix separates screenshots that were captured from screenshots that were opened and visually inspected, and names the reviewer. Full-resolution PNG evidence is kept locally under `evidence/` and is not committed (it is several hundred megabytes); `scripts/redesign/browser.cjs` regenerates it from a production build.
 
 Review logs: [products and funnels](product-review.md), [account and supporting pages](account-route-review.md), [editorial and documentation](editorial-review.md), [workspaces](workspace-review.md). Manifests include headings, rendered destinations, errors, broken images and horizontal overflow. Zero flags means those automated checks found nothing; it is not a substitute for the visual reviews.
 
