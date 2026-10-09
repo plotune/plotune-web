@@ -94,19 +94,34 @@ export function queryEvents(events, query = {}) {
     search = "",
     name = "All events",
     range = "24h",
+    deviceId = "all",
+    sessionId = "all",
+    startAt = "",
+    endAt = "",
     now,
     conditions = [],
   } = query;
   const current = typeof now === "number" ? now : Date.parse(now);
   const interval = DASHBOARD_RANGES.find((item) => item.id === range)?.durationMs;
+  const explicitStart = startAt ? Date.parse(startAt) : null;
+  const explicitEnd = endAt ? Date.parse(endAt) : null;
+  if ((startAt && !Number.isFinite(explicitStart)) || (endAt && !Number.isFinite(explicitEnd)) || (explicitStart !== null && explicitEnd !== null && explicitStart > explicitEnd)) return [];
   return events
     .filter((event) => {
       const timestamp = Date.parse(event.timestamp);
-      const matchesTime = timestamp <= current
-        && (range === "all" || interval === undefined || timestamp >= current - interval);
-      const matchesSearch = !search || JSON.stringify({ event: event.event, properties: event.properties }).toLowerCase().includes(search.trim().toLowerCase());
+      const matchesTime = Number.isFinite(timestamp)
+        && (startAt || endAt
+          ? (explicitStart === null || timestamp >= explicitStart)
+            && (explicitEnd === null || timestamp < explicitEnd)
+          : timestamp <= current
+            && (range === "all" || interval === undefined || timestamp >= current - interval));
+      const matchesSearch = !search || JSON.stringify({ event: event.event, device_id: event.device_id, session_id: event.session_id, properties: event.properties }).toLowerCase().includes(search.trim().toLowerCase());
+      const matchesDevice = deviceId === "all" || (deviceId === "unspecified" ? !event.device_id : event.device_id === deviceId);
+      const matchesSession = sessionId === "all" || (sessionId === "unspecified" ? !event.session_id : event.session_id === sessionId);
       return matchesTime
         && matchesSearch
+        && matchesDevice
+        && matchesSession
         && (name === "All events" || event.event === name)
         && matchesConditions(event, conditions);
     })

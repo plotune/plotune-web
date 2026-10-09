@@ -77,6 +77,16 @@ test("simulated first event matches the schemaless onboarding example", () => {
   });
 });
 
+test("event envelope context is optional and minimal payloads remain valid", () => {
+  const project = initialProjects.find((item) => item.id === "battery");
+  const run = project.events.filter((item) => item.session_id === "run-817");
+  expect(run.map((item) => item.event)).toEqual(["motor.started", "motor.speed_changed", "motor.overtemp", "motor.shutdown", "test.completed"]);
+  expect(run.slice(0, 4).every((item) => item.device_id === "motor-003")).toBe(true);
+  expect(project.events.some((item) => !item.device_id && !item.session_id)).toBe(true);
+  expect(createSimulatedFirstEvent("minimal", SNAPSHOT)).not.toHaveProperty("device_id", "motor-003");
+  expect(createSimulatedFirstEvent("minimal", SNAPSHOT)).not.toHaveProperty("session_id", "run-817");
+});
+
 test("robot and drone fixtures exercise arbitrary mixed engineering properties", () => {
   const robotEvents = initialProjects.find((project) => project.id === "robot").events;
   const robotSamples = robotEvents.filter((item) => item.event === "robot.sample");

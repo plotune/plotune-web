@@ -147,6 +147,23 @@
 .mvp-filters select {
   max-width: 260px;
 }
+.mvp-native-filter { position:relative; display:flex; align-items:center; }
+.mvp-native-filter > .sw-button { min-height:38px; white-space:nowrap; }
+.mvp-native-filter > .sw-button.is-active { border-color:#b8d2c7; color:#397565; }
+.mvp-native-dismiss { position:fixed; z-index:45; inset:0; width:100%; height:100%; border:0; background:transparent; cursor:default; }
+.mvp-native-popover { position:absolute; z-index:46; top:calc(100% + 7px); left:0; display:grid; gap:6px; width:min(270px,calc(100vw - 28px)); max-height:min(340px,calc(100vh - 100px)); overflow:auto; padding:11px; border:1px solid #dce6e2; border-radius:5px; background:#fff; box-shadow:0 10px 28px #243a3420; }
+.mvp-native-popover strong { padding:3px 5px; color:#405c57; font-size:11px; }
+.mvp-native-popover > button { min-height:34px; padding:7px 8px; border:0; border-radius:3px; background:#fff; color:#526963; text-align:left; font:inherit; font-size:11px; overflow-wrap:anywhere; cursor:pointer; }
+.mvp-native-popover > button:hover { background:#f2f7f4; }
+.mvp-native-popover input,.mvp-native-popover label { min-width:0; color:#71827d; font-size:10px; }
+.mvp-native-popover input { min-height:34px; padding:6px; border:1px solid #dce6e2; border-radius:3px; }
+.mvp-time-popover { width:min(300px,calc(100vw - 28px)); }
+.mvp-time-popover label { display:grid; gap:4px; }
+.mvp-event-context { display:flex; flex-wrap:wrap; gap:4px 10px; margin-bottom:5px; color:#7a8e87; font-size:9px; }
+.mvp-event-context b { color:#52766c; font-weight:550; }
+.mvp-event-context-unspecified { display:block; margin-bottom:5px; color:#97a39f; font-size:9px; }
+.mvp-context-detail > div { flex-wrap:wrap; }
+.mvp-context-detail .sw-button { min-height:30px; font-size:10px; }
 .mvp-list-status {
   display: flex;
   align-items: center;
@@ -493,6 +510,9 @@
 
 @media (max-width:800px) {
   .mvp-filters .mvp-filter-control, .mvp-filters .mvp-export-menu { flex:none; }
+  .mvp-native-filter { flex:1 1 auto; }
+  .mvp-native-filter > .sw-button { width:100%; justify-content:center; overflow:hidden; text-overflow:ellipsis; }
+  .mvp-native-popover { position:fixed; top:74px; right:12px; left:12px; width:auto; max-height:calc(100vh - 92px); }
   .mvp-filter-popover { position:fixed; top:74px; right:12px; left:12px; width:auto; max-height:calc(100vh - 92px); }
   .mvp-export-options { position:fixed; top:125px; right:12px; }
 }

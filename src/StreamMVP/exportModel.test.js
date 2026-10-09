@@ -18,6 +18,17 @@ test("JSON export preserves the full event envelope, nested properties, and orig
   expect(typeof output[0].properties.diagnostic.retry).toBe("number");
 });
 
+test("native identifiers are exported as envelope fields and separate delimited columns", () => {
+  const rows = [
+    { id: "ctx", event: "motor.started", timestamp: "2026-10-08T09:00:00Z", device_id: "motor-003", session_id: "run-817", properties: { rpm: 0 } },
+    { id: "none", event: "motor.stopped", timestamp: "2026-10-08T09:01:00Z", properties: {} },
+  ];
+  expect(JSON.parse(serializeExport(rows, "json"))[0]).toHaveProperty("session_id", "run-817");
+  const csv = serializeExport(rows, "csv");
+  expect(csv.split("\r\n")[0]).toContain("device_id,session_id");
+  expect(csv).toContain("motor-003,run-817");
+});
+
 test("CSV and TSV flatten nested paths and escape their delimiters and quotes", () => {
   const csv = serializeExport(events.slice(0, 1), "csv");
   const tsv = serializeExport(events.slice(0, 1), "tsv");
@@ -32,6 +43,7 @@ test("browser export applies the same conditions as Explorer across all matching
   let progress;
   const result = await createFilteredExport(events, {
     range: "all",
+    deviceId: "unspecified",
     now: "2026-10-08T10:00:00Z",
     conditions: [{ path: "diagnostic.retry", operator: "greater_than", value: 1 }],
   }, "json", (done, total) => { progress = [done, total]; });

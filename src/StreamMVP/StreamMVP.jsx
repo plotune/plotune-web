@@ -7,6 +7,7 @@ import {
   FiBarChart2,
   FiCheck,
   FiChevronRight,
+  FiClock,
   FiCode,
   FiCopy,
   FiEye,
@@ -75,6 +76,12 @@ export default function StreamMVP() {
   const [search, setSearch] = useState("");
   const [name, setName] = useState("All events");
   const [range, setRange] = useState("24h");
+  const [deviceId, setDeviceId] = useState("all");
+  const [sessionId, setSessionId] = useState("all");
+  const [startAt, setStartAt] = useState("");
+  const [endAt, setEndAt] = useState("");
+  const [nativeOpen, setNativeOpen] = useState(null);
+  const [nativeSearch, setNativeSearch] = useState("");
   const [cursorStack, setCursorStack] = useState([null]);
   const [resources, setResources] = useState(loadProjectResources);
   const [filterId, setFilterId] = useState(null);
@@ -109,22 +116,28 @@ export default function StreamMVP() {
         search,
         name,
         range,
+        deviceId,
+        sessionId,
+        startAt,
+        endAt,
         now: new Date(clock).toISOString(),
         conditions,
       }),
-    [project.events, search, name, range, clock, conditions],
+    [project.events, search, name, range, deviceId, sessionId, startAt, endAt, clock, conditions],
   );
   const page = useMemo(
     () => cursorPage(filtered, cursorStack[cursorStack.length - 1], EVENTS_PER_PAGE),
     [filtered, cursorStack],
   );
   const eventNames = [...new Set(project.events.map((e) => e.event))].sort();
+  const deviceIds = [...new Set(project.events.map((e) => e.device_id).filter(Boolean))].sort();
+  const sessionIds = [...new Set(project.events.map((e) => e.session_id).filter(Boolean))].sort();
   const pendingEvents = pending[projectId] || [];
   const latest = [...project.events].sort(
     (a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp),
   )[0];
   const notify = (text) => setToast(text);
-  const setLocation = (nextView, nextProject = projectId) => {
+  const setLocation = (nextView, nextProject = projectId, preserveContext = false) => {
     setParams({
       ...(nextView !== "events" ? { view: nextView } : {}),
       ...(nextProject !== "first" ? { project: nextProject } : {}),
@@ -132,11 +145,14 @@ export default function StreamMVP() {
     setNavOpen(false);
     setAccountOpen(false);
     setDialog(null);
-    setSearch("");
-    setName("All events");
-    setRange("24h");
-    setFilterId(null);
-    setConditions([]);
+    if (!preserveContext) {
+      setSearch("");
+      setName("All events");
+      setRange("24h");
+      setDeviceId("all"); setSessionId("all"); setStartAt(""); setEndAt(""); setNativeOpen(null);
+      setFilterId(null);
+      setConditions([]);
+    }
     setCursorStack([null]);
     setRevealed(false);
     window.scrollTo({ top: 0 });
@@ -192,6 +208,8 @@ export default function StreamMVP() {
       setSearch("");
       setName("All events");
       setRange("24h");
+      setDeviceId("all"); setSessionId("all"); setStartAt(""); setEndAt("");
+      setNativeOpen(null);
       setCursorStack([null]);
       setParams(projectId === "first" ? {} : { project: projectId });
       if (project.events.length === 0) setInvitePrompt((prev) => ({ ...prev, [projectId]: true }));
@@ -215,9 +233,23 @@ export default function StreamMVP() {
     setSearch("");
     setName("All events");
     setRange("24h");
+    setDeviceId("all"); setSessionId("all"); setStartAt(""); setEndAt(""); setNativeOpen(null);
     setFilterId(null);
     setConditions([]);
     setCursorStack([null]);
+  };
+  const applyContext = (next = {}) => {
+    if (Object.hasOwn(next, "name")) setName(next.name);
+    if (Object.hasOwn(next, "deviceId")) setDeviceId(next.deviceId);
+    if (Object.hasOwn(next, "sessionId")) setSessionId(next.sessionId);
+    if (Object.hasOwn(next, "startAt")) setStartAt(next.startAt);
+    if (Object.hasOwn(next, "endAt")) setEndAt(next.endAt);
+    if (Object.hasOwn(next, "range")) setRange(next.range);
+    setCursorStack([null]);
+  };
+  const navigateContext = (next) => {
+    applyContext(next);
+    if (view !== "events") setLocation("events", projectId, true);
   };
   const applyPropertyFilter = (nextConditions, nextFilterId) => {
     setConditions(nextConditions);
@@ -401,6 +433,7 @@ export default function StreamMVP() {
     if (!hasEvents) return firstEvent;
     return (
       <>
+        {nativeOpen && <button className="mvp-native-dismiss" aria-label="Close native filter" tabIndex={-1} onClick={() => setNativeOpen(null)} />}
         {invitePrompt[projectId] && (
           <div className="mvp-invite-prompt">
             <div><strong>First event received</strong><span>motor.sample · just now</span></div>
@@ -430,32 +463,30 @@ export default function StreamMVP() {
               }}
             />
           </label>
-          <select
-            aria-label="Filter event name"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setCursorStack([null]);
-            }}
-          >
+          <select aria-label="Filter event name" value={name} onChange={(e) => applyContext({ name: e.target.value })}>
             <option>All events</option>
             {eventNames.map((n) => (
               <option key={n}>{n}</option>
             ))}
           </select>
-          <select
-            aria-label="Event time range"
-            value={range}
-            onChange={(e) => {
-              setRange(e.target.value);
-              setCursorStack([null]);
-            }}
-          >
+          <select aria-label="Event time range" value={range} onChange={(e) => applyContext({ range: e.target.value, startAt: "", endAt: "" })}>
             <option value="1h">Last hour</option>
             <option value="24h">Last 24 hours</option>
             <option value="7d">Last 7 days</option>
             <option value="all">All time</option>
           </select>
+          <div className="mvp-native-filter">
+            <button type="button" className={`sw-button ${deviceId !== "all" ? "is-active" : ""}`} aria-expanded={nativeOpen === "device"} onClick={() => setNativeOpen(nativeOpen === "device" ? null : "device")}>Device{deviceId === "all" ? "" : ` · ${deviceId === "unspecified" ? "Unspecified" : deviceId}`}</button>
+            {nativeOpen === "device" && <div className="mvp-native-popover" role="dialog" aria-label="Filter by device"><strong>Device ID</strong><input aria-label="Search device IDs" type="search" placeholder="Search identifiers" value={nativeSearch} onChange={(e) => setNativeSearch(e.target.value)} /><button type="button" onClick={() => { applyContext({ deviceId: "all" }); setNativeOpen(null); }}>All devices</button><button type="button" onClick={() => { applyContext({ deviceId: "unspecified" }); setNativeOpen(null); }}>Unspecified</button>{deviceIds.filter((id) => id.toLowerCase().includes(nativeSearch.toLowerCase())).map((id) => <button type="button" key={id} onClick={() => { applyContext({ deviceId: id }); setNativeOpen(null); }}>{id}</button>)}{!deviceIds.length && <small>No device IDs in project</small>}</div>}
+          </div>
+          <div className="mvp-native-filter">
+            <button type="button" className={`sw-button ${sessionId !== "all" ? "is-active" : ""}`} aria-expanded={nativeOpen === "session"} onClick={() => setNativeOpen(nativeOpen === "session" ? null : "session")}>Session{sessionId === "all" ? "" : ` · ${sessionId === "unspecified" ? "Unspecified" : sessionId}`}</button>
+            {nativeOpen === "session" && <div className="mvp-native-popover" role="dialog" aria-label="Filter by session"><strong>Session ID</strong><input aria-label="Search session IDs" type="search" placeholder="Search identifiers" value={nativeSearch} onChange={(e) => setNativeSearch(e.target.value)} /><button type="button" onClick={() => { applyContext({ sessionId: "all", name: "All events" }); setNativeOpen(null); }}>All sessions</button><button type="button" onClick={() => { applyContext({ sessionId: "unspecified", name: "All events" }); setNativeOpen(null); }}>Unspecified</button>{sessionIds.filter((id) => id.toLowerCase().includes(nativeSearch.toLowerCase())).map((id) => <button type="button" key={id} onClick={() => { applyContext({ sessionId: id, name: "All events" }); setNativeOpen(null); }}>{id}</button>)}{!sessionIds.length && <small>No session IDs in project</small>}</div>}
+          </div>
+          <div className="mvp-native-filter">
+            <button type="button" className={`sw-button ${startAt || endAt ? "is-active" : ""}`} aria-expanded={nativeOpen === "time"} onClick={() => setNativeOpen(nativeOpen === "time" ? null : "time")}><FiClock /> {startAt || endAt ? `${startAt ? new Date(startAt).toISOString().slice(11, 16) : "…"}–${endAt ? new Date(endAt).toISOString().slice(11, 16) : "…"} UTC` : "Time range"}</button>
+            {nativeOpen === "time" && <div className="mvp-native-popover mvp-time-popover" role="dialog" aria-label="Custom event time range"><strong>Event time · UTC</strong><label>From<input type="datetime-local" value={startAt ? new Date(Date.parse(startAt)).toISOString().slice(0,16) : ""} onChange={(e) => applyContext({ startAt: e.target.value ? new Date(`${e.target.value}Z`).toISOString() : "", range: "all" })} /></label><label>Until (exclusive)<input type="datetime-local" value={endAt ? new Date(Date.parse(endAt)).toISOString().slice(0,16) : ""} onChange={(e) => applyContext({ endAt: e.target.value ? new Date(`${e.target.value}Z`).toISOString() : "", range: "all" })} /></label>{startAt && endAt && Date.parse(startAt) > Date.parse(endAt) && <small role="alert">Start must be before end.</small>}<button type="button" onClick={() => { applyContext({ startAt: "", endAt: "", range: "24h" }); setNativeOpen(null); }}>Reset time</button></div>}
+          </div>
           <FilterPopover
             events={project.events}
             filters={projectFilters}
@@ -469,10 +500,10 @@ export default function StreamMVP() {
           />
           <ExportMenu
             events={project.events}
-            query={{ search, name, range, now: new Date(clock).toISOString(), conditions }}
+            query={{ search, name, range, deviceId, sessionId, startAt, endAt, now: new Date(clock).toISOString(), conditions }}
             projectName={project.name}
           />
-          {(search || name !== "All events" || range !== "24h" || conditions.length > 0) && (
+          {(search || name !== "All events" || range !== "24h" || deviceId !== "all" || sessionId !== "all" || startAt || endAt || conditions.length > 0) && (
             <button className="sw-link" onClick={resetFilters}>
               Clear filters
             </button>
@@ -530,6 +561,7 @@ export default function StreamMVP() {
                       </td>
                       <td>
                         <div className="mvp-property-preview">
+                          {(e.device_id || e.session_id) ? <div className="mvp-event-context"><span>Device <b>{e.device_id || "Unspecified"}</b></span><span>Session <b>{e.session_id || "Unspecified"}</b></span></div> : <span className="mvp-event-context-unspecified">Context unspecified</span>}
                           {Object.entries(e.properties)
                             .slice(0, 3)
                             .map(([k, v]) => (
@@ -859,6 +891,12 @@ export default function StreamMVP() {
                 </button>
               </div>
             </div>
+            <div className="mvp-detail-field mvp-context-detail">
+              <span>Device ID</span><div><code>{e.device_id || "Unspecified"}</code>{e.device_id && <button className="sw-button" type="button" onClick={() => { navigateContext({ deviceId: e.device_id, name: "All events" }); setDialog(null); notify(`Showing events from ${e.device_id}.`); }}>View device events</button>}</div>
+            </div>
+            <div className="mvp-detail-field mvp-context-detail">
+              <span>Session ID</span><div><code>{e.session_id || "Unspecified"}</code>{e.session_id && <button className="sw-button" type="button" onClick={() => { navigateContext({ sessionId: e.session_id, name: "All events" }); setDialog(null); notify(`Showing all event types in ${e.session_id}.`); }}>View session events</button>}</div>
+            </div>
             <div className="sw-code-head">
               <h3>Properties</h3>
               <button
@@ -885,6 +923,8 @@ export default function StreamMVP() {
                   JSON.stringify(
                     {
                       event: e.event,
+                      ...(e.device_id ? { device_id: e.device_id } : {}),
+                      ...(e.session_id ? { session_id: e.session_id } : {}),
                       timestamp: e.timestamp,
                       properties: e.properties,
                     },
@@ -899,8 +939,8 @@ export default function StreamMVP() {
               Copy complete event
             </button>
             <p className="mvp-contract-note">
-              Properties are supplied by the sender. Stream does not assign
-              built-in meaning to these fields.
+              Device and session IDs are optional sender supplied context. They are
+              not registered or generated by Stream. Properties remain arbitrary.
             </p>
           </div>
         </Dialog>

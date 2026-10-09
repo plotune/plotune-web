@@ -2,7 +2,7 @@
 export const CAPTURE_ENDPOINT = "https://stream.plotune.net/capture";
 export const MCP_ENDPOINT = "https://stream.plotune.net/mcp";
 export const FREE_ALLOWANCE = 100000;
-export const SNAPSHOT = "2026-10-07T10:46:00.000Z";
+export const SNAPSHOT = "2026-10-09T12:00:00.000Z";
 export const ONBOARDING_EVENT_NAME = "motor.sample";
 export const initialProjects = [
   {
@@ -204,12 +204,26 @@ function seedEvents(project) {
           ["drone.error", "2026-10-07T10:18:20.000Z", { drone_id: "D-04", sw_version: "flight-2.7", error_code: 42, message: "GPS lock lost", diagnostic: { satellites: 3, retry: true } }],
           ["drone.error", "2026-10-07T09:54:20.000Z", { drone_id: "D-04", sw_version: "flight-2.6", error_code: "E42", message: "GPS lock lost", diagnostic: null }],
         ];
-  return entries.map(([event, timestamp, properties], i) => ({
+  const enriched = entries.map(([event, timestamp, properties], i) => ({
     id: `${project}-${i}`,
     event,
     timestamp,
+    device_id: i % 5 === 0 ? undefined : (project === "battery" ? ["motor-003", "motor-004", "bms-rig-02"][i % 3] : ["robot-01", "robot-02"][i % 2]),
+    session_id: i % 6 === 0 ? undefined : (project === "battery" ? ["run-817", "run-818", "thermal-cycle-42"][i % 3] : ["nav-run-22", "nav-run-23"][i % 2]),
     properties,
   }));
+  if (project === "battery") {
+    enriched.unshift(
+      { id: "battery-run-817-1", event: "motor.started", timestamp: "2026-10-09T10:00:00Z", device_id: "motor-003", session_id: "run-817", properties: { rpm: 0, sw_version: "v1.4", controller: { mode: "closed_loop" } } },
+      { id: "battery-run-817-2", event: "motor.speed_changed", timestamp: "2026-10-09T10:03:12Z", device_id: "motor-003", session_id: "run-817", properties: { rpm: 4200, sw_version: "v1.4" } },
+      { id: "battery-run-817-3", event: "motor.overtemp", timestamp: "2026-10-09T10:05:33Z", device_id: "motor-003", session_id: "run-817", properties: { temperature: 103.5, rpm: 4200, sw_version: "v1.4" } },
+      { id: "battery-run-817-4", event: "motor.shutdown", timestamp: "2026-10-09T10:06:02Z", device_id: "motor-003", session_id: "run-817", properties: { reason: "thermal_limit", rpm: 0 } },
+      { id: "battery-run-817-5", event: "test.completed", timestamp: "2026-10-09T10:06:08Z", device_id: "test-controller-01", session_id: "run-817", properties: { outcome: "aborted", attempt: 1 } },
+      { id: "battery-run-816-1", event: "motor.started", timestamp: "2026-10-08T09:00:00Z", device_id: "motor-003", session_id: "run-816", properties: { rpm: 0, sw_version: "v1.3" } },
+      { id: "battery-run-816-2", event: "motor.overtemp", timestamp: "2026-10-08T09:24:14Z", device_id: "motor-003", session_id: "run-816", properties: { temperature: 96.1, rpm: 3800 } },
+    );
+  }
+  return enriched;
 }
 export function previewValue(value) {
   if (value === null) return "null";
@@ -219,8 +233,9 @@ export function previewValue(value) {
 }
 export function filterEvents(
   events,
-  { search = "", name = "All events", range = "24h", now = SNAPSHOT },
+  { search = "", name = "All events", range = "24h", now = SNAPSHOT, deviceId = "all", sessionId = "all", startAt = "", endAt = "" },
 ) {
+  if ((startAt && !Number.isFinite(Date.parse(startAt))) || (endAt && !Number.isFinite(Date.parse(endAt))) || (startAt && endAt && Date.parse(startAt) > Date.parse(endAt))) return [];
   const interval =
     { "1h": 3600000, "24h": 86400000, "7d": 604800000 }[range] ?? Infinity;
   const current = Date.parse(now);
@@ -228,11 +243,14 @@ export function filterEvents(
     .filter(
       (e) =>
         (name === "All events" || e.event === name) &&
-        JSON.stringify({ event: e.event, properties: e.properties })
+        (deviceId === "all" || (deviceId === "unspecified" ? !e.device_id : e.device_id === deviceId)) &&
+        (sessionId === "all" || (sessionId === "unspecified" ? !e.session_id : e.session_id === sessionId)) &&
+        JSON.stringify({ event: e.event, device_id: e.device_id, session_id: e.session_id, properties: e.properties })
           .toLowerCase()
           .includes(search.toLowerCase()) &&
-        Date.parse(e.timestamp) >= current - interval &&
-        Date.parse(e.timestamp) <= current,
+        (startAt || endAt
+          ? (!startAt || Date.parse(e.timestamp) >= Date.parse(startAt)) && (!endAt || Date.parse(e.timestamp) < Date.parse(endAt))
+          : Date.parse(e.timestamp) >= current - interval && Date.parse(e.timestamp) <= current),
     )
     .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
 }
@@ -265,6 +283,8 @@ export function createSimulatedFirstEvent(id, timestamp) {
     id,
     event: ONBOARDING_EVENT_NAME,
     timestamp,
+    device_id: undefined,
+    session_id: undefined,
     properties: { temperature: 72.4, rpm: 1840, state: "running" },
   };
 }
@@ -273,6 +293,9 @@ export function ingestionSnippet(language, apiKey) {
   const payload = {
     api_key: apiKey,
     event: ONBOARDING_EVENT_NAME,
+    // Optional context: include either field when the sender has one.
+    // device_id: "motor-003",
+    // session_id: "test-run-817",
     properties: { temperature: 72.4, rpm: 1840, state: "running" },
   };
   const body = JSON.stringify(payload);

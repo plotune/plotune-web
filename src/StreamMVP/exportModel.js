@@ -14,7 +14,7 @@ function flattenValue(value, prefix, output) {
 export function flattenEvent(event) {
   const properties = {};
   flattenValue(event.properties || {}, "properties", properties);
-  return { id: event.id, event: event.event, timestamp: event.timestamp, ...properties };
+  return { id: event.id, event: event.event, timestamp: event.timestamp, device_id: event.device_id ?? "", session_id: event.session_id ?? "", ...properties };
 }
 
 function cellValue(value) {
@@ -35,7 +35,7 @@ export function serializeDelimited(events, format = "csv") {
   const delimiter = format === "tsv" ? "\t" : ",";
   const rows = events.map(flattenEvent);
   const propertyColumns = [...new Set(rows.flatMap((row) => Object.keys(row).filter((key) => key.startsWith("properties."))))].sort();
-  const columns = ["id", "event", "timestamp", ...propertyColumns];
+  const columns = ["id", "event", "timestamp", "device_id", "session_id", ...propertyColumns];
   return [
     columns.map((column) => escapeDelimited(column, delimiter)).join(delimiter),
     ...rows.map((row) => columns.map((column) => escapeDelimited(row[column], delimiter)).join(delimiter)),
@@ -67,8 +67,8 @@ export async function createFilteredExport(events, query, format, onProgress = (
   let columns;
   if (format === "csv" || format === "tsv") {
     const flattened = matches.map(flattenEvent);
-    columns = ["id", "event", "timestamp", ...new Set(flattened.flatMap((row) => Object.keys(row).filter((key) => key.startsWith("properties."))))].sort((a, b) => {
-      const baseOrder = ["id", "event", "timestamp"];
+    columns = ["id", "event", "timestamp", "device_id", "session_id", ...new Set(flattened.flatMap((row) => Object.keys(row).filter((key) => key.startsWith("properties."))))].sort((a, b) => {
+      const baseOrder = ["id", "event", "timestamp", "device_id", "session_id"];
       return (baseOrder.indexOf(a) < 0 ? 3 : baseOrder.indexOf(a)) - (baseOrder.indexOf(b) < 0 ? 3 : baseOrder.indexOf(b)) || a.localeCompare(b);
     });
     const delimiter = format === "tsv" ? "\t" : ",";
