@@ -1,16 +1,29 @@
 // pages/Streams.js
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import PlotuneStreams from '../components/streams/PlotuneStreams';
 import PlotuneNetworks from '../components/networks/PlotuneNetworks';
 
 const Streams = () => {
-  const { user } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('streams'); // 'streams' or 'networks'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
       <div className="container mx-auto px-4">
+        <section aria-labelledby="stream-projects-heading" className="mb-8 flex flex-col gap-5 rounded-2xl border border-primary/30 bg-dark-card p-6 shadow-xl sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-xl">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">Plotune Stream</p>
+            <h1 id="stream-projects-heading" className="text-2xl font-semibold text-light-text">Event projects</h1>
+            <p className="mt-2 text-sm leading-6 text-gray-text">
+              Collect, explore, and visualize engineering events from your devices, tests, and simulations.
+              Create or select a project in the Stream workspace.
+            </p>
+          </div>
+          <Link to="/stream/workspace" className="inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg">
+            Open Stream workspace <span aria-hidden="true" className="ml-2">→</span>
+          </Link>
+        </section>
+        <h2 className="mb-3 text-sm font-medium text-gray-text">Realtime streams &amp; networks</h2>
 
         {/* Main Tabs */}
         <div className="flex border-b border-white/10 mb-8">
