@@ -867,7 +867,7 @@ const motionCss = `
 `;
 
 const CaseChip = ({ value }) => (
-  <span className="rounded-full bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
+  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
     {value}
   </span>
 );
@@ -878,8 +878,8 @@ const IndustryTab = ({ industry, isActive, onSelect }) => (
     onClick={onSelect}
     className={`rounded-full px-4 py-3 min-h-[44px] text-xs font-semibold transition-all duration-300 sm:text-sm ${
       isActive
-        ? 'bg-primary text-white shadow-custom'
-        : 'bg-white/[0.04] text-gray-text hover:bg-white/[0.08] hover:text-light-text'
+        ? 'bg-primary text-white '
+        : 'bg-dark-card text-gray-text hover:bg-dark-card hover:text-light-text'
     }`}
     aria-pressed={isActive}
   >
@@ -888,7 +888,7 @@ const IndustryTab = ({ industry, isActive, onSelect }) => (
 );
 
 const ResultBlock = ({ result }) => (
-  <div className="mt-5 overflow-hidden rounded-[1.25rem] bg-dark-surface/80 p-4">
+  <div className="mt-5 overflow-hidden rounded-sm bg-dark-surface/80 p-4">
     <div className="flex items-center justify-between gap-3">
       <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-primary">{result.run}</span>
       <span className="text-[10px] uppercase tracking-[0.18em] text-gray-text">Example run</span>
@@ -905,12 +905,12 @@ const ResultBlock = ({ result }) => (
 );
 
 const FeatureAccordionItem = ({ feature, isOpen, onToggle }) => (
-  <div className="overflow-hidden rounded-[1.5rem] bg-dark-card/80 shadow-custom">
+  <div className="overflow-hidden rounded-sm bg-dark-card/80 ">
     <button
       type="button"
       onClick={onToggle}
       aria-expanded={isOpen}
-      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-300 hover:bg-white/[0.03] md:px-6 md:py-5"
+      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-300 hover:bg-dark-card md:px-6 md:py-5"
     >
       <h3 className="text-base font-semibold text-light-text md:text-lg">{feature.title}</h3>
       <FiChevronDown
@@ -935,8 +935,8 @@ const FamilyTab = ({ family, isActive, onSelect }) => (
   <button
     type="button"
     onClick={onSelect}
-    className={`rounded-[1.35rem] px-5 py-4 text-left transition-all duration-300 ${
-      isActive ? 'bg-dark-surface text-light-text shadow-custom' : 'bg-transparent text-gray-text hover:bg-white/[0.04] hover:text-light-text'
+    className={`rounded-sm px-5 py-4 text-left transition-all duration-300 ${
+      isActive ? 'bg-dark-surface text-light-text ' : 'bg-transparent text-gray-text hover:bg-dark-card hover:text-light-text'
     }`}
     aria-pressed={isActive}
   >
@@ -950,7 +950,7 @@ const HeroProof = ({ family, scenario, cycle }) => {
   const Svg = scenario.Svg;
 
   return (
-    <div className="rounded-[2rem] bg-dark-card/80 p-5 shadow-2xl backdrop-blur-xl">
+    <div className="rounded-sm bg-dark-card/80 p-5  ">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{family.shell}</p>
@@ -961,7 +961,7 @@ const HeroProof = ({ family, scenario, cycle }) => {
         </span>
       </div>
 
-      <div className="mt-5 overflow-hidden rounded-[1.5rem] bg-[#0f1114]">
+      <div className="mt-5 overflow-hidden rounded-sm bg-[#0f1114]">
         <Svg key={`${scenario.id}-hero-${cycle}`} className="h-auto w-full" />
       </div>
     </div>
@@ -975,7 +975,7 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
     <button
       type="button"
       onClick={onSelect}
-      className={`group rounded-[2rem] p-4 text-left shadow-custom transition-all duration-300 ${
+      className={`group rounded-sm p-4 text-left  transition-all duration-300 ${
         isActive ? 'bg-dark-card' : 'bg-dark-card/80'
       }`}
       aria-pressed={isActive}
@@ -989,7 +989,7 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
         </span>
       </div>
 
-      <div className="mt-4 min-h-[10rem] overflow-hidden rounded-[1.5rem] bg-dark-surface/80">
+      <div className="mt-4 min-h-[10rem] overflow-hidden rounded-sm bg-dark-surface/80">
         <Svg key={`${scenario.id}-${isActive ? cycle : 'idle'}`} className="h-auto w-full" />
       </div>
 
@@ -1003,8 +1003,8 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
 };
 
 const ResultMatrix = ({ scenarios }) => (
-  <div className="rounded-[2rem] bg-dark-card/80 p-4 shadow-custom">
-    <div className="overflow-hidden rounded-[1.5rem] bg-dark-surface/75">
+  <div className="rounded-sm bg-dark-card/80 p-4 ">
+    <div className="overflow-hidden rounded-sm bg-dark-surface/75">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
@@ -1018,12 +1018,12 @@ const ResultMatrix = ({ scenarios }) => (
             {scenarios.map((scenario) => (
               <tr
                 key={scenario.id}
-                className="text-light-text transition-colors duration-300 hover:bg-white/[0.03]"
+                className="text-light-text transition-colors duration-300 hover:bg-dark-card"
               >
                 <td className="px-4 py-4 font-semibold">{scenario.label}</td>
                 <td className="px-4 py-4 text-gray-text">{scenario.chips[0]}</td>
                 <td className="px-4 py-4">
-                  <span className="rounded-full bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
                     {scenario.status}
                   </span>
                 </td>
@@ -1114,7 +1114,7 @@ const NexusUseCases = () => {
       <style>{motionCss}</style>
 
       <section className="relative pt-32 pb-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(38,166,154,0.18),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(63,81,181,0.14),transparent_28%),linear-gradient(180deg,#101112_0%,#121212_58%,#151719_100%)]" />
+        <div className="absolute inset-0 bg-dark-surface" />
         <div className="relative container mx-auto px-5">
           <div className="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-center">
             <div className="max-w-2xl">
@@ -1125,10 +1125,11 @@ const NexusUseCases = () => {
               <p className="mt-6 text-lg leading-8 text-gray-text">
                 Switch between Claude and Codex, follow the full runtime on Plotune Nexus, and read the artifacts that come out of each case. Then jump to the scenarios built for your industry.
               </p>
+              <p className="mt-4 text-sm leading-6 text-gray-text">Illustrative, prerecorded scenarios. No live hardware is connected to this page.</p>
               <div className="mt-8">
                 <a
                   href={contactMailto('Plotune Nexus')}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark"
                 >
                   Contact Us
                   <FiArrowRight />
@@ -1137,19 +1138,19 @@ const NexusUseCases = () => {
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href="#runtime"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:border-primary/40 hover:text-white"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-ink/15 bg-dark-card px-4 py-2 text-sm text-gray-text transition hover:border-primary/40 hover:text-light-text"
                 >
                   Runtime
                 </a>
                 <a
                   href="#artifacts"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:border-primary/40 hover:text-white"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-ink/15 bg-dark-card px-4 py-2 text-sm text-gray-text transition hover:border-primary/40 hover:text-light-text"
                 >
                   Artifacts
                 </a>
                 <a
                   href="#industries"
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:border-primary/40 hover:text-white"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-ink/15 bg-dark-card px-4 py-2 text-sm text-gray-text transition hover:border-primary/40 hover:text-light-text"
                 >
                   By industry
                 </a>
@@ -1163,7 +1164,7 @@ const NexusUseCases = () => {
             />
           </div>
 
-          <div className="mt-10 grid gap-2 rounded-[1.75rem] bg-dark-card/80 p-2 shadow-custom md:grid-cols-2">
+          <div className="mt-10 grid gap-2 rounded-sm bg-dark-card/80 p-2  md:grid-cols-2">
             {familyOrder.map((familyKey) => (
               <FamilyTab
                 key={familyKey}
@@ -1178,15 +1179,15 @@ const NexusUseCases = () => {
 
       <section id="runtime" className="scroll-mt-24 pb-24">
         <div className="container mx-auto px-5">
-          <div className="rounded-[2rem] bg-dark-card/80 p-3 shadow-2xl backdrop-blur-xl md:p-4">
+          <div className="rounded-sm bg-dark-card/80 p-3   md:p-4">
             <div className="flex items-center justify-between px-3 pb-3 pt-1">
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{activeFamilyConfig.shell}</p>
-              <span className="rounded-full bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
+              <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
                 {activeFamilyConfig.runtimeLabel}
               </span>
             </div>
 
-            <div className="relative overflow-hidden rounded-[1.5rem] bg-[#090a0c]">
+            <div className="relative overflow-hidden rounded-sm bg-[#090a0c]">
               <iframe
                 key={`${activeFamily}-${frameSeed}`}
                 src={frameSrc}
@@ -1199,11 +1200,11 @@ const NexusUseCases = () => {
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                   <div
                     role="status"
-                    className="flex items-center gap-2 rounded-full border border-white/15 bg-dark-card/90 px-4 py-2 text-sm text-gray-text shadow-custom"
+                    className="flex items-center gap-2 rounded-full border border-ink/15 bg-dark-card/90 px-4 py-2 text-sm text-gray-text "
                   >
                     <span
                       aria-hidden="true"
-                      className="use-case-loading-spinner h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/20 border-t-primary"
+                      className="use-case-loading-spinner h-3.5 w-3.5 animate-spin rounded-full border-2 border-ink/15 border-t-primary"
                     />
                     Loading runtime…
                   </div>
@@ -1258,7 +1259,7 @@ const NexusUseCases = () => {
               ))}
             </div>
 
-            <div className="mt-8 rounded-[2rem] bg-dark-card/60 p-6 shadow-custom md:p-8">
+            <div className="mt-8 rounded-sm bg-dark-card/60 p-6  md:p-8">
               <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
                 <div className="max-w-3xl">
                   <h3 className="text-2xl font-semibold text-light-text">{activeIndustryConfig.label}</h3>
@@ -1266,7 +1267,7 @@ const NexusUseCases = () => {
                 </div>
                 <a
                   href={contactMailto(activeIndustryConfig.label)}
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-gray-text transition-all duration-300 hover:border-primary/40 hover:text-white"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-ink/15 bg-dark-card px-6 py-3 font-semibold text-gray-text transition-all duration-300 hover:border-primary/40 hover:text-light-text"
                 >
                   Contact Us
                   <FiArrowRight />
@@ -1296,7 +1297,7 @@ const NexusUseCases = () => {
             </div>
           </div>
 
-          <div className="mt-12 rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.08))] p-8 shadow-custom md:p-10">
+          <div className="mt-12 rounded-sm bg-dark-surface p-8  md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div>
                 <h3 className="text-2xl font-semibold text-light-text">Map this to your own bench.</h3>
@@ -1304,7 +1305,7 @@ const NexusUseCases = () => {
               </div>
               <a
                 href={contactMailto('Plotune Nexus')}
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark"
               >
                 Contact Us
                 <FiArrowRight />

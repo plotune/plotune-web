@@ -5,6 +5,7 @@ import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import MD5 from 'crypto-js/md5';
 import { v4 as uuidv4 } from 'uuid';
+import { FiUser, FiKey, FiLock } from 'react-icons/fi';
 
 const Profile = () => {
   const { user, token, logout } = useContext(AuthContext);
@@ -15,14 +16,13 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('profile');
   const [apiToken, setApiToken] = useState('');
-  const [premiumStatus, setPremiumStatus] = useState(false);
 
   const getGravatarUrl = (email, size = 80) => {
     if (!email) {
       const seed = userData.username || 'unknown';
       return `https://robohash.org/${seed}?set=set2&size=${size}x${size}`;
     }
-    
+
     const hash = MD5(email.trim().toLowerCase()).toString();
     return `https://www.gravatar.com/avatar/${hash}?d=retro&s=${size}`;
   };
@@ -40,12 +40,6 @@ useEffect(() => {
       });
       setUserData(profileResponse.data);
       setSavedSnapshot(profileResponse.data);
-
-      const premiumResponse = await api.get(
-        `/user/premium?cb=${cachebuster}`,
-        { headers: { Authorization: token } }
-      );
-      setPremiumStatus(premiumResponse.data.is_premium || false);
     } catch (err) {
       if (err.response?.status === 401) logout();
     } finally {
@@ -113,7 +107,7 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-dark-surface   flex items-center justify-center">
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
           <p className="text-light-text">Loading your profile...</p>
@@ -123,12 +117,17 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
+    <div className="min-h-screen bg-dark-surface pt-24 pb-12">
       <div className="container mx-auto px-4">
+        <header className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account settings</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Profile</h1>
+          <p className="mt-2 text-sm text-gray-text">Manage your profile, API access, and security settings.</p>
+        </header>
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Navigation */}
           <div className="lg:w-1/4">
-            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+            <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
               <div className="flex items-center mb-6">
                 <img
                   src={getGravatarUrl(userData.email)}
@@ -142,21 +141,14 @@ useEffect(() => {
                 <div className="ml-4">
                   <h3 className="text-light-text font-semibold">{userData.full_name || userData.username}</h3>
                   <p className="text-gray-text text-sm">{userData.email}</p>
-                  <div className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
-                    premiumStatus 
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
-                      : 'bg-gray-600 text-gray-300'
-                  }`}>
-                    {premiumStatus ? 'PREMIUM' : 'FREE'}
-                  </div>
                 </div>
               </div>
 
               <nav className="space-y-2">
                 {[
-                  { id: 'profile', label: 'Profile Information', icon: '👤' },
-                  { id: 'api', label: 'API Access', icon: '🔑' },
-                  { id: 'security', label: 'Security', icon: '🔒' },
+                  { id: 'profile', label: 'Profile Information', icon: FiUser },
+                  { id: 'api', label: 'API Access', icon: FiKey },
+                  { id: 'security', label: 'Security', icon: FiLock },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -164,10 +156,10 @@ useEffect(() => {
                     className={`w-full text-left px-4 py-3 rounded-lg transition flex items-center ${
                       activeSection === item.id
                         ? 'bg-primary/20 text-primary border-l-4 border-primary'
-                        : 'text-gray-text hover:text-light-text hover:bg-white/5'
+                        : 'text-gray-text hover:text-light-text hover:bg-dark-card'
                     }`}
                   >
-                    <span className="mr-3">{item.icon}</span>
+                    <item.icon aria-hidden="true" className="mr-3 h-4 w-4" />
                     {item.label}
                   </button>
                 ))}
@@ -179,7 +171,7 @@ useEffect(() => {
           <div className="lg:w-3/4">
             {/* Profile Information */}
             {activeSection === 'profile' && (
-              <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold text-light-text">Profile Information</h2>
                   {!isEditing ? (
@@ -200,7 +192,7 @@ useEffect(() => {
                       </button>
                       <button
                         onClick={handleCancelEdit}
-                        className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                        className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-dark-surface transition"
                       >
                         Cancel
                       </button>
@@ -221,10 +213,10 @@ useEffect(() => {
                   <div>
                     <h3 className="text-light-text font-semibold text-lg">Profile Picture</h3>
                     <p className="text-gray-text text-sm">
-                      Your profile picture is managed through Gravatar. 
-                      <a 
-                        href="https://gravatar.com" 
-                        target="_blank" 
+                      Your profile picture is managed through Gravatar.
+                      <a
+                        href="https://gravatar.com"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline ml-1"
                       >
@@ -241,7 +233,7 @@ useEffect(() => {
                       type="text"
                       value={userData.username || ''}
                       disabled
-                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text opacity-70"
+                      className="w-full p-3 bg-dark-card  rounded-lg border border-ink/15 text-light-text opacity-70"
                     />
                   </div>
                   <div>
@@ -250,7 +242,7 @@ useEffect(() => {
                       type="email"
                       value={userData.email || ''}
                       disabled
-                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text opacity-70"
+                      className="w-full p-3 bg-dark-card  rounded-lg border border-ink/15 text-light-text opacity-70"
                     />
                   </div>
                   <div>
@@ -260,7 +252,7 @@ useEffect(() => {
                       value={userData.full_name || ''}
                       onChange={(e) => setUserData({ ...userData, full_name: e.target.value })}
                       disabled={!isEditing}
-                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text disabled:opacity-70"
+                      className="w-full p-3 bg-dark-card  rounded-lg border border-ink/15 text-light-text disabled:opacity-70"
                     />
                   </div>
                   <div>
@@ -270,7 +262,7 @@ useEffect(() => {
                       value={userData.company || ''}
                       onChange={(e) => setUserData({ ...userData, company: e.target.value })}
                       disabled={!isEditing}
-                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text disabled:opacity-70"
+                      className="w-full p-3 bg-dark-card  rounded-lg border border-ink/15 text-light-text disabled:opacity-70"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -279,7 +271,7 @@ useEffect(() => {
                       type="text"
                       value={userData.sector || ''}
                       disabled
-                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text opacity-70"
+                      className="w-full p-3 bg-dark-card  rounded-lg border border-ink/15 text-light-text opacity-70"
                     />
                   </div>
                 </div>
@@ -288,16 +280,16 @@ useEffect(() => {
 
             {/* API Access */}
             {activeSection === 'api' && (
-              <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
                 <h2 className="text-xl font-semibold text-light-text mb-6">API Access</h2>
-                
-                <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5 mb-6">
+
+                <div className="bg-dark-card  rounded-lg p-6 border border-ink/15 mb-6">
                   <h3 className="text-lg font-medium text-light-text mb-4">API Token</h3>
                   <p className="text-gray-text mb-4">
                     Generate an API token to integrate Plotune with your applications and scripts.
                     Keep this token secure and never share it publicly.
                   </p>
-                  
+
                   <button
                     onClick={handleGenerateToken}
                     className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium"
@@ -326,7 +318,7 @@ useEffect(() => {
                   )}
                 </div>
 
-                <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
+                <div className="bg-dark-card  rounded-lg p-6 border border-ink/15">
                   <h3 className="text-lg font-medium text-light-text mb-4">API Documentation</h3>
                   <p className="text-gray-text mb-4">
                     Learn how to use the Plotune API with our comprehensive documentation.
@@ -343,11 +335,11 @@ useEffect(() => {
 
             {/* Security */}
             {activeSection === 'security' && (
-              <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
                 <h2 className="text-xl font-semibold text-light-text mb-6">Security Settings</h2>
-                
+
                 <div className="space-y-6">
-                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
+                  <div className="bg-dark-card  rounded-lg p-6 border border-ink/15">
                     <h3 className="text-lg font-medium text-light-text mb-4">Password</h3>
                     <p className="text-gray-text mb-4">Change your password to keep your account secure.</p>
                     <Link
@@ -358,7 +350,7 @@ useEffect(() => {
                     </Link>
                   </div>
 
-                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
+                  <div className="bg-dark-card  rounded-lg p-6 border border-ink/15">
                     <h3 className="text-lg font-medium text-light-text mb-4">Two-Factor Authentication</h3>
                     <p className="text-gray-text mb-4">Add an extra layer of security to your account.</p>
                     <button
@@ -367,11 +359,11 @@ useEffect(() => {
                       className="px-6 py-3 bg-primary/20 text-primary rounded-lg font-medium opacity-50 cursor-not-allowed inline-flex items-center"
                     >
                       Enable 2FA
-                      <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">Soon</span>
+                      <span className="ml-2 rounded-full bg-dark-card px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">Soon</span>
                     </button>
                   </div>
 
-                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
+                  <div className="bg-dark-card  rounded-lg p-6 border border-ink/15">
                     <h3 className="text-lg font-medium text-light-text mb-4">Login History</h3>
                     <p className="text-gray-text">
                       Login history isn&apos;t available yet. When it is, your recent account

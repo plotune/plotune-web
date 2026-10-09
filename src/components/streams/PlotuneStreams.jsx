@@ -6,8 +6,8 @@ import { AuthContext } from '../../context/AuthContext';
 import CreateStreamModal from './CreateStreamModal';
 import StreamManagementModal from './StreamManagementModal';
 import StreamCard from './StreamCard';
-import StreamIcon from '../../assets/icons/stream.svg';
-import { 
+import { FiActivity } from 'react-icons/fi';
+import {
   FaPlus,
   FaUsers,
   FaStream
@@ -54,7 +54,7 @@ const PlotuneStreams = () => {
       const response = await api.get(`/auth/stream?q=${cacheBuster}&user=${user?.username}`, {
         headers: { Authorization: token },
       });
-      
+
       if (response.data && response.data.token) {
         setStreamToken(response.data.token);
         fetchMyStreams(response.data.token);
@@ -79,9 +79,9 @@ const PlotuneStreams = () => {
       const response = await streamApi.post('/streams/list', {}, {
         headers: { Authorization: tokenToUse },
       });
-      
+
       setMyStreams(response.data.streams || []);
-      
+
     } catch (err) {
       console.error('Error fetching streams:', err);
       toast.error('Failed to load your streams');
@@ -101,7 +101,7 @@ const PlotuneStreams = () => {
       const response = await streamApi.get('/streams/shared-streams', {
         headers: { Authorization: tokenToUse },
       });
-      
+
       // Map shared streams to match StreamCard structure
       const mappedStreams = (response.data.shared_streams || []).map(stream => ({
         ...stream,
@@ -113,9 +113,9 @@ const PlotuneStreams = () => {
           can_write: stream.can_write
         }
       }));
-      
+
       setSharedStreams(mappedStreams);
-      
+
     } catch (err) {
       console.error('Error fetching shared streams:', err);
       toast.error('Failed to load shared streams');
@@ -153,7 +153,7 @@ const PlotuneStreams = () => {
       const response = await streamApi.post('/streams/create', createData, {
         headers: { Authorization: streamToken },
       });
-      
+
       setShowCreateModal(false);
       toast.success('Stream created successfully!');
       fetchMyStreams();
@@ -210,7 +210,7 @@ const PlotuneStreams = () => {
     }
 
     try {
-      await streamApi.post('/streams/share', 
+      await streamApi.post('/streams/share',
         {
           stream_name: streamName,
           user_email: shareEmail,
@@ -235,7 +235,7 @@ const PlotuneStreams = () => {
     }
 
     try {
-      await streamApi.post('/streams/unshare', 
+      await streamApi.post('/streams/unshare',
         {
           stream_name: streamName,
           user_email: userEmail
@@ -290,7 +290,7 @@ const PlotuneStreams = () => {
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center justify-center gap-2
+          className="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap
                       px-4 py-2 min-h-[44px] rounded-lg
                       bg-blue-600 hover:bg-blue-700
                       text-white text-sm font-medium
@@ -300,15 +300,15 @@ const PlotuneStreams = () => {
           New Stream
         </button>
 
-        
+
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-white/10">
+      <div className="flex border-b border-ink/15">
         <button
           className={`px-4 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
-            activeTab === 'my' 
-              ? 'border-primary text-primary' 
+            activeTab === 'my'
+              ? 'border-primary text-primary'
               : 'border-transparent text-gray-text hover:text-light-text'
           }`}
           onClick={() => handleTabChange('my')}
@@ -323,8 +323,8 @@ const PlotuneStreams = () => {
         </button>
         <button
           className={`px-4 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
-            activeTab === 'shared' 
-              ? 'border-primary text-primary' 
+            activeTab === 'shared'
+              ? 'border-primary text-primary'
               : 'border-transparent text-gray-text hover:text-light-text'
           }`}
           onClick={() => handleTabChange('shared')}
@@ -356,16 +356,16 @@ const PlotuneStreams = () => {
               streamToken={streamToken}
             />
           ))}
-          
+
           {currentStreams.length === 0 && (
             <div className="col-span-full text-center py-12">
-              <img src={StreamIcon} alt="Streams" className="mx-auto mb-4 w-16 h-16 opacity-50" />
+              <FiActivity aria-hidden="true" className="mx-auto mb-4 h-10 w-10 text-primary" />
               <h3 className="text-lg font-medium text-light-text mb-2">
                 {activeTab === 'my' ? 'No streams yet' : 'No shared streams'}
               </h3>
               <p className="text-gray-text mb-4">
-                {activeTab === 'my' 
-                  ? 'Create your first stream to get started' 
+                {activeTab === 'my'
+                  ? 'Create your first stream to get started'
                   : 'No one has shared any streams with you yet'}
               </p>
               {activeTab === 'my' && (
@@ -382,7 +382,7 @@ const PlotuneStreams = () => {
       )}
 
       {/* Connection Information */}
-      <div className="rounded-xl p-6 border border-white/10">
+      <div className="rounded-sm p-6 border border-ink/15">
         <h4 className="text-light-text font-medium mb-4">Connection Details</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
@@ -409,8 +409,8 @@ const PlotuneStreams = () => {
 
       {/* Modals */}
       {showCreateModal && (
-        <CreateStreamModal 
-          onClose={() => setShowCreateModal(false)} 
+        <CreateStreamModal
+          onClose={() => setShowCreateModal(false)}
           onSubmit={handleCreateStream}
           isPremium={isPremium}
           isSubmitting={isCreatingStream}

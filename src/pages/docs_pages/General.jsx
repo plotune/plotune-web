@@ -16,15 +16,15 @@ export default function General() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="text-2xl font-bold text-primary mb-2">Real-time</div>
           <div className="text-gray-text">Data Visualization</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="text-2xl font-bold text-primary mb-2">Modular</div>
           <div className="text-gray-text">Architecture</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="text-2xl font-bold text-primary mb-2">Extensible</div>
           <div className="text-gray-text">Plugin System</div>
         </div>
@@ -32,7 +32,7 @@ export default function General() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Introduction
@@ -48,12 +48,12 @@ export default function General() {
       {/* Core Philosophy */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-8 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Core Philosophy
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-lg">M</span>
             </div>
@@ -64,7 +64,7 @@ export default function General() {
             </p>
           </div>
 
-          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-lg">E</span>
             </div>
@@ -75,7 +75,7 @@ export default function General() {
             </p>
           </div>
 
-          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-lg">P</span>
             </div>
@@ -91,13 +91,13 @@ export default function General() {
       {/* Architecture Overview */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-8 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Architecture Overview
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Frontend */}
-          <div className="bg-gradient-to-br from-primary/10 to-transparent rounded-2xl p-6 border border-primary/20">
+          <div className="bg-dark-surface  to-transparent rounded-sm p-6 border border-primary/20">
             <h3 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
               <i className="fas fa-desktop text-primary"></i>
               Frontend
@@ -119,7 +119,7 @@ export default function General() {
           </div>
 
           {/* Backend */}
-          <div className="bg-gradient-to-br from-secondary/10 to-transparent rounded-2xl p-6 border border-secondary/20">
+          <div className="bg-dark-surface  to-transparent rounded-sm p-6 border border-secondary/20">
             <h3 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
               <i className="fas fa-server text-secondary"></i>
               Backend
@@ -145,11 +145,11 @@ export default function General() {
       {/* Interface Layout */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Interface Layout
         </h2>
 
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h4 className="text-lg font-semibold text-light-text mb-3">Main Areas</h4>
@@ -189,13 +189,13 @@ export default function General() {
       {/* Extensibility */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Extensibility & Plugins
         </h2>
 
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <p className="text-gray-text mb-6">
-            Plotune offers a flexible <strong className="text-light-text">Extension SDK</strong> 
+            Plotune offers a flexible <strong className="text-light-text">Extension SDK</strong>{' '}
             for building plugins that extend both frontend and backend capabilities.
           </p>
           
@@ -257,7 +257,7 @@ export default function General() {
               "Custom signal processing and algorithm validation",
               "Educational demonstrations for signal analytics"
             ].map((useCase, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <i className="fas fa-check text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{useCase}</span>
               </div>
@@ -278,7 +278,7 @@ export default function General() {
               "Distributed stream processing",
               "Advanced plugin store with auto-deployment"
             ].map((item, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <i className="fas fa-road text-secondary mt-1 text-sm"></i>
                 <span className="text-gray-text">{item}</span>
               </div>
@@ -288,7 +288,7 @@ export default function General() {
       </div>
 
       {/* Footer */}
-      <div className="text-center pt-8 border-t border-white/10">
+      <div className="text-center pt-8 border-t border-ink/15">
         <p className="text-gray-text italic">
           Last updated: November 2025 — Plotune Core v1.0.0
         </p>

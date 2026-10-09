@@ -76,7 +76,7 @@ const ContactPage = () => {
         description="Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
         path="/contact"
       />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
+      <div className="absolute inset-0 bg-dark-surface" />
 
       <div className="relative container mx-auto max-w-6xl px-5">
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto_1fr] lg:gap-x-16 lg:gap-y-10">
@@ -94,7 +94,7 @@ const ContactPage = () => {
             <ContactForm topic={topic} />
 
             {/* Second funnel: visitors not ready to talk take the assessment instead of leaving. */}
-            <div className="mt-5 rounded-2xl border border-primary/30 bg-primary/[0.07] p-5 md:p-6">
+            <div className="mt-5 rounded-sm border border-primary/30 bg-primary/[0.07] p-5 md:p-6">
               <p className="text-base font-semibold text-light-text">Not ready to talk yet?</p>
               <p className="mt-1 text-sm leading-6 text-gray-text">
                 See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
@@ -127,7 +127,7 @@ const ContactPage = () => {
             </ol>
           </div>
 
-          <p className="flex flex-wrap items-center gap-x-1.5 border-t border-white/10 pt-4 text-sm text-gray-text lg:col-start-1 lg:row-start-3 lg:self-start">
+          <p className="flex flex-wrap items-center gap-x-1.5 border-t border-ink/15 pt-4 text-sm text-gray-text lg:col-start-1 lg:row-start-3 lg:self-start">
             Prefer email?
             <a href={mailto} className="inline-flex min-h-[44px] items-center font-medium text-light-text underline underline-offset-4 hover:text-primary">
               {CONTACT_EMAIL}
@@ -135,7 +135,7 @@ const ContactPage = () => {
           </p>
         </div>
 
-        <div className="mt-14 border-t border-white/10 pt-12">
+        <div className="mt-14 border-t border-ink/15 pt-12">
           <p className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-gray-text">
             Other ways to reach us
           </p>
@@ -146,9 +146,9 @@ const ContactPage = () => {
                 href={channel.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-dark-card/60 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
+                className="group flex items-center gap-4 rounded-sm border border-ink/15 bg-dark-card/60 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.05] text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-card text-primary">
                   {channel.icon === 'discord' ? (
                     <i className="fa-brands fa-discord text-lg" aria-hidden="true" />
                   ) : (

@@ -61,7 +61,7 @@ const motionCss = `
 `;
 
 const Chip = ({ value }) => (
-  <span className="rounded-full bg-white/[0.05] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
+  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
     {value}
   </span>
 );
@@ -86,7 +86,7 @@ const NexusShowcase = () => (
           const Svg = run.Svg;
 
           return (
-            <article key={run.id} className="rounded-[1.5rem] bg-dark-card/80 p-5 shadow-custom">
+            <article key={run.id} className="rounded-sm bg-dark-card/80 p-5 ">
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-gray-text">{run.source}</p>
                 <span className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary" title="Example outcome" aria-label="Example outcome">
@@ -96,7 +96,7 @@ const NexusShowcase = () => (
 
               <h3 className="mt-3 text-xl font-semibold text-light-text">{run.title}</h3>
 
-              <div className="mt-4 min-h-[9rem] overflow-hidden rounded-[1.25rem] bg-dark-surface/80">
+              <div className="mt-4 min-h-[9rem] overflow-hidden rounded-sm bg-dark-surface/80">
                 <Svg className="h-auto w-full" />
               </div>
 
@@ -113,7 +113,7 @@ const NexusShowcase = () => (
 
         <Link
           to="/nexus/use-cases"
-          className="group flex flex-col justify-center rounded-[1.5rem] border border-primary/25 bg-primary/[0.06] p-6 text-left shadow-custom transition-all duration-300 hover:-translate-y-1 hover:bg-primary/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+          className="group flex flex-col justify-center rounded-sm border border-primary/25 bg-primary/[0.06] p-6 text-left  transition-all duration-300  hover:bg-primary/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
         >
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Use Cases</p>
           <p className="mt-3 text-lg font-semibold text-light-text">

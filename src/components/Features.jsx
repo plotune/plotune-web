@@ -63,13 +63,13 @@ const Features = () => {
           {services.map((service, index) => (
             <motion.div
               key={index}
-              className="bg-dark-card rounded-custom p-8 border border-white/5 hover:border-primary/30 hover:-translate-y-2 hover:shadow-custom transition-all duration-300 group"
+              className="bg-dark-card rounded-custom p-8 border border-ink/15 hover:border-primary/30 hover:-translate-y-2  transition-all duration-300 group"
               variants={variants}
               initial={prefersReducedMotion ? false : 'hidden'}
               animate={isInView || prefersReducedMotion ? 'visible' : 'hidden'}
               transition={{ delay: index * 0.2 }}
             >
-              <div className="mb-6 rounded-2xl bg-dark-bg/50 p-4 ring-1 ring-white/5">
+              <div className="mb-6 rounded-sm bg-dark-bg/50 p-4 ring-1 ring-white/5">
                 <service.Visual className="h-auto w-full" />
               </div>
 
@@ -81,11 +81,11 @@ const Features = () => {
                   {service.subtitle}
                 </p>
               </div>
-              
+
               <p className="text-gray-text mb-6 leading-relaxed">
                 {service.desc}
               </p>
-              
+
               <ul className="space-y-2">
                 {service.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-center text-light-text/80 text-sm">
@@ -99,7 +99,7 @@ const Features = () => {
         </div>
 
         {/* Additional call-to-action */}
-        <motion.div 
+        <motion.div
           className="text-center mt-16"
           variants={variants}
           initial={prefersReducedMotion ? false : 'hidden'}
@@ -111,7 +111,7 @@ const Features = () => {
           </p>
           <Link
             to="/contact"
-            className="inline-flex items-center justify-center rounded-full border-2 border-primary px-8 py-3 font-semibold text-primary hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+            className="inline-flex items-center justify-center rounded-full border-2 border-primary px-8 py-3 font-semibold text-primary hover:bg-primary/10  transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
           >
             Contact Us
           </Link>

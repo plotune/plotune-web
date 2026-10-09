@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section className="relative flex min-h-[88vh] items-start overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(38,166,154,0.14),transparent_62%),linear-gradient(180deg,#101112_0%,#121212_100%)] pt-28 pb-16 md:min-h-[640px] md:items-center md:py-24 xl:min-h-screen">
+    <section className="relative flex min-h-[88vh] items-start overflow-hidden bg-dark-surface pt-28 pb-16 md:min-h-[640px] md:items-center md:py-24 xl:min-h-screen">
       <div className="container mx-auto px-5">
         <div className="relative z-10 mx-auto max-w-2xl text-center xl:mx-0 xl:text-left">
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">
@@ -20,13 +20,13 @@ const Hero = () => {
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center xl:justify-start">
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+              className="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
             >
               Contact Us
             </Link>
             <Link
               to="/nexus"
-              className="inline-flex items-center justify-center rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300 hover:-translate-y-1 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+              className="inline-flex items-center justify-center rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300  hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
             >
               Explore Nexus
             </Link>
@@ -35,8 +35,8 @@ const Hero = () => {
       </div>
 
       <div className="absolute right-0 top-1/2 hidden w-1/2 max-w-2xl -translate-y-1/2 pr-8 xl:block">
-        <div className="ml-auto max-w-lg rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-sm">
-          <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="ml-auto max-w-lg rounded-sm border border-ink/15 bg-dark-card p-6  ">
+          <div className="mb-5 flex items-center justify-between border-b border-ink/15 pb-4">
             <h3 className="text-lg font-semibold text-light-text">Plotune Nexus</h3>
             <span className="rounded-full bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
               Flagship

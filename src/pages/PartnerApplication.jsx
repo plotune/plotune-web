@@ -3,34 +3,23 @@ import { Link } from 'react-router-dom';
 
 const PartnerApplication = () => {
   return (
-    <div className="min-h-screen bg-dark-bg py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <Link 
-            to="/partners" 
-            className="inline-flex items-center text-primary hover:text-primary-dark mb-6 transition-colors"
-          >
-            <i className="fas fa-arrow-left mr-2"></i>
-            Back to Partnership
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-4">
-            Partner Application
-          </h1>
-          <p className="text-gray-text text-lg max-w-2xl mx-auto">
-            Complete the form below to start your partnership journey with Plotune. 
-            We'll review your application and get back to you within 2 business days.
-          </p>
-        </div>
-
+    <div className="min-h-screen bg-dark-bg pb-12">
+      <section className="design-container page-intro">
+        <div className="section-index"><Link to="/partners">← Back to Partnership</Link><span>Partners / Apply</span></div>
+        <h1>Partner <span>Application</span></h1>
+        <p>
+          Complete the form below to start your partnership journey with Plotune.
+          We'll review your application and get back to you within 2 business days.
+        </p>
+      </section>
+      <div className="design-container">
         {/* Google Form */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div className="p-1 bg-gradient-to-r from-primary to-blue-500"></div>
-          <div className="p-8">
-            <iframe 
-              src="https://docs.google.com/forms/d/e/1FAIpQLSc2xQCMnvMH-_nHptO7cBudN5c9GrX79FpowISPhtp5puihHw/viewform?embedded=true" 
-              width="100%" 
-              height="1200" 
+        <div className="bg-white border-t border-ink overflow-hidden">
+          <div className="p-6 md:p-8">
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSc2xQCMnvMH-_nHptO7cBudN5c9GrX79FpowISPhtp5puihHw/viewform?embedded=true"
+              width="100%"
+              height="1200"
               frameBorder="0"
               className="min-h-[800px]"
               title="Partner application form"

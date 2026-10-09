@@ -100,10 +100,10 @@ export const buildMonthlyBenchmarkCharts = () => {
         };
       }),
       layout: {
-        barmode: 'group', margin: { l: 190, r: 36, t: 54, b: 48 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#fbfcfe',
+        barmode: 'group', margin: { l: 190, r: 36, t: 76, b: 48 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#fbfcfe',
         font: { family: 'Inter, sans-serif', color: '#334155', size: 12 },
         xaxis: { range: [0, 100], title: 'Validation index', gridcolor: '#e2e8f0', zeroline: false, fixedrange: true }, yaxis: { automargin: true, autorange: 'reversed', fixedrange: true },
-        legend: { orientation: 'h', y: 1.18, x: 0, font: { size: 11 } }, hoverlabel: { bgcolor: '#0f172a', font: { color: '#ffffff' } },
+        legend: { orientation: 'h', x: 0, y: 1.02, yanchor: 'bottom', font: { size: 11 } }, hoverlabel: { bgcolor: '#0f172a', font: { color: '#ffffff' } },
       },
       config: { responsive: true, displaylogo: false, displayModeBar: false },
       height: 400,

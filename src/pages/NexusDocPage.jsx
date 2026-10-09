@@ -28,7 +28,7 @@ const NexusDocPage = () => {
       <main className="flex min-h-[60vh] flex-col items-center justify-center bg-dark-bg px-5 py-20 text-center text-dark-text">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Docs</p>
         <h1 className="mt-4 text-3xl font-semibold text-light-text">We couldn&apos;t find that document.</h1>
-        <Link to="/docs/nexus" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
+        <Link to="/docs/nexus" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
           Back to Nexus docs
         </Link>
       </main>
@@ -38,11 +38,11 @@ const NexusDocPage = () => {
   const otherDocs = nexusDocs.filter((d) => d.slug !== doc.slug);
 
   return (
-    <main className="overflow-hidden bg-dark-bg text-dark-text">
+    <main className="site-public nexus-doc-page overflow-hidden bg-dark-bg text-dark-text">
       <Seo title={`${doc.title} | Plotune Nexus Docs`} description={doc.summary} path={`/docs/nexus/${doc.slug}`} />
       <section className="relative pt-32 pb-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
-        <div className="relative container mx-auto max-w-3xl px-5">
+        <div className="absolute inset-0 bg-dark-surface" />
+        <div className="nexus-doc-heading relative container mx-auto max-w-3xl px-5">
           <Link to="/docs/nexus" className="text-sm text-gray-text transition-colors hover:text-primary">
             &larr; Nexus documentation
           </Link>
@@ -56,7 +56,7 @@ const NexusDocPage = () => {
       </section>
 
       <section className="pb-8">
-        <div className="container mx-auto max-w-3xl px-5">
+        <div className="nexus-doc-reading container mx-auto max-w-3xl px-5">
           <div className="nexus-doc-body">
             {Content ? (
               <MDXProvider components={components}>
@@ -72,11 +72,11 @@ const NexusDocPage = () => {
       {doc.cta && (
         <section className="pb-16">
           <div className="container mx-auto max-w-3xl px-5">
-            <div className="rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.08))] p-8 shadow-custom">
+          <div className="nexus-doc-cta rounded-sm bg-dark-surface p-8">
               <p className="text-gray-text">{doc.cta.summary}</p>
               <Link
                 to={withFunnelParams(doc.cta.path, { article: doc.slug })}
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark"
               >
                 {doc.cta.label}
                 <FiArrowRight />
@@ -94,7 +94,7 @@ const NexusDocPage = () => {
               <Link
                 key={other.slug}
                 to={`/docs/nexus/${other.slug}`}
-                className="group rounded-2xl border border-white/10 bg-dark-card/60 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
+                className="group rounded-sm border border-ink/15 bg-dark-card/60 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{other.topic}</p>
                 <p className="mt-2 font-semibold text-light-text group-hover:text-primary">{other.title}</p>

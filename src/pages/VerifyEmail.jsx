@@ -7,7 +7,7 @@ const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [verificationStatus, setVerificationStatus] = useState('loading'); // 'loading', 'success', 'error'
+  const [verificationStatus, setVerificationStatus] = useState('loading');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const [failureReason, setFailureReason] = useState('');
@@ -29,17 +29,19 @@ const VerifyEmail = () => {
   useEffect(() => {
     if (token) {
       verifyEmail();
+    } else if (email) {
+      setVerificationStatus('pending');
     } else {
       setVerificationStatus('error');
       toast.error('Invalid verification link');
     }
-  }, [token]);
+  }, [token, email]);
 
   const verifyEmail = async () => {
     setIsSubmitting(true);
     try {
       const response = await api.get(`/auth/verify-email?token=${token}`);
-      
+
       if (response.status === 200) {
         setVerificationStatus('success');
         toast.success('Email verified successfully!');
@@ -61,12 +63,13 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
-      <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl w-full max-w-md">
+    <div className="min-h-screen bg-dark-surface   flex items-center justify-center py-8 px-4">
+      <div className="bg-dark-card rounded-sm p-8 border border-ink/15  w-full max-w-md">
         <div className="text-center mb-8">
           <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
             verificationStatus === 'loading' ? 'bg-blue-500/20' :
-            verificationStatus === 'success' ? 'bg-green-500/20' : 'bg-red-500/20'
+            verificationStatus === 'success' ? 'bg-green-500/20' :
+            verificationStatus === 'pending' ? 'bg-primary/10' : 'bg-red-500/20'
           }`}>
             {verificationStatus === 'loading' && (
               <svg className="w-8 h-8 text-blue-500 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,18 +86,25 @@ const VerifyEmail = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             )}
+            {verificationStatus === 'pending' && (
+              <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h18v14H3zM3 5l9 7 9-7" />
+              </svg>
+            )}
           </div>
-          
+
           <h1 className="text-3xl font-bold text-light-text mb-2">
             {verificationStatus === 'loading' && 'Verifying Email'}
             {verificationStatus === 'success' && 'Email Verified!'}
             {verificationStatus === 'error' && 'Verification Failed'}
+            {verificationStatus === 'pending' && 'Check your email'}
           </h1>
-          
+
           <p className="text-gray-text">
             {verificationStatus === 'loading' && 'Please wait while we verify your email address...'}
             {verificationStatus === 'success' && 'Your email has been successfully verified.'}
             {verificationStatus === 'error' && 'We could not verify your email address.'}
+            {verificationStatus === 'pending' && `Open the verification link in your email for ${email}.`}
           </p>
         </div>
 
@@ -122,7 +132,7 @@ const VerifyEmail = () => {
                 </span>
               </div>
             </div>
-            
+
             <div className="flex flex-col space-y-3">
               <Link
                 to="/login"
@@ -132,7 +142,7 @@ const VerifyEmail = () => {
               </Link>
               <Link
                 to="/"
-                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
+                className="w-full py-3 bg-dark-surface  text-gray-text border border-ink/15 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Back to Home
               </Link>
@@ -140,9 +150,9 @@ const VerifyEmail = () => {
           </div>
         )}
 
-        {verificationStatus === 'error' && (
+        {(verificationStatus === 'error' || verificationStatus === 'pending') && (
           <div className="space-y-6">
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            {verificationStatus === 'error' && <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
               <div className="flex items-start">
                 <svg className="w-5 h-5 text-red-500 mr-2 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -152,7 +162,7 @@ const VerifyEmail = () => {
                   {email && ` We sent the original link to ${email}.`}
                 </span>
               </div>
-            </div>
+            </div>}
 
             <div className="flex flex-col space-y-3">
               {/* Postel (truthful controls): there is no resend endpoint wired up, so the
@@ -167,7 +177,7 @@ const VerifyEmail = () => {
 
               <Link
                 to="/login"
-                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
+                className="w-full py-3 bg-dark-surface  text-gray-text border border-ink/15 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Back to Login
               </Link>
@@ -177,7 +187,7 @@ const VerifyEmail = () => {
 
         {/* Additional help section */}
         {(verificationStatus === 'error') && (
-          <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-ink/15">
             <p className="text-gray-text text-sm text-center">
               Need help?{' '}
               <a href="mailto:support@plotune.net" className="text-primary hover:underline">

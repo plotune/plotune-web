@@ -1,10 +1,10 @@
 // components/networks/CreateNetworkModal.jsx
 import React, { useRef, useState } from 'react';
 import {
-    FaGlobe, 
+    FaGlobe,
     FaLock,
-    FaShareAlt , 
-    FaUsers, 
+    FaShareAlt ,
+    FaUsers,
     FaSpinner,
     FaNetworkWired
   } from 'react-icons/fa';
@@ -55,7 +55,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div ref={panelRef} className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl w-full max-w-md">
+      <div ref={panelRef} className="bg-dark-card rounded-sm p-6 border border-ink/15  w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-light-text">Create New Network</h3>
           <button
@@ -82,7 +82,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
               </p>
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-dark-surface transition"
               >
                 Close
               </button>
@@ -96,8 +96,8 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                  errors.name ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                  errors.name ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
                 placeholder="my-peer-network"
                 maxLength={100}
@@ -110,7 +110,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
               <textarea
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
-                className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                className="w-full p-3 bg-dark-surface  rounded-lg border border-ink/15 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 rows="3"
                 placeholder="Describe what this network will be used for..."
                 maxLength={500}
@@ -123,14 +123,14 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
               role="switch"
               aria-checked={formData.is_public}
               onClick={toggleVisibility}
-              className="w-full text-left bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5 cursor-pointer hover:border-primary/30 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="w-full text-left bg-dark-surface  rounded-lg p-4 border border-ink/15 cursor-pointer hover:border-primary/30 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    formData.is_public 
-                      ? 'bg-gradient-to-br from-primary/20 to-cyan-500/20' 
-                      : 'bg-gradient-to-br from-purple-500/20 to-indigo-500/20'
+                    formData.is_public
+                      ? 'bg-dark-surface  to-cyan-500/20'
+                      : 'bg-dark-surface from-purple-500/20 to-indigo-500/20'
                   }`}>
                     {formData.is_public ? (
                       <FaGlobe className="w-5 h-5 text-primary" />
@@ -143,8 +143,8 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
                       {formData.is_public ? 'Public Network' : 'Private Network'}
                     </h4>
                     <p className="text-gray-text text-sm">
-                      {formData.is_public 
-                        ? 'Anyone can discover and request to join' 
+                      {formData.is_public
+                        ? 'Anyone can discover and request to join'
                         : 'Only invited peers can join'}
                     </p>
                   </div>
@@ -160,10 +160,10 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
             </button>
 
             {/* Owner Information */}
-            <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
+            <div className="bg-dark-surface  rounded-lg p-4 border border-ink/15">
               <h4 className="text-light-text font-medium mb-2">Owner</h4>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary-dark/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-dark-surface  -dark/20 flex items-center justify-center">
                   <span className="text-primary font-bold">
                     {user?.username?.charAt(0).toUpperCase() || 'U'}
                   </span>
@@ -180,7 +180,7 @@ const CreateNetworkModal = ({ onClose, onSubmit, user, isLoading = false, isSubm
                 type="button"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-dark-surface transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>

@@ -4,12 +4,12 @@ import { toast } from 'react-toastify';
 import { streamApi } from '../../services/api';
 import useModalDismiss from '../../hooks/useModalDismiss';
 
-const StreamManagementModal = ({ 
-  stream, 
-  onClose, 
-  onUpdate, 
-  onShare, 
-  onUnshare, 
+const StreamManagementModal = ({
+  stream,
+  onClose,
+  onUpdate,
+  onShare,
+  onUnshare,
   onDeleteStream,
   streamToken,
   user,
@@ -28,14 +28,14 @@ const StreamManagementModal = ({
   // Fetch shared users - only for owned streams
   const fetchSharedUsers = async () => {
     if (!streamToken || isShared) return;
-    
+
     setLoadingShared(true);
     try {
       const response = await streamApi.get('/streams/shared-with', {
         params: { stream_name: stream.name },
         headers: { Authorization: streamToken },
       });
-      
+
       setSharedUsers(response.data.shared_with || []);
     } catch (err) {
       console.error('Error fetching shared users:', err);
@@ -97,9 +97,9 @@ const StreamManagementModal = ({
   // Format date helper
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'long', 
-      day: 'numeric', 
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -108,9 +108,9 @@ const StreamManagementModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div data-modal-root className="bg-dark-card rounded-2xl border border-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+      <div data-modal-root className="bg-dark-card rounded-sm border border-ink/15  w-full max-w-2xl max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div className="flex items-center justify-between p-6 border-b border-ink/15">
           <div>
             <h2 className="text-xl font-semibold text-light-text">
               {isShared ? 'View Stream' : 'Manage Stream'}
@@ -131,7 +131,7 @@ const StreamManagementModal = ({
         </div>
 
         {/* Tabs - Only show Sharing tab for owned streams */}
-        <div className="flex border-b border-white/10">
+        <div className="flex border-b border-ink/15">
           <button
             onClick={() => setActiveTab('details')}
             className={`flex-1 py-4 text-center font-medium transition ${
@@ -165,7 +165,7 @@ const StreamManagementModal = ({
               <div className="space-y-4">
                 <div>
                   <h3 className="text-light-text font-medium mb-2">Stream Information</h3>
-                  <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 space-y-3">
+                  <div className="bg-dark-surface  rounded-lg p-4 space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-text">Name</span>
                       <span className="text-light-text font-mono">{stream.name}</span>
@@ -173,7 +173,7 @@ const StreamManagementModal = ({
                     <div className="flex justify-between">
                       <span className="text-gray-text">Owner</span>
                       <span className="text-light-text">
-                        <a 
+                        <a
                           href={`mailto:${isShared ? stream.owner_email : user?.email}`}
                           className="hover:underline"
                           style={{
@@ -212,19 +212,19 @@ const StreamManagementModal = ({
                 <div>
                   <h3 className="text-light-text font-medium mb-2">Limits</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
+                    <div className="bg-dark-surface  rounded-lg p-4">
                       <div className="text-gray-text text-sm mb-1">Max Messages/Sec</div>
                       <div className="text-light-text font-semibold text-lg">
                         {stream.max_messages_per_second}
                       </div>
                     </div>
-                    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
+                    <div className="bg-dark-surface  rounded-lg p-4">
                       <div className="text-gray-text text-sm mb-1">Max Message Size</div>
                       <div className="text-light-text font-semibold text-lg">
                         {stream.max_message_size_bytes} bytes
                       </div>
                     </div>
-                    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
+                    <div className="bg-dark-surface  rounded-lg p-4">
                       <div className="text-gray-text text-sm mb-1">Max Retention</div>
                       <div className="text-light-text font-semibold text-lg">
                         {stream.max_retention_messages} messages
@@ -236,7 +236,7 @@ const StreamManagementModal = ({
                 {/* Connection Details */}
                 <div>
                   <h3 className="text-light-text font-medium mb-2">Connection Details</h3>
-                  <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 space-y-3">
+                  <div className="bg-dark-surface  rounded-lg p-4 space-y-3">
                     <div>
                       <p className="text-gray-text text-sm mb-1">Producer Endpoint</p>
                       <code className="text-primary bg-dark-bg px-3 py-2 rounded block break-all text-sm">
@@ -295,7 +295,7 @@ const StreamManagementModal = ({
           {activeTab === 'sharing' && !isShared && (
             <div className="space-y-6">
               {/* Add User Form */}
-              <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-5 border border-white/5">
+              <div className="bg-dark-surface  rounded-sm p-5 border border-ink/15">
                 <h3 className="text-light-text font-medium mb-4">Share with New User</h3>
                 <form onSubmit={handleShareSubmit} className="space-y-4">
                   <div>
@@ -305,11 +305,11 @@ const StreamManagementModal = ({
                       value={shareForm.email}
                       onChange={(e) => setShareForm({ ...shareForm, email: e.target.value })}
                       placeholder="user@example.com"
-                      className="w-full p-3 bg-dark-bg rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+                      className="w-full p-3 bg-dark-bg rounded-lg border border-ink/15 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
                       required
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center">
                       <input
@@ -317,7 +317,7 @@ const StreamManagementModal = ({
                         id="can_read"
                         checked={shareForm.can_read}
                         onChange={(e) => setShareForm({ ...shareForm, can_read: e.target.checked })}
-                        className="mr-2 h-4 w-4 text-primary bg-dark-bg border-white/20 rounded focus:ring-primary/50"
+                        className="mr-2 h-4 w-4 text-primary bg-dark-bg border-ink/15 rounded focus:ring-primary/50"
                       />
                       <label htmlFor="can_read" className="text-light-text text-sm">
                         Can Read
@@ -329,7 +329,7 @@ const StreamManagementModal = ({
                         id="can_write"
                         checked={shareForm.can_write}
                         onChange={(e) => setShareForm({ ...shareForm, can_write: e.target.checked })}
-                        className="mr-2 h-4 w-4 text-primary bg-dark-bg border-white/20 rounded focus:ring-primary/50"
+                        className="mr-2 h-4 w-4 text-primary bg-dark-bg border-ink/15 rounded focus:ring-primary/50"
                       />
                       <label htmlFor="can_write" className="text-light-text text-sm">
                         Can Write
@@ -365,7 +365,7 @@ const StreamManagementModal = ({
                     <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
                   </div>
                 ) : sharedUsers.length === 0 ? (
-                  <div className="text-center py-8 bg-dark-surface backdrop-blur-xl/50 rounded-lg">
+                  <div className="text-center py-8 bg-dark-surface /50 rounded-lg">
                     <div className="text-gray-text mb-2">No users have been shared with yet</div>
                     <div className="text-sm text-gray-text">Share this stream with others above</div>
                   </div>
@@ -374,22 +374,22 @@ const StreamManagementModal = ({
                     {sharedUsers.map((sharedUser, index) => (
                       <div
                         key={index}
-                        className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 flex items-center justify-between"
+                        className="bg-dark-surface  rounded-lg p-4 flex items-center justify-between"
                       >
                         <div>
                           <div className="text-light-text font-medium">{sharedUser.email}</div>
                           <div className="flex items-center gap-4 mt-1">
                             <span className={`text-xs px-2 py-1 rounded-full ${
-                              sharedUser.can_read 
-                                ? 'bg-green-500/20 text-green-400' 
-                                : 'bg-gray-500/20 text-gray-400'
+                              sharedUser.can_read
+                                ? 'bg-green-500/20 text-green-400'
+                                : 'bg-gray-500/20 text-gray-text'
                             }`}>
                               {sharedUser.can_read ? 'Can Read' : 'Cannot Read'}
                             </span>
                             <span className={`text-xs px-2 py-1 rounded-full ${
-                              sharedUser.can_write 
-                                ? 'bg-blue-500/20 text-blue-400' 
-                                : 'bg-gray-500/20 text-gray-400'
+                              sharedUser.can_write
+                                ? 'bg-blue-500/20 text-blue-400'
+                                : 'bg-gray-500/20 text-gray-text'
                             }`}>
                               {sharedUser.can_write ? 'Can Write' : 'Cannot Write'}
                             </span>
@@ -397,7 +397,7 @@ const StreamManagementModal = ({
                         </div>
                         <button
                           onClick={() => handleUnshareUser(sharedUser.email)}
-                          className="text-red-400 hover:text-red-300 transition p-2 hover:bg-white/10 rounded-lg"
+                          className="text-red-400 hover:text-red-300 transition p-2 hover:bg-dark-card rounded-lg"
                           title="Remove access"
                         >
                           Remove
@@ -423,10 +423,10 @@ const StreamManagementModal = ({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end p-6 border-t border-white/10">
+        <div className="flex justify-end p-6 border-t border-ink/15">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition"
+            className="px-6 py-2 bg-gray-600 hover:bg-dark-surface text-white rounded-lg transition"
           >
             Close
           </button>

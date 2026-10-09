@@ -61,9 +61,9 @@ const values = [
 
 const ConnectivityArt = () => {
   return (
-    <div className="hidden lg:block">
-      <div className="relative h-[31rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#0f1012]/85 shadow-2xl backdrop-blur-xl">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_26%_20%,rgba(38,166,154,0.20),transparent_34%),radial-gradient(circle_at_78%_72%,rgba(63,81,181,0.16),transparent_38%),linear-gradient(145deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))]" />
+    <div className="connectivity-figure">
+      <div className="relative h-[26rem] overflow-hidden rounded-sm border border-ink/15 bg-dark-surface  ">
+        <div className="absolute inset-0 bg-dark-surface" />
         <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:32px_32px]" />
 
         <ConnectivityHub className="absolute inset-0 h-full w-full p-4" />
@@ -81,7 +81,7 @@ const NexusConnectivity = () => {
         path="/nexus/connectivity"
       />
       <section className="relative pt-32 pb-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.22),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
+        <div className="absolute inset-0 bg-dark-surface" />
         <div className="relative container mx-auto px-5">
           <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr]">
             <div className="max-w-3xl">
@@ -96,11 +96,11 @@ const NexusConnectivity = () => {
                 Plotune Nexus acts as the single interface between your tools and your workflow. Whether you're on a bench, inside a vehicle, or at a test rig, Plotune Nexus connects to what's already there.
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
+                <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
                   Contact Us
                   <FiArrowRight />
                 </Link>
-                <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
+                <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-ink/15 bg-dark-card px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
                   See it in action
                 </Link>
               </div>
@@ -119,8 +119,8 @@ const NexusConnectivity = () => {
           </p>
           <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {interfaces.map(([title, copy, Icon]) => (
-              <article key={title} className="rounded-2xl bg-dark-card/80 p-6 shadow-custom">
-                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+              <article key={title} className="rounded-sm bg-dark-card/80 p-6 ">
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-sm bg-primary/12 text-primary">
                   <Icon className="text-xl" />
                 </div>
                 <h3 className="text-xl font-semibold text-light-text">{title}</h3>
@@ -142,7 +142,7 @@ const NexusConnectivity = () => {
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
               {systems.map(([title, copy]) => (
-                <article key={title} className="rounded-2xl bg-dark-card/80 p-6 shadow-custom">
+                <article key={title} className="rounded-sm bg-dark-card/80 p-6 ">
                   <FiCpu className="text-2xl text-primary" />
                   <h3 className="mt-4 text-xl font-semibold text-light-text">{title}</h3>
                   <p className="mt-3 text-sm leading-7 text-gray-text">{copy}</p>
@@ -164,7 +164,7 @@ const NexusConnectivity = () => {
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{group.label}</p>
                 <div className="mt-4 space-y-4">
                   {group.items.map(([title, copy], index) => (
-                    <div key={title} className="flex gap-4 rounded-2xl bg-dark-card/80 p-5 shadow-custom">
+                    <div key={title} className="flex gap-4 rounded-sm bg-dark-card/80 p-5 ">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">
                         {index + 1}
                       </div>
@@ -185,7 +185,7 @@ const NexusConnectivity = () => {
         <div className="container mx-auto px-5">
           <div className="grid gap-6 md:grid-cols-3">
             {values.map(([title, copy, Icon]) => (
-              <article key={title} className="rounded-2xl bg-primary/10 p-6 shadow-custom">
+              <article key={title} className="rounded-sm bg-primary/10 p-6 ">
                 <Icon className="text-2xl text-primary" />
                 <h3 className="mt-4 text-xl font-semibold text-light-text">{title}</h3>
                 <p className="mt-3 text-sm leading-7 text-gray-text">{copy}</p>
@@ -197,7 +197,7 @@ const NexusConnectivity = () => {
 
       <section className="pb-24">
         <div className="container mx-auto px-5">
-          <div className="rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.12))] p-8 text-center shadow-custom md:p-12">
+          <div className="rounded-sm bg-dark-surface p-8 text-center  md:p-12">
             <h2 className="text-3xl font-semibold text-light-text md:text-4xl">
               Ready to connect your test environment?
             </h2>
@@ -205,11 +205,11 @@ const NexusConnectivity = () => {
               See Plotune Nexus working with your CAN, XCP, and measurement setup, and where connected validation can take your team next.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
+              <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
                 Contact Us
                 <FiArrowRight />
               </Link>
-              <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
+              <Link to="/nexus/use-cases" className="inline-flex items-center justify-center rounded-full border border-ink/15 bg-dark-card px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10">
                 Explore use cases
               </Link>
             </div>

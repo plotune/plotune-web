@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
-import { 
-  FaUpload, 
-  FaDownload, 
-  FaTrash, 
-  FaFile, 
-  FaFileImage, 
-  FaFilePdf, 
-  FaFileCode, 
+import {
+  FaUpload,
+  FaDownload,
+  FaTrash,
+  FaFile,
+  FaFileImage,
+  FaFilePdf,
+  FaFileCode,
   FaFileArchive,
   FaSpinner,
   FaCloudUploadAlt,
@@ -44,7 +44,7 @@ const StorageManager = () => {
     'application/zip': <FaFileArchive className="text-yellow-400" />,
     'application/x-rar-compressed': <FaFileArchive className="text-yellow-400" />,
     'text/': <FaFileCode className="text-green-400" />,
-    'default': <FaFile className="text-gray-400" />
+    'default': <FaFile className="text-gray-text" />
   };
 
   const getFileIcon = (fileName) => {
@@ -58,13 +58,13 @@ const StorageManager = () => {
     };
 
     const mimeType = mimeTypes[extension] || 'default';
-    
+
     for (const [key, icon] of Object.entries(fileTypeIcons)) {
       if (mimeType.startsWith(key)) {
         return icon;
       }
     }
-    
+
     return fileTypeIcons.default;
   };
 
@@ -86,12 +86,12 @@ const StorageManager = () => {
       const filesResponse = await api.get(`/s3/user/files?cb=${cachebuster}`, {
         headers: { Authorization: token },
       });
-      
+
       // Fetch total storage usage
       const usageResponse = await api.get(`/s3/user/total_usage?cb=${cachebuster}`, {
         headers: { Authorization: token },
       });
-      
+
       setFiles(filesResponse.data.files || []);
       setTotalUsage(usageResponse.data.storage || 0);
     } catch (err) {
@@ -113,39 +113,39 @@ const StorageManager = () => {
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-    
+
     // Check file size (max 20MB)
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
       toast.error(`File size exceeds the ${MAX_FILE_SIZE_MB} MB limit`);
       return;
     }
-    
+
     setSelectedFile(file);
     handleUpload(file);
   };
 
 const handleUpload = async (file) => {
   setUploading(true);
-  
+
   try {
     const urlResponse = await api.get('/s3/user/upload_url', {
       params: { filename: file.name },
       headers: { Authorization: token },
     });
-    
+
     if (!urlResponse.data.upload_url) {
       throw new Error('Failed to get upload URL');
     }
-    
+
     // File'ı ArrayBuffer'a çevir ve headers objesini tamamen boş bırak
     const arrayBuffer = await file.arrayBuffer();
-    
+
     const response = await fetch(urlResponse.data.upload_url, {
       method: 'PUT',
       body: arrayBuffer,
       headers: {} // Explicitly empty - tarayıcıya header ekletme
     });
-    
+
     if (response.ok) {
       toast.success(`${file.name} uploaded successfully`);
       fetchData();
@@ -173,7 +173,7 @@ const handleUpload = async (file) => {
         params: { file: filePath },
         headers: { Authorization: token },
       });
-      
+
       if (response.data.download_url) {
         // Direct download via browser
         window.open(response.data.download_url, '_blank');
@@ -189,13 +189,13 @@ const handleUpload = async (file) => {
     if (!window.confirm(`Are you sure you want to delete ${filePath.split('/').pop()}?`)) {
       return;
     }
-    
+
     try {
       await api.delete('/s3/user/file', {
         params: { file: filePath },
         headers: { Authorization: token },
       });
-      
+
       toast.success('File deleted');
       fetchData(); // Refresh file list
     } catch (err) {
@@ -211,7 +211,7 @@ const handleUpload = async (file) => {
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const file = e.dataTransfer.files[0];
     if (file) {
       setSelectedFile(file);
@@ -232,7 +232,7 @@ const handleUpload = async (file) => {
     if (sortConfig.key) {
       sortableFiles.sort((a, b) => {
         if (sortConfig.key === 'name') {
-          return sortConfig.direction === 'asc' 
+          return sortConfig.direction === 'asc'
             ? a.localeCompare(b)
             : b.localeCompare(a);
         }
@@ -243,13 +243,13 @@ const handleUpload = async (file) => {
     return sortableFiles;
   }, [files, sortConfig]);
 
-  const filteredFiles = sortedFiles.filter(file => 
+  const filteredFiles = sortedFiles.filter(file =>
     file.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12 flex items-center justify-center">
+      <div className="min-h-screen bg-dark-surface   pt-20 pb-12 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <FaSpinner className="animate-spin text-4xl text-primary mb-4" />
           <p className="text-light-text">Loading your files...</p>
@@ -259,27 +259,32 @@ const handleUpload = async (file) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
+    <div className="min-h-screen bg-dark-surface pt-24 pb-12">
       <div className="container mx-auto px-4">
+        <header className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account tools</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Storage</h1>
+          <p className="mt-2 text-sm text-gray-text">Review and manage your uploaded files.</p>
+        </header>
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar - Storage Stats */}
           <div className="lg:w-1/4">
-            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+            <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-light-text font-semibold text-lg">Storage Overview</h3>
                 <FaChartPie className="text-primary text-xl" />
               </div>
-              
+
               <div className="space-y-6">
                 {/* Storage Usage */}
-                <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
+                <div className="bg-dark-surface  rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-text">Used Space</span>
                     <span className="text-light-text font-semibold">{totalUsage.toFixed(2)} MB of 1 GB used</span>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-gradient-to-r from-primary to-primary-dark h-2 rounded-full transition-all duration-300"
+                  <div className="w-full bg-dark-surface rounded-full h-2">
+                    <div
+                      className="bg-dark-surface  -dark h-2 rounded-full transition-all duration-300"
                       style={{ width: `${Math.min(totalUsage / 1000 * 100, 100)}%` }}
                     ></div>
                   </div>
@@ -289,7 +294,7 @@ const handleUpload = async (file) => {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
+                <div className="bg-dark-surface  rounded-lg p-4">
                   <h4 className="text-light-text font-medium mb-3">Quick Stats</h4>
                   <div className="space-y-2">
                     <div className="flex justify-between">
@@ -304,11 +309,11 @@ const handleUpload = async (file) => {
                 </div>
 
                 {/* Upload Section */}
-                <div 
+                <div
                   className={`border-2 border-dashed rounded-lg p-6 text-center transition-all duration-300 ${
-                    uploading 
-                      ? 'border-primary/50 bg-primary/10' 
-                      : 'border-gray-600 hover:border-primary hover:bg-white/5 cursor-pointer'
+                    uploading
+                      ? 'border-primary/50 bg-primary/10'
+                      : 'border-gray-600 hover:border-primary hover:bg-dark-card cursor-pointer'
                   }`}
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
@@ -321,11 +326,11 @@ const handleUpload = async (file) => {
                     className="hidden"
                     disabled={uploading}
                   />
-                  
+
                   <FaCloudUploadAlt className={`mx-auto text-3xl mb-3 ${
-                    uploading ? 'text-primary animate-pulse' : 'text-gray-400'
+                    uploading ? 'text-primary animate-pulse' : 'text-gray-text'
                   }`} />
-                  
+
                   {uploading ? (
                     <div className="space-y-2" role="status">
                       <p className="text-light-text">Uploading {selectedFile?.name}</p>
@@ -343,7 +348,7 @@ const handleUpload = async (file) => {
                 </div>
 
                 {/* Tips */}
-                <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
+                <div className="bg-dark-surface  rounded-lg p-4">
                   <h4 className="text-light-text font-medium mb-2">Tips</h4>
                   <ul className="text-gray-text text-sm space-y-1">
                     <li>• Click on a file to download</li>
@@ -358,33 +363,33 @@ const handleUpload = async (file) => {
 
           {/* Main Content - File List */}
           <div className="lg:w-3/4">
-            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+            <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
               {/* Header */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                   <h2 className="text-xl font-semibold text-light-text">My Files</h2>
                   <p className="text-gray-text">Manage your uploaded files and documents</p>
                 </div>
-                
-                <div className="flex items-center space-x-4">
+
+                <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
                   {/* Search */}
-                  <div className="relative">
+                  <div className="relative min-w-0 flex-1 sm:w-64 sm:flex-none">
                     <input
                       type="text"
                       placeholder="Search files..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 bg-dark-surface border border-ink/15 rounded-lg text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
                     />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-text">
                       🔍
                     </div>
                   </div>
-                  
+
                   {/* Refresh Button */}
                   <button
                     onClick={fetchData}
-                    className="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition flex items-center"
+                    className="inline-flex min-h-[44px] w-full shrink-0 items-center justify-center rounded-lg bg-primary/20 px-4 py-2 text-primary transition hover:bg-primary/30 sm:w-auto"
                   >
                     <FaSpinner className={`mr-2 ${loading ? 'animate-spin' : ''}`} />
                     Refresh
@@ -395,7 +400,7 @@ const handleUpload = async (file) => {
               {/* File List Table */}
               {error ? (
                 <div className="text-center py-12" role="alert">
-                  <FaFile className="text-5xl text-gray-600 mx-auto mb-4" />
+                  <FaFile className="text-5xl text-gray-text mx-auto mb-4" />
                   <h3 className="text-light-text text-lg mb-2">Couldn't load your files.</h3>
                   <p className="text-gray-text mb-4">Something went wrong while fetching your file list.</p>
                   <button
@@ -407,31 +412,31 @@ const handleUpload = async (file) => {
                 </div>
               ) : filteredFiles.length === 0 ? (
                 <div className="text-center py-12">
-                  <FaFile className="text-5xl text-gray-600 mx-auto mb-4" />
+                  <FaFile className="text-5xl text-gray-text mx-auto mb-4" />
                   <h3 className="text-light-text text-lg mb-2">No files found</h3>
                   <p className="text-gray-text">
                     {searchTerm ? 'Try a different search term' : 'Upload your first file to get started'}
                   </p>
                 </div>
               ) : (
-                <div className="overflow-x-auto rounded-lg border border-white/10">
+                <div className="overflow-x-auto rounded-lg border border-ink/15">
                   <table className="min-w-full divide-y divide-white/10">
-                    <thead className="bg-dark-surface backdrop-blur-xl">
+                    <thead className="bg-dark-surface ">
                       <tr>
-                        <th 
-                          scope="col" 
+                        <th
+                          scope="col"
                           className="px-6 py-3 text-left text-xs font-medium text-gray-text uppercase tracking-wider cursor-pointer hover:text-light-text transition"
                           onClick={() => handleSort('name')}
                         >
                           <div className="flex items-center">
                             Name
                             {sortConfig.key === 'name' && (
-                              sortConfig.direction === 'asc' ? 
-                                <FaSortUp className="ml-1" /> : 
+                              sortConfig.direction === 'asc' ?
+                                <FaSortUp className="ml-1" /> :
                                 <FaSortDown className="ml-1" />
                             )}
                             {sortConfig.key !== 'name' && (
-                              <FaSort className="ml-1 text-gray-500" />
+                              <FaSort className="ml-1 text-gray-text" />
                             )}
                           </div>
                         </th>
@@ -444,11 +449,11 @@ const handleUpload = async (file) => {
                       {filteredFiles.map((filePath, index) => {
                         const fileName = filePath.split('/').pop();
                         const fileExtension = fileName.split('.').pop().toLowerCase();
-                        
+
                         return (
-                          <tr 
-                            key={index} 
-                            className="hover:bg-white/5 transition-colors"
+                          <tr
+                            key={index}
+                            className="hover:bg-dark-card transition-colors"
                           >
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
@@ -469,7 +474,7 @@ const handleUpload = async (file) => {
                               <div className="flex items-center space-x-2">
                                 <button
                                   onClick={() => handleDownload(filePath)}
-                                  className="text-blue-400 hover:text-blue-300 transition p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-white/10 rounded-lg"
+                                  className="text-blue-400 hover:text-blue-300 transition p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-dark-card rounded-lg"
                                   title="Download"
                                   aria-label={`Download ${fileName}`}
                                 >
@@ -477,7 +482,7 @@ const handleUpload = async (file) => {
                                 </button>
                                 <button
                                   onClick={() => handleDelete(filePath)}
-                                  className="text-red-400 hover:text-red-300 transition p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-white/10 rounded-lg"
+                                  className="text-red-400 hover:text-red-300 transition p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:bg-dark-card rounded-lg"
                                   title="Delete"
                                   aria-label={`Delete ${fileName}`}
                                 >
@@ -502,7 +507,7 @@ const handleUpload = async (file) => {
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
-                    className="mt-2 sm:mt-0 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition"
+                    className="mt-2 sm:mt-0 px-3 py-1 bg-dark-surface hover:bg-gray-600 rounded transition"
                   >
                     Clear search
                   </button>

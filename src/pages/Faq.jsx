@@ -115,34 +115,25 @@ const FaqItem = ({ item, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <article className="overflow-hidden rounded-2xl bg-dark-card/80 shadow-custom">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-300 hover:bg-white/[0.03] md:px-7"
-      >
-        <h3 className="text-lg font-semibold text-light-text md:text-xl">{item.q}</h3>
-        <FiChevronDown
-          className={`shrink-0 text-xl text-primary transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-        />
+    <article className="faq-item">
+      <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+        <h3>{item.q}</h3>
+        <FiChevronDown aria-hidden="true" className={open ? 'rotate-180' : ''} />
       </button>
       {/* grid-rows collapse keeps the answer mounted (crawlable) while animating open/closed */}
-      <div
-        className={`grid transition-all duration-300 ease-in-out ${
-          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
+      <div className={`grid transition-all duration-300 ease-in-out ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">
-          <p className="px-6 pb-6 text-sm leading-7 text-gray-text md:px-7 md:text-base">{item.a}</p>
+          <p>{item.a}</p>
         </div>
       </div>
     </article>
   );
 };
 
+const questionCount = sections.reduce((total, section) => total + section.items.length, 0);
+
 const Faq = () => (
-  <main className="overflow-hidden bg-dark-bg text-dark-text">
+  <main className="faq-page">
     <Seo
       title="Plotune & Nexus FAQ: AI-Ready Test Systems and DataOps"
       description="Answers to common questions about Plotune Nexus and the Plotune DataOps platform: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation."
@@ -152,64 +143,45 @@ const Faq = () => (
       <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
     </Helmet>
 
-    <section className="relative pt-32 pb-16">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.22),transparent_38%),radial-gradient(circle_at_82%_18%,rgba(63,81,181,0.16),transparent_24%),linear-gradient(180deg,#101112_0%,#121212_55%,#151719_100%)]" />
-      <div className="relative container mx-auto px-5">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Frequently Asked Questions</p>
-          <h1 className="mt-5 text-4xl font-semibold text-light-text md:text-6xl">
-            Questions about Plotune and Nexus.
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-text">
-            How teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware, keep
-            their data local, and orchestrate data operations with the Plotune platform.
-          </p>
-        </div>
+    <section className="design-container page-intro">
+      <div className="section-index"><span>Plotune / Frequently asked questions</span><span>{questionCount} answers</span></div>
+      <h1>Questions about <span>Plotune and Nexus.</span></h1>
+      <p>
+        How teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware, keep
+        their data local, and orchestrate data operations with the Plotune platform.
+      </p>
+    </section>
+
+    <section className="design-container faq-layout">
+      <nav className="faq-index" aria-label="FAQ topics">
+        <p className="technical-label">Topics</p>
+        {sections.map((section, i) => (
+          <a key={section.id} href={`#${section.id}`}>
+            <span className="technical-label">{String(i + 1).padStart(2, '0')}</span>
+            {section.title}
+            <span className="technical-label">{section.items.length}</span>
+          </a>
+        ))}
+      </nav>
+      <div className="faq-sections">
+        {sections.map((section) => (
+          <div key={section.id} id={section.id} className="faq-section">
+            <h2>{section.title}</h2>
+            {section.items.map((item, index) => (
+              <FaqItem key={item.q} item={item} defaultOpen={index === 0} />
+            ))}
+          </div>
+        ))}
       </div>
     </section>
 
-    <section className="py-16 md:py-20">
-      <div className="container mx-auto px-5">
-        <div className="mx-auto max-w-3xl space-y-16">
-          {sections.map((section) => (
-            <div key={section.id}>
-              <h2 className="text-2xl font-semibold text-light-text md:text-3xl">{section.title}</h2>
-              <div className="mt-8 space-y-4">
-                {section.items.map((item, index) => (
-                  <FaqItem key={item.q} item={item} defaultOpen={index === 0} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section className="pb-24">
-      <div className="container mx-auto px-5">
-        <div className="flex flex-col items-center justify-center gap-4 rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.12))] p-8 text-center shadow-custom md:flex-row md:justify-between md:text-left">
-          <div>
-            <h2 className="text-2xl font-semibold text-light-text">Still have a question?</h2>
-            <p className="mt-2 text-gray-text">
-              Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow would fit your setup.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/nexus"
-              className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-3 font-semibold text-light-text transition-all duration-300 hover:border-primary hover:bg-primary/10"
-            >
-              Explore Nexus
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark"
-            >
-              Contact Us
-              <FiArrowRight />
-            </Link>
-          </div>
-        </div>
+    <section className="design-container closing-section faq-closing">
+      <p className="technical-label">Not covered here</p>
+      <h2>Still have a question?</h2>
+      <p>Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow would fit your setup.</p>
+      <div className="design-actions">
+        <Link to="/contact" className="design-button">Contact Us <FiArrowRight aria-hidden="true" /></Link>
+        <Link to="/nexus" className="text-link">Explore Nexus →</Link>
       </div>
     </section>
   </main>

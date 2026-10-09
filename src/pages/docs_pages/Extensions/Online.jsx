@@ -16,25 +16,25 @@ export default function ExtensionsOnline() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-satellite-dish text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Real-time Streams</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-microchip text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Hardware Interfaces</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-network-wired text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Network Protocols</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-bolt text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function ExtensionsOnline() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -73,7 +73,7 @@ export default function ExtensionsOnline() {
               "Network data acquisition from TCP/UDP streams or WebSockets",
               "Hardware-in-the-loop (HIL) testing and validation"
             ].map((useCase, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <i className="fas fa-bolt text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{useCase}</span>
               </div>
@@ -88,7 +88,7 @@ export default function ExtensionsOnline() {
             Key Characteristics
           </h2>
           <div className="space-y-4">
-            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface  rounded-lg border border-ink/15">
               <h4 className="font-semibold text-light-text mb-2 flex items-center gap-2">
                 <i className="fas fa-clock text-primary"></i>
                 Real-time
@@ -97,7 +97,7 @@ export default function ExtensionsOnline() {
                 Processes data as it arrives with minimal latency for immediate feedback.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface  rounded-lg border border-ink/15">
               <h4 className="font-semibold text-light-text mb-2 flex items-center gap-2">
                 <i className="fas fa-exchange-alt text-primary"></i>
                 Bidirectional
@@ -106,7 +106,7 @@ export default function ExtensionsOnline() {
                 Many online extensions support both data acquisition and device control.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface  rounded-lg border border-ink/15">
               <h4 className="font-semibold text-light-text mb-2 flex items-center gap-2">
                 <i className="fas fa-heartbeat text-primary"></i>
                 Stateful
@@ -122,7 +122,7 @@ export default function ExtensionsOnline() {
       {/* Supported Protocols */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Supported Protocols & Interfaces
         </h2>
 
@@ -137,7 +137,7 @@ export default function ExtensionsOnline() {
             { name: 'GPIO', icon: 'fas fa-plug' },
             { name: 'I2C/SPI', icon: 'fas fa-project-diagram' }
           ].map((protocol, index) => (
-            <div key={index} className="text-center p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="text-center p-4 bg-dark-surface  rounded-lg border border-ink/15 hover:border-primary/30 transition-all duration-300">
               <i className={`${protocol.icon} text-2xl text-primary mb-2`}></i>
               <div className="text-light-text font-semibold text-sm">{protocol.name}</div>
             </div>
@@ -148,11 +148,11 @@ export default function ExtensionsOnline() {
       {/* Extension Manifest */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Extension Manifest
         </h2>
 
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">Example Manifest</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -168,11 +168,11 @@ export default function ExtensionsOnline() {
       {/* Code Example */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Example Implementation
         </h2>
 
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">UART Serial Extension</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -216,7 +216,7 @@ export default function ExtensionsOnline() {
                 desc: "Use non-blocking I/O and appropriate buffer sizes"
               }
             ].map((practice, index) => (
-              <div key={index} className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <div key={index} className="p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <div className="flex items-center gap-3 mb-2">
                   <i className={`${practice.icon} text-primary`}></i>
                   <h4 className="font-semibold text-light-text">{practice.title}</h4>
@@ -240,7 +240,7 @@ export default function ExtensionsOnline() {
               { feature: "Bidirectional Control", icon: "fas fa-exchange-alt" },
               { feature: "Quality of Service Metrics", icon: "fas fa-chart-line" }
             ].map((item, index) => (
-              <div key={index} className="flex items-center gap-4 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <div key={index} className="flex items-center gap-4 p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <div className="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
                   <i className={`${item.icon} text-secondary`}></i>
                 </div>
@@ -254,13 +254,13 @@ export default function ExtensionsOnline() {
       {/* Testing & Deployment */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Testing & Deployment
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Testing */}
-          <div className="bg-gradient-to-br from-primary/10 to-transparent rounded-2xl p-6 border border-primary/20">
+          <div className="bg-dark-surface  to-transparent rounded-sm p-6 border border-primary/20">
             <h3 className="text-xl font-bold text-light-text mb-4 flex items-center gap-3">
               <i className="fas fa-vial text-primary"></i>
               Testing Strategy
@@ -282,7 +282,7 @@ export default function ExtensionsOnline() {
           </div>
 
           {/* Performance Considerations */}
-          <div className="bg-gradient-to-br from-secondary/10 to-transparent rounded-2xl p-6 border border-secondary/20">
+          <div className="bg-dark-surface  to-transparent rounded-sm p-6 border border-secondary/20">
             <h3 className="text-xl font-bold text-light-text mb-4 flex items-center gap-3">
               <i className="fas fa-tachometer-alt text-secondary"></i>
               Performance Considerations
@@ -308,7 +308,7 @@ export default function ExtensionsOnline() {
       {/* FAQ */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Frequently Asked Questions
         </h2>
 
@@ -331,7 +331,7 @@ export default function ExtensionsOnline() {
               answer: "Extensions can define custom configuration parameters in their manifest that appear in the Plotune UI settings."
             }
           ].map((faq, index) => (
-            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
+            <div key={index} className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
               <h4 className="text-lg font-semibold text-light-text mb-3 flex items-center gap-2">
                 <i className="fas fa-question-circle text-primary"></i>
                 {faq.question}
@@ -343,7 +343,7 @@ export default function ExtensionsOnline() {
       </section>
 
       {/* Footer */}
-      <div className="text-center pt-8 border-t border-white/10">
+      <div className="text-center pt-8 border-t border-ink/15">
         <p className="text-gray-text italic">
           Last updated: November 2025 — Online Extensions v1.0.0
         </p>

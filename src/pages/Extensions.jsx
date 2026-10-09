@@ -134,11 +134,11 @@ const Extensions = () => {
     try {
       const cacheKey = `github_release_${btoa(repoUrl)}`;
       const cached = localStorage.getItem(cacheKey);
-      
+
       if (cached) {
         const { data, timestamp } = JSON.parse(cached);
         const now = Date.now();
-        
+
         if (now - timestamp < CACHE_DURATION) {
           console.log(`Using cached data for ${repoUrl}`);
           return data;
@@ -180,13 +180,13 @@ const Extensions = () => {
       const urlParts = repoUrl.split('/');
       const owner = urlParts[urlParts.length - 2];
       const repo = urlParts[urlParts.length - 1];
-      
+
       const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
-      
+
       console.log(`Fetching latest release from: ${apiUrl}`);
-      
+
       const response = await fetch(apiUrl);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           console.log(`No releases found for ${owner}/${repo}`);
@@ -196,20 +196,20 @@ const Extensions = () => {
         }
         throw new Error(`GitHub API returned ${response.status}`);
       }
-      
+
       const releaseData = await response.json();
       console.log(`Release data for ${owner}/${repo}:`, releaseData);
-      
+
       const result = {
         version: releaseData.tag_name,
         last_updated: releaseData.published_at,
         download_url: releaseData.html_url,
         assets: releaseData.assets
       };
-      
+
       // Cache the result
       setCachedRelease(repoUrl, result);
-      
+
       return result;
     } catch (error) {
       console.error(`Error fetching release for ${repoUrl}:`, error);
@@ -230,7 +230,7 @@ const Extensions = () => {
       if (cachedExtensions) {
         const { data, timestamp } = JSON.parse(cachedExtensions);
         const now = Date.now();
-        
+
         if (now - timestamp < CACHE_DURATION) {
           console.log("Using cached extensions data");
           setExtensions(data);
@@ -238,11 +238,11 @@ const Extensions = () => {
           return;
         }
       }
-      
+
       // If no cache or expired, load fresh data
       const extensionsWithReleases = await loadBaseExtensions();
       setExtensions(extensionsWithReleases);
-      
+
       // Cache the full extensions data
       try {
         const cacheData = {
@@ -253,7 +253,7 @@ const Extensions = () => {
       } catch (cacheError) {
         console.error('Error caching extensions:', cacheError);
       }
-      
+
     } catch (error) {
       console.error("Error loading extensions:", error);
       setExtensions([]);
@@ -267,12 +267,12 @@ const Extensions = () => {
   const loadBaseExtensions = async () => {
     try {
       console.log("Fetching release information for extensions...");
-      
+
       const extensionsWithReleases = await Promise.all(
         baseExtensions.map(async (ext) => {
           try {
             const releaseInfo = await fetchLatestRelease(ext.repo);
-            
+
             return {
               ...ext,
               version: releaseInfo?.version ?? null,
@@ -291,12 +291,12 @@ const Extensions = () => {
           }
         })
       );
-      
+
       console.log("Extensions with release info:", extensionsWithReleases);
       return extensionsWithReleases;
     } catch (error) {
       console.log("Error fetching releases, using base extension data:", error.message);
-      
+
       return baseExtensions.map(ext => ({
         ...ext,
         version: null,
@@ -309,12 +309,12 @@ const Extensions = () => {
   const matchesFilter = (extension) => {
     if (currentSearch) {
       const searchLower = currentSearch.toLowerCase();
-      const matchesSearch = 
+      const matchesSearch =
         extension.name.toLowerCase().includes(searchLower) ||
         extension.description.toLowerCase().includes(searchLower) ||
         (extension.tags && extension.tags.some(tag => tag.toLowerCase().includes(searchLower))) ||
         extension.author.toLowerCase().includes(searchLower);
-      
+
       if (!matchesSearch) return false;
     }
 
@@ -342,19 +342,19 @@ const Extensions = () => {
     }
 
     const customUrl = `plotune://install?method=github&source=github&repo=${encodeURIComponent(extension.deployment)}&uid=${extension.id}`;
-    
+
     console.log("Attempting to install via custom URL:", customUrl);
-    
+
     // Store the timestamp when we try to open the app
     localStorage.setItem('plotune_install_attempt', Date.now().toString());
-    
+
     // Create a hidden iframe to handle the protocol launch
     // This is a common workaround for custom protocol handlers
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.src = customUrl;
     document.body.appendChild(iframe);
-    
+
     // Show toast immediately
     toast.info(
       <div>
@@ -366,19 +366,19 @@ const Extensions = () => {
         closeButton: true,
       }
     );
-    
+
     // Remove the iframe after a short delay
     setTimeout(() => {
       document.body.removeChild(iframe);
-      
+
       // Check if we should show a download link (only if extension has a deployment URL)
       if (extension.deployment) {
         toast.info(
           <div>
             <p>You can also download from GitHub Releases:</p>
-            <a 
-              href={extension.deployment} 
-              target="_blank" 
+            <a
+              href={extension.deployment}
+              target="_blank"
               rel="noopener noreferrer"
               style={{ color: '#61dafb', textDecoration: 'underline' }}
             >
@@ -426,8 +426,8 @@ const Extensions = () => {
 
   const filteredExtensions = extensions.filter(matchesFilter);
 
-  console.log("Current state:", { 
-    extensionsCount: extensions.length, 
+  console.log("Current state:", {
+    extensionsCount: extensions.length,
     filteredCount: filteredExtensions.length,
     loading
   });

@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import CreateNetworkModal from './CreateNetworkModal';
 import NetworkManagementModal from './NetworkManagementModal';
 import NetworkCard from './NetworkCard';
-import { 
+import {
   FaPlus,
   FaUsers,
   FaUser,
@@ -63,7 +63,7 @@ const PlotuneNetworks = () => {
       const response = await api.get(`/auth/stream?q=${cacheBuster}&user=${user?.username}`, {
         headers: { Authorization: token },
       });
-      
+
       if (response.data && response.data.token) {
         setStreamToken(response.data.token);
         fetchMyNetworks(response.data.token);
@@ -88,9 +88,9 @@ const PlotuneNetworks = () => {
       const response = await streamApi.get('/networks', {
         headers: { Authorization: tokenToUse },
       });
-      
+
       setMyNetworks(response.data || []);
-      
+
     } catch (err) {
       console.error('Error fetching networks:', err);
       toast.error('Failed to load your networks');
@@ -110,12 +110,12 @@ const PlotuneNetworks = () => {
       const response = await streamApi.get('/networks/authorized', {
         headers: { Authorization: tokenToUse },
       });
-      
+
       // Filter out networks owned by the current user
-      const filteredNetworks = (response.data || []).filter(network => 
+      const filteredNetworks = (response.data || []).filter(network =>
         network.owner_email !== userEmail
       );
-      
+
       // Map authorized networks
       const mappedNetworks = filteredNetworks.map(network => {
         // Find current user's auth in the network
@@ -128,9 +128,9 @@ const PlotuneNetworks = () => {
           user_auth: userAuth // Store the full auth object
         };
       });
-      
+
       setAuthorizedNetworks(mappedNetworks);
-      
+
     } catch (err) {
       console.error('Error fetching authorized networks:', err);
       toast.error('Failed to load authorized networks');
@@ -165,7 +165,7 @@ const PlotuneNetworks = () => {
       const response = await streamApi.post('/network/create', createData, {
         headers: { Authorization: streamToken },
       });
-      
+
       setShowCreateModal(false);
       toast.success('Network created successfully!');
       fetchMyNetworks();
@@ -216,7 +216,7 @@ const PlotuneNetworks = () => {
     }
 
     try {
-      await streamApi.post('/network/share', 
+      await streamApi.post('/network/share',
         {
           name: networkName,
           user_email: shareEmail,
@@ -241,7 +241,7 @@ const PlotuneNetworks = () => {
     }
 
     try {
-      await streamApi.post('/network/unshare', 
+      await streamApi.post('/network/unshare',
         {
           name: networkName,
           user_email: userEmail
@@ -266,8 +266,8 @@ const PlotuneNetworks = () => {
 
     try {
       const newStatus = !currentStatus;
-      
-      const response = await streamApi.post('/network/auth/status', 
+
+      const response = await streamApi.post('/network/auth/status',
         {
           network_name: networkName,
           user_email: userEmail,
@@ -277,20 +277,20 @@ const PlotuneNetworks = () => {
       );
 
       toast.success(`Network ${newStatus ? 'enabled' : 'disabled'} successfully`);
-      
+
       // Update the specific network in state
       if (activeTab === 'authorized') {
-        setAuthorizedNetworks(prev => prev.map(network => 
-          network.name === networkName 
-            ? { 
-                ...network, 
+        setAuthorizedNetworks(prev => prev.map(network =>
+          network.name === networkName
+            ? {
+                ...network,
                 enabled: newStatus,
                 user_auth: { ...network.user_auth, enabled: newStatus }
               }
             : network
         ));
       }
-      
+
     } catch (err) {
       console.error('Toggle status error:', err);
       toast.error(`Failed to ${currentStatus ? 'disable' : 'enable'} network`);
@@ -348,9 +348,9 @@ const PlotuneNetworks = () => {
           onClick={() => setShowCreateModal(true)}
           disabled={!userEmail}
           className={`px-4 py-2 rounded-lg transition flex items-center ${
-            userEmail 
-              ? 'bg-primary text-white hover:bg-primary-dark' 
-              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+            userEmail
+              ? 'bg-primary text-white hover:bg-primary-dark'
+              : 'bg-gray-600 text-gray-text cursor-not-allowed'
           }`}
         >
           <span className="mr-2"><FaPlus className="w-3 h-3" /></span> New Network
@@ -358,11 +358,11 @@ const PlotuneNetworks = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-white/10">
+      <div className="flex border-b border-ink/15">
         <button
           className={`px-4 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
-            activeTab === 'my' 
-              ? 'border-primary text-primary' 
+            activeTab === 'my'
+              ? 'border-primary text-primary'
               : 'border-transparent text-gray-text hover:text-light-text'
           }`}
           onClick={() => handleTabChange('my')}
@@ -377,8 +377,8 @@ const PlotuneNetworks = () => {
         </button>
         <button
           className={`px-4 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
-            activeTab === 'authorized' 
-              ? 'border-primary text-primary' 
+            activeTab === 'authorized'
+              ? 'border-primary text-primary'
               : 'border-transparent text-gray-text hover:text-light-text'
           }`}
           onClick={() => handleTabChange('authorized')}
@@ -406,25 +406,25 @@ const PlotuneNetworks = () => {
               network={network}
               onManage={() => setActiveNetwork(network)}
               onDelete={network.is_authorized ? null : () => handleDeleteNetwork(network.name)}
-              onToggleStatus={network.is_authorized ? 
+              onToggleStatus={network.is_authorized ?
                 () => handleToggleNetworkStatus(network.name, network.enabled) : null}
               isAuthorized={network.is_authorized}
               isUpdating={updatingStatus[network.name]}
               currentUserEmail={userEmail}
             />
           ))}
-          
+
           {currentNetworks.length === 0 && (
             <div className="col-span-full text-center py-12">
               <div className="mx-auto mb-4 w-16 h-16 opacity-50 flex items-center justify-center">
-                <FaNetworkWired className="w-16 h-16 text-gray-500" />
+                <FaNetworkWired className="w-16 h-16 text-gray-text" />
               </div>
               <h3 className="text-lg font-medium text-light-text mb-2">
                 {activeTab === 'my' ? 'No networks yet' : 'No joined networks'}
               </h3>
               <p className="text-gray-text mb-4">
-                {activeTab === 'my' 
-                  ? 'Create your first network to start connecting peers' 
+                {activeTab === 'my'
+                  ? 'Create your first network to start connecting peers'
                   : 'You have not joined any networks yet'}
               </p>
               {activeTab === 'my' && (
@@ -443,9 +443,9 @@ const PlotuneNetworks = () => {
                     onClick={() => setShowCreateModal(true)}
                     disabled={!userEmail}
                     className={`px-6 py-3 rounded-lg ${
-                      userEmail 
-                        ? 'bg-primary text-white hover:bg-primary-dark' 
-                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      userEmail
+                        ? 'bg-primary text-white hover:bg-primary-dark'
+                        : 'bg-gray-600 text-gray-text cursor-not-allowed'
                     }`}
                   >
                     {userEmail ? 'Create Your First Network' : 'Loading user information...'}
@@ -459,7 +459,7 @@ const PlotuneNetworks = () => {
 
       {/* Security Note for Authorized Networks */}
       {activeTab === 'authorized' && authorizedNetworks.length > 0 && (
-        <div className="rounded-xl p-4 border border-amber-500/20 bg-amber-500/5">
+        <div className="rounded-sm p-4 border border-amber-500/20 bg-amber-500/5">
           <div className="flex items-start gap-3">
             <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
@@ -467,7 +467,7 @@ const PlotuneNetworks = () => {
             <div>
               <h4 className="text-amber-400 font-medium mb-1">Security Notice</h4>
               <p className="text-amber-300/80 text-sm">
-                Shared networks are disabled by default to prevent metadata leakage. 
+                Shared networks are disabled by default to prevent metadata leakage.
                 Enable a network only when you trust the owner and intend to use it.
               </p>
             </div>
@@ -477,8 +477,8 @@ const PlotuneNetworks = () => {
 
       {/* Modals */}
       {showCreateModal && (
-        <CreateNetworkModal 
-          onClose={() => setShowCreateModal(false)} 
+        <CreateNetworkModal
+          onClose={() => setShowCreateModal(false)}
           onSubmit={handleCreateNetwork}
           user={{ ...user, email: userEmail }}
           isLoading={!userEmail}
@@ -490,7 +490,7 @@ const PlotuneNetworks = () => {
           network={activeNetwork}
           onClose={() => setActiveNetwork(null)}
           onUpdate={() => activeTab === 'my' ? fetchMyNetworks() : fetchAuthorizedNetworks()}
-          onToggleStatus={activeNetwork.is_authorized ? 
+          onToggleStatus={activeNetwork.is_authorized ?
             () => handleToggleNetworkStatus(activeNetwork.name, activeNetwork.enabled) : null}
           isUpdating={updatingStatus[activeNetwork.name]}
           onShare={activeNetwork.is_authorized ? null : handleShareNetwork}

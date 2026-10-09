@@ -7,7 +7,7 @@ const Footer = () => {
   const linkClass = (path) => `flex min-h-[44px] items-center text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300 ${location.pathname === path ? 'text-primary' : ''}`;
 
   return (
-    <footer className="bg-dark-surface backdrop-blur-xl py-16 border-t border-white/5">
+    <footer className="site-footer py-16">
       <div className="container mx-auto px-5">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
           <div>
@@ -16,7 +16,7 @@ const Footer = () => {
               <span className="text-2xl font-bold text-light-text">Plotune</span>
             </Link>
             <p className="mt-5 text-gray-text max-w-xs">
-              Empowering engineers, analysts, and researchers with real-time data visualization tools.
+              Tools for physical engineering systems, data operations and controlled agent workflows.
             </p>
           </div>
           <div>
@@ -24,6 +24,7 @@ const Footer = () => {
             <nav aria-labelledby="footer-product"><ul className="space-y-3">
               <li><Link to="/#features" className={linkClass('/')}>Features</Link></li>
               <li><Link to="/nexus" aria-current={location.pathname === '/nexus' ? 'page' : undefined} className={linkClass('/nexus')}>Nexus</Link></li>
+              <li><Link to="/stream" className={linkClass('/stream')}>Stream</Link></li>
               <li><Link to="/extensions" aria-current={location.pathname === '/extensions' ? 'page' : undefined} className={linkClass('/extensions')}>Extensions</Link></li>
               <li><Link to="/download" aria-current={location.pathname === '/download' ? 'page' : undefined} className={linkClass('/download')}>Download</Link></li>
             </ul>
@@ -33,6 +34,7 @@ const Footer = () => {
             <h3 id="footer-resources" className="text-xl font-semibold text-light-text mb-5">Resources</h3>
             <nav aria-labelledby="footer-resources"><ul className="space-y-3">
               <li><Link to="/docs" aria-current={location.pathname === '/docs' ? 'page' : undefined} className={linkClass('/docs')}>Documentation</Link></li>
+              <li><Link to="/research" className={linkClass('/research')}>Research</Link></li>
               <li><Link to="/faq" aria-current={location.pathname === '/faq' ? 'page' : undefined} className={linkClass('/faq')}>FAQ</Link></li>
               <li>
                 <a
@@ -61,7 +63,7 @@ const Footer = () => {
             </nav>
           </div>
         </div>
-        <div className="text-center pt-8 border-t border-white/5 text-gray-text text-sm">
+        <div className="text-center pt-8 border-t border-ink/15 text-gray-text text-sm">
           &copy; {new Date().getFullYear()} Plotune. All rights reserved.
         </div>
       </div>

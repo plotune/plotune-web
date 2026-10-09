@@ -1,0 +1,1241 @@
+[
+  {
+    "path": "/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [
+        "https://www.plotune.net/"
+      ],
+      "description": [
+        "Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [
+        "https://www.plotune.net/"
+      ],
+      "description": [
+        "Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/ai-readiness/",
+    "before": {
+      "title": [
+        "How AI-ready is your test bench? | Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/ai-readiness"
+      ],
+      "description": [
+        "Four quick questions to assess how accessible your test environment is to AI-agent-driven testing."
+      ]
+    },
+    "after": {
+      "title": [
+        "How AI-ready is your test bench? | Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/ai-readiness"
+      ],
+      "description": [
+        "Four quick questions to assess how accessible your test environment is to AI-agent-driven testing."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/agentic-test-development/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/nexus/",
+    "before": {
+      "title": [
+        "Plotune Nexus: Local-First Appliance for AI-Ready Test Systems"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus"
+      ],
+      "description": [
+        "Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Nexus: Local-First Appliance for AI-Ready Test Systems"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus"
+      ],
+      "description": [
+        "Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/contact/",
+    "before": {
+      "title": [
+        "Contact Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/contact"
+      ],
+      "description": [
+        "Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
+      ]
+    },
+    "after": {
+      "title": [
+        "Contact Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/contact"
+      ],
+      "description": [
+        "Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/privacy/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/",
+    "before": {
+      "title": [
+        "Plotune Documentation"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs"
+      ],
+      "description": [
+        "Documentation for Plotune and Plotune Nexus: components, extensions, calculations, and workflows."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Documentation"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs"
+      ],
+      "description": [
+        "Documentation for Plotune and Plotune Nexus: components, extensions, calculations, and workflows."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/legal/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/careers/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/about/",
+    "before": {
+      "title": [
+        "About Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/about"
+      ],
+      "description": [
+        "Plotune helps engineering teams orchestrate, process, and govern their data, and builds Plotune Nexus for controlled, AI-ready work on real test hardware."
+      ]
+    },
+    "after": {
+      "title": [
+        "About Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/about"
+      ],
+      "description": [
+        "Plotune helps engineering teams orchestrate, process, and govern their data, and builds Plotune Nexus for controlled, AI-ready work on real test hardware."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/download/",
+    "before": {
+      "title": [
+        "Download Plotune for Windows &amp; Linux"
+      ],
+      "canonical": [
+        "https://www.plotune.net/download"
+      ],
+      "description": [
+        "Download the Plotune desktop app for Windows and Linux and bring DataOps workflows to your own machine."
+      ]
+    },
+    "after": {
+      "title": [
+        "Download Plotune for Windows &amp; Linux"
+      ],
+      "canonical": [
+        "https://www.plotune.net/download"
+      ],
+      "description": [
+        "Download the Plotune desktop app for Windows and Linux and bring DataOps workflows to your own machine."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/extensions/",
+    "before": {
+      "title": [
+        "Plotune Extensions Marketplace"
+      ],
+      "canonical": [
+        "https://www.plotune.net/extensions"
+      ],
+      "description": [
+        "Extend Plotune with a growing marketplace of integrations and tools for data sources, processing, and export."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Extensions Marketplace"
+      ],
+      "canonical": [
+        "https://www.plotune.net/extensions"
+      ],
+      "description": [
+        "Extend Plotune with a growing marketplace of integrations and tools for data sources, processing, and export."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/faq/",
+    "before": {
+      "title": [
+        "Plotune &amp; Nexus FAQ: AI-Ready Test Systems and DataOps"
+      ],
+      "canonical": [
+        "https://www.plotune.net/faq"
+      ],
+      "description": [
+        "Answers to common questions about Plotune Nexus and the Plotune DataOps platform: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune &amp; Nexus FAQ: AI-Ready Test Systems and DataOps"
+      ],
+      "canonical": [
+        "https://www.plotune.net/faq"
+      ],
+      "description": [
+        "Answers to common questions about Plotune Nexus and the Plotune DataOps platform: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/",
+    "before": {
+      "title": [
+        "Agentic Test &amp; Validation | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research"
+      ],
+      "description": [
+        "Visual comparisons from Plotune's final agentic engineering test and validation benchmark."
+      ]
+    },
+    "after": {
+      "title": [
+        "Agentic Test &amp; Validation | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research"
+      ],
+      "description": [
+        "Visual comparisons from Plotune's final agentic engineering test and validation benchmark."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/methodology/",
+    "before": {
+      "title": [
+        "Methodology | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/methodology"
+      ],
+      "description": [
+        "Agentic Test and Validation Protocol."
+      ]
+    },
+    "after": {
+      "title": [
+        "Methodology | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/methodology"
+      ],
+      "description": [
+        "Agentic Test and Validation Protocol."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/reports/",
+    "before": {
+      "title": [
+        "Reports | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/reports"
+      ],
+      "description": [
+        "Monthly reports and reading for Plotune Research."
+      ]
+    },
+    "after": {
+      "title": [
+        "Reports | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/reports"
+      ],
+      "description": [
+        "Monthly reports and reading for Plotune Research."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/results/",
+    "before": {
+      "title": [
+        "Agentic Test &amp; Validation | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research"
+      ],
+      "description": [
+        "Visual comparisons from Plotune's final agentic engineering test and validation benchmark."
+      ]
+    },
+    "after": {
+      "title": [
+        "Agentic Test &amp; Validation | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research"
+      ],
+      "description": [
+        "Visual comparisons from Plotune's final agentic engineering test and validation benchmark."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/what-is-agentic-test-development/",
+    "before": {
+      "title": [
+        "What Is Agentic Test &amp; Development? From Test Scripts to Autonomous Engineering | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/what-is-agentic-test-development"
+      ],
+      "description": [
+        "What &quot;agentic testing&quot; actually means, and how agentic test automation differs from a fixed test script by deciding its next bounded action instead of replaying a fixed one."
+      ]
+    },
+    "after": {
+      "title": [
+        "What Is Agentic Test &amp; Development? From Test Scripts to Autonomous Engineering | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/what-is-agentic-test-development"
+      ],
+      "description": [
+        "What &quot;agentic testing&quot; actually means, and how agentic test automation differs from a fixed test script by deciding its next bounded action instead of replaying a fixed one."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/test-automation-engineer-in-the-loop/",
+    "before": {
+      "title": [
+        "Why test automation still requires an engineer in the loop | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/test-automation-engineer-in-the-loop"
+      ],
+      "description": [
+        "Automation that stops at &quot;run the script&quot; still needs a person standing next to it: a look at where test automation actually breaks down and what closes the gap."
+      ]
+    },
+    "after": {
+      "title": [
+        "Why test automation still requires an engineer in the loop | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/test-automation-engineer-in-the-loop"
+      ],
+      "description": [
+        "Automation that stops at &quot;run the script&quot; still needs a person standing next to it: a look at where test automation actually breaks down and what closes the gap."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/running-unattended-ros2-hardware-tests/",
+    "before": {
+      "title": [
+        "Running unattended ROS 2 hardware tests | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/running-unattended-ros2-hardware-tests"
+      ],
+      "description": [
+        "Why most ROS 2 hardware testing is bottlenecked on a terminal and a person watching it, and what it takes to make a DDS-based test run unattended."
+      ]
+    },
+    "after": {
+      "title": [
+        "Running unattended ROS 2 hardware tests | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/running-unattended-ros2-hardware-tests"
+      ],
+      "description": [
+        "Why most ROS 2 hardware testing is bottlenecked on a terminal and a person watching it, and what it takes to make a DDS-based test run unattended."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/decision-model-agent-guardrails/",
+    "before": {
+      "title": [
+        "Using a Decision Model as an Agent's Guardrail, Not Its Judgment | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/decision-model-agent-guardrails"
+      ],
+      "description": [
+        "Two simulated control systems, 88 real paid model calls, and one consistent finding: a fast decision model is a real safety win behind a rule, and a measurable safety regression left to decide on its own."
+      ]
+    },
+    "after": {
+      "title": [
+        "Using a Decision Model as an Agent's Guardrail, Not Its Judgment | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/decision-model-agent-guardrails"
+      ],
+      "description": [
+        "Two simulated control systems, 88 real paid model calls, and one consistent finding: a fast decision model is a real safety win behind a rule, and a measurable safety regression left to decide on its own."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/building-a-24-7-unattended-test-lab/",
+    "before": {
+      "title": [
+        "From Manual Test Benches to Unattended Testing: Building a 24/7 Hardware Test Lab | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/building-a-24-7-unattended-test-lab"
+      ],
+      "description": [
+        "A practical look at what it takes to turn a manual test bench into an automated test bench that supports unattended testing and remote hardware testing around the clock."
+      ]
+    },
+    "after": {
+      "title": [
+        "From Manual Test Benches to Unattended Testing: Building a 24/7 Hardware Test Lab | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/building-a-24-7-unattended-test-lab"
+      ],
+      "description": [
+        "A practical look at what it takes to turn a manual test bench into an automated test bench that supports unattended testing and remote hardware testing around the clock."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/automating-can-ecu-tests-with-ai-agents/",
+    "before": {
+      "title": [
+        "Automating CAN-based ECU tests with AI agents | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/automating-can-ecu-tests-with-ai-agents"
+      ],
+      "description": [
+        "Why a CAN or ECU test procedure is a lifecycle, not a single frame send, and how an agent-driven workflow keeps that lifecycle bounded and reviewable."
+      ]
+    },
+    "after": {
+      "title": [
+        "Automating CAN-based ECU tests with AI agents | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/automating-can-ecu-tests-with-ai-agents"
+      ],
+      "description": [
+        "Why a CAN or ECU test procedure is a lifecycle, not a single frame send, and how an agent-driven workflow keeps that lifecycle bounded and reviewable."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/ai-hardware-in-the-loop-testing/",
+    "before": {
+      "title": [
+        "AI Hardware-in-the-Loop Testing: Giving AI Agents Access to Real Hardware | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/ai-hardware-in-the-loop-testing"
+      ],
+      "description": [
+        "Why most HIL rigs keep AI agents out entirely, and what a bounded-access architecture for AI HIL testing looks like once it stops being a trust exercise."
+      ]
+    },
+    "after": {
+      "title": [
+        "AI Hardware-in-the-Loop Testing: Giving AI Agents Access to Real Hardware | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/ai-hardware-in-the-loop-testing"
+      ],
+      "description": [
+        "Why most HIL rigs keep AI agents out entirely, and what a bounded-access architecture for AI HIL testing looks like once it stops being a trust exercise."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/ai-agents-vs-traditional-test-automation/",
+    "before": {
+      "title": [
+        "AI Agents vs. Traditional Test Automation: What Should Actually Be Autonomous? | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/ai-agents-vs-traditional-test-automation"
+      ],
+      "description": [
+        "A framework for AI test automation that scopes autonomous testing by how bounded and reviewable an action is, not by how capable the underlying model happens to be."
+      ]
+    },
+    "after": {
+      "title": [
+        "AI Agents vs. Traditional Test Automation: What Should Actually Be Autonomous? | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/ai-agents-vs-traditional-test-automation"
+      ],
+      "description": [
+        "A framework for AI test automation that scopes autonomous testing by how bounded and reviewable an action is, not by how capable the underlying model happens to be."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/ai-agents-control-test-benches-with-mcp/",
+    "before": {
+      "title": [
+        "How AI Agents Can Control Real Test Benches with MCP | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/ai-agents-control-test-benches-with-mcp"
+      ],
+      "description": [
+        "Why MCP hardware test automation works where raw shell access doesn't: a narrow, typed, authorized set of operations is what makes AI agent hardware control safe to approve."
+      ]
+    },
+    "after": {
+      "title": [
+        "How AI Agents Can Control Real Test Benches with MCP | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/ai-agents-control-test-benches-with-mcp"
+      ],
+      "description": [
+        "Why MCP hardware test automation works where raw shell access doesn't: a narrow, typed, authorized set of operations is what makes AI agent hardware control safe to approve."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/agentic-testing-ros2-dds-systems/",
+    "before": {
+      "title": [
+        "Agentic Testing for ROS 2 &amp; DDS Systems | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/agentic-testing-ros2-dds-systems"
+      ],
+      "description": [
+        "A walkthrough of how an AI agent runs ROS2 test automation end to end: discovering the DDS graph, commanding and gating on telemetry, recording multi-topic evidence, and producing a verdict."
+      ]
+    },
+    "after": {
+      "title": [
+        "Agentic Testing for ROS 2 &amp; DDS Systems | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/agentic-testing-ros2-dds-systems"
+      ],
+      "description": [
+        "A walkthrough of how an AI agent runs ROS2 test automation end to end: discovering the DDS graph, commanding and gating on telemetry, recording multi-topic evidence, and producing a verdict."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/agentic-test-validation-model-comparison/",
+    "before": {
+      "title": [
+        "September 2026: Agentic Testing Environments Monthly Benchmark Review | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/agentic-test-validation-model-comparison"
+      ],
+      "description": [
+        "A category-normalized review of 13 models across six agentic engineering workflows, with final validation index, cost, and duration context."
+      ]
+    },
+    "after": {
+      "title": [
+        "September 2026: Agentic Testing Environments Monthly Benchmark Review | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/agentic-test-validation-model-comparison"
+      ],
+      "description": [
+        "A category-normalized review of 13 models across six agentic engineering workflows, with final validation index, cost, and duration context."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/research/articles/agentic-ecu-testing-can-to-execution/",
+    "before": {
+      "title": [
+        "Agentic ECU Testing: From CAN Signals to Autonomous Test Execution | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/agentic-ecu-testing-can-to-execution"
+      ],
+      "description": [
+        "A look at the decode layer underneath CAN test automation: why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy."
+      ]
+    },
+    "after": {
+      "title": [
+        "Agentic ECU Testing: From CAN Signals to Autonomous Test Execution | Plotune Research"
+      ],
+      "canonical": [
+        "https://www.plotune.net/research/articles/agentic-ecu-testing-can-to-execution"
+      ],
+      "description": [
+        "A look at the decode layer underneath CAN test automation: why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/use-cases/codex/",
+    "before": {
+      "title": [
+        "Codex Use Cases \u2014 Plotune Nexus"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Codex Use Cases \u2014 Plotune Nexus"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/use-cases/claude/",
+    "before": {
+      "title": [
+        "Claude Use Cases \u2014 Plotune Nexus"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Claude Use Cases \u2014 Plotune Nexus"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/",
+    "before": {
+      "title": [
+        "Plotune Nexus Documentation"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus"
+      ],
+      "description": [
+        "Technical reference documentation for Plotune Nexus: security model, hardware and protocol compatibility, the MCP tool surface, system architecture, and deployment."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Nexus Documentation"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus"
+      ],
+      "description": [
+        "Technical reference documentation for Plotune Nexus: security model, hardware and protocol compatibility, the MCP tool surface, system architecture, and deployment."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/quick-start/",
+    "before": {
+      "title": [
+        "Quick Start | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/quick-start"
+      ],
+      "description": [
+        "From power-on to your first bounded hardware workflow: network setup, owner bootstrap, connecting an MCP client, and three runnable simulator-based examples that need no hardware yet."
+      ]
+    },
+    "after": {
+      "title": [
+        "Quick Start | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/quick-start"
+      ],
+      "description": [
+        "From power-on to your first bounded hardware workflow: network setup, owner bootstrap, connecting an MCP client, and three runnable simulator-based examples that need no hardware yet."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/protocols/",
+    "before": {
+      "title": [
+        "Protocol Notes: CAN, UDS, DoIP, XCP | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/protocols"
+      ],
+      "description": [
+        "Transport-level detail for the four protocols Nexus speaks today: addressing modes, discovery mechanics, and exactly what is production-qualified versus implemented-but-unqualified."
+      ]
+    },
+    "after": {
+      "title": [
+        "Protocol Notes: CAN, UDS, DoIP, XCP | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/protocols"
+      ],
+      "description": [
+        "Transport-level detail for the four protocols Nexus speaks today: addressing modes, discovery mechanics, and exactly what is production-qualified versus implemented-but-unqualified."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/data-handling/",
+    "before": {
+      "title": [
+        "Data Handling &amp; Deployment Model | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/data-handling"
+      ],
+      "description": [
+        "Where recorded data lands first, how it leaves the device, the bring-your-own-cloud model, and the checklist for deploying into a closed network with no internet access."
+      ]
+    },
+    "after": {
+      "title": [
+        "Data Handling &amp; Deployment Model | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/data-handling"
+      ],
+      "description": [
+        "Where recorded data lands first, how it leaves the device, the bring-your-own-cloud model, and the checklist for deploying into a closed network with no internet access."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/architecture/",
+    "before": {
+      "title": [
+        "System Architecture | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/architecture"
+      ],
+      "description": [
+        "The three-plane model behind Nexus: what runs on the device, what runs in Plotune\u2019s cloud, and the exact boundary between them, including where the design is still hardening."
+      ]
+    },
+    "after": {
+      "title": [
+        "System Architecture | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/architecture"
+      ],
+      "description": [
+        "The three-plane model behind Nexus: what runs on the device, what runs in Plotune\u2019s cloud, and the exact boundary between them, including where the design is still hardening."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/mcp-api/",
+    "before": {
+      "title": [
+        "MCP Tools &amp; API Reference | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/mcp-api"
+      ],
+      "description": [
+        "The actual MCP tool surface an agent calls: real tool names, read-only resources, authentication, and the client setup commands for Claude Code, Codex, Cursor, VS Code, and n8n."
+      ]
+    },
+    "after": {
+      "title": [
+        "MCP Tools &amp; API Reference | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/mcp-api"
+      ],
+      "description": [
+        "The actual MCP tool surface an agent calls: real tool names, read-only resources, authentication, and the client setup commands for Claude Code, Codex, Cursor, VS Code, and n8n."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/hardware-compatibility/",
+    "before": {
+      "title": [
+        "Hardware &amp; Protocol Compatibility | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/hardware-compatibility"
+      ],
+      "description": [
+        "Which CAN, UART, XCP, and DoIP hardware families run natively on Nexus today, which need a container, and which are not yet supported, stated without inflating the claim."
+      ]
+    },
+    "after": {
+      "title": [
+        "Hardware &amp; Protocol Compatibility | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/hardware-compatibility"
+      ],
+      "description": [
+        "Which CAN, UART, XCP, and DoIP hardware families run natively on Nexus today, which need a container, and which are not yet supported, stated without inflating the claim."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/docs/nexus/security-model/",
+    "before": {
+      "title": [
+        "Security &amp; Trust Model | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/security-model"
+      ],
+      "description": [
+        "How device ownership, key custody, and access boundaries work: what stays on the device, what a compromised session can and cannot do, and what is still being hardened."
+      ]
+    },
+    "after": {
+      "title": [
+        "Security &amp; Trust Model | Plotune Nexus Docs"
+      ],
+      "canonical": [
+        "https://www.plotune.net/docs/nexus/security-model"
+      ],
+      "description": [
+        "How device ownership, key custody, and access boundaries work: what stays on the device, what a compromised session can and cannot do, and what is still being hardened."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/nexus/use-cases/",
+    "before": {
+      "title": [
+        "Plotune Nexus Use Cases: Automotive, Robotics &amp; ROS 2"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus/use-cases"
+      ],
+      "description": [
+        "See how Plotune Nexus runs bounded, AI-ready workflows across automotive validation, robotics, ROS 2 / DDS supervision, ECU and gateway integration, field diagnostics, and HIL automation."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Nexus Use Cases: Automotive, Robotics &amp; ROS 2"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus/use-cases"
+      ],
+      "description": [
+        "See how Plotune Nexus runs bounded, AI-ready workflows across automotive validation, robotics, ROS 2 / DDS supervision, ECU and gateway integration, field diagnostics, and HIL automation."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/nexus/stream/",
+    "before": {
+      "title": [
+        "Plotune Stream: Live Validation as Your Tests Run",
+        "Always-on validation pipeline"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus/stream"
+      ],
+      "description": [
+        "Plotune Stream monitors live signals and validates requirements continuously, close to your hardware, so teams get results the moment something happens."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Stream: Live Validation as Your Tests Run"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus/stream"
+      ],
+      "description": [
+        "Explore the Nexus and Stream integration model for engineering events, with a separate local MVP workspace and future-product reference."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/nexus/connectivity/",
+    "before": {
+      "title": [
+        "Plotune Nexus Connectivity: CAN, UART, XCP, ROS 2 / DDS",
+        "One connection point for many buses"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus/connectivity"
+      ],
+      "description": [
+        "Connect Plotune Nexus to the test systems your team already uses: CAN, UART, XCP on CAN and Ethernet, ROS 2 / DDS over CycloneDDS, and raw UDS and DoIP."
+      ]
+    },
+    "after": {
+      "title": [
+        "Plotune Nexus Connectivity: CAN, UART, XCP, ROS 2 / DDS",
+        "One connection point for many buses"
+      ],
+      "canonical": [
+        "https://www.plotune.net/nexus/connectivity"
+      ],
+      "description": [
+        "Connect Plotune Nexus to the test systems your team already uses: CAN, UART, XCP on CAN and Ethernet, ROS 2 / DDS over CycloneDDS, and raw UDS and DoIP."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/solutions/can-testing/",
+    "before": {
+      "title": [
+        "CAN / ECU Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/can-ecu-testing"
+      ],
+      "description": [
+        "A CAN or ECU test procedure is never just &quot;send a frame.&quot; It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day."
+      ]
+    },
+    "after": {
+      "title": [
+        "CAN / ECU Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/can-ecu-testing"
+      ],
+      "description": [
+        "A CAN or ECU test procedure is never just &quot;send a frame.&quot; It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/solutions/hil-testing/",
+    "before": {
+      "title": [
+        "AI Hardware-in-the-Loop Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/hil-testing"
+      ],
+      "description": [
+        "Giving an AI agent access to real hardware raises a different question than giving it access to a shell: what happens when it's wrong? Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely."
+      ]
+    },
+    "after": {
+      "title": [
+        "AI Hardware-in-the-Loop Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/hil-testing"
+      ],
+      "description": [
+        "Giving an AI agent access to real hardware raises a different question than giving it access to a shell: what happens when it's wrong? Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/solutions/test-orchestration/",
+    "before": {
+      "title": [
+        "Test Automation &amp; Orchestration | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/test-orchestration"
+      ],
+      "description": [
+        "Most test automation stops at &quot;run the script.&quot; The real bottleneck is upstream: someone still decides which sequence to run, watches it for faults, and re-runs it by hand when a build changes. Automation that still needs a person standing next to it is a faster way to wait, not less waiting."
+      ]
+    },
+    "after": {
+      "title": [
+        "Test Automation &amp; Orchestration | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/test-orchestration"
+      ],
+      "description": [
+        "Most test automation stops at &quot;run the script.&quot; The real bottleneck is upstream: someone still decides which sequence to run, watches it for faults, and re-runs it by hand when a build changes. Automation that still needs a person standing next to it is a faster way to wait, not less waiting."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/solutions/ros2-dds-testing/",
+    "before": {
+      "title": [
+        "ROS 2 / DDS Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/ros2-dds-testing"
+      ],
+      "description": [
+        "Testing a ROS 2 robot usually means SSHing into the robot, running ros2 CLI commands by hand, and eyeballing topic echoes to decide whether a requirement passed, a process that does not scale past the one person who knows the stack."
+      ]
+    },
+    "after": {
+      "title": [
+        "ROS 2 / DDS Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/ros2-dds-testing"
+      ],
+      "description": [
+        "Testing a ROS 2 robot usually means SSHing into the robot, running ros2 CLI commands by hand, and eyeballing topic echoes to decide whether a requirement passed, a process that does not scale past the one person who knows the stack."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/solutions/can-ecu-testing/",
+    "before": {
+      "title": [
+        "CAN / ECU Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/can-ecu-testing"
+      ],
+      "description": [
+        "A CAN or ECU test procedure is never just &quot;send a frame.&quot; It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day."
+      ]
+    },
+    "after": {
+      "title": [
+        "CAN / ECU Testing | Plotune Nexus"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/can-ecu-testing"
+      ],
+      "description": [
+        "A CAN or ECU test procedure is never just &quot;send a frame.&quot; It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/solutions/agentic-test-development/",
+    "before": {
+      "title": [
+        "Agentic Test &amp; Development | Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/agentic-test-development"
+      ],
+      "description": [
+        "Traditional test automation runs a fixed script: the same steps, in the same order, against the same fixture, every time. Agentic test &amp; development is a different approach: an AI agent reads the current state of a real system and takes the next bounded, pre-approved action, rather than following a script that breaks the moment reality doesn't match it exactly."
+      ]
+    },
+    "after": {
+      "title": [
+        "Agentic Test &amp; Development | Plotune"
+      ],
+      "canonical": [
+        "https://www.plotune.net/solutions/agentic-test-development"
+      ],
+      "description": [
+        "Traditional test automation runs a fixed script: the same steps, in the same order, against the same fixture, every time. Agentic test &amp; development is a different approach: an AI agent reads the current state of a real system and takes the next bounded, pre-approved action, rather than following a script that breaks the moment reality doesn't match it exactly."
+      ]
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/stream/workspace/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  },
+  {
+    "path": "/stream/prototypes/vision/",
+    "before": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "after": {
+      "title": [
+        "Plotune: DataOps Platform &amp; AI-Ready Test Systems"
+      ],
+      "canonical": [],
+      "description": []
+    },
+    "canonicalPreserved": true
+  }
+]

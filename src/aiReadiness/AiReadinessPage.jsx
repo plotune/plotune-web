@@ -240,7 +240,7 @@ const AiReadinessPage = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(38,166,154,0.12),transparent_45%)]" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 bg-dark-surface" aria-hidden="true" />
 
       <div className="ai-shell relative mx-auto flex w-full max-w-xl flex-col px-5">
         {/* Selective attention: no site header/footer here. The only chrome is Back + progress. */}
@@ -287,7 +287,7 @@ const AiReadinessPage = () => {
             aria-valuemax={QUESTION_COUNT}
             aria-valuenow={step}
             aria-valuetext={`Question ${step} of ${QUESTION_COUNT}`}
-            className="mb-8 mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+            className="mb-8 mt-1 h-1.5 w-full overflow-hidden rounded-full bg-dark-card"
           >
             <div className="ai-progress-fill h-full rounded-full bg-primary" style={{ width: `${progress * 100}%` }} />
           </div>
@@ -310,7 +310,7 @@ const AiReadinessPage = () => {
             <button
               type="button"
               onClick={handleStart}
-              className="mt-10 flex min-h-[60px] w-full items-center justify-center gap-2 rounded-full bg-primary px-8 text-lg font-semibold text-white shadow-custom transition-colors duration-100 hover:bg-primary-dark active:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg sm:w-auto sm:self-start"
+              className="mt-10 flex min-h-[60px] w-full items-center justify-center gap-2 rounded-full bg-primary px-8 text-lg font-semibold text-white  transition-colors duration-100 hover:bg-primary-dark active:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg sm:w-auto sm:self-start"
             >
               Start assessment
               <FiArrowRight aria-hidden="true" />

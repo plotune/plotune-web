@@ -54,7 +54,7 @@ const forceInView = () => {
 const articlesDir = path.join(root, 'src/research/articles');
 const routes = [
   '/', '/research', '/research/reports', '/research/methodology', '/faq',
-  '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases',
+  '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases',
   '/solutions/agentic-test-development', '/contact',
   '/about', '/careers', '/download', '/extensions', '/legal', '/privacy', '/docs',
   '/research/results',

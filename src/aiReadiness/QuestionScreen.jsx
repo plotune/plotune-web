@@ -12,7 +12,7 @@ const Indicator = ({ type, selected }) => (
     aria-hidden="true"
     className={`flex h-6 w-6 shrink-0 items-center justify-center border-2 transition-colors duration-100 ${
       type === 'single' ? 'rounded-full' : 'rounded-md'
-    } ${selected ? 'border-primary bg-primary text-dark-bg' : 'border-white/25 bg-transparent'}`}
+    } ${selected ? 'border-primary bg-primary text-dark-bg' : 'border-ink/15 bg-transparent'}`}
   >
     {selected && <FiCheck className="text-sm" strokeWidth={3.5} />}
   </span>
@@ -25,12 +25,12 @@ const OptionCard = ({ option, type, selected, disabled, onSelect }) => (
     aria-checked={selected}
     aria-disabled={disabled || undefined}
     onClick={() => { if (!disabled) onSelect(option.id); }}
-    className={`flex min-h-[56px] w-full items-center justify-between gap-3 rounded-xl border-2 px-4 py-3 text-left transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg ${
+    className={`flex min-h-[56px] w-full items-center justify-between gap-3 rounded-sm border-2 px-4 py-3 text-left transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg ${
       selected
         ? 'border-primary bg-primary/15 text-light-text'
         : disabled
-          ? 'cursor-not-allowed border-white/5 bg-dark-card/40 text-gray-text/50'
-          : 'border-white/10 bg-dark-card text-dark-text hover:border-primary/50 active:bg-primary/10'
+          ? 'cursor-not-allowed border-ink/15 bg-dark-card/40 text-gray-text/50'
+          : 'border-ink/15 bg-dark-card text-dark-text hover:border-primary/50 active:bg-primary/10'
     }`}
   >
     <span className="min-w-0">
@@ -142,7 +142,7 @@ const QuestionScreen = ({
         )}
 
         {otherSelected && question.other && (
-          <div className="mt-4 rounded-xl border border-white/10 bg-dark-card/60 p-4">
+          <div className="mt-4 rounded-sm border border-ink/15 bg-dark-card/60 p-4">
             <label htmlFor={`other-${question.id}`} className="block text-sm font-medium text-light-text">
               {question.other.label} <span className="font-normal text-gray-text">(optional)</span>
             </label>
@@ -160,7 +160,7 @@ const QuestionScreen = ({
               onBlur={handleInputBlur}
               onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
               // 16px minimum: anything smaller makes iOS Safari zoom the page on focus.
-              className="mt-2 h-12 w-full rounded-lg border border-white/15 bg-dark-bg px-3 text-base text-light-text placeholder:text-gray-text/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-2 h-12 w-full rounded-lg border border-ink/15 bg-dark-bg px-3 text-base text-light-text placeholder:text-gray-text/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <p className="mt-2 text-xs leading-5 text-gray-text">{question.other.hint}</p>
           </div>
@@ -177,7 +177,7 @@ const QuestionScreen = ({
         //  - While the Other text field has focus the bar drops back into normal flow, so the
         //    on-screen keyboard can never leave it floating over the field.
         <div
-          className={`${inputFocused ? 'relative -mx-5' : 'fixed inset-x-0 bottom-0 z-20'} border-t border-white/10 bg-dark-bg/95 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur`}
+          className={`${inputFocused ? 'relative -mx-5' : 'fixed inset-x-0 bottom-0 z-20'} border-t border-ink/15 bg-dark-bg/95 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur`}
         >
           <div className="mx-auto w-full max-w-xl px-5">
             {status && (

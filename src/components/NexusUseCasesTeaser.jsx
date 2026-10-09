@@ -42,7 +42,7 @@ const NexusUseCasesTeaser = () => (
           {industries.map((industry) => (
             <span
               key={industry}
-              className="rounded-full bg-white/[0.05] px-4 py-2 text-xs font-semibold text-gray-text sm:text-sm"
+              className="rounded-full bg-dark-card px-4 py-2 text-xs font-semibold text-gray-text sm:text-sm"
             >
               {industry}
             </span>
@@ -51,7 +51,7 @@ const NexusUseCasesTeaser = () => (
 
         <Link
           to="/nexus/use-cases"
-          className="mt-9 inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300 hover:-translate-y-1 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+          className="mt-9 inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary px-7 py-3 font-semibold text-primary transition-all duration-300  hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
         >
           Explore the Use Cases
           <FiArrowRight />
@@ -63,7 +63,7 @@ const NexusUseCasesTeaser = () => (
           <Link
             key={page.to}
             to={page.to}
-            className="group flex items-center justify-between gap-4 rounded-2xl bg-dark-card p-6 shadow-custom transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+            className="group flex items-center justify-between gap-4 rounded-sm bg-dark-card p-6  transition-all duration-300   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
           >
             <div>
               <h3 className="text-xl font-semibold text-light-text">{page.label}</h3>

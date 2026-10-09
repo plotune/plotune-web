@@ -1,0 +1,590 @@
+[
+  {
+    "phase": "before",
+    "route": "/",
+    "fcp": 2024,
+    "lcp": 2024,
+    "cls": 0,
+    "jsBytes": 962832,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2032,
+        "fcp": 2032,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 2024,
+        "fcp": 2024,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 2008,
+        "fcp": 2008,
+        "jsBytes": 962832
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/nexus",
+    "fcp": 2348,
+    "lcp": 2428,
+    "cls": 0,
+    "jsBytes": 962832,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2428,
+        "fcp": 2348,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 2428,
+        "fcp": 2344,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 2428,
+        "fcp": 2348,
+        "jsBytes": 962832
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/nexus/connectivity",
+    "fcp": 1792,
+    "lcp": 1792,
+    "cls": 0,
+    "jsBytes": 962832,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1780,
+        "fcp": 1780,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 1792,
+        "fcp": 1792,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 1796,
+        "fcp": 1796,
+        "jsBytes": 962832
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/nexus/stream",
+    "fcp": 1792,
+    "lcp": 1792,
+    "cls": 0,
+    "jsBytes": 962832,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1800,
+        "fcp": 1800,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 1792,
+        "fcp": 1792,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 1780,
+        "fcp": 1780,
+        "jsBytes": 962832
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/nexus/use-cases",
+    "fcp": 2188,
+    "lcp": 2188,
+    "cls": 0,
+    "jsBytes": 962832,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2188,
+        "fcp": 2188,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 2188,
+        "fcp": 2188,
+        "jsBytes": 962832
+      },
+      {
+        "cls": 0,
+        "lcp": 2184,
+        "fcp": 2184,
+        "jsBytes": 962832
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/solutions/agentic-test-development",
+    "fcp": 1756,
+    "lcp": 1756,
+    "cls": 0.4004739336492891,
+    "jsBytes": 974877,
+    "measurements": [
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1756,
+        "fcp": 1756,
+        "jsBytes": 974877
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1772,
+        "fcp": 1772,
+        "jsBytes": 974877
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1748,
+        "fcp": 1748,
+        "jsBytes": 974877
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/research",
+    "fcp": 1792,
+    "lcp": 1792,
+    "cls": 0.06990521327014218,
+    "jsBytes": 2143888,
+    "measurements": [
+      {
+        "cls": 0.06990521327014218,
+        "lcp": 1800,
+        "fcp": 1800,
+        "jsBytes": 2143888
+      },
+      {
+        "cls": 0.06990521327014218,
+        "lcp": 1792,
+        "fcp": 1792,
+        "jsBytes": 2143888
+      },
+      {
+        "cls": 0.06990521327014218,
+        "lcp": 1780,
+        "fcp": 1780,
+        "jsBytes": 2143888
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/contact",
+    "fcp": 1768,
+    "lcp": 1768,
+    "cls": 0.4004739336492891,
+    "jsBytes": 985373,
+    "measurements": [
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1764,
+        "fcp": 1764,
+        "jsBytes": 985373
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1768,
+        "fcp": 1768,
+        "jsBytes": 985373
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1776,
+        "fcp": 1776,
+        "jsBytes": 985373
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/faq",
+    "fcp": 1828,
+    "lcp": 1828,
+    "cls": 0.4004739336492891,
+    "jsBytes": 974963,
+    "measurements": [
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1836,
+        "fcp": 1836,
+        "jsBytes": 974963
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1828,
+        "fcp": 1828,
+        "jsBytes": 974963
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1828,
+        "fcp": 1828,
+        "jsBytes": 974963
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/about",
+    "fcp": 1764,
+    "lcp": 1764,
+    "cls": 0.4004739336492891,
+    "jsBytes": 974054,
+    "measurements": [
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1764,
+        "fcp": 1764,
+        "jsBytes": 974054
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1768,
+        "fcp": 1768,
+        "jsBytes": 974054
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1764,
+        "fcp": 1764,
+        "jsBytes": 974054
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/download",
+    "fcp": 1796,
+    "lcp": 1796,
+    "cls": 0.4004739336492891,
+    "jsBytes": 979935,
+    "measurements": [
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1796,
+        "fcp": 1796,
+        "jsBytes": 979935
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1800,
+        "fcp": 1800,
+        "jsBytes": 979935
+      },
+      {
+        "cls": 0.4004739336492891,
+        "lcp": 1792,
+        "fcp": 1792,
+        "jsBytes": 979935
+      }
+    ]
+  },
+  {
+    "phase": "before",
+    "route": "/research/articles/agentic-ecu-testing-can-to-execution",
+    "fcp": 1752,
+    "lcp": 1752,
+    "cls": 0.09900305122863368,
+    "jsBytes": 1115223,
+    "measurements": [
+      {
+        "cls": 0.09900305122863368,
+        "lcp": 1740,
+        "fcp": 1740,
+        "jsBytes": 1115223
+      },
+      {
+        "cls": 0.09900305122863368,
+        "lcp": 1960,
+        "fcp": 1960,
+        "jsBytes": 1115223
+      },
+      {
+        "cls": 0.09900305122863368,
+        "lcp": 1752,
+        "fcp": 1752,
+        "jsBytes": 1115223
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/",
+    "fcp": 2572,
+    "lcp": 2572,
+    "cls": 0,
+    "jsBytes": 810303,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2576,
+        "fcp": 2576,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 2572,
+        "fcp": 2572,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 2556,
+        "fcp": 2556,
+        "jsBytes": 810303
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/nexus",
+    "fcp": 2528,
+    "lcp": 2528,
+    "cls": 0,
+    "jsBytes": 810303,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2528,
+        "fcp": 2528,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 2524,
+        "fcp": 2524,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 2548,
+        "fcp": 2548,
+        "jsBytes": 810303
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/nexus/connectivity",
+    "fcp": 1944,
+    "lcp": 1944,
+    "cls": 0,
+    "jsBytes": 810303,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1944,
+        "fcp": 1944,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 1940,
+        "fcp": 1940,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 1944,
+        "fcp": 1944,
+        "jsBytes": 810303
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/nexus/stream",
+    "fcp": 1896,
+    "lcp": 1896,
+    "cls": 0,
+    "jsBytes": 810303,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1892,
+        "fcp": 1892,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 1896,
+        "fcp": 1896,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 1920,
+        "fcp": 1920,
+        "jsBytes": 810303
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/nexus/use-cases",
+    "fcp": 2340,
+    "lcp": 2340,
+    "cls": 0,
+    "jsBytes": 810303,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2336,
+        "fcp": 2336,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 2344,
+        "fcp": 2344,
+        "jsBytes": 810303
+      },
+      {
+        "cls": 0,
+        "lcp": 2340,
+        "fcp": 2340,
+        "jsBytes": 810303
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/solutions/agentic-test-development",
+    "fcp": 1892,
+    "lcp": 1892,
+    "cls": 0,
+    "jsBytes": 822085,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1892,
+        "fcp": 1892,
+        "jsBytes": 822085
+      },
+      {
+        "cls": 0,
+        "lcp": 1884,
+        "fcp": 1884,
+        "jsBytes": 822085
+      },
+      {
+        "cls": 0,
+        "lcp": 1896,
+        "fcp": 1896,
+        "jsBytes": 822085
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/research",
+    "fcp": 1928,
+    "lcp": 1928,
+    "cls": 0,
+    "jsBytes": 1991359,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1940,
+        "fcp": 1940,
+        "jsBytes": 1991359
+      },
+      {
+        "cls": 0,
+        "lcp": 1928,
+        "fcp": 1928,
+        "jsBytes": 1991359
+      },
+      {
+        "cls": 0,
+        "lcp": 1904,
+        "fcp": 1904,
+        "jsBytes": 1991359
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/contact",
+    "fcp": 2260,
+    "lcp": 2260,
+    "cls": 0,
+    "jsBytes": 832885,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 2260,
+        "fcp": 2260,
+        "jsBytes": 832885
+      },
+      {
+        "cls": 0,
+        "lcp": 2256,
+        "fcp": 2256,
+        "jsBytes": 832885
+      },
+      {
+        "cls": 0,
+        "lcp": 2260,
+        "fcp": 2260,
+        "jsBytes": 832885
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "route": "/faq",
+    "fcp": 1988,
+    "lcp": 1988,
+    "cls": 0,
+    "jsBytes": 822129,
+    "measurements": [
+      {
+        "cls": 0,
+        "lcp": 1988,
+        "fcp": 1988,
+        "jsBytes": 822129
+      },
+      {
+        "cls": 0,
+        "lcp": 1996,
+        "fcp": 1996,
+        "jsBytes": 822129
+      },
+      {
+        "cls": 0,
+        "lcp": 1980,
+        "fcp": 1980,
+        "jsBytes": 822129
+      }
+    ]
+  }
+]

@@ -142,7 +142,7 @@ const ContactForm = ({ topic = null }) => {
 
   if (status === 'sent' || status === 'preview') {
     return (
-      <div className="rounded-2xl border border-primary/40 bg-primary/10 p-6 text-center" role="status">
+      <div className="rounded-sm border border-primary/40 bg-primary/10 p-6 text-center" role="status">
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-dark-bg">
           <FiCheck className="text-2xl" strokeWidth={3} aria-hidden="true" />
         </span>
@@ -155,13 +155,13 @@ const ContactForm = ({ topic = null }) => {
               <span className="ph-no-capture break-all text-light-text">{email.trim()}</span> {REPLY_TIME}.
             </p>
             {/* Peak-end: finish on a useful next step, not a dead end. */}
-            <div className="mt-6 border-t border-white/10 pt-5">
+            <div className="mt-6 border-t border-ink/15 pt-5">
               <p className="text-sm font-semibold text-light-text">While you wait</p>
               <p className="mt-1 text-sm leading-6 text-gray-text">See how AI-ready your test bench is: 4 questions, about 30 seconds.</p>
               <Link
                 to={withFunnelParams('/ai-readiness')}
                 onClick={() => track('contact_sent_next_clicked', { target: 'ai_readiness', topic })}
-                className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-white/20 px-5 text-sm font-semibold text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-ink/15 px-5 text-sm font-semibold text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 Check your test bench
                 <FiArrowRight aria-hidden="true" />
@@ -186,7 +186,7 @@ const ContactForm = ({ topic = null }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="relative rounded-2xl border border-white/10 bg-dark-card/80 p-6 shadow-2xl backdrop-blur-xl md:p-7">
+    <form onSubmit={handleSubmit} noValidate className="relative rounded-sm border border-ink/15 bg-dark-card/80 p-6   md:p-7">
       {/* Honeypot: hidden from people and assistive tech; the server discards submissions that fill it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>
@@ -210,8 +210,8 @@ const ContactForm = ({ topic = null }) => {
         onBlur={handleEmailBlur}
         aria-invalid={errors.email ? 'true' : undefined}
         aria-describedby={errors.email ? 'contact-email-error' : emailFix ? 'contact-email-fix' : undefined}
-        className={`mt-2 h-14 w-full rounded-xl border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
-          errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-white/15 focus:border-primary focus:ring-primary'
+        className={`mt-2 h-14 w-full rounded-sm border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
+          errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-ink/15 focus:border-primary focus:ring-primary'
         }`}
       />
       {/* One line is reserved once an email is typed, so the error or typo hint that appears when the
@@ -247,7 +247,7 @@ const ContactForm = ({ topic = null }) => {
               aria-pressed={message === item.text}
               onClick={() => chooseStarter(item)}
               className={`min-h-[44px] rounded-full border px-4 text-sm font-medium transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                message === item.text ? 'border-primary bg-primary/15 text-light-text' : 'border-white/15 text-gray-text hover:border-primary/60 hover:text-light-text'
+                message === item.text ? 'border-primary bg-primary/15 text-light-text' : 'border-ink/15 text-gray-text hover:border-primary/60 hover:text-light-text'
               }`}
             >
               {item.label}
@@ -266,8 +266,8 @@ const ContactForm = ({ topic = null }) => {
         aria-invalid={errors.message ? 'true' : undefined}
         aria-describedby={errors.message ? 'contact-message-error' : undefined}
         // text-base (16px): smaller makes iOS Safari zoom the page on focus.
-        className={`${showStarters ? 'mt-3' : 'mt-2'} w-full resize-y rounded-xl border bg-dark-bg px-4 py-3 text-base leading-6 text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
-          errors.message ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-white/15 focus:border-primary focus:ring-primary'
+        className={`${showStarters ? 'mt-3' : 'mt-2'} w-full resize-y rounded-sm border bg-dark-bg px-4 py-3 text-base leading-6 text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
+          errors.message ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-ink/15 focus:border-primary focus:ring-primary'
         }`}
       />
       {errors.message && <p id="contact-message-error" role="alert" className="mt-2 text-sm text-red-300">{errors.message}</p>}

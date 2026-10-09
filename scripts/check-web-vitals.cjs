@@ -86,6 +86,8 @@ const measure = async (browser, routePath) => {
     viewport: { width: 390, height: 844 },
     userAgent: 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36',
   });
+  // Lab runs must not count as ad visits or production analytics events.
+  await page.route(/^https?:\/\/(t\.plotune\.net|[a-z0-9.-]*posthog\.com|snap\.licdn\.com|px\.ads\.linkedin\.com|www\.googletagmanager\.com|[a-z0-9.-]*google-analytics\.com|[a-z0-9.-]*googleadservices\.com|[a-z0-9.-]*doubleclick\.net|www\.google\.com)\//, route => route.abort());
   const client = await page.context().newCDPSession(page);
   await client.send('Network.enable');
   await client.send('Network.emulateNetworkConditions', {

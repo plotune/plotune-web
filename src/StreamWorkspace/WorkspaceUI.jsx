@@ -184,7 +184,7 @@ export function Trend({
             stroke="#b34540"
             strokeDasharray="5 4"
           />
-          <text x="300" y={y(threshold) - 6} style={{ fill: "#b34540" }}>
+          <text x="44" y={y(threshold) - 6} style={{ fill: "#b34540" }}>
             Limit {threshold} {unit}
           </text>
         </>
