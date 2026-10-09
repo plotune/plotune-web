@@ -8,7 +8,7 @@ Nexus connects to physical test systems. Stream provides an independent event mo
 
 [Contact Us ↗](https://www.plotune.net/contact?entry_source=direct)[Learn More →](https://www.plotune.net/nexus/connectivity)
 
-The Stream workspace in this repository is a local MVP demo. Continuous validation, automated actions and richer measurement workflows are explored in the separate future-product reference.
+The Stream demo experience runs in your browser with sample data. Continuous validation, automated actions and richer measurement workflows are explored in the separate future-product reference.
 
 01 / Integration model  Illustrative workflow
 
@@ -49,7 +49,7 @@ A source that can make HTTP requests can send event data; Nexus is one possible 
 
 ### Inspect
 
-Use the MVP demo to explore event history, filters and the complete JSON payload.
+Use the demo experience to explore event history, filters and the complete JSON payload.
 
 04 
 
@@ -63,7 +63,7 @@ Follow a device or session across events. Keep the distinction between event his
 
 Nexus documentation describes local artifacts and result retrieval. The Stream demo shows a source-agnostic event envelope and example setup contracts.
 
-[Open the MVP demo ↗](https://www.plotune.net/stream/workspace)[Data handling →](https://www.plotune.net/docs/nexus/data-handling)
+[Try the demo experience ↗](https://www.plotune.net/stream/workspace)[Data handling →](https://www.plotune.net/docs/nexus/data-handling)
 
 Illustrative event / not a live result 
 

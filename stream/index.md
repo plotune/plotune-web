@@ -6,9 +6,9 @@ Plotune Stream / Event infrastructure
 
 Event history for physical engineering systems. Send from the tools you already use; inspect names, timestamps, optional device and session context, and arbitrary JSON properties.
 
-[Explore the MVP demo ↗](https://www.plotune.net/stream/workspace)[Discuss your integration →](https://www.plotune.net/contact)
+[Try the demo experience ↗](https://www.plotune.net/stream/workspace)[Discuss your integration →](https://www.plotune.net/contact)
 
-The workspace is a local frontend demo with synthetic data. Capture endpoints and setup examples are illustrative; no production event service is connected.
+The demo experience runs in your browser with sample data. Its setup examples are complete integrations; the demo itself does not send them to a production event service.
 
 01 / Source-agnostic ingestion  HTTP
 
@@ -50,7 +50,7 @@ Illustrative payload / not a live event
 
 03 / Choose your experience  Existing routes, distinct capabilities
 
-[MVP demoEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/workspace)[Account toolsStream managementThe existing authenticated stream and network management experience.↗](https://www.plotune.net/streams)[Live connectionSignal inspectionThe existing connection interface for configured streams.↗](https://www.plotune.net/streams/connect)
+[Demo experienceEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/workspace)[Account toolsStream managementThe existing authenticated stream and network management experience.↗](https://www.plotune.net/streams)[Live connectionSignal inspectionThe existing connection interface for configured streams.↗](https://www.plotune.net/streams/connect)
 
 A separate [future-product reference](https://www.plotune.net/stream/prototypes/vision) explores synthetic runs, measurements and processors. These are prototype capabilities.
 

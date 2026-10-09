@@ -60,7 +60,7 @@ Any source that speaks HTTP
 
 Bring events from Python, C/C++, CAPL, MATLAB, ROS, shell scripts or Nexus into an inspectable history. Stream is independent of the hardware that sends it.
 
-[Explore Stream ↗](https://www.plotune.net/stream)[Open the MVP demo →](https://www.plotune.net/stream/workspace)
+[Explore Stream ↗](https://www.plotune.net/stream)[Try the demo experience →](https://www.plotune.net/stream/workspace)
 
 Event structure / illustrative
 
