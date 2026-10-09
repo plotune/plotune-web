@@ -289,29 +289,225 @@ export function createSimulatedFirstEvent(id, timestamp) {
   };
 }
 
+// Copy-paste integrations: each example is a complete program or sketch in that
+// language's normal HTTP path, sending the same event as the curl example.
 export function ingestionSnippet(language, apiKey) {
+  const endpoint = CAPTURE_ENDPOINT;
+  const event = ONBOARDING_EVENT_NAME;
   const payload = {
     api_key: apiKey,
-    event: ONBOARDING_EVENT_NAME,
-    // Optional context: include either field when the sender has one.
-    // device_id: "motor-003",
-    // session_id: "test-run-817",
+    event,
+    device_id: "motor-003",
+    session_id: "test-run-817",
     properties: { temperature: 72.4, rpm: 1840, state: "running" },
   };
-  const body = JSON.stringify(payload);
   if (language === "Python")
-    return `import json\nfrom urllib.request import Request, urlopen\n\npayload = ${JSON.stringify(payload, null, 4)}\nrequest = Request(\n    "${CAPTURE_ENDPOINT}",\n    data=json.dumps(payload).encode("utf-8"),\n    headers={"Content-Type": "application/json"},\n    method="POST",\n)\nwith urlopen(request, timeout=10) as response:\n    print(response.status)`;
+    return String.raw`# send_event.py: Python 3 standard library only.
+import json
+from urllib.error import URLError
+from urllib.request import Request, urlopen
+
+ENDPOINT = "${endpoint}"
+API_KEY = "${apiKey}"
+
+
+def send_event(event, properties, device_id=None, session_id=None):
+    payload = {"api_key": API_KEY, "event": event, "properties": properties}
+    if device_id:
+        payload["device_id"] = device_id
+    if session_id:
+        payload["session_id"] = session_id
+    request = Request(
+        ENDPOINT,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urlopen(request, timeout=10) as response:
+        return response.status
+
+
+if __name__ == "__main__":
+    try:
+        status = send_event(
+            "${event}",
+            {"temperature": 72.4, "rpm": 1840, "state": "running"},
+            device_id="motor-003",
+            session_id="test-run-817",
+        )
+        print("sent", status)
+    except URLError as error:
+        print("send failed:", error)`;
   if (language === "C/C++")
-    return `/* Illustrative libcurl example; handle errors in your application. */\nCURL *request = curl_easy_init();\nstruct curl_slist *headers = NULL;\nconst char *payload = ${JSON.stringify(body)};\nheaders = curl_slist_append(headers, "Content-Type: application/json");\ncurl_easy_setopt(request, CURLOPT_URL, "${CAPTURE_ENDPOINT}");\ncurl_easy_setopt(request, CURLOPT_HTTPHEADER, headers);\ncurl_easy_setopt(request, CURLOPT_POSTFIELDS, payload);\ncurl_easy_perform(request);\ncurl_slist_free_all(headers);\ncurl_easy_cleanup(request);`;
+    return String.raw`/* send_event.c. Build: cc send_event.c -lcurl -o send_event */
+#include <stdio.h>
+#include <curl/curl.h>
+
+int main(void) {
+  char body[512];
+  snprintf(body, sizeof body,
+    "{\"api_key\":\"%s\",\"event\":\"%s\",\"device_id\":\"motor-003\","
+    "\"session_id\":\"test-run-817\",\"properties\":{\"temperature\":%.1f,"
+    "\"rpm\":%d,\"state\":\"running\"}}",
+    "${apiKey}", "${event}", 72.4, 1840);
+
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+  CURL *curl = curl_easy_init();
+  if (!curl) return 1;
+  struct curl_slist *headers =
+    curl_slist_append(NULL, "Content-Type: application/json");
+  curl_easy_setopt(curl, CURLOPT_URL, "${endpoint}");
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+
+  CURLcode rc = curl_easy_perform(curl);
+  long status = 0;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
+  if (rc != CURLE_OK) fprintf(stderr, "send failed: %s\n", curl_easy_strerror(rc));
+  else printf("sent %ld\n", status);
+
+  curl_slist_free_all(headers);
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
+  return rc == CURLE_OK ? 0 : 1;
+}`;
   if (language === "Arduino / ESP32")
-    return `// ESP32 Arduino core example, after Wi-Fi connects.\n// Define rootCACertificate as the CA certificate for stream.plotune.net.\n#include <WiFiClientSecure.h>\n#include <HTTPClient.h>\nWiFiClientSecure tls;\ntls.setCACert(rootCACertificate);\nHTTPClient http;\nhttp.begin(tls, "${CAPTURE_ENDPOINT}");\nhttp.addHeader("Content-Type", "application/json");\nconst char *payload = R"json(${body})json";\nint status = http.POST(payload);\nhttp.end();`;
+    return String.raw`// ESP32 sketch (Arduino core): reads a sensor and sends an event every 5 s.
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+
+const char *WIFI_SSID = "your-wifi";
+const char *WIFI_PASSWORD = "your-password";
+const char *ENDPOINT = "${endpoint}";
+const char *API_KEY = "${apiKey}";
+const char *ROOT_CA = "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----\n";
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) delay(250);
+}
+
+void sendSample(float temperature, int rpm) {
+  WiFiClientSecure tls;
+  tls.setCACert(ROOT_CA);
+  HTTPClient http;
+  http.begin(tls, ENDPOINT);
+  http.addHeader("Content-Type", "application/json");
+  String body = String("{\"api_key\":\"") + API_KEY +
+    "\",\"event\":\"${event}\",\"device_id\":\"esp32-motor-003\"," +
+    "\"properties\":{\"temperature\":" + String(temperature, 1) +
+    ",\"rpm\":" + rpm + ",\"state\":\"running\"}}";
+  int status = http.POST(body);
+  Serial.printf("sent %d\n", status);
+  http.end();
+}
+
+void loop() {
+  float temperature = analogReadMilliVolts(34) / 10.0;  // LM35: 10 mV per degree C
+  sendSample(temperature, 1840);
+  delay(5000);
+}`;
   if (language === "MATLAB")
-    return `payload = struct( ...\n    'api_key', '${apiKey}', ...\n    'event', 'motor.sample', ...\n    'properties', struct('temperature', 72.4, 'rpm', 1840, 'state', 'running'));\noptions = weboptions('MediaType', 'application/json');\nresponse = webwrite('${CAPTURE_ENDPOINT}', payload, options);`;
+    return String.raw`% send_event.m: works in MATLAB R2016b or newer.
+endpoint = '${endpoint}';
+payload = struct( ...
+    'api_key', '${apiKey}', ...
+    'event', '${event}', ...
+    'device_id', 'motor-003', ...
+    'session_id', 'test-run-817', ...
+    'properties', struct('temperature', 72.4, 'rpm', 1840, 'state', 'running'));
+options = weboptions('MediaType', 'application/json', 'Timeout', 10);
+try
+    webwrite(endpoint, payload, options);
+    disp('sent');
+catch err
+    warning('send failed: %s', err.message);
+end`;
   if (language === "ROS 2")
-    return `# Inside an rclpy subscription callback, with sensor message "msg"\nimport json\nfrom urllib.request import Request, urlopen\n\npayload = {\n    "api_key": "${apiKey}",\n    "event": "motor.sample",\n    "properties": {"temperature": float(msg.data), "rpm": 1840, "state": "running"},\n}\nrequest = Request(\n    "${CAPTURE_ENDPOINT}",\n    data=json.dumps(payload).encode("utf-8"),\n    headers={"Content-Type": "application/json"},\n    method="POST",\n)\nwith urlopen(request, timeout=10) as response:\n    print(response.status)`;
+    return String.raw`# stream_bridge.py: forwards /motor/temperature to Plotune Stream.
+# Run: python3 stream_bridge.py (with your ROS 2 environment sourced)
+import json
+from urllib.request import Request, urlopen
+
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32
+
+ENDPOINT = "${endpoint}"
+API_KEY = "${apiKey}"
+
+
+class StreamBridge(Node):
+    def __init__(self):
+        super().__init__("plotune_stream_bridge")
+        self.create_subscription(Float32, "/motor/temperature", self.on_temperature, 10)
+
+    def on_temperature(self, msg):
+        payload = {
+            "api_key": API_KEY,
+            "event": "${event}",
+            "device_id": "motor-003",
+            "session_id": "test-run-817",
+            "properties": {"temperature": round(msg.data, 2), "rpm": 1840, "state": "running"},
+        }
+        request = Request(
+            ENDPOINT,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urlopen(request, timeout=5) as response:
+                self.get_logger().info(f"sent {response.status}")
+        except OSError as error:
+            self.get_logger().warning(f"send failed: {error}")
+
+
+def main():
+    rclpy.init()
+    rclpy.spin(StreamBridge())
+
+
+if __name__ == "__main__":
+    main()`;
   if (language === "CAPL")
-    return `// Illustrative HTTP adapter pseudocode, not native CAPL functions.\n// Map this request to an HTTP-capable adapter in your test environment.\nhttpPost(\n  "${CAPTURE_ENDPOINT}",\n  "application/json",\n  ${JSON.stringify(body)}\n);`;
-  return `curl ${CAPTURE_ENDPOINT} \\\n  -H 'Content-Type: application/json' \\\n  -d '${JSON.stringify(payload, null, 2)}'`;
+    return String.raw`/* CANoe CAPL: samples a CAN message and sends one event per second.
+   Replace EngineData and its signals with names from your DBC.
+   Uses curl.exe (included with Windows 10 and later). */
+variables {
+  char endpoint[100] = "${endpoint}";
+  char apiKey[64] = "${apiKey}";
+  float lastTemperature;
+  long lastRpm;
+  msTimer sendTimer;
+}
+
+on start { setTimerCyclic(sendTimer, 1000); }
+
+on message EngineData {
+  lastTemperature = this.Temperature.phys;
+  lastRpm = (long)this.EngineSpeed.phys;
+}
+
+on timer sendTimer {
+  char body[256];
+  char args[400];
+  dword file;
+  snprintf(body, elcount(body),
+    "{\"api_key\":\"%s\",\"event\":\"${event}\",\"device_id\":\"canoe-bench-01\",\"properties\":{\"temperature\":%.1f,\"rpm\":%d,\"state\":\"running\"}}",
+    apiKey, lastTemperature, lastRpm);
+  file = openFileWrite("plotune_event.json", 0);
+  filePutString(body, elcount(body), file);
+  fileClose(file);
+  snprintf(args, elcount(args),
+    "-s -X POST %s -H \"Content-Type: application/json\" --data @plotune_event.json",
+    endpoint);
+  sysExecCmd("curl", args);
+}`;
+  return `curl -X POST ${endpoint} \\\n  -H 'Content-Type: application/json' \\\n  -d '${JSON.stringify(payload, null, 2)}'`;
 }
 export function mcpSnippet(apiKey) {
   return JSON.stringify(

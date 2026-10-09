@@ -376,7 +376,7 @@ export default function StreamMVP() {
           onClick={() =>
             copy(
               ingestionSnippet(language, project.key),
-              "Illustrative integration snippet",
+              "Integration example",
             )
           }
         >
@@ -392,11 +392,11 @@ export default function StreamMVP() {
         </pre>
       </div>
       <p className="mvp-contract-note">
-        Illustrative API contract · demo key · no requests are sent by this
-        preview.
-        {language === "CAPL" ? " CAPL uses adapter pseudocode for your test environment." : ""}
-        {language === "Arduino / ESP32" ? " Configure TLS with the server CA certificate." : ""}
-        {language === "ROS 2" ? " Example code belongs inside an rclpy subscription callback." : ""}
+        Uses this project's demo key. Replace it with your project key; this demo doesn't send requests.
+        {language === "C/C++" ? " Requires libcurl." : ""}
+        {language === "Arduino / ESP32" ? " Paste the server's root CA certificate into ROOT_CA." : ""}
+        {language === "ROS 2" ? " Runs as a standalone rclpy node; batch events for high-rate topics." : ""}
+        {language === "CAPL" ? " Calls curl.exe through sysExecCmd; adjust message and signal names to your DBC." : ""}
       </p>
     </div>
   );
@@ -1047,7 +1047,7 @@ export default function StreamMVP() {
         >
           <FiMenu />
         </button>
-        <a className="sw-brand" href="/stream/workspace/">
+        <a className="sw-brand" href="/" aria-label="Plotune home">
           <img className="mvp-brand-logo" src={plotuneLogo} alt="" />
           <strong>
             Plotune <span>Stream</span>

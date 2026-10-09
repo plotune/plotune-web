@@ -160,3 +160,9 @@
 .research-site .research-article blockquote { border-left-color: #1c242b; border-radius: 0; background: #eeeee6; }
 .research-site .chart-legend__row { flex-wrap: wrap; row-gap: 6px; }
 .research-site .chart-legend__item { white-space: normal; min-width: 0; }
+/* Brand: Plotune logo + name goes home; "Research" goes to the research overview. */
+.research-site .research-brand { display: flex; align-items: center; gap: 10px; }
+.research-site .research-brand a { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #1c242b; }
+.research-site .research-brand-plotune img { width: 26px; height: 26px; object-fit: contain; }
+.research-site .research-brand-plotune span { font-weight: 750; font-size: 15px; letter-spacing: -.02em; color: #1c242b; }
+.research-site .research-brand a:hover span, .research-site .research-brand a:hover strong { color: #00594f; }

@@ -2035,3 +2035,4 @@
 .sw-app .mvp-usage progress { height: 4px; }
 .sw-app .sw-dialog::backdrop { background: #1c242b70; backdrop-filter: none; }
 @media(max-width:700px) { .sw-app .sw-page-head h1 { font-size: 27px; } .sw-app .sw-button { min-height: 44px; } }
+.sw-brand-logo { width: 28px; height: 28px; flex: none; object-fit: contain; }

@@ -1,3 +1,4 @@
+import plotuneLogo from "../assets/logo.png";
 import React, { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
@@ -1788,10 +1789,8 @@ export default function StreamWorkspace() {
         >
           <FiMenu />
         </button>
-        <a className="sw-brand" href="/stream/prototypes/vision">
-          <span className="sw-brand-symbol">
-            <FiActivity />
-          </span>
+        <a className="sw-brand" href="/" aria-label="Plotune home">
+          <img className="sw-brand-logo" src={plotuneLogo} alt="" />
           <strong>
             Plotune <span>Stream</span>
           </strong>
