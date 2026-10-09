@@ -1125,6 +1125,7 @@ const NexusUseCases = () => {
               <p className="mt-6 text-lg leading-8 text-gray-text">
                 Switch between Claude and Codex, follow the full runtime on Plotune Nexus, and read the artifacts that come out of each case. Then jump to the scenarios built for your industry.
               </p>
+              <p className="mt-4 text-sm leading-6 text-gray-text">Illustrative, prerecorded scenarios. No live hardware is connected to this page.</p>
               <div className="mt-8">
                 <a
                   href={contactMailto('Plotune Nexus')}

@@ -448,3 +448,5 @@ body.claude-code-shell .bottombar { border-radius: 2px; box-shadow: none; border
 body.claude-code-shell .stab, body.claude-code-shell .breplay { min-height: 34px; color: #adbbb4; border-radius: 2px; }
 @media(max-width:600px) { body.claude-code-shell .stab,body.claude-code-shell .breplay { min-height: 44px; } body.claude-code-shell .bottombar { height: auto; padding: 8px; flex-wrap: wrap; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+.demo-disclosure { padding: 9px 16px; color: #c2cfc7; font-size: 12px; line-height: 1.5; background: #26343a; border-bottom: 1px solid #526067; }
