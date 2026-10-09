@@ -507,3 +507,6 @@ img { max-width: 100%; }
 .embed-page > section { padding-top: 72px !important; padding-bottom: 72px !important; }
 .embed-page > section:first-of-type { padding-top: 128px !important; }
 @media (max-width: 640px) { .embed-page > section { padding-top: 44px !important; padding-bottom: 44px !important; } .embed-page > section:first-of-type { padding-top: 104px !important; } }
+/* Only code panels stay dark; other legacy black/xx tiles become ruled paper cells. */
+.legacy-doc div[class*="bg-black/"]:not(:has(pre, code)):not([class*="font-mono"]) { background: transparent !important; color: inherit !important; border-top: 1px solid var(--ink) !important; padding: 12px 0 !important; }
+.legacy-doc div[class*="bg-black/"]:not(:has(pre, code)):not([class*="font-mono"]) * { color: inherit; }

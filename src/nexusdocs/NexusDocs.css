@@ -312,3 +312,14 @@
   .site-docs .docs-content li { font-size: .94rem; line-height: 1.7; }
   .site-docs .docs-content pre { margin-inline: -1rem; border-inline: 0; font-size: .78rem; }
 }
+
+/* Phones: wide tables and code scroll sideways; fade the right edge so that is visible. */
+@media (max-width: 640px) {
+  .nexus-doc-body table, .nexus-doc-body pre, .site-docs .docs-content pre, .site-docs .docs-content table {
+    -webkit-mask-image: linear-gradient(to right, #000 86%, rgba(0,0,0,.25));
+    mask-image: linear-gradient(to right, #000 86%, rgba(0,0,0,.25));
+  }
+}
+@media (max-width: 640px) {
+  .nexus-doc-overview > section:first-of-type, .nexus-doc-page > section:first-of-type { padding-top: 96px !important; }
+}

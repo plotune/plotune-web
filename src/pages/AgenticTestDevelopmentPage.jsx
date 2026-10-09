@@ -19,7 +19,7 @@ const AgenticTestDevelopmentPage = () => (
       </div>
     </section>
 
-    <section className="pb-16">
+    <section className="pt-14 pb-16">
       <div className="container mx-auto px-5">
         <h2 className="text-xl font-semibold text-light-text">Traditional automation vs. an agentic workflow</h2>
       </div>

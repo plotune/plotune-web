@@ -1,0 +1,138 @@
+[
+  {
+    "path": "public/assets/favicon.ico",
+    "bytes": 34234
+  },
+  {
+    "path": "public/assets/logo.png",
+    "bytes": 15575
+  },
+  {
+    "path": "public/assets/plotune-nexus.webp",
+    "bytes": 135854
+  },
+  {
+    "path": "public/assets/web_dataops.png",
+    "bytes": 24139
+  },
+  {
+    "path": "public/favicon.ico",
+    "bytes": 34234
+  },
+  {
+    "path": "public/logo192.png",
+    "bytes": 11330
+  },
+  {
+    "path": "public/logo512.png",
+    "bytes": 32398
+  },
+  {
+    "path": "public/plots/loss_curve.svg",
+    "bytes": 45681
+  },
+  {
+    "path": "public/plots/numeric_summary.svg",
+    "bytes": 46361
+  },
+  {
+    "path": "public/plots/similarity_histograms.svg",
+    "bytes": 111632
+  },
+  {
+    "path": "public/plots/umap_clusters.svg",
+    "bytes": 218101
+  },
+  {
+    "path": "public/plots/umap_triplets.svg",
+    "bytes": 193834
+  },
+  {
+    "path": "src/assets/businessimpact-trend.svg",
+    "bytes": 3730
+  },
+  {
+    "path": "src/assets/connectivity-hub.svg",
+    "bytes": 6887
+  },
+  {
+    "path": "src/assets/favicon.ico",
+    "bytes": 34234
+  },
+  {
+    "path": "src/assets/features-cloud.svg",
+    "bytes": 2362
+  },
+  {
+    "path": "src/assets/features-core.svg",
+    "bytes": 3460
+  },
+  {
+    "path": "src/assets/features-stream.svg",
+    "bytes": 2716
+  },
+  {
+    "path": "src/assets/icons/api.svg",
+    "bytes": 464
+  },
+  {
+    "path": "src/assets/icons/billing.svg",
+    "bytes": 662
+  },
+  {
+    "path": "src/assets/icons/download.svg",
+    "bytes": 399
+  },
+  {
+    "path": "src/assets/icons/extensions.svg",
+    "bytes": 611
+  },
+  {
+    "path": "src/assets/icons/network.svg",
+    "bytes": 1493
+  },
+  {
+    "path": "src/assets/icons/overview.svg",
+    "bytes": 417
+  },
+  {
+    "path": "src/assets/icons/profile.svg",
+    "bytes": 990
+  },
+  {
+    "path": "src/assets/icons/security.svg",
+    "bytes": 418
+  },
+  {
+    "path": "src/assets/icons/stream.svg",
+    "bytes": 1105
+  },
+  {
+    "path": "src/assets/logo.png",
+    "bytes": 15575
+  },
+  {
+    "path": "src/assets/stream-pipeline.svg",
+    "bytes": 5234
+  },
+  {
+    "path": "src/assets/use-case-bus-gate.svg",
+    "bytes": 4244
+  },
+  {
+    "path": "src/assets/use-case-diff.svg",
+    "bytes": 3661
+  },
+  {
+    "path": "src/assets/use-case-document.svg",
+    "bytes": 3098
+  },
+  {
+    "path": "src/assets/use-case-mesh.svg",
+    "bytes": 3554
+  },
+  {
+    "path": "src/assets/use-case-timeline.svg",
+    "bytes": 3072
+  }
+]

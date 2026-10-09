@@ -23,3 +23,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .codex
+# Redesign QA screenshots (regenerate with scripts/redesign/browser.cjs)
+docs/redesign/evidence/

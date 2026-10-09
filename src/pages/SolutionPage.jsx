@@ -111,7 +111,7 @@ const SolutionPage = () => {
                 <p className="mt-2 text-gray-text">Plotune Nexus is one product, this is how it runs against {config.label}.</p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link to={withFunnelParams('/contact', { segment: config.slug, solution: config.slug })} className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
+                <Link to={withFunnelParams('/contact', { segment: config.slug, solution: config.slug })} className="inline-flex shrink-0 whitespace-nowrap items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
                   Discuss your setup <FiArrowRight />
                 </Link>
               </div>

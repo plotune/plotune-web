@@ -1,0 +1,286 @@
+{
+  "checks": [
+    {
+      "event": "cta_impression",
+      "pass": true
+    },
+    {
+      "event": "scroll_depth",
+      "pass": true
+    },
+    {
+      "event": "nexus_assessment_clicked",
+      "pass": true
+    },
+    {
+      "event": "both Nexus impression IDs",
+      "pass": true
+    },
+    {
+      "event": "UTM and funnel propagation",
+      "pass": true
+    }
+  ],
+  "destination": "http://localhost:4184/ai-readiness?segment=can-ecu-testing&solution=can-ecu-testing&entry_source=qa",
+  "bottomContact": "/contact?segment=can-ecu-testing&solution=can-ecu-testing&entry_source=qa",
+  "payloads": [
+    {
+      "event": "$pageview",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing"
+      }
+    },
+    {
+      "event": "$pageview",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing"
+      }
+    },
+    {
+      "event": "$set",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing"
+      }
+    },
+    {
+      "event": "cta_impression",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "cta_id": "nexus_hero_assessment",
+        "path": "/nexus",
+        "entry_source": "qa",
+        "segment": "can-ecu-testing",
+        "solution": "can-ecu-testing"
+      }
+    },
+    {
+      "event": "cta_impression",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "cta_id": "nexus_bottom_contact",
+        "path": "/nexus",
+        "entry_source": "qa",
+        "segment": "can-ecu-testing",
+        "solution": "can-ecu-testing"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 25,
+        "path": "/nexus"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 50,
+        "path": "/nexus"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 75,
+        "path": "/nexus"
+      }
+    },
+    {
+      "event": "nexus_assessment_clicked",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "entry_source": "qa",
+        "segment": "can-ecu-testing",
+        "solution": "can-ecu-testing",
+        "path": "/nexus"
+      }
+    },
+    {
+      "event": "$pageview",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 25,
+        "path": "/ai-readiness"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 50,
+        "path": "/ai-readiness"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 75,
+        "path": "/ai-readiness"
+      }
+    },
+    {
+      "event": "scroll_depth",
+      "properties": {
+        "attr_utm_source": "qa",
+        "attr_utm_campaign": "redesign",
+        "attr_platform": "qa",
+        "attr_landing_path": "/solutions/can-ecu-testing",
+        "percent": 90,
+        "path": "/ai-readiness"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/array/phc_oYVUYaQPBDJCHgaEgooHE2wSb9AeSWbwxeg5x3WAS4Je/config.js"
+    },
+    {
+      "method": "POST",
+      "path": "/e/",
+      "bodyBytes": 1146,
+      "contentType": "text/plain",
+      "parsedKeys": [
+        "api_key",
+        "batch",
+        "sent_at"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/array/phc_oYVUYaQPBDJCHgaEgooHE2wSb9AeSWbwxeg5x3WAS4Je/config"
+    },
+    {
+      "method": "POST",
+      "path": "/flags/",
+      "bodyBytes": 494,
+      "contentType": "text/plain",
+      "parsedKeys": [
+        "token",
+        "distinct_id",
+        "groups",
+        "person_properties",
+        "timezone",
+        "$device_id",
+        "sent_at"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/array/phc_oYVUYaQPBDJCHgaEgooHE2wSb9AeSWbwxeg5x3WAS4Je/config.js"
+    },
+    {
+      "method": "POST",
+      "path": "/e/",
+      "bodyBytes": 1084,
+      "contentType": "text/plain",
+      "parsedKeys": [
+        "api_key",
+        "batch",
+        "sent_at"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/array/phc_oYVUYaQPBDJCHgaEgooHE2wSb9AeSWbwxeg5x3WAS4Je/config"
+    },
+    {
+      "method": "POST",
+      "path": "/flags/",
+      "bodyBytes": 494,
+      "contentType": "text/plain",
+      "parsedKeys": [
+        "token",
+        "distinct_id",
+        "groups",
+        "person_properties",
+        "timezone",
+        "$device_id",
+        "sent_at"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/e/",
+      "bodyBytes": 5838,
+      "contentType": "application/json",
+      "parsedKeys": [
+        "api_key",
+        "batch",
+        "sent_at"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/e/",
+      "bodyBytes": 8407,
+      "contentType": "application/json",
+      "parsedKeys": [
+        "api_key",
+        "batch",
+        "sent_at"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/e/",
+      "bodyBytes": 13411,
+      "contentType": "application/json",
+      "parsedKeys": [
+        "api_key",
+        "batch",
+        "sent_at"
+      ]
+    }
+  ],
+  "limitation": "Telemetry is captured locally; ingestion in the production PostHog project is not exercised."
+}
