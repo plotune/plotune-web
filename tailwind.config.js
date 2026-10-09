@@ -6,15 +6,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#26A69A',
+        primary: '#00796B',
         'primary-dark': '#00796B',
-        secondary: '#3f51b5',
-        'dark-bg': '#121212',
-        'dark-surface': '#1e1e1e',
-        'dark-card': '#252525',
-        'dark-text': '#e0e0e0',
-        'light-text': '#f5f5f5',
-        'gray-text': '#9e9e9e',
+        secondary: '#5B62A7',
+        ink: '#1C242B',
+        'dark-bg': 'rgb(var(--color-paper) / <alpha-value>)',
+        'dark-surface': 'rgb(var(--color-surface) / <alpha-value>)',
+        'dark-card': 'rgb(var(--color-panel) / <alpha-value>)',
+        'dark-text': 'rgb(var(--color-ink) / <alpha-value>)',
+        'light-text': 'rgb(var(--color-ink) / <alpha-value>)',
+        'gray-text': 'rgb(var(--color-muted) / <alpha-value>)',
       },
       boxShadow: {
         custom: '0 4px 12px rgba(0, 0, 0, 0.25)',

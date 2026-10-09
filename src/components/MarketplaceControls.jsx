@@ -16,7 +16,7 @@ const MarketplaceControls = ({
   ];
 
   return (
-    <div className="bg-dark-card border-b border-white/5">
+    <div className="bg-dark-card border-b border-ink/15">
       <div className="container mx-auto px-5 py-5">
         {/* Search Bar - Minimal */}
         <div className="relative max-w-xl mx-auto mb-5">
@@ -26,7 +26,7 @@ const MarketplaceControls = ({
             aria-label="Search extensions"
             value={currentSearch}
             onChange={(e) => setCurrentSearch(e.target.value)}
-            className="w-full px-4 py-2.5 bg-dark-card border border-white/10 rounded-lg text-light-text placeholder-gray-text focus:outline-none focus:border-primary/30 transition-all duration-200 text-sm"
+            className="w-full px-4 py-2.5 bg-dark-card border border-ink/15 rounded-lg text-light-text placeholder-gray-text focus:outline-none focus:border-primary/30 transition-all duration-200 text-sm"
           />
           {currentSearch && (
             <button
@@ -48,7 +48,7 @@ const MarketplaceControls = ({
               className={`px-3 py-2 text-sm min-h-[44px] rounded-md font-medium transition-all duration-200 ${
                 currentFilter === filter.key
                   ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'bg-white/5 text-gray-text hover:bg-white/10 hover:text-light-text'
+                  : 'bg-dark-card text-gray-text hover:bg-dark-card hover:text-light-text'
               }`}
             >
               {filter.label}

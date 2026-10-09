@@ -1,4 +1,4 @@
-﻿import React, { lazy, Suspense, useLayoutEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, Link } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
@@ -32,41 +32,53 @@ import ScrollDepthTracker from './components/ScrollDepthTracker';
 // StorageManager, PackageMirror and every other page before React could paint
 // the Hero -- that eager bundle was the main driver behind the site's FCP/LCP
 // regression.
-const Faq = lazy(() => import('./pages/Faq'));
-const Extensions = lazy(() => import('./pages/Extensions'));
-const Download = lazy(() => import('./pages/Download'));
-const About = lazy(() => import('./pages/About'));
-const Careers = lazy(() => import('./pages/Careers'));
-const Login = lazy(() => import('./pages/Login'));
-const Register = lazy(() => import('./pages/Register'));
-const Legal = lazy(() => import('./pages/Legal'));
-const Docs = lazy(() => import('./pages/Docs'));
-const NexusDocsOverview = lazy(() => import('./pages/NexusDocsOverview'));
-const NexusDocPage = lazy(() => import('./pages/NexusDocPage'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Privacy = lazy(() => import('./pages/Privacy'));
-const ContactPage = lazy(() => import('./pages/Contact'));
-const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
-const Profile = lazy(() => import('./pages/Profile'));
-const Streams = lazy(() => import('./pages/Streams'));
-const StreamWorkspace = lazy(() => import('./StreamWorkspace/StreamWorkspace'));
-const StreamMVP = lazy(() => import('./StreamMVP/StreamMVP'));
-const DnsPage = lazy(() => import('./pages/DnsPage'));
-const Partnership = lazy(() => import('./pages/Partnership'));
-const PartnerApplication = lazy(() => import('./pages/PartnerApplication'));
-const PartnerPortal = lazy(() => import('./pages/PartnerPortal'));
-const StorageManager = lazy(() => import('./pages/StorageManager'));
-const PackageMirror = lazy(() => import('./pages/PackageMirror'));
-const Embeddings = lazy(() => import('./pages/Embeddings'));
-const SolutionPage = lazy(() => import('./pages/SolutionPage'));
-const AgenticTestDevelopmentPage = lazy(() => import('./pages/AgenticTestDevelopmentPage'));
-const StreamOverviewPage = lazy(() => import('./components/streams/StreamOverviewPage'));
-const ResearchOverview = lazy(() => import('./research/ResearchOverview'));
-const ResearchArticle = lazy(() => import('./research/ResearchArticle'));
-const ResearchResults = lazy(() => import('./research/ResearchResults'));
-const ResearchReports = lazy(() => import('./research/ResearchReports'));
-const ResearchMethodology = lazy(() => import('./research/ResearchMethodology'));
+// Resolve the initial route before replacing prerendered HTML. This prevents a
+// lazy route's loading fallback from erasing a paid landing page on first paint.
+const routePage = (load) => {
+  let resolved;
+  let pending;
+  const preload = () => pending || (pending = load().then(module => { resolved = module; return module; }));
+  const Page = lazy(() => resolved ? { then(resolve) { resolve(resolved); } } : preload());
+  Page.preload = preload;
+  return Page;
+};
+
+const Faq = routePage(() => import('./pages/Faq'));
+const Extensions = routePage(() => import('./pages/Extensions'));
+const Download = routePage(() => import('./pages/Download'));
+const About = routePage(() => import('./pages/About'));
+const Careers = routePage(() => import('./pages/Careers'));
+const Login = routePage(() => import('./pages/Login'));
+const Register = routePage(() => import('./pages/Register'));
+const Legal = routePage(() => import('./pages/Legal'));
+const Docs = routePage(() => import('./pages/Docs'));
+const NexusDocsOverview = routePage(() => import('./pages/NexusDocsOverview'));
+const NexusDocPage = routePage(() => import('./pages/NexusDocPage'));
+const Dashboard = routePage(() => import('./pages/Dashboard'));
+const Privacy = routePage(() => import('./pages/Privacy'));
+const ContactPage = routePage(() => import('./pages/Contact'));
+const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
+const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
+const Profile = routePage(() => import('./pages/Profile'));
+const Stream = routePage(() => import('./pages/Stream'));
+const Streams = routePage(() => import('./pages/Streams'));
+const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
+const StreamMVP = routePage(() => import('./StreamMVP/StreamMVP'));
+const DnsPage = routePage(() => import('./pages/DnsPage'));
+const Partnership = routePage(() => import('./pages/Partnership'));
+const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));
+const PartnerPortal = routePage(() => import('./pages/PartnerPortal'));
+const StorageManager = routePage(() => import('./pages/StorageManager'));
+const PackageMirror = routePage(() => import('./pages/PackageMirror'));
+const Embeddings = routePage(() => import('./pages/Embeddings'));
+const SolutionPage = routePage(() => import('./pages/SolutionPage'));
+const AgenticTestDevelopmentPage = routePage(() => import('./pages/AgenticTestDevelopmentPage'));
+const StreamOverviewPage = routePage(() => import('./components/streams/StreamOverviewPage'));
+const ResearchOverview = routePage(() => import('./research/ResearchOverview'));
+const ResearchArticle = routePage(() => import('./research/ResearchArticle'));
+const ResearchResults = routePage(() => import('./research/ResearchResults'));
+const ResearchReports = routePage(() => import('./research/ResearchReports'));
+const ResearchMethodology = routePage(() => import('./research/ResearchMethodology'));
 
 // The pillar page moved from /agentic-test-development to /solutions/agentic-test-development
 // so every funnel destination lives under /solutions/ — this keeps the old URL working.
@@ -146,16 +158,31 @@ const NavigationWrapper = ({ children }) => {
   );
 };
 
+const SiteFrame = ({ children }) => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    // Older route icons are local assets; fetch their CSS after the first paint,
+    // and only for the routes that use them. Product landings need no icon font.
+    if (/^\/(contact|about|careers|download|legal|partners|partner-portal|embed|faq|docs)(\/|$)/.test(pathname)) {
+      import('@fortawesome/fontawesome-free/css/all.min.css');
+    }
+  }, [pathname]);
+  const kind = /^\/(login|register|reset-password|verify-email)/.test(pathname) ? 'auth'
+    : /^\/(dashboard|profile|storage|mirror|dns|streams|partner-portal)/.test(pathname) ? 'account'
+    : pathname.startsWith('/docs') ? 'docs' : 'public';
+  return <div className={`app site-${kind}`}>{children}</div>;
+};
+
 function App() {
   return (
     <HelmetProvider>
       <AuthProvider>
       <Router>
-        <div className="app">
+        <SiteFrame>
           <ScrollToTop />
           <ScrollDepthTracker />
           <NavigationWrapper>
-            <Suspense fallback={<div className="min-h-[60vh]" aria-hidden="true" />}>
+            <Suspense fallback={<div className="route-loading" role="status"><span className="technical-label">Plotune</span><p>Loading this page…</p></div>}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/faq" element={<Faq />} />
@@ -178,6 +205,7 @@ function App() {
               <Route path="/reset-password" element={<ForgotPassword />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/stream" element={<Stream />} />
               <Route path="/streams" element={<Streams />} />
               <Route path="/stream/workspace" element={<StreamMVP />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
@@ -206,7 +234,7 @@ function App() {
             </Routes>
             </Suspense>
           </NavigationWrapper>
-        </div>
+        </SiteFrame>
         <ToastContainer position="bottom-right" autoClose={3000} />
       </Router>
       </AuthProvider>
@@ -218,3 +246,46 @@ export default App;
 
 
 
+
+const initialRoutes = [
+  [/^\/faq\/?$/, Faq],
+  [/^\/extensions\/?$/, Extensions],
+  [/^\/download\/?$/, Download],
+  [/^\/about\/?$/, About],
+  [/^\/careers\/?$/, Careers],
+  [/^\/login\/?$/, Login],
+  [/^\/register\/?$/, Register],
+  [/^\/legal\/?$/, Legal],
+  [/^\/docs\/?$/, Docs],
+  [/^\/docs\/nexus\/?$/, NexusDocsOverview],
+  [/^\/docs\/nexus\/[^\/]+\/?$/, NexusDocPage],
+  [/^\/privacy\/?$/, Privacy],
+  [/^\/contact\/?$/, ContactPage],
+  [/^\/verify-email\/?$/, VerifyEmail],
+  [/^\/reset-password\/?$/, ForgotPassword],
+  [/^\/dashboard\/?$/, Dashboard],
+  [/^\/profile\/?$/, Profile],
+  [/^\/stream\/?$/, Stream],
+  [/^\/streams\/?$/, Streams],
+  [/^\/stream\/workspace\/?$/, StreamMVP],
+  [/^\/stream\/prototypes\/vision\/?$/, StreamWorkspace],
+  [/^\/dns\/?$/, DnsPage],
+  [/^\/partners\/?$/, Partnership],
+  [/^\/partner-portal\/?$/, PartnerPortal],
+  [/^\/partners\/apply\/?$/, PartnerApplication],
+  [/^\/storage\/?$/, StorageManager],
+  [/^\/mirror\/?$/, PackageMirror],
+  [/^\/embed\/?$/, Embeddings],
+  [/^\/solutions\/agentic-test-development\/?$/, AgenticTestDevelopmentPage],
+  [/^\/solutions\/[^\/]+\/?$/, SolutionPage],
+  [/^\/research\/?$/, ResearchOverview],
+  [/^\/research\/results\/?$/, ResearchResults],
+  [/^\/research\/reports\/?$/, ResearchReports],
+  [/^\/research\/methodology\/?$/, ResearchMethodology],
+  [/^\/research\/articles\/[^\/]+\/?$/, ResearchArticle],
+  [/^\/streams\/connect\/?$/, StreamOverviewPage],
+];
+export const prepareInitialRoute = (pathname) => {
+  const match = initialRoutes.find(([pattern]) => pattern.test(pathname));
+  return match ? match[1].preload() : Promise.resolve();
+};

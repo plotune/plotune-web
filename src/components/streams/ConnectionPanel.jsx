@@ -47,11 +47,11 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
     : consumerUrl.replace(/(token=)[^&]+/, '$1••••••••');
 
   return (
-    <div className="bg-dark-card rounded-xl border border-white/10 p-5">
+    <div className="bg-dark-card rounded-sm border border-ink/15 p-5">
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
         <FaLink /> Connection Details
       </h3>
-      
+
       <div className="space-y-4">
         {/* Consumer URL */}
         <div>
@@ -79,7 +79,7 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
         </div>
 
         {/* Stream Info */}
-        <div className="space-y-3 pt-4 border-t border-white/10">
+        <div className="space-y-3 pt-4 border-t border-ink/15">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-gray-text">
               <FaUser className="w-4 h-4" />
@@ -89,7 +89,7 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
               {getOwnerUsername()}
             </span>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-gray-text">
               <FaCalendar className="w-4 h-4" />
@@ -99,7 +99,7 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
               {formatDate(stream.created_at)}
             </span>
           </div>
-          
+
           {/* Permissions for shared streams */}
           {isShared && stream.shared_permissions && (
             <>
@@ -112,7 +112,7 @@ const ConnectionPanel = ({ stream, isShared, user, connectionStatus, onCopyConne
                   {stream.shared_permissions.can_read ? '✓ Allowed' : '✗ Denied'}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-gray-text">
                   <FaEdit className="w-4 h-4" />

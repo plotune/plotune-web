@@ -7,8 +7,8 @@ const PartnerApplication = () => {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link 
-            to="/partners" 
+          <Link
+            to="/partners"
             className="inline-flex items-center text-primary hover:text-primary-dark mb-6 transition-colors"
           >
             <i className="fas fa-arrow-left mr-2"></i>
@@ -18,19 +18,19 @@ const PartnerApplication = () => {
             Partner Application
           </h1>
           <p className="text-gray-text text-lg max-w-2xl mx-auto">
-            Complete the form below to start your partnership journey with Plotune. 
+            Complete the form below to start your partnership journey with Plotune.
             We'll review your application and get back to you within 2 business days.
           </p>
         </div>
 
         {/* Google Form */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div className="p-1 bg-gradient-to-r from-primary to-blue-500"></div>
+        <div className="bg-white rounded-sm  overflow-hidden">
+          <div className="p-1 bg-dark-surface  to-blue-500"></div>
           <div className="p-8">
-            <iframe 
-              src="https://docs.google.com/forms/d/e/1FAIpQLSc2xQCMnvMH-_nHptO7cBudN5c9GrX79FpowISPhtp5puihHw/viewform?embedded=true" 
-              width="100%" 
-              height="1200" 
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSc2xQCMnvMH-_nHptO7cBudN5c9GrX79FpowISPhtp5puihHw/viewform?embedded=true"
+              width="100%"
+              height="1200"
               frameBorder="0"
               className="min-h-[800px]"
               title="Partner application form"

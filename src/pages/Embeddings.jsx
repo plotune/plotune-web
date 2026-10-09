@@ -20,21 +20,21 @@ const Embeddings = () => {
             </h1>
 
             <p className="text-gray-text text-lg leading-relaxed">
-              Move beyond generic embeddings. Our models are fine‑tuned on 
-              <strong className="text-primary"> automotive domain data</strong> – technical manuals, repair guides, 
+              Move beyond generic embeddings. Our models are fine‑tuned on
+              <strong className="text-primary"> automotive domain data</strong> – technical manuals, repair guides,
               sensor logs, and engineering documents – to deliver precise semantic understanding.
             </p>
 
             <p className="text-gray-text text-lg leading-relaxed">
-              But we didn’t stop there. The same architecture excels in 
-              <strong> electronics, control systems, and IoT</strong> domains, making Plotune Embeddings the 
+              But we didn’t stop there. The same architecture excels in
+              <strong> electronics, control systems, and IoT</strong> domains, making Plotune Embeddings the
               universal choice for engineering‑focused AI applications.
             </p>
 
             <div className="pt-4 flex gap-4 flex-wrap">
               <Link
                 to="/login"
-                className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 font-semibold"
+                className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full hover:bg-primary-dark   transition-all duration-300 font-semibold"
               >
                 Get API Key
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@ const Embeddings = () => {
               </Link>
               <Link
                 to="/docs"
-                className="inline-flex items-center px-6 py-3 border-2 border-primary text-primary rounded-full hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 font-semibold"
+                className="inline-flex items-center px-6 py-3 border-2 border-primary text-primary rounded-full hover:bg-primary/10  transition-all duration-300 font-semibold"
               >
                 API Reference
               </Link>
@@ -52,15 +52,15 @@ const Embeddings = () => {
 
           {/* Right: Visual Card - API Example (unchanged) */}
           <div className="flex-1 w-full max-w-lg">
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-2xl">
+            <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 ">
               <div className="flex items-start mb-6">
                 <div className="w-3 h-3 rounded-full bg-red-500 mr-2 mt-1"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2 mt-1"></div>
                 <div className="w-3 h-3 rounded-full bg-green-500 mr-4 mt-1"></div>
                 <h3 className="text-light-text font-semibold text-xl">One API Call</h3>
               </div>
-              
-              <div className="bg-dark-card rounded-xl p-4 font-mono text-sm text-gray-text overflow-x-auto">
+
+              <div className="bg-dark-card rounded-sm p-4 font-mono text-sm text-gray-text overflow-x-auto">
                 <pre className="whitespace-pre-wrap">
 {`curl -X POST https://api.plotune.net/v1/embeddings \
   -H "Authorization: Bearer YOUR_KEY" \
@@ -71,12 +71,12 @@ const Embeddings = () => {
   }`}
                 </pre>
               </div>
-              
+
               <div className="mt-4 text-gray-text text-sm">
                 Returns a 384‑dimensional vector ready for semantic search, clustering, or classification.
               </div>
-              
-              <div className="mt-6 pt-5 border-t border-white/10">
+
+              <div className="mt-6 pt-5 border-t border-ink/15">
                 <div className="flex justify-between items-center text-xs text-gray-text">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
@@ -90,7 +90,7 @@ const Embeddings = () => {
       </section>
 
       {/* NEW SECTION: Why Automotive Needs Specialized Embeddings */}
-      <section className="py-24 bg-dark-surface backdrop-blur-xl">
+      <section className="py-24 bg-dark-surface ">
         <div className="container mx-auto px-5">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
@@ -102,7 +102,7 @@ const Embeddings = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-dark-card rounded-xl p-8 border border-white/5 hover:border-primary/30 transition-all">
+            <div className="bg-dark-card rounded-sm p-8 border border-ink/15 hover:border-primary/30 transition-all">
               <div className="w-14 h-14 bg-primary/20 rounded-full flex items-center justify-center mb-5">
                 <i className="fas fa-wrench text-primary text-2xl"></i>
               </div>
@@ -112,7 +112,7 @@ const Embeddings = () => {
               </p>
             </div>
 
-            <div className="bg-dark-card rounded-xl p-8 border border-white/5 hover:border-primary/30 transition-all">
+            <div className="bg-dark-card rounded-sm p-8 border border-ink/15 hover:border-primary/30 transition-all">
               <div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mb-5">
                 <i className="fas fa-car-crash text-blue-500 text-2xl"></i>
               </div>
@@ -122,7 +122,7 @@ const Embeddings = () => {
               </p>
             </div>
 
-            <div className="bg-dark-card rounded-xl p-8 border border-white/5 hover:border-primary/30 transition-all">
+            <div className="bg-dark-card rounded-sm p-8 border border-ink/15 hover:border-primary/30 transition-all">
               <div className="w-14 h-14 bg-green-500/20 rounded-full flex items-center justify-center mb-5">
                 <i className="fas fa-microchip text-green-500 text-2xl"></i>
               </div>
@@ -145,15 +145,15 @@ const Embeddings = () => {
               </p>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+            <div className="bg-dark-card  rounded-sm p-8 border border-ink/15">
               <div className="flex items-start mb-6">
                 <div className="w-3 h-3 rounded-full bg-red-500 mr-2 mt-1"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2 mt-1"></div>
                 <div className="w-3 h-3 rounded-full bg-green-500 mr-4 mt-1"></div>
                 <h3 className="text-light-text font-semibold text-xl">API Example (Node.js)</h3>
               </div>
-              
-              <div className="bg-dark-card rounded-xl p-4 font-mono text-sm text-gray-text overflow-x-auto">
+
+              <div className="bg-dark-card rounded-sm p-4 font-mono text-sm text-gray-text overflow-x-auto">
                 <pre className="whitespace-pre-wrap">
 {`const response = await axios.post(
   "https://api.plotune.net/v1/embeddings",
@@ -204,7 +204,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 flex flex-col">
+            <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 flex flex-col">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-search text-primary text-xl"></i>
@@ -218,7 +218,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 flex flex-col">
+            <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 flex flex-col">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-robot text-blue-500 text-xl"></i>
@@ -232,7 +232,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 flex flex-col">
+            <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 flex flex-col">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-chart-line text-green-500 text-xl"></i>
@@ -246,7 +246,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 flex flex-col">
+            <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 flex flex-col">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <i className="fas fa-code-branch text-purple-500 text-xl"></i>
@@ -264,7 +264,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
       </section>
 
       {/* Why Plotune Embeddings? (Values Grid) - unchanged */}
-      <section className="py-24 bg-dark-surface backdrop-blur-xl">
+      <section className="py-24 bg-dark-surface ">
         <div className="container mx-auto px-5">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
@@ -277,7 +277,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-dark-card rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 hover:border-primary/30  transition-all duration-300">
                 <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
                   <i className="fas fa-car text-primary text-xl"></i>
                 </div>
@@ -287,7 +287,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
                 </p>
               </div>
 
-              <div className="bg-dark-card rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 hover:border-primary/30  transition-all duration-300">
                 <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mb-4">
                   <i className="fas fa-microchip text-blue-500 text-xl"></i>
                 </div>
@@ -297,7 +297,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
                 </p>
               </div>
 
-              <div className="bg-dark-card rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 hover:border-primary/30  transition-all duration-300">
                 <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
                   <i className="fas fa-plug text-green-500 text-xl"></i>
                 </div>
@@ -307,7 +307,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
                 </p>
               </div>
 
-              <div className="bg-dark-card rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+              <div className="bg-dark-card rounded-sm p-6 border border-ink/15 hover:border-primary/30  transition-all duration-300">
                 <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mb-4">
                   <i className="fas fa-shield-alt text-purple-500 text-xl"></i>
                 </div>
@@ -321,7 +321,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
         </div>
       </section>
       {/* Performance Visuals Section - REDESIGNED to be more balanced */}
-      <section className="py-24 bg-dark-surface backdrop-blur-xl">
+      <section className="py-24 bg-dark-surface ">
         <div className="container mx-auto px-5">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
@@ -332,7 +332,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
 
             {/* UMAP Triplets */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 lg:col-span-2">
+            <div className="bg-dark-card  rounded-sm p-6 border border-ink/15 lg:col-span-2">
               <h3 className="text-lg font-semibold text-light-text mb-2">Embedding Space</h3>
               <div className="aspect-video bg-dark-card rounded-lg flex items-center justify-center">
                 <img src="/plots/umap_triplets.svg" alt="UMAP projection" className="max-h-full max-w-full object-contain" />
@@ -340,7 +340,7 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
             </div>
 
             {/* Similarity Histograms - full width but smaller */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 lg:col-span-2">
+            <div className="bg-dark-card  rounded-sm p-6 border border-ink/15 lg:col-span-2">
               <h3 className="text-lg font-semibold text-light-text mb-2">Semantic Separation</h3>
               <div className="aspect-[2/1] bg-dark-card rounded-lg flex items-center justify-center p-4">
                 <div className="relative overflow-hidden rounded-lg">
@@ -365,17 +365,17 @@ console.log(response.data.data[0].embedding); // [0.023, -0.145, ..., 0.876]`}
       <section className="py-24 bg-dark-bg">
         <div className="container mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-            <div className="bg-dark-card rounded-xl p-6 border border-white/5 text-center">
+            <div className="bg-dark-card rounded-sm p-6 border border-ink/15 text-center">
               <div className="text-2xl mb-3">⚡</div>
               <h3 className="text-lg font-semibold text-light-text mb-2">Qdrant</h3>
               <p className="text-gray-text text-sm">Recommended for metadata filtering and hybrid search</p>
             </div>
-            <div className="bg-dark-card rounded-xl p-6 border border-white/5 text-center">
+            <div className="bg-dark-card rounded-sm p-6 border border-ink/15 text-center">
               <div className="text-2xl mb-3">🔍</div>
               <h3 className="text-lg font-semibold text-light-text mb-2">Pinecone</h3>
               <p className="text-gray-text text-sm">Managed service with built-in hybrid search</p>
             </div>
-            <div className="bg-dark-card rounded-xl p-6 border border-white/5 text-center">
+            <div className="bg-dark-card rounded-sm p-6 border border-ink/15 text-center">
               <div className="text-2xl mb-3">🗄️</div>
               <h3 className="text-lg font-semibold text-light-text mb-2">pgvector</h3>
               <p className="text-gray-text text-sm">PostgreSQL extension for existing relational data</p>

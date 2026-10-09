@@ -11,7 +11,7 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!key.trim() || !value.trim()) {
       return;
     }
@@ -26,7 +26,7 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
     setValueError('');
 
     setLoading(true);
-    
+
     try {
       const success = await onSendMessage(key, numericValue);
       if (success) {
@@ -43,9 +43,9 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
 
   if (!canWrite) {
     return (
-      <div className="bg-dark-card rounded-xl border border-white/10 p-5">
+      <div className="bg-dark-card rounded-sm border border-ink/15 p-5">
         <div className="text-center py-4">
-          <FaCode className="w-8 h-8 mx-auto mb-2 text-gray-500" />
+          <FaCode className="w-8 h-8 mx-auto mb-2 text-gray-text" />
           <p className="text-gray-text">Write access required to send messages</p>
         </div>
       </div>
@@ -54,9 +54,9 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
 
   if (connectionStatus !== 'connected') {
     return (
-      <div className="bg-dark-card rounded-xl border border-white/10 p-5">
+      <div className="bg-dark-card rounded-sm border border-ink/15 p-5">
         <div className="text-center py-4">
-          <FaPlug className="w-8 h-8 mx-auto mb-2 text-gray-500" />
+          <FaPlug className="w-8 h-8 mx-auto mb-2 text-gray-text" />
           <p className="text-gray-text">Connect to stream to send messages</p>
         </div>
       </div>
@@ -64,11 +64,11 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
   }
 
   return (
-    <div className="bg-dark-card rounded-xl border border-white/10 p-5">
+    <div className="bg-dark-card rounded-sm border border-ink/15 p-5">
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
         <FaPaperPlane /> Send Message
       </h3>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-gray-text text-sm mb-2">Key</label>
@@ -77,11 +77,11 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
             value={key}
             onChange={(e) => setKey(e.target.value)}
             placeholder="temperature"
-            className="w-full p-3 bg-dark-bg rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+            className="w-full p-3 bg-dark-bg rounded-lg border border-ink/15 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
             required
           />
         </div>
-        
+
         <div>
           <label className="block text-gray-text text-sm mb-2">Value (number)</label>
           <input
@@ -93,7 +93,7 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
             }}
             placeholder="23.5"
             className={`w-full p-3 bg-dark-bg rounded-lg border text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent ${
-              valueError ? 'border-red-500' : 'border-white/10'
+              valueError ? 'border-red-500' : 'border-ink/15'
             }`}
             required
           />
@@ -103,11 +103,11 @@ const MessageSender = ({ onSendMessage, canWrite, connectionStatus }) => {
         <button
           type="submit"
           disabled={loading || !key.trim() || !value.trim()}
-          className="w-full py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3 bg-dark-surface  -dark text-white rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-ink/15 border-t-white rounded-full animate-spin"></div>
               Sending...
             </>
           ) : (

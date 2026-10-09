@@ -16,25 +16,25 @@ export default function Bridge() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-exchange-alt text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Data Routing</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-plug text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Extension Links</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-bolt text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Minimal Latency</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-sync text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function Bridge() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -60,7 +60,7 @@ export default function Bridge() {
       {/* How It Works */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           How It Works
         </h2>
 
@@ -85,7 +85,7 @@ export default function Bridge() {
               description: "Bridge creates the connection and data flows between extensions"
             }
           ].map((item, index) => (
-            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+            <div key={index} className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4 mx-auto">
                 <span className="text-primary font-bold text-lg">{item.step}</span>
               </div>
@@ -98,7 +98,7 @@ export default function Bridge() {
           ))}
         </div>
 
-        <div className="mt-8 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl p-6 border border-primary/20">
+        <div className="mt-8 bg-dark-surface  to-transparent rounded-sm p-6 border border-primary/20">
           <h4 className="text-lg font-semibold text-light-text mb-3 flex items-center gap-2">
             <i className="fas fa-info-circle text-primary"></i>
             Architecture Note
@@ -113,12 +113,12 @@ export default function Bridge() {
       {/* Interface Elements */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Interface Elements
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
+          <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
             <h3 className="text-xl font-semibold text-light-text mb-4 flex items-center gap-3">
               <i className="fas fa-sliders-h text-primary"></i>
               Control Elements
@@ -157,7 +157,7 @@ export default function Bridge() {
             </div>
           </div>
 
-          <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
+          <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
             <h3 className="text-xl font-semibold text-light-text mb-4 flex items-center gap-3">
               <i className="fas fa-project-diagram text-secondary"></i>
               Connection Flow
@@ -192,7 +192,7 @@ export default function Bridge() {
       {/* Use Cases */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Use Cases
         </h2>
 
@@ -214,7 +214,7 @@ export default function Bridge() {
               description: "Connecting two independent data sources for synchronized analysis"
             }
           ].map((useCase, index) => (
-            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300 text-center">
+            <div key={index} className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <i className={`${useCase.icon} text-primary`}></i>
               </div>
@@ -227,7 +227,7 @@ export default function Bridge() {
 
       {/* Design Philosophy */}
       <section className="mb-12">
-        <div className="bg-gradient-to-r from-secondary/10 to-primary/10 rounded-2xl p-8 border border-secondary/20 text-center">
+        <div className="bg-dark-surface   rounded-sm p-8 border border-secondary/20 text-center">
           <h3 className="text-2xl font-bold text-light-text mb-4">
             Minimal Design, Maximum Flexibility
           </h3>
@@ -242,13 +242,13 @@ export default function Bridge() {
       {/* Related Components */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Related Components
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <a href="/docs?page=components-oscilloscope" className="group">
-            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 hover: transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-wave-square text-primary"></i>
               </div>
@@ -262,7 +262,7 @@ export default function Bridge() {
           </a>
 
           <a href="/docs?page=components-scatter" className="group">
-            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 hover: transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-chart-scatter text-primary"></i>
               </div>
@@ -276,7 +276,7 @@ export default function Bridge() {
           </a>
 
           <a href="/docs?page=extensions-bridging" className="group">
-            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 hover: transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-plug text-primary"></i>
               </div>
@@ -292,7 +292,7 @@ export default function Bridge() {
       </section>
 
       {/* Footer */}
-      <div className="text-center pt-8 border-t border-white/10">
+      <div className="text-center pt-8 border-t border-ink/15">
         <p className="text-gray-text italic">
           Last updated: November 2025 — Bridge Component v1.0.0
         </p>

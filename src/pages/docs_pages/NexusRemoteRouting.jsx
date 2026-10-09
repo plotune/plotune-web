@@ -74,7 +74,7 @@ export default function NexusRemoteRouting() {
       </div>
 
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Security Model
@@ -90,7 +90,7 @@ export default function NexusRemoteRouting() {
 
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-8 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Routing Flow
         </h2>
 
@@ -98,7 +98,7 @@ export default function NexusRemoteRouting() {
           {routingSteps.map((step, index) => (
             <article
               key={step.title}
-              className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5"
+              className="bg-dark-surface  rounded-sm p-6 border border-ink/15"
             >
               <div className="flex flex-col gap-4 md:flex-row md:items-start">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
@@ -109,7 +109,7 @@ export default function NexusRemoteRouting() {
                     {step.title}
                   </h3>
                   <p className="text-gray-text leading-relaxed mb-4">{step.body}</p>
-                  <code className="block overflow-x-auto rounded-lg border border-white/5 bg-black/30 px-4 py-3 text-sm text-primary">
+                  <code className="block overflow-x-auto rounded-lg border border-ink/15 bg-black/30 px-4 py-3 text-sm text-primary">
                     {step.code}
                   </code>
                 </div>
@@ -121,7 +121,7 @@ export default function NexusRemoteRouting() {
 
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Remote MCP Examples
         </h2>
 
@@ -129,7 +129,7 @@ export default function NexusRemoteRouting() {
           {clientCommands.map((client) => (
             <div
               key={client.name}
-              className="bg-gradient-to-br from-primary/10 to-transparent rounded-xl p-6 border border-primary/20"
+              className="bg-dark-surface  to-transparent rounded-sm p-6 border border-primary/20"
             >
               <h3 className="text-lg font-semibold text-light-text mb-3">{client.name}</h3>
               <code className="block min-h-[6rem] overflow-x-auto rounded-lg bg-black/30 p-3 text-sm leading-6 text-primary">
@@ -141,7 +141,7 @@ export default function NexusRemoteRouting() {
       </section>
 
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Clients That Require Headers
@@ -149,14 +149,14 @@ export default function NexusRemoteRouting() {
           <p className="text-gray-text leading-relaxed mb-5">
             Some MCP clients may require the device UUID as an explicit routing header. Use the same UUID from the dashboard in both the device-scoped URL and the <code className="text-primary">X-Plotune-Device-UUID</code> header.
           </p>
-          <pre className="overflow-x-auto rounded-xl border border-white/5 bg-black/30 p-4 text-sm leading-6 text-primary">
+          <pre className="overflow-x-auto rounded-sm border border-ink/15 bg-black/30 p-4 text-sm leading-6 text-primary">
             <code>{vscodeHeaderExample}</code>
           </pre>
         </div>
       </section>
 
       <section>
-        <div className="rounded-2xl border border-secondary/20 bg-gradient-to-br from-secondary/10 to-transparent p-8">
+        <div className="rounded-sm border border-secondary/20 bg-dark-surface  to-transparent p-8">
           <h2 className="text-2xl font-bold text-light-text mb-4">
             Share the Right URL
           </h2>

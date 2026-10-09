@@ -108,7 +108,7 @@ const StreamOverviewPage = () => {
   return (
     <div className="min-h-screen bg-dark-bg text-light-text">
       {/* Header */}
-      <div className="bg-dark-card border-b border-white/10">
+      <div className="bg-dark-card border-b border-ink/15">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -162,7 +162,7 @@ const StreamOverviewPage = () => {
                     if (totalPoints > 0 && !window.confirm('Clear all captured data points? This cannot be undone.')) return;
                     clearMessages();
                   }}
-                  className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                  className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-dark-surface transition"
                 >
                   Clear Data
                 </button>
@@ -173,7 +173,7 @@ const StreamOverviewPage = () => {
       </div>
 
       {/* Stats Bar */}
-      <div className="border-b border-white/5 bg-dark-card/50">
+      <div className="border-b border-ink/15 bg-dark-card/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center gap-2">

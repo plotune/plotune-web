@@ -203,21 +203,21 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
-      <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl w-full max-w-md">
+    <div className="min-h-screen bg-dark-surface   flex items-center justify-center py-8 px-4">
+      <div className="bg-dark-card rounded-sm p-8 border border-ink/15  w-full max-w-md">
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-primary/20">
             <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
             </svg>
           </div>
-          
+
           <h1 className="text-3xl font-bold text-light-text mb-2">
             {step === 'email' && 'Reset Password'}
             {step === 'code' && 'Enter Verification Code'}
             {step === 'reset' && 'Create New Password'}
           </h1>
-          
+
           <p className="text-gray-text">
             {step === 'email' && 'Enter your email to receive a reset code'}
             {step === 'code' && 'Enter the 9-digit code sent to your email'}
@@ -248,8 +248,8 @@ const ForgotPassword = () => {
                   }
                 }}
                 onBlur={validateEmail}
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                  errors.email ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                  errors.email ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
                 placeholder="Enter your email address"
                 autoComplete="email"
@@ -307,8 +307,8 @@ const ForgotPassword = () => {
                   }
                 }}
                 onBlur={validateCode}
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition text-center text-xl tracking-widest ${
-                  errors.code ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition text-center text-xl tracking-widest ${
+                  errors.code ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
                 placeholder="000000000"
                 maxLength={9}
@@ -389,8 +389,8 @@ const ForgotPassword = () => {
                     }
                   }}
                   onBlur={validatePassword}
-                  className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
-                    errors.newPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                  className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
+                    errors.newPassword ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                   }`}
                   placeholder="Create a strong password"
                   autoComplete="new-password"
@@ -420,13 +420,13 @@ const ForgotPassword = () => {
                   {errors.newPassword}
                 </p>
               )}
-              
+
               {newPassword.length > 0 && (
                 <div className="mt-2">
                   <div className="flex justify-between text-xs text-gray-text mb-1">
                     <span>Password strength: {passwordStrength().strength}</span>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-1.5">
+                  <div className="w-full bg-dark-surface rounded-full h-1.5">
                     <div
                       className={`h-1.5 rounded-full ${getPasswordStrengthColor()}`}
                       style={{ width: `${(passwordStrength().score / 5) * 100}%` }}
@@ -466,8 +466,8 @@ const ForgotPassword = () => {
                     }
                   }}
                   onBlur={validatePassword}
-                  className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                  className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                   }`}
                   placeholder="Confirm your password"
                   autoComplete="new-password"

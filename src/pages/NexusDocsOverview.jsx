@@ -3,17 +3,18 @@ import { Link } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import Seo from '../components/Seo';
 import { nexusDocs } from '../content/nexusDocs';
+import '../nexusdocs/NexusDocs.css';
 
 const NexusDocsOverview = () => (
-  <main className="overflow-hidden bg-dark-bg text-dark-text">
+  <main className="site-public nexus-doc-overview overflow-hidden bg-dark-bg text-dark-text">
     <Seo
       title="Plotune Nexus Documentation"
       description="Technical reference documentation for Plotune Nexus: security model, hardware and protocol compatibility, the MCP tool surface, system architecture, and deployment."
       path="/docs/nexus"
     />
     <section className="relative pt-32 pb-16">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(38,166,154,0.16),transparent_40%),linear-gradient(180deg,#101112_0%,#121212_100%)]" />
-      <div className="relative container mx-auto max-w-3xl px-5">
+      <div className="absolute inset-0 bg-dark-surface" />
+      <div className="nexus-doc-heading relative container mx-auto max-w-3xl px-5">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Documentation</p>
         <h1 className="mt-5 text-4xl font-semibold leading-tight text-light-text md:text-5xl">Plotune Nexus Documentation</h1>
         <p className="mt-6 text-lg leading-8 text-gray-text">
@@ -30,7 +31,7 @@ const NexusDocsOverview = () => (
             <Link
               key={doc.slug}
               to={`/docs/nexus/${doc.slug}`}
-              className="group flex items-start justify-between gap-6 rounded-2xl border border-white/10 bg-dark-card/60 p-6 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
+              className="nexus-doc-index group flex items-start justify-between gap-6 rounded-sm border border-ink/15 bg-dark-card/60 p-6 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
             >
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{doc.topic}</p>

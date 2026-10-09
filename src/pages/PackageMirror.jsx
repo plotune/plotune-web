@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../context/AuthContext';
-import { 
-  FaDocker, 
-  FaPlay, 
-  FaStop, 
-  FaTrash, 
+import {
+  FaDocker,
+  FaPlay,
+  FaStop,
+  FaTrash,
   FaCopy,
   FaSync,
   FaClock,
@@ -58,13 +58,13 @@ const PackageMirror = () => {
       const urlParts = url.replace('https://', '').split('/');
       const orgIndex = urlParts.indexOf('orgs');
       const packageIndex = urlParts.indexOf('package');
-      
+
       if (orgIndex !== -1 && packageIndex !== -1) {
         const org = urlParts[orgIndex + 1];
         const pkg = urlParts[packageIndex + 1];
         return `ghcr.io/${org}/${pkg}`;
       }
-      
+
       // If URL format is different, try to extract from path
       const pathParts = url.split('/');
       const orgName = pathParts[pathParts.length - 3];
@@ -77,7 +77,7 @@ const PackageMirror = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.packageUrl.trim()) {
       toast.error('Please enter a package URL');
       return;
@@ -90,7 +90,7 @@ const PackageMirror = () => {
     }
 
     setLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       const newPackage = {
@@ -108,22 +108,22 @@ const PackageMirror = () => {
 
       setPackages([newPackage, ...packages]);
       toast.success('Demo started — nothing was synced');
-      
+
       // Simulate sync completion
       setTimeout(() => {
-        setPackages(prev => prev.map(pkg => 
-          pkg.id === newPackage.id 
-            ? { 
-                ...pkg, 
-                status: 'active', 
-                size: '210MB', 
+        setPackages(prev => prev.map(pkg =>
+          pkg.id === newPackage.id
+            ? {
+                ...pkg,
+                status: 'active',
+                size: '210MB',
                 logs: [
-                  ...pkg.logs, 
+                  ...pkg.logs,
                   'Demo: authenticated locally',
                   'Demo: would pull latest image from GHCR',
                   'Image verified and ready for Plotune ecosystem',
                   'Demo complete — nothing was synced'
-                ] 
+                ]
               }
             : pkg
         ));
@@ -142,8 +142,8 @@ const PackageMirror = () => {
     const targetPackage = packages.find((p) => p.id === packageId);
     if (action === 'delete' && !window.confirm(`Remove "${targetPackage?.displayName || 'this package'}" from your list?`)) return;
 
-    setPackages(prev => prev.map(pkg => 
-      pkg.id === packageId 
+    setPackages(prev => prev.map(pkg =>
+      pkg.id === packageId
         ? { ...pkg, status: 'processing' }
         : pkg
     ));
@@ -151,24 +151,24 @@ const PackageMirror = () => {
     setTimeout(() => {
       switch(action) {
         case 'start':
-          setPackages(prev => prev.map(pkg => 
-            pkg.id === packageId 
-              ? { 
-                  ...pkg, 
-                  status: 'active', 
-                  logs: [...pkg.logs, `${new Date().toLocaleTimeString()} - Package activated`] 
+          setPackages(prev => prev.map(pkg =>
+            pkg.id === packageId
+              ? {
+                  ...pkg,
+                  status: 'active',
+                  logs: [...pkg.logs, `${new Date().toLocaleTimeString()} - Package activated`]
                 }
               : pkg
           ));
           toast.success('Package activated');
           break;
         case 'stop':
-          setPackages(prev => prev.map(pkg => 
-            pkg.id === packageId 
-              ? { 
-                  ...pkg, 
-                  status: 'inactive', 
-                  logs: [...pkg.logs, `${new Date().toLocaleTimeString()} - Package deactivated`] 
+          setPackages(prev => prev.map(pkg =>
+            pkg.id === packageId
+              ? {
+                  ...pkg,
+                  status: 'inactive',
+                  logs: [...pkg.logs, `${new Date().toLocaleTimeString()} - Package deactivated`]
                 }
               : pkg
           ));
@@ -179,18 +179,18 @@ const PackageMirror = () => {
           toast.success('Package removed');
           break;
         case 'sync':
-          setPackages(prev => prev.map(pkg => 
-            pkg.id === packageId 
+          setPackages(prev => prev.map(pkg =>
+            pkg.id === packageId
               ? { ...pkg, status: 'syncing', lastSynced: new Date().toISOString() }
               : pkg
           ));
           setTimeout(() => {
-            setPackages(prev => prev.map(pkg => 
-              pkg.id === packageId 
-                ? { 
-                    ...pkg, 
-                    status: 'active', 
-                    logs: [...pkg.logs, `${new Date().toLocaleTimeString()} - Synced with latest version`] 
+            setPackages(prev => prev.map(pkg =>
+              pkg.id === packageId
+                ? {
+                    ...pkg,
+                    status: 'active',
+                    logs: [...pkg.logs, `${new Date().toLocaleTimeString()} - Synced with latest version`]
                   }
                 : pkg
             ));
@@ -213,7 +213,7 @@ const PackageMirror = () => {
   const getStatusConfig = (status) => {
     const configs = {
       active: { color: 'bg-green-500/20 text-green-400', label: 'Active', icon: '▶' },
-      inactive: { color: 'bg-gray-500/20 text-gray-400', label: 'Inactive', icon: '⏸' },
+      inactive: { color: 'bg-gray-500/20 text-gray-text', label: 'Inactive', icon: '⏸' },
       error: { color: 'bg-red-500/20 text-red-400', label: 'Error', icon: '⚠' },
       syncing: { color: 'bg-blue-500/20 text-blue-400', label: 'Syncing', icon: '↻' },
       processing: { color: 'bg-purple-500/20 text-purple-400', label: 'Processing', icon: '🔄' }
@@ -222,7 +222,7 @@ const PackageMirror = () => {
   };
 
   const renderMirrorSection = () => (
-    <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+    <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
       <div className="flex items-center mb-6">
         <div className="p-3 bg-primary/20 rounded-lg mr-4">
           <FaBox className="text-primary text-2xl" />
@@ -230,14 +230,14 @@ const PackageMirror = () => {
         <div>
           <div className="flex items-center gap-3 flex-wrap">
             <h2 className="text-xl font-semibold text-light-text">Sync GitHub Packages</h2>
-            <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-400 whitespace-nowrap">
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-text whitespace-nowrap">
               Preview — sync runs locally as a demo
             </span>
           </div>
           <p className="text-gray-text">Connect your private GitHub packages to Plotune ecosystem</p>
         </div>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-gray-text mb-2">
@@ -249,7 +249,7 @@ const PackageMirror = () => {
             value={formData.packageUrl}
             onChange={(e) => setFormData({ ...formData, packageUrl: e.target.value })}
             placeholder="https://github.com/orgs/plotune/packages/container/package/plotune-stream-gateway"
-            className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+            className="w-full p-3 bg-dark-surface  rounded-lg border border-ink/15 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
             required
           />
           <p className="text-gray-text text-xs mt-2">
@@ -265,13 +265,13 @@ const PackageMirror = () => {
               value={formData.tag}
               onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
               placeholder="latest"
-              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full p-3 bg-dark-surface  rounded-lg border border-ink/15 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <p className="text-gray-text text-xs mt-2">Container tag (default: latest)</p>
           </div>
         </div>
 
-        <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
+        <div className="bg-dark-surface  rounded-lg p-4 border border-ink/15">
           <h4 className="text-light-text font-medium mb-3">How it works</h4>
           <div className="space-y-3 text-sm text-gray-text">
             <div className="flex items-center">
@@ -308,8 +308,8 @@ const PackageMirror = () => {
   );
 
   const renderManageSection = () => (
-    <div className="bg-dark-card rounded-2xl border border-white/10 shadow-xl overflow-hidden">
-      <div className="p-6 border-b border-white/10">
+    <div className="bg-dark-card rounded-sm border border-ink/15  overflow-hidden">
+      <div className="p-6 border-b border-ink/15">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold text-light-text">My Packages</h2>
@@ -318,7 +318,7 @@ const PackageMirror = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveSection('mirror')}
-              className="px-4 py-2 min-h-[44px] bg-white/5 text-light-text border border-white/10 rounded-lg hover:bg-white/10 transition"
+              className="px-4 py-2 min-h-[44px] bg-dark-card text-light-text border border-ink/15 rounded-lg hover:bg-dark-card transition"
             >
               + Add Package
             </button>
@@ -333,7 +333,7 @@ const PackageMirror = () => {
           </div>
         ) : packages.length === 0 ? (
           <div className="text-center py-12">
-            <FaBox className="text-5xl text-gray-600 mx-auto mb-4" />
+            <FaBox className="text-5xl text-gray-text mx-auto mb-4" />
             <h3 className="text-light-text text-lg mb-2">No packages synced yet</h3>
             <p className="text-gray-text mb-4">Sync your first GitHub package to get started</p>
             <button
@@ -348,7 +348,7 @@ const PackageMirror = () => {
             {packages.map((pkg) => {
               const statusConfig = getStatusConfig(pkg.status);
               return (
-                <div key={pkg.id} className="bg-dark-surface backdrop-blur-xl rounded-xl p-5 border border-white/5 hover:border-white/10 transition">
+                <div key={pkg.id} className="bg-dark-surface  rounded-sm p-5 border border-ink/15 hover:border-ink/15 transition">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
@@ -358,7 +358,7 @@ const PackageMirror = () => {
                         </span>
                       </div>
                       <p className="text-gray-text text-sm mb-3">{pkg.description}</p>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                         <div className="bg-dark-bg rounded-lg p-3">
                           <div className="text-gray-text text-xs mb-1">Docker Pull Command</div>
@@ -375,15 +375,15 @@ const PackageMirror = () => {
                             </button>
                           </div>
                         </div>
-                        
+
                         <div className="bg-dark-bg rounded-lg p-3">
                           <div className="text-gray-text text-xs mb-1">Last Synced</div>
                           <div className="text-sm text-light-text flex items-center">
-                            <FaClock className="mr-2 text-gray-400" />
+                            <FaClock className="mr-2 text-gray-text" />
                             {formatDate(pkg.lastSynced)}
                           </div>
                         </div>
-                        
+
                         <div className="bg-dark-bg rounded-lg p-3">
                           <div className="text-gray-text text-xs mb-1">Size</div>
                           <div className="text-sm text-light-text">{pkg.size}</div>
@@ -392,7 +392,7 @@ const PackageMirror = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <div className="flex items-center justify-between pt-4 border-t border-ink/15">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setSelectedPackage(pkg)}
@@ -402,12 +402,12 @@ const PackageMirror = () => {
                         View Logs
                       </button>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleAction(pkg.id, 'sync')}
                         disabled={pkg.status === 'processing'}
-                        className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-lg transition"
+                        className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-blue-400 hover:text-blue-300 hover:bg-dark-card rounded-lg transition"
                         title="Sync with latest version"
                         aria-label="Sync now"
                       >
@@ -418,8 +418,8 @@ const PackageMirror = () => {
                         disabled={pkg.status === 'processing' || pkg.status === 'syncing'}
                         className={`p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg transition ${
                           pkg.status === 'active'
-                            ? 'text-yellow-400 hover:text-yellow-300 hover:bg-white/5'
-                            : 'text-green-400 hover:text-green-300 hover:bg-white/5'
+                            ? 'text-yellow-400 hover:text-yellow-300 hover:bg-dark-card'
+                            : 'text-green-400 hover:text-green-300 hover:bg-dark-card'
                         }`}
                         title={pkg.status === 'active' ? 'Deactivate' : 'Activate'}
                         aria-label={pkg.status === 'active' ? 'Stop' : 'Start'}
@@ -428,7 +428,7 @@ const PackageMirror = () => {
                       </button>
                       <button
                         onClick={() => handleAction(pkg.id, 'delete')}
-                        className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg transition"
+                        className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-dark-card rounded-lg transition"
                         title="Remove Package"
                         aria-label="Remove package"
                       >
@@ -446,8 +446,8 @@ const PackageMirror = () => {
   );
 
   const renderLogsSection = () => (
-    <div className="bg-dark-card rounded-2xl border border-white/10 shadow-xl overflow-hidden">
-      <div className="p-6 border-b border-white/10">
+    <div className="bg-dark-card rounded-sm border border-ink/15  overflow-hidden">
+      <div className="p-6 border-b border-ink/15">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold text-light-text">Package Logs</h2>
@@ -455,7 +455,7 @@ const PackageMirror = () => {
           </div>
           <button
             onClick={() => setSelectedPackage(null)}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition"
+            className="px-4 py-2 bg-gray-600 hover:bg-dark-surface text-white rounded-lg transition"
           >
             ← Back to Packages
           </button>
@@ -475,15 +475,15 @@ const PackageMirror = () => {
               </div>
             </div>
 
-            <div className="bg-dark-bg rounded-lg border border-white/10 overflow-hidden">
-              <div className="px-4 py-3 bg-dark-surface backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
+            <div className="bg-dark-bg rounded-lg border border-ink/15 overflow-hidden">
+              <div className="px-4 py-3 bg-dark-surface  border-b border-ink/15 flex items-center justify-between">
                 <span className="text-light-text font-medium">Sync Logs</span>
                 <span className="text-gray-text text-sm">Updated: {formatDate(selectedPackage.lastSynced)}</span>
               </div>
               <div className="p-4 font-mono text-sm">
                 <div className="space-y-1 max-h-96 overflow-y-auto">
                   {selectedPackage.logs.map((log, index) => (
-                    <div key={index} className="text-gray-300 hover:text-light-text transition">
+                    <div key={index} className="text-gray-text hover:text-light-text transition">
                       <span className="text-blue-400">$</span> {log}
                     </div>
                   ))}
@@ -493,7 +493,7 @@ const PackageMirror = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <FaTerminal className="text-5xl text-gray-600 mx-auto mb-4" />
+            <FaTerminal className="text-5xl text-gray-text mx-auto mb-4" />
             <h3 className="text-light-text text-lg mb-2">No package selected</h3>
             <p className="text-gray-text">Select a package from the Manage section to view its logs</p>
           </div>
@@ -503,25 +503,30 @@ const PackageMirror = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
+    <div className="min-h-screen bg-dark-surface pt-24 pb-12">
       <div className="container mx-auto px-4">
+        <header className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account tools</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Package Mirror</h1>
+          <p className="mt-2 text-sm text-gray-text">Preview package mirror workflows.</p>
+        </header>
         <div className="max-w-6xl mx-auto">
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-dark-card rounded-xl p-4 border border-white/10">
+            <div className="bg-dark-card rounded-sm p-4 border border-ink/15">
               <div className="text-gray-text text-sm mb-1">Synced Packages</div>
               <div className="text-2xl font-semibold text-light-text">{packages.length}</div>
             </div>
-            <div className="bg-dark-card rounded-xl p-4 border border-white/10">
+            <div className="bg-dark-card rounded-sm p-4 border border-ink/15">
               <div className="text-gray-text text-sm mb-1">Active</div>
               <div className="text-2xl font-semibold text-green-400">
                 {packages.filter(p => p.status === 'active').length}
               </div>
             </div>
-            <div className="bg-dark-card rounded-xl p-4 border border-white/10">
+            <div className="bg-dark-card rounded-sm p-4 border border-ink/15">
               <div className="text-gray-text text-sm mb-1">Last Activity</div>
               <div className="text-lg font-semibold text-light-text">
-                {packages.length > 0 
+                {packages.length > 0
                   ? formatDate(packages[0].lastSynced).split(',')[0]
                   : 'Never'
                 }
@@ -536,7 +541,7 @@ const PackageMirror = () => {
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'mirror'
                   ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
+                  : 'bg-dark-surface  text-gray-text hover:text-light-text'
               }`}
             >
               <FaSync className="mr-2" />
@@ -547,7 +552,7 @@ const PackageMirror = () => {
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'manage'
                   ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
+                  : 'bg-dark-surface  text-gray-text hover:text-light-text'
               }`}
             >
               <FaCogs className="mr-2" />
@@ -558,7 +563,7 @@ const PackageMirror = () => {
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'logs'
                   ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
+                  : 'bg-dark-surface  text-gray-text hover:text-light-text'
               }`}
             >
               <FaTerminal className="mr-2" />

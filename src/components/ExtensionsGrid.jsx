@@ -1,14 +1,14 @@
 import React from 'react';
 import { FaSearch } from "react-icons/fa";
 
-const ExtensionsGrid = ({ 
-  extensions, 
-  loading, 
+const ExtensionsGrid = ({
+  extensions,
+  loading,
   error,
   onRetry,
-  installExtension, 
-  visitWebsite, 
-  visitRepo 
+  installExtension,
+  visitWebsite,
+  visitRepo
 }) => {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -23,7 +23,7 @@ const ExtensionsGrid = ({
       'stream': 'bg-blue-500/15 text-blue-400 border border-blue-500/20',
       'cloud': 'bg-purple-500/15 text-purple-400 border border-purple-500/20',
     };
-    return colors[tag] || 'bg-white/5 text-gray-300 border border-white/10';
+    return colors[tag] || 'bg-dark-card text-gray-text border border-ink/15';
   };
 
   if (loading) {
@@ -31,12 +31,12 @@ const ExtensionsGrid = ({
       <div className="container mx-auto px-5 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-dark-card rounded-xl p-6 animate-pulse">
-              <div className="h-4 bg-gray-700 rounded w-3/4 mb-4"></div>
-              <div className="h-3 bg-gray-700 rounded w-1/2 mb-6"></div>
+            <div key={i} className="bg-dark-card rounded-sm p-6 animate-pulse">
+              <div className="h-4 bg-dark-surface rounded w-3/4 mb-4"></div>
+              <div className="h-3 bg-dark-surface rounded w-1/2 mb-6"></div>
               <div className="space-y-2">
-                <div className="h-3 bg-gray-700 rounded"></div>
-                <div className="h-3 bg-gray-700 rounded w-5/6"></div>
+                <div className="h-3 bg-dark-surface rounded"></div>
+                <div className="h-3 bg-dark-surface rounded w-5/6"></div>
               </div>
             </div>
           ))}
@@ -76,13 +76,13 @@ const ExtensionsGrid = ({
           {extensions.map((extension) => (
             <div
               key={extension.id}
-              className="bg-dark-card/50 rounded-xl p-5 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300"
+              className="bg-dark-card/50 rounded-sm p-5 border border-ink/15 hover:border-primary/30  transition-all duration-300"
             >
               {/* Logo and basic info */}
               <div className="flex items-start gap-3 mb-4">
                 <div className="w-12 h-12 rounded-lg flex-shrink-0 bg-[#FFFDD0] flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={extension.logo} 
+                  <img
+                    src={extension.logo}
                     alt={extension.name}
                     className="w-full h-full object-contain p-1"
                     onError={(e) => {
@@ -104,7 +104,7 @@ const ExtensionsGrid = ({
                     <h3 className="text-lg font-semibold text-light-text truncate">
                       {extension.name}
                     </h3>
-                    <span className="text-xs text-gray-text bg-white/5 px-2 py-1 rounded">
+                    <span className="text-xs text-gray-text bg-dark-card px-2 py-1 rounded">
                       {extension.version || '—'}
                     </span>
                   </div>
@@ -122,7 +122,7 @@ const ExtensionsGrid = ({
                 {extension.tags
                   .filter(tag => ['verified', 'core', 'package', 'stream', 'cloud'].includes(tag))
                   .map((tag, index) => (
-                  <span 
+                  <span
                     key={index}
                     className={`px-2 py-0.5 rounded text-xs font-medium ${getTagColor(tag)}`}
                   >
@@ -171,7 +171,7 @@ const ExtensionsGrid = ({
                     disabled={!extension.repo}
                     className={`flex-1 min-h-[44px] py-2 px-3 border border-gray-700 rounded-lg transition-all duration-200 text-sm flex items-center justify-center gap-1 ${
                       extension.repo
-                        ? 'text-gray-300 hover:border-gray-500 hover:text-white'
+                        ? 'text-gray-text hover:border-gray-500 hover:text-light-text'
                         : 'text-gray-text/50 opacity-60 cursor-not-allowed'
                     }`}
                   >
@@ -180,7 +180,7 @@ const ExtensionsGrid = ({
                   </button>
                   <button
                     onClick={() => visitWebsite(extension.web)}
-                    className="flex-1 min-h-[44px] py-2 px-3 border border-gray-700 text-gray-300 rounded-lg hover:border-gray-500 hover:text-white transition-all duration-200 text-sm flex items-center justify-center gap-1"
+                    className="flex-1 min-h-[44px] py-2 px-3 border border-gray-700 text-gray-text rounded-lg hover:border-gray-500 hover:text-light-text transition-all duration-200 text-sm flex items-center justify-center gap-1"
                   >
                     <span></span>
                     Web
@@ -190,7 +190,7 @@ const ExtensionsGrid = ({
 
               {/* Last updated - subtle (hidden when unknown) */}
               {extension.last_updated && (
-                <div className="text-xs text-gray-text/60 text-center mt-4 pt-3 border-t border-white/5">
+                <div className="text-xs text-gray-text/60 text-center mt-4 pt-3 border-t border-ink/15">
                   Updated: {formatDate(extension.last_updated)}
                 </div>
               )}

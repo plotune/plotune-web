@@ -125,7 +125,7 @@ const QUICK_ACTIONS = [
 const PartnerPortal = () => {
   const [partnerData, setPartnerData] = useState(PARTNER_STATS);
   const [activeTab, setActiveTab] = useState('overview');
-  
+
   // State for dynamic data (for future API integration)
   const [dataStreams, setDataStreams] = useState(DATA_STREAMS);
   const [alerts, setAlerts] = useState(ALERTS);
@@ -155,7 +155,7 @@ const PartnerPortal = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
-        return <OverviewTab 
+        return <OverviewTab
           partnerData={partnerData}
           alerts={alerts}
           users={users}
@@ -165,39 +165,39 @@ const PartnerPortal = () => {
           setActiveTab={setActiveTab}
         />;
       case 'streams':
-        return <StreamsTab 
+        return <StreamsTab
           streams={dataStreams}
           handleComingSoon={handleComingSoon}
         />;
       case 'analytics':
-        return <AnalyticsTab 
+        return <AnalyticsTab
           handleComingSoon={handleComingSoon}
           usageData={USAGE_DATA}
         />;
       case 'storage':
-        return <StorageTab 
+        return <StorageTab
           storageClients={STORAGE_CLIENTS}
           backupStatus={BACKUP_STATUS}
           handleComingSoon={handleComingSoon}
         />;
       case 'compute':
-        return <ComputeTab 
+        return <ComputeTab
           jobs={computeJobs}
           handleComingSoon={handleComingSoon}
         />;
       case 'security':
-        return <SecurityTab 
+        return <SecurityTab
           securityEvents={SECURITY_EVENTS}
           handleComingSoon={handleComingSoon}
         />;
       case 'api':
-        return <ApiTab 
+        return <ApiTab
           apiKeys={apiKeys}
           integrations={integrations}
           handleComingSoon={handleComingSoon}
         />;
       default:
-        return <OverviewTab 
+        return <OverviewTab
           partnerData={partnerData}
           alerts={alerts}
           users={users}
@@ -212,9 +212,15 @@ const PartnerPortal = () => {
   return (
     <div className="min-h-screen bg-dark-bg pt-24 pb-12">
       <div className="container mx-auto px-4 max-w-7xl">
-        
+
         {/* Header */}
         <div className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Partner workspace</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Partner Portal</h1>
+          <p className="mt-2 max-w-2xl text-sm text-gray-text">Explore the partner workspace layout and available service areas.</p>
+          <div className="mt-5 rounded-sm border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-light-text" role="note">
+            <strong className="font-semibold">Prototype preview.</strong> The metrics, service statuses, security labels, and activity shown here are illustrative local demo data, not live account or compliance results.
+          </div>
 
           {/* Stats Overview */}
           <StatsOverview partnerData={partnerData} />
@@ -224,7 +230,7 @@ const PartnerPortal = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Sidebar - Service Navigation */}
           <div className="lg:w-64 flex-shrink-0">
-            <SidebarNav 
+            <SidebarNav
               tabs={NAV_TABS}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -235,9 +241,9 @@ const PartnerPortal = () => {
           {/* Main Content Area */}
           <div className="flex-1">
             {renderTabContent()}
-            
+
             {/* Footer Note */}
-            <div className="mt-8 p-6 bg-dark-surface backdrop-blur-xl rounded-xl border border-white/5">
+            <div className="mt-8 p-6 bg-dark-surface  rounded-sm border border-ink/15">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="text-light-text font-semibold mb-2">Plotune Cloud - Enterprise Partner Tier</h4>
@@ -264,23 +270,23 @@ const PartnerPortal = () => {
 
 const StatsOverview = ({ partnerData }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    <StatCard 
-      label="Active Streams" 
-      value={partnerData.activeStreams} 
-      icon="stream" 
-      color="primary" 
+    <StatCard
+      label="Active Streams"
+      value={partnerData.activeStreams}
+      icon="stream"
+      color="primary"
     />
-    <StatCard 
-      label="Total Clients" 
-      value={partnerData.totalClients} 
-      icon="users" 
-      color="green-500" 
+    <StatCard
+      label="Total Clients"
+      value={partnerData.totalClients}
+      icon="users"
+      color="green-500"
     />
-    <StatCard 
-      label="Storage Used" 
-      value={partnerData.storageUsed} 
-      icon="database" 
-      color="blue-500" 
+    <StatCard
+      label="Storage Used"
+      value={partnerData.storageUsed}
+      icon="database"
+      color="blue-500"
     />
     <StatCard
       label="Compliance Score"
@@ -289,14 +295,14 @@ const StatsOverview = ({ partnerData }) => (
           ? `${partnerData.complianceScore}%`
           : '—'
       }
-      icon="shield-alt" 
-      color="green-500" 
+      icon="shield-alt"
+      color="green-500"
     />
   </div>
 );
 
 const StatCard = ({ label, value, icon, color }) => (
-  <div className="bg-dark-card rounded-xl p-4 border border-white/5">
+  <div className="bg-dark-card rounded-sm p-4 border border-ink/15">
     <div className="flex items-center justify-between">
       <div>
         <p className="text-gray-text text-sm">{label}</p>
@@ -311,8 +317,8 @@ const StatCard = ({ label, value, icon, color }) => (
 
 const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
   <div className="sticky top-24">
-    <div className="bg-dark-card rounded-xl border border-white/10 overflow-hidden">
-      <div className="p-4 border-b border-white/10">
+    <div className="bg-dark-card rounded-sm border border-ink/15 overflow-hidden">
+      <div className="p-4 border-b border-ink/15">
         <h3 className="font-semibold text-light-text">Cloud Services</h3>
       </div>
       <nav className="p-2">
@@ -321,9 +327,9 @@ const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-colors ${
-              activeTab === tab.id 
-                ? 'bg-primary/20 text-primary' 
-                : 'text-gray-text hover:bg-white/5 hover:text-light-text'
+              activeTab === tab.id
+                ? 'bg-primary/20 text-primary'
+                : 'text-gray-text hover:bg-dark-card hover:text-light-text'
             }`}
           >
             <i className={`fas fa-${tab.icon}`}></i>
@@ -331,24 +337,24 @@ const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
           </button>
         ))}
       </nav>
-      
-      <div className="p-4 border-t border-white/10">
+
+      <div className="p-4 border-t border-ink/15">
         <div className="text-sm text-gray-text mb-2">Quick Actions</div>
-        <button 
+        <button
           disabled
           className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text/70 cursor-not-allowed rounded-lg"
         >
           <i className="fas fa-plus"></i>
           <span>New Support Ticket</span>
-          <span className="ml-auto text-[10px] uppercase tracking-wide bg-white/5 border border-white/10 text-gray-text px-1.5 py-0.5 rounded">Coming soon</span>
+          <span className="ml-auto text-[10px] uppercase tracking-wide bg-dark-card border border-ink/15 text-gray-text px-1.5 py-0.5 rounded">Coming soon</span>
         </button>
-        <button 
+        <button
           disabled
           className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text/70 cursor-not-allowed rounded-lg"
         >
           <i className="fas fa-user-plus"></i>
           <span>Add New Client</span>
-          <span className="ml-auto text-[10px] uppercase tracking-wide bg-white/5 border border-white/10 text-gray-text px-1.5 py-0.5 rounded">Coming soon</span>
+          <span className="ml-auto text-[10px] uppercase tracking-wide bg-dark-card border border-ink/15 text-gray-text px-1.5 py-0.5 rounded">Coming soon</span>
         </button>
       </div>
     </div>
@@ -386,23 +392,23 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
   <>
     {/* Quick Stats */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-      <OverviewCard 
-        title="Active Alerts" 
-        icon="bell" 
+      <OverviewCard
+        title="Active Alerts"
+        icon="bell"
         color="red-500"
         items={alerts.slice(0, 3)}
         type="alerts"
       />
-      <OverviewCard 
-        title="User Access" 
-        icon="users-cog" 
+      <OverviewCard
+        title="User Access"
+        icon="users-cog"
         color="blue-500"
         items={users}
         type="users"
       />
-      <OverviewCard 
-        title="Extensions" 
-        icon="puzzle-piece" 
+      <OverviewCard
+        title="Extensions"
+        icon="puzzle-piece"
         color="purple-500"
         items={extensions}
         type="extensions"
@@ -410,22 +416,22 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
     </div>
 
     {/* Usage Chart */}
-    <div className="bg-dark-card rounded-xl border border-white/10 p-6 mb-6">
+    <div className="bg-dark-card rounded-sm border border-ink/15 p-6 mb-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-light-text font-semibold text-xl">Usage Analytics</h3>
           <p className="text-gray-text">Monthly consumption across all clients</p>
         </div>
         <div className="flex items-center gap-2">
-          <button 
+          <button
             disabled
-            className="px-3 py-1 bg-gray-600 text-gray-400 rounded text-sm cursor-not-allowed"
+            className="px-3 py-1 bg-dark-surface border border-ink/15 text-gray-text rounded text-sm cursor-not-allowed"
           >
             Last 6 Months
           </button>
         </div>
       </div>
-      
+
       {/* Simple chart visualization (sample data, not yet live) */}
       <div className="relative">
         <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -440,8 +446,8 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
         <div className="h-64 flex items-end gap-2 pt-8 opacity-30">
           {usageData.dataVolume.map((height, index) => (
             <div key={index} className="flex-1 flex flex-col items-center">
-              <div 
-                className="w-full bg-gradient-to-t from-primary to-blue-400 rounded-t"
+              <div
+                className="w-full bg-dark-surface  to-blue-400 rounded-t"
                 style={{height: `${height * 2}%`}}
               ></div>
               <div className="text-gray-text text-xs mt-2">{usageData.months[index]}</div>
@@ -454,10 +460,10 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
     {/* Quick Actions */}
     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
       {quickActions.map(action => (
-        <button 
+        <button
           key={action.id}
           onClick={() => setActiveTab(action.tab)}
-          className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5 hover:border-primary/30 transition-colors group"
+          className="bg-dark-surface  rounded-lg p-4 border border-ink/15 hover:border-primary/30 transition-colors group"
         >
           <div className={`text-${action.color} mb-2`}>
             <i className={`fas fa-${action.icon} text-2xl`}></i>
@@ -470,7 +476,7 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
 );
 
 const OverviewCard = ({ title, icon, color, items, type }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-4">
       <h3 className="text-light-text font-semibold">{title}</h3>
       <span className={`text-${color}`}>
@@ -525,9 +531,9 @@ const OverviewItem = ({ item, type }) => {
         <div className="text-gray-text text-xs mb-2">{item.description}</div>
         <div className="flex items-center justify-between">
           <span className="text-gray-text text-xs">{item.version}</span>
-          <button 
+          <button
             disabled
-            className="px-2 py-1 bg-gray-700 text-gray-400 rounded text-xs cursor-not-allowed"
+            className="px-2 py-1 bg-dark-surface text-gray-text rounded text-xs cursor-not-allowed"
           >
             Install
           </button>
@@ -540,7 +546,7 @@ const OverviewItem = ({ item, type }) => {
 };
 
 const StreamsTab = ({ streams, handleComingSoon }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-6">
       <div>
         <h2 className="text-2xl font-bold text-light-text mb-2">Data Stream Management</h2>
@@ -551,7 +557,7 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-white/10">
+          <tr className="border-b border-ink/15">
             <th className="text-left py-3 px-4 text-gray-text font-medium">Stream Name</th>
             <th className="text-left py-3 px-4 text-gray-text font-medium">Client</th>
             <th className="text-left py-3 px-4 text-gray-text font-medium">Status</th>
@@ -565,7 +571,7 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
             <EmptyStateRow colSpan={6} />
           ) : (
             streams.map(stream => (
-            <tr key={stream.id} className="border-b border-white/5 hover:bg-white/2">
+            <tr key={stream.id} className="border-b border-ink/15 hover:bg-dark-card">
               <td className="py-3 px-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-2 h-2 rounded-full ${
@@ -588,10 +594,10 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
               <td className="py-3 px-4 text-gray-text">{stream.rate}</td>
               <td className="py-3 px-4 text-gray-text">{stream.uptime}</td>
               <td className="py-3 px-4">
-                <button 
+                <button
                   onClick={() => handleComingSoon('Stream Control')}
                   disabled
-                  className="px-3 py-1 bg-gray-700 text-gray-400 rounded text-sm cursor-not-allowed"
+                  className="px-3 py-1 bg-dark-surface text-gray-text rounded text-sm cursor-not-allowed"
                 >
                   <i className="fas fa-pause mr-1"></i>
                   Control
@@ -607,7 +613,7 @@ const StreamsTab = ({ streams, handleComingSoon }) => (
 );
 
 const AnalyticsTab = ({ handleComingSoon, usageData }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-6">
       <div>
         <h2 className="text-2xl font-bold text-light-text mb-2">Real-Time Analytics</h2>
@@ -630,11 +636,11 @@ const AnalyticsTab = ({ handleComingSoon, usageData }) => (
           <p className="text-gray-text text-sm mt-2">Coming soon in the Cloud Tier</p>
         </div>
       </div>
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 h-96 opacity-30">
+      <div className="bg-dark-surface  rounded-lg p-6 h-96 opacity-30">
         {/* Chart grid lines */}
-        <div className="h-full border-l border-b border-white/20 relative">
+        <div className="h-full border-l border-b border-ink/15 relative">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="absolute w-full h-px bg-white/10 top-1/6" style={{top: `${i * 20}%`}}></div>
+            <div key={i} className="absolute w-full h-px bg-dark-card top-1/6" style={{top: `${i * 20}%`}}></div>
           ))}
         </div>
       </div>
@@ -643,7 +649,7 @@ const AnalyticsTab = ({ handleComingSoon, usageData }) => (
 );
 
 const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-6">
       <div>
         <h2 className="text-2xl font-bold text-light-text mb-2">Storage & Backup</h2>
@@ -652,7 +658,7 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
+      <div className="bg-dark-surface  rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Storage Usage</h3>
         <div className="space-y-4">
           {storageClients.length === 0 ? (
@@ -664,9 +670,9 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
                 <span>{client.name}</span>
                 <span>{client.usage}</span>
               </div>
-              <div className="w-full bg-white/5 rounded-full h-2">
-                <div 
-                  className="bg-blue-500 h-2 rounded-full" 
+              <div className="w-full bg-dark-card rounded-full h-2">
+                <div
+                  className="bg-blue-500 h-2 rounded-full"
                   style={{width: `${client.percentage}%`}}
                 ></div>
               </div>
@@ -676,7 +682,7 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
         </div>
       </div>
 
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
+      <div className="bg-dark-surface  rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Backup Status</h3>
         <div className="space-y-3">
           {backupStatus.length === 0 ? (
@@ -703,7 +709,7 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
 );
 
 const ComputeTab = ({ jobs, handleComingSoon }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-6">
       <div>
         <h2 className="text-2xl font-bold text-light-text mb-2">Compute & Processing Jobs</h2>
@@ -714,7 +720,7 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-white/10">
+          <tr className="border-b border-ink/15">
             <th className="text-left py-3 px-4 text-gray-text font-medium">Job Name</th>
             <th className="text-left py-3 px-4 text-gray-text font-medium">Type</th>
             <th className="text-left py-3 px-4 text-gray-text font-medium">Status</th>
@@ -728,7 +734,7 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
             <EmptyStateRow colSpan={6} />
           ) : (
             jobs.map(job => (
-            <tr key={job.id} className="border-b border-white/5 hover:bg-white/2">
+            <tr key={job.id} className="border-b border-ink/15 hover:bg-dark-card">
               <td className="py-3 px-4 text-light-text">{job.name}</td>
               <td className="py-3 px-4">
                 <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
@@ -748,10 +754,10 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
               <td className="py-3 px-4 text-gray-text">{job.duration}</td>
               <td className="py-3 px-4 text-gray-text">{job.cpu}</td>
               <td className="py-3 px-4">
-                <button 
+                <button
                   onClick={() => handleComingSoon('Job Control')}
                   disabled
-                  className="px-3 py-1 bg-gray-700 text-gray-400 rounded text-sm cursor-not-allowed"
+                  className="px-3 py-1 bg-dark-surface text-gray-text rounded text-sm cursor-not-allowed"
                 >
                   <i className="fas fa-play mr-1"></i>
                   Control
@@ -767,7 +773,7 @@ const ComputeTab = ({ jobs, handleComingSoon }) => (
 );
 
 const SecurityTab = ({ securityEvents, handleComingSoon }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-6">
       <div>
         <h2 className="text-2xl font-bold text-light-text mb-2">Security & Compliance Monitoring</h2>
@@ -776,21 +782,21 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 text-center">
+      <div className="bg-dark-surface  rounded-lg p-6 text-center">
         <div className="text-4xl text-green-500 mb-4">
           <i className="fas fa-shield-check"></i>
         </div>
         <h3 className="text-light-text font-semibold mb-2">GDPR Compliant</h3>
         <p className="text-gray-text text-sm">Fully compliant with EU data protection</p>
       </div>
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 text-center">
+      <div className="bg-dark-surface  rounded-lg p-6 text-center">
         <div className="text-4xl text-blue-500 mb-4">
           <i className="fas fa-lock"></i>
         </div>
         <h3 className="text-light-text font-semibold mb-2">End-to-End Encryption</h3>
         <p className="text-gray-text text-sm">AES-256 encryption for all data</p>
       </div>
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 text-center">
+      <div className="bg-dark-surface  rounded-lg p-6 text-center">
         <div className="text-4xl text-purple-500 mb-4">
           <i className="fas fa-audit"></i>
         </div>
@@ -799,7 +805,7 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
       </div>
     </div>
 
-    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
+    <div className="bg-dark-surface  rounded-lg p-6">
       <h3 className="text-light-text font-semibold mb-4">Recent Security Events</h3>
       <div className="space-y-3">
         {securityEvents.length === 0 ? (
@@ -825,7 +831,7 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
 );
 
 const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
-  <div className="bg-dark-card rounded-xl border border-white/10 p-6">
+  <div className="bg-dark-card rounded-sm border border-ink/15 p-6">
     <div className="flex items-center justify-between mb-6">
       <div>
         <h2 className="text-2xl font-bold text-light-text mb-2">API & Integration Hub</h2>
@@ -834,7 +840,7 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
+      <div className="bg-dark-surface  rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">API Keys</h3>
         <div className="space-y-3">
           {apiKeys.length === 0 ? (
@@ -850,10 +856,10 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
                 <code className="text-gray-text text-sm bg-black/40 px-2 py-1 rounded">
                   {api.key}
                 </code>
-                <button 
+                <button
                   onClick={() => handleComingSoon('Copy API Key')}
                   disabled
-                  className="px-2 py-1 bg-gray-700 text-gray-400 rounded text-sm cursor-not-allowed"
+                  className="px-2 py-1 bg-dark-surface text-gray-text rounded text-sm cursor-not-allowed"
                 >
                   <i className="fas fa-copy"></i>
                 </button>
@@ -864,7 +870,7 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
         </div>
       </div>
 
-      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
+      <div className="bg-dark-surface  rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Available Integrations</h3>
         <div className="space-y-3">
           {integrations.length === 0 ? (
@@ -876,11 +882,11 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
                 <div className="text-light-text font-medium">{integration.name}</div>
                 <div className="text-gray-text text-sm">{integration.description}</div>
               </div>
-              <button 
+              <button
                 onClick={() => handleComingSoon(`Connect ${integration.name}`)}
                 disabled={integration.status === 'connected'}
                 className={`px-3 py-1 rounded text-sm ${
-                  integration.status === 'connected' 
+                  integration.status === 'connected'
                     ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
                     : 'bg-blue-500/20 text-blue-400 cursor-not-allowed'
                 }`}

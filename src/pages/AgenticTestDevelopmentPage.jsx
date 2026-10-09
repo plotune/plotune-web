@@ -7,11 +7,11 @@ import { solutionSegments } from '../content/solutions';
 import { withFunnelParams } from '../utils/funnel';
 
 const AgenticTestDevelopmentPage = () => (
-  <main className="bg-dark-bg text-dark-text">
+  <main className="pillar-design bg-dark-bg text-dark-text">
     <Seo title={`${pillar.label} | Plotune`} description={pillar.intro} path={pillar.path} />
 
     <section className="relative pt-32 pb-16">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(38,166,154,0.18),transparent_34%),linear-gradient(180deg,#101112_0%,#121212_58%,#151719_100%)]" />
+      <div className="absolute inset-0 bg-dark-surface" />
       <div className="relative container mx-auto px-5">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">{pillar.label}</p>
         <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-tight text-light-text md:text-5xl">{pillar.heroTitle}</h1>
@@ -23,8 +23,8 @@ const AgenticTestDevelopmentPage = () => (
       <div className="container mx-auto px-5">
         <h2 className="text-xl font-semibold text-light-text">Traditional automation vs. an agentic workflow</h2>
       </div>
-      <div className="container mx-auto grid gap-6 px-5 pt-6 lg:grid-cols-2">
-        <div className="rounded-[1.75rem] bg-dark-card/80 p-7 shadow-custom md:p-8">
+      <div className="pillar-comparison container mx-auto grid gap-6 px-5 pt-6 lg:grid-cols-2">
+        <div className="rounded-sm bg-dark-card/80 p-7  md:p-8">
           <h3 className="text-lg font-semibold text-light-text">Traditional automation</h3>
           <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
             {pillar.traditional.map((item, index) => (
@@ -35,7 +35,7 @@ const AgenticTestDevelopmentPage = () => (
             ))}
           </ul>
         </div>
-        <div className="rounded-[1.75rem] border border-primary/20 bg-dark-card/80 p-7 shadow-custom md:p-8">
+        <div className="rounded-sm border border-primary/20 bg-dark-card/80 p-7  md:p-8">
           <h3 className="text-lg font-semibold text-light-text">The agentic approach</h3>
           <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
             {pillar.agentic.map((item, index) => (
@@ -52,7 +52,7 @@ const AgenticTestDevelopmentPage = () => (
     <section className="pb-16">
       <div className="container mx-auto px-5">
         <h2 className="text-xl font-semibold text-light-text">Explore by workflow</h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="pillar-links mt-6">
           {pillar.segmentSlugs.map((slug) => {
             const segment = solutionSegments[slug];
             if (!segment) return null;
@@ -60,7 +60,7 @@ const AgenticTestDevelopmentPage = () => (
               <Link
                 key={slug}
                 to={withFunnelParams(`/solutions/${slug}`)}
-                className="group rounded-[1.25rem] bg-dark-card/80 p-5 shadow-custom transition-all duration-300 hover:bg-dark-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="group rounded-sm bg-dark-card/80 p-5  transition-all duration-300 hover:bg-dark-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{segment.label}</p>
                 <p className="mt-2 text-sm leading-6 text-gray-text">{segment.heroTitle}</p>
@@ -76,17 +76,17 @@ const AgenticTestDevelopmentPage = () => (
 
     <section className="pb-24">
       <div className="container mx-auto px-5">
-        <div className="rounded-[2rem] bg-[linear-gradient(145deg,rgba(38,166,154,0.16),rgba(63,81,181,0.08))] p-8 md:p-10">
+        <div className="rounded-sm bg-dark-surface p-8 md:p-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="text-2xl font-semibold text-light-text">See the bounded-operation model in practice.</h3>
               <p className="mt-2 text-gray-text">Plotune Nexus is the runtime this whole approach is built on.</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Link to={withFunnelParams('/nexus')} className="inline-flex items-center justify-center gap-2 rounded-full bg-white/[0.06] px-6 py-3 font-semibold text-light-text transition-all duration-300 hover:bg-white/[0.1]">
+              <Link to={withFunnelParams('/nexus')} className="inline-flex items-center justify-center gap-2 rounded-full bg-dark-card px-6 py-3 font-semibold text-light-text transition-all duration-300 hover:bg-dark-card">
                 Explore Nexus
               </Link>
-              <Link to={withFunnelParams('/contact')} className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-primary-dark">
+              <Link to={withFunnelParams('/contact')} className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
                 Discuss your setup <FiArrowRight />
               </Link>
             </div>

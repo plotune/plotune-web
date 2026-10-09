@@ -9,15 +9,22 @@ const Streams = () => {
   const [activeTab, setActiveTab] = useState('streams'); // 'streams' or 'networks'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
+    <div className="min-h-screen bg-dark-surface pt-24 pb-12">
       <div className="container mx-auto px-4">
+        <header className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account tools</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Streams &amp; Networks</h1>
+          <p className="mt-2 max-w-2xl text-sm text-gray-text">Manage stream connections and peer networks from one workspace.</p>
+        </header>
 
         {/* Main Tabs */}
-        <div className="flex border-b border-white/10 mb-8">
+        <div className="flex overflow-x-auto border-b border-ink/15 mb-8" role="tablist" aria-label="Streams and networks">
           <button
-            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
-              activeTab === 'streams' 
-                ? 'border-primary text-primary' 
+            role="tab"
+            aria-selected={activeTab === 'streams'}
+            className={`shrink-0 px-4 sm:px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
+              activeTab === 'streams'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-gray-text hover:text-light-text'
             }`}
             onClick={() => setActiveTab('streams')}
@@ -28,9 +35,11 @@ const Streams = () => {
             Streams
           </button>
           <button
-            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
-              activeTab === 'networks' 
-                ? 'border-primary text-primary' 
+            role="tab"
+            aria-selected={activeTab === 'networks'}
+            className={`shrink-0 px-4 sm:px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
+              activeTab === 'networks'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-gray-text hover:text-light-text'
             }`}
             onClick={() => setActiveTab('networks')}
@@ -42,7 +51,7 @@ const Streams = () => {
           </button>
         </div>
 
-        <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+        <div className="bg-dark-card rounded-sm p-4 sm:p-6 border border-ink/15 ">
           {activeTab === 'streams' ? (
             <PlotuneStreams />
           ) : (

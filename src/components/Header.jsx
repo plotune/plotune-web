@@ -32,9 +32,9 @@ const Header = () => {
   // Doherty/Occam: Escape and outside clicks close the open dropdown, instead of
   // requiring a precise second click on the same chevron.
   useEffect(() => {
-    if (!openDropdown) return undefined;
+    if (!openDropdown && !isMobileMenuOpen) return undefined;
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') setOpenDropdown(null);
+      if (event.key === 'Escape') { setOpenDropdown(null); setIsMobileMenuOpen(false); }
     };
     const onMouseDown = (event) => {
       if (event.target instanceof Element && !event.target.closest('[data-nav-dropdown]')) {
@@ -47,7 +47,7 @@ const Header = () => {
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('mousedown', onMouseDown);
     };
-  }, [openDropdown]);
+  }, [openDropdown, isMobileMenuOpen]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((current) => !current);
@@ -65,28 +65,26 @@ const Header = () => {
 
   // Navigation items for non-logged-in users
   const guestNavItems = [
-    { to: '/', label: 'Home' },
-    {
-      to: '/nexus',
-      label: 'Nexus',
-      children: [
-        { to: '/nexus/connectivity', label: 'Connectivity' },
-        { to: '/nexus/stream', label: 'Stream' },
-        { to: '/nexus/use-cases', label: 'Use Cases' },
-      ],
-    },
-    { to: '/extensions', label: 'Extensions' },
-    { to: '/download', label: 'Download' },
-    { to: '/about', label: 'About' },
-    {
-      to: '/docs',
-      label: 'Docs',
-      children: [
-        { to: '/docs/nexus', label: 'Nexus Documentation' },
-        { to: '/faq', label: 'FAQ' },
-      ],
-    },
+    { to: '/nexus', label: 'Nexus', children: [
+      { to: '/nexus/connectivity', label: 'Connectivity' },
+      { to: '/nexus/stream', label: 'Stream integration' },
+      { to: '/nexus/use-cases', label: 'Use Cases' },
+      { to: '/ai-readiness', label: 'AI Readiness' },
+    ] },
+    { to: '/stream', label: 'Stream' },
     { to: '/research', label: 'Research' },
+    { to: '/docs', label: 'Docs', children: [
+      { to: '/docs/nexus', label: 'Nexus Documentation' },
+      { to: '/download', label: 'Desktop downloads' },
+      { to: '/extensions', label: 'Extensions' },
+      { to: '/faq', label: 'FAQ' },
+    ] },
+    { to: '/about', label: 'Company', children: [
+      { to: '/about', label: 'About Plotune' },
+      { to: '/careers', label: 'Careers' },
+      { to: '/partners', label: 'Partnerships' },
+      { to: '/contact', label: 'Contact' },
+    ] },
   ];
 
   // Navigation items for logged-in users with Material Icons
@@ -105,8 +103,8 @@ const Header = () => {
   const renderNavLink = (item) => {
     const isActive = location.pathname === item.to || item.children?.some((child) => location.pathname === child.to);
     const linkClass = `min-h-[44px] rounded-lg text-dark-text font-medium text-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary relative transition-colors duration-300 ${
-      isActive 
-        ? 'text-primary after:w-full after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0' 
+      isActive
+        ? 'text-primary after:w-full after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0'
         : 'after:w-0 after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0 after:transition-all after:duration-300 hover:after:w-full focus-visible:after:w-full'
     }`;
 
@@ -151,8 +149,8 @@ const Header = () => {
               <FiChevronDown aria-hidden="true" className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
           </div>
-          <div id={dropdownId} className={`${isOpen ? 'block' : 'hidden'} mt-2 md:absolute md:left-0 md:top-full md:mt-3 md:min-w-48`}>
-            <div className="min-w-48 rounded-xl border border-white/10 bg-dark-surface p-3 shadow-custom">
+          <div id={dropdownId} className={`${isOpen ? 'block' : 'hidden'} mt-2 xl:absolute xl:left-0 xl:top-full xl:mt-3 xl:min-w-48`}>
+            <div className="min-w-48 rounded-sm border border-ink/15 bg-dark-surface p-3 ">
               {item.children.map((child) => (
                 <Link
                   key={child.to}
@@ -187,18 +185,18 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white/5 backdrop-blur-xl fixed w-full top-0 z-50 shadow-custom py-4">
+    <header className="site-header fixed w-full top-0 z-50">
       <div className="container mx-auto px-5 flex justify-between items-center">
           <Link to="/" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="Plotune Logo" className="h-10 w-auto" />
-          <span className="text-2xl font-bold text-light-text bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <img src={logo} alt="Plotune Logo" className="h-8 w-auto" />
+          <span className="site-wordmark text-light-text">
             Plotune
           </span>
         </div>
           </Link>
         <nav className="flex items-center" aria-label="Main navigation">
-          <ul id="main-navigation" className={`md:flex gap-8 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface backdrop-blur-xl p-5' : 'hidden md:flex'}`}>
+          <ul id="main-navigation" className={`xl:flex gap-4 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface  p-5' : 'hidden xl:flex'}`}>
             {navItems.map((item) => (
               <li key={item.to}>
                 {renderNavLink(item)}
@@ -242,9 +240,9 @@ const Header = () => {
               </>
             )}
           </ul>
-          
+
           {/* Desktop view - Auth buttons */}
-          <div className="hidden md:flex items-center gap-4 ml-8">
+          <div className="hidden xl:flex items-center gap-4 ml-8">
             {isLoggedIn ? (
               // Logout button for logged-in users (desktop)
               <button
@@ -275,9 +273,9 @@ const Header = () => {
           </div>
 
           {/* Mobile menu button */}
-          <button 
-            className="md:hidden ml-4 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text text-2xl hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            onClick={toggleMobileMenu} 
+          <button
+            className="xl:hidden ml-4 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text text-2xl hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            onClick={toggleMobileMenu}
             aria-label={isMobileMenuOpen ? 'Close main navigation' : 'Open main navigation'}
             aria-controls="main-navigation"
             aria-expanded={isMobileMenuOpen}

@@ -24,7 +24,7 @@ const Legal = () => {
 
   return (
     <>
-      <section className="min-h-[40vh] flex items-center py-36 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
+      <section className="min-h-[40vh] flex items-center py-36 bg-dark-surface   text-center">
         <div className="container mx-auto px-5">
           <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-5">Legal Information</h1>
           <p className="text-lg text-gray-text max-w-2xl mx-auto">
@@ -34,8 +34,8 @@ const Legal = () => {
       </section>
       <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-20">
         <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
-          <div className="bg-dark-card rounded-custom p-5 border border-white/5">
-            <h3 className="text-lg font-semibold text-light-text mb-4 border-b border-white/10 pb-3">Navigation</h3>
+          <div className="bg-dark-card rounded-custom p-5 border border-ink/15">
+            <h3 className="text-lg font-semibold text-light-text mb-4 border-b border-ink/15 pb-3">Navigation</h3>
             <ul className="space-y-2">
               {[
                 { id: 'terms', label: 'Terms of Service' },
@@ -57,9 +57,9 @@ const Legal = () => {
             </ul>
           </div>
         </div>
-        <div className="flex-1 bg-dark-card rounded-custom p-10 border border-white/5 shadow-custom">
+        <div className="flex-1 bg-dark-card rounded-custom p-10 border border-ink/15 ">
           <Element name="terms" className="legal-section">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Terms of Service</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Terms of Service</h2>
             <p className="text-gray-text mb-4">These Terms of Service ("Terms") govern your access to and use of Plotune software, services, and extensions. By accessing or using Plotune, you agree to be bound by these Terms.</p>
             <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">Acceptance of Terms</h3>
             <p className="text-gray-text mb-4">By installing, accessing, or using Plotune software, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not use Plotune.</p>
@@ -74,12 +74,12 @@ const Legal = () => {
               <li>Upload or transmit viruses or any malicious code</li>
               <li>Interfere with or disrupt the integrity or performance of Plotune</li>
             </ul>
-            <div className="bg-dark-surface backdrop-blur-xl border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="bg-dark-surface  border-l-4 border-primary p-5 my-5 rounded-r-custom">
               <p className="text-gray-text"><strong>Important:</strong> Plotune reserves the right to modify or terminate the service for any reason, without notice at any time.</p>
             </div>
           </Element>
           <Element name="privacy" className="legal-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Privacy Policy</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Privacy Policy</h2>
             <p className="text-gray-text mb-4">
               Plotune is committed to protecting your privacy. For details on what information we collect, how we use it, and your rights, please read our full Privacy Policy.
             </p>
@@ -91,7 +91,7 @@ const Legal = () => {
             </RouterLink>
           </Element>
           <Element name="software-license" className="legal-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Software License</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Software License</h2>
             <p className="text-gray-text mb-4">Plotune is proprietary software provided under the following license terms:</p>
             <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">License Grant</h3>
             <p className="text-gray-text mb-4">Subject to your compliance with these Terms, Plotune grants you a limited, non-exclusive, non-transferable, non-sublicensable license to:</p>
@@ -111,19 +111,19 @@ const Legal = () => {
             <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">Subscription Plans</h3>
             <p className="text-gray-text mb-4">Plotune offers different licensing options:</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
+              <div className="bg-dark-surface  rounded-custom p-6 border border-ink/15">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-gift text-primary"></i> Lite Edition
                 </h4>
                 <p className="text-gray-text">Free for personal and non-commercial use. Includes basic functionality with limited features.</p>
               </div>
-              <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
+              <div className="bg-dark-surface  rounded-custom p-6 border border-ink/15">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-crown text-primary"></i> Pro Edition
                 </h4>
                 <p className="text-gray-text">Subscription-based license for individual professionals. Includes all features and priority support.</p>
               </div>
-              <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
+              <div className="bg-dark-surface  rounded-custom p-6 border border-ink/15">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-building text-primary"></i> Enterprise Edition
                 </h4>

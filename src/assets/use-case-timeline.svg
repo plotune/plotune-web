@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 250" fill="none">
   <style>
-    .bg { fill: #121417; }
-    .panel { fill: #171a1f; }
+    .bg { fill: #e8ece4; }
+    .panel { fill: #eeeee6; }
     .line { stroke: rgba(143,155,168,0.22); stroke-width: 2; }
     .cursor { animation: cursor 4.6s ease-in-out infinite; }
     .gauge {
@@ -11,9 +11,9 @@
     }
     .fault { animation: fault 4.6s ease-in-out infinite; }
     .window { animation: window 4.6s ease-in-out infinite; }
-    .label { fill: #8f9ba8; font: 11px Inter, Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
-    .value { fill: #f5f5f5; font: 600 12px Inter, Arial, sans-serif; }
-    .key { fill: #26A69A; font: 600 12px Inter, Arial, sans-serif; }
+    .label { fill: #526067; font: 11px Inter, Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+    .value { fill: #1c242b; font: 600 12px Inter, Arial, sans-serif; }
+    .key { fill: #00796b; font: 600 12px Inter, Arial, sans-serif; }
     @keyframes cursor {
       0%, 12% { transform: translateX(0); opacity: 0.35; }
       36%, 78% { transform: translateX(188px); opacity: 1; }
@@ -43,21 +43,21 @@
 
   <text class="label" x="38" y="44">Correlation Window</text>
   <line class="line" x1="46" y1="118" x2="274" y2="118"/>
-  <rect class="window" x="58" y="98" width="190" height="40" rx="12" fill="#26A69A" opacity="0.18"/>
-  <rect class="cursor" x="78" y="86" width="6" height="64" rx="3" fill="#26A69A"/>
-  <circle class="fault" cx="252" cy="118" r="12" fill="#3f51b5" opacity="0.88"/>
-  <circle class="fault" cx="252" cy="118" r="4" fill="#F5F5F5"/>
+  <rect class="window" x="58" y="98" width="190" height="40" rx="12" fill="#00796b" opacity="0.18"/>
+  <rect class="cursor" x="78" y="86" width="6" height="64" rx="3" fill="#00796b"/>
+  <circle class="fault" cx="252" cy="118" r="12" fill="#7479c8" opacity="0.88"/>
+  <circle class="fault" cx="252" cy="118" r="4" fill="#1c242b"/>
   <text class="value" x="46" y="82">discharge_complete</text>
   <text class="key" x="214" y="82">fault window</text>
 
   <text class="label" x="338" y="44">Residual Current</text>
-  <rect x="360" y="62" width="34" height="82" rx="12" fill="#222933"/>
-  <rect class="gauge" x="360" y="62" width="34" height="82" rx="12" fill="#26A69A"/>
+  <rect x="360" y="62" width="34" height="82" rx="12" fill="#d2d5ce"/>
+  <rect class="gauge" x="360" y="62" width="34" height="82" rx="12" fill="#00796b"/>
   <line x1="350" y1="110" x2="404" y2="110" stroke="#f59e0b" stroke-dasharray="4 4"/>
   <text class="value" x="336" y="162">2.4 A</text>
   <text class="label" x="334" y="178">threshold 0.5 A</text>
 
-  <circle class="fault" cx="42" cy="206" r="5" fill="#26A69A"/>
+  <circle class="fault" cx="42" cy="206" r="5" fill="#00796b"/>
   <text class="value" x="56" y="210">820 ms</text>
   <text class="value" x="160" y="210">P1C44:28</text>
   <text class="key" x="294" y="210">service bundle</text>

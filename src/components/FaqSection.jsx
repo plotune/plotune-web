@@ -41,17 +41,17 @@ const FaqSection = () => {
           <p>Plotune is currently available on Linux exclusively via <strong>Snap Store</strong>.</p>
 
           <p>Install using Snap:</p>
-          <pre className="bg-dark-surface backdrop-blur-xl p-3 rounded-custom my-2 text-gray-text">
+          <pre className="bg-dark-surface  p-3 rounded-custom my-2 text-gray-text">
             sudo snap install plotune
           </pre>
 
           <p>If Snap is not installed on your system, you can enable it:</p>
-          <pre className="bg-dark-surface backdrop-blur-xl p-3 rounded-custom my-2 text-gray-text">
+          <pre className="bg-dark-surface  p-3 rounded-custom my-2 text-gray-text">
             sudo apt install snapd
           </pre>
 
           <p className="mt-2">After installation, you can run Plotune using:</p>
-          <pre className="bg-dark-surface backdrop-blur-xl p-3 rounded-custom my-2 text-gray-text">
+          <pre className="bg-dark-surface  p-3 rounded-custom my-2 text-gray-text">
             plotune
           </pre>
         </>
@@ -84,7 +84,7 @@ const FaqSection = () => {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`bg-dark-card rounded-custom p-4 border border-white/5 ${activeFaq === index ? 'shadow-custom' : ''}`}
+              className={`bg-dark-card rounded-custom p-4 border border-ink/15 ${activeFaq === index ? '' : ''}`}
             >
               <h3 className="text-lg font-semibold text-light-text">
                 <button

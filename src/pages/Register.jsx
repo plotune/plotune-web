@@ -28,7 +28,7 @@ const Register = () => {
       ...formData,
       [name]: value,
     });
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors({
@@ -41,25 +41,25 @@ const Register = () => {
   const passwordStrength = () => {
     if (password.length === 0) return { strength: 'None', score: 0 };
     if (password.length < 8) return { strength: 'Weak', score: 1 };
-    
+
     let score = 0;
     // Length contributes to score
     if (password.length >= 8) score++;
     if (password.length >= 12) score++;
-    
+
     // Check for uppercase letters
     if (/[A-Z]/.test(password)) score++;
-    
+
     // Check for numbers
     if (/[0-9]/.test(password)) score++;
-    
+
     // Check for special characters
     if (/[^A-Za-z0-9]/.test(password)) score++;
-    
+
     let strength = 'Weak';
     if (score >= 4) strength = 'Strong';
     else if (score >= 3) strength = 'Medium';
-    
+
     return { strength, score };
   };
 
@@ -72,35 +72,35 @@ const Register = () => {
 
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.email.match(/^\S+@\S+\.\S+$/)) {
       newErrors.email = 'Invalid email format';
     }
-    
+
     if (formData.username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters';
     }
-    
+
     if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
+
     if (!formData.sector) {
       newErrors.sector = 'Sector is required';
     }
-    
+
     if (!formData.country) {
       newErrors.country = 'Country is required';
     }
-    
+
     if (!termsAgreed) {
       newErrors.terms = 'You must agree to the terms';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -157,9 +157,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const response = await api.post('/register', {
         full_name: formData.fullName, // Rename fullName to full_name
@@ -245,8 +245,8 @@ const Register = () => {
   const { strength } = passwordStrength();
 
   return (
-    <div className="min-h-screen mt-20 bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
-      <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl">
+    <div className="min-h-screen mt-20 bg-dark-surface   flex items-center justify-center py-8 px-4">
+      <div className="bg-dark-card rounded-sm p-8 border border-ink/15 ">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-light-text mb-2">Create Account</h1>
           <p className="text-gray-text">Join Plotune to access exclusive features</p>
@@ -258,7 +258,7 @@ const Register = () => {
             <span className="text-gray-text">3. Sign in</span>
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Full Name (Optional)</label>
@@ -267,11 +267,11 @@ const Register = () => {
               name="fullName"
               value={fullName}
               onChange={handleInputChange}
-              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
+              className="w-full p-3 bg-dark-surface  rounded-lg border border-ink/15 text-light-text focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
               placeholder="Enter your full name"
             />
           </div>
-          
+
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Email</label>
             <input
@@ -281,8 +281,8 @@ const Register = () => {
               onChange={handleInputChange}
               onBlur={() => validateField('email')}
               autoComplete="email"
-              className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                errors.email ? 'border-red-500' : 'border-white/10 focus:border-primary'
+              className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                errors.email ? 'border-red-500' : 'border-ink/15 focus:border-primary'
               }`}
               placeholder="your.email@example.com"
             />
@@ -293,7 +293,7 @@ const Register = () => {
               {errors.email}
             </p>}
           </div>
-          
+
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Username</label>
             <input
@@ -303,8 +303,8 @@ const Register = () => {
               onChange={handleInputChange}
               onBlur={() => validateField('username')}
               autoComplete="username"
-              className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                errors.username ? 'border-red-500' : 'border-white/10 focus:border-primary'
+              className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                errors.username ? 'border-red-500' : 'border-ink/15 focus:border-primary'
               }`}
               placeholder="Choose a username"
             />
@@ -315,7 +315,7 @@ const Register = () => {
               {errors.username}
             </p>}
           </div>
-          
+
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Password</label>
             <div className="relative">
@@ -326,8 +326,8 @@ const Register = () => {
                 onChange={handleInputChange}
                 onBlur={() => validateField('password')}
                 autoComplete="new-password"
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
-                  errors.password ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
+                  errors.password ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
                 placeholder="Create a strong password"
               />
@@ -354,13 +354,13 @@ const Register = () => {
               </svg>
               {errors.password}
             </p>}
-            
+
             {password.length > 0 && (
               <div className="mt-2">
                 <div className="flex justify-between text-xs text-gray-text mb-1">
                   <span>Password strength: {strength}</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
+                <div className="w-full bg-dark-surface rounded-full h-1.5">
                   <div
                     className={`h-1.5 rounded-full ${getPasswordStrengthColor()}`}
                     style={{ width: `${(passwordStrength().score / 5) * 100}%` }}
@@ -383,7 +383,7 @@ const Register = () => {
               </div>
             )}
           </div>
-          
+
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Confirm Password</label>
             <div className="relative">
@@ -394,8 +394,8 @@ const Register = () => {
                 onChange={handleInputChange}
                 onBlur={() => validateField('confirmPassword')}
                 autoComplete="new-password"
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
+                  errors.confirmPassword ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
                 placeholder="Confirm your password"
               />
@@ -423,7 +423,7 @@ const Register = () => {
               {errors.confirmPassword}
             </p>}
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-text mb-2 text-sm font-medium">Sector</label>
@@ -432,8 +432,8 @@ const Register = () => {
                 value={sector}
                 onChange={handleInputChange}
                 onBlur={() => validateField('sector')}
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                  errors.sector ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                  errors.sector ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
               >
                 <option value="">Select sector</option>
@@ -453,7 +453,7 @@ const Register = () => {
                 {errors.sector}
               </p>}
             </div>
-            
+
             <div>
               <label className="block text-gray-text mb-2 text-sm font-medium">Country</label>
               <select
@@ -461,8 +461,8 @@ const Register = () => {
                 value={country}
                 onChange={handleInputChange}
                 onBlur={() => validateField('country')}
-                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                  errors.country ? 'border-red-500' : 'border-white/10 focus:border-primary'
+                className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                  errors.country ? 'border-red-500' : 'border-ink/15 focus:border-primary'
                 }`}
               >
                 <option value="">Select country</option>
@@ -484,7 +484,7 @@ const Register = () => {
               </p>}
             </div>
           </div>
-          
+
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Company (Optional)</label>
             <input
@@ -492,11 +492,11 @@ const Register = () => {
               name="company"
               value={company}
               onChange={handleInputChange}
-              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
+              className="w-full p-3 bg-dark-surface  rounded-lg border border-ink/15 text-light-text focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
               placeholder="Your company name"
             />
           </div>
-          
+
           <label htmlFor="newsletter" className="flex items-start gap-3 py-2 cursor-pointer">
             <input
               id="newsletter"
@@ -509,7 +509,7 @@ const Register = () => {
               Subscribe to our newsletter for updates and offers (optional)
             </span>
           </label>
-          
+
           <label htmlFor="terms" className="flex items-start gap-3 py-2 cursor-pointer">
             <input
               id="terms"
@@ -528,7 +528,7 @@ const Register = () => {
             </svg>
             {errors.terms}
           </p>}
-          
+
           <button
             type="submit"
             disabled={isSubmitting}
@@ -547,15 +547,15 @@ const Register = () => {
             )}
           </button>
         </form>
-        
+
         <div className="my-6 flex items-center">
-          <div className="flex-grow border-t border-white/10"></div>
+          <div className="flex-grow border-t border-ink/15"></div>
           <span className="mx-4 text-gray-text text-sm">Or continue with</span>
-          <div className="flex-grow border-t border-white/10"></div>
+          <div className="flex-grow border-t border-ink/15"></div>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-3">
-          <button disabled className="py-2.5 px-4 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg text-light-text opacity-50 cursor-not-allowed flex items-center justify-center">
+          <button disabled className="py-2.5 px-4 bg-dark-surface  border border-ink/15 rounded-lg text-light-text opacity-50 cursor-not-allowed flex items-center justify-center">
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -573,7 +573,7 @@ const Register = () => {
                 toast.error('GitHub login failed');
               }
             }}
-            className="py-2.5 px-4 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg text-light-text hover:bg-white/5 transition flex items-center justify-center"
+            className="py-2.5 px-4 bg-dark-surface  border border-ink/15 rounded-lg text-light-text hover:bg-dark-card transition flex items-center justify-center"
           >
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -581,7 +581,7 @@ const Register = () => {
             GitHub
           </button>
         </div>
-        
+
         <p className="mt-8 text-center text-gray-text text-sm">
           Already have an account? <Link to="/login" className="text-primary hover:underline font-medium">Sign in</Link>
         </p>

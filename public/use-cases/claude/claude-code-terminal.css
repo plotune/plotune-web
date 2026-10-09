@@ -437,3 +437,14 @@ body.claude-code-shell .cursor {
     flex: 0 0 auto;
   }
 }
+
+/* Plotune engineering demonstration frame. The terminal remains a dark code interface. */
+:root { --bg: #1c242b; --txt: #e0e8e1; --dim: #91a19b; --mid: #adbbb4; --teal: #6bc4af; --yellow: #f0be57; --overlay: #334247; }
+html, body.claude-code-shell { background: #f7f6f2; }
+body.claude-code-shell .window { border-radius: 2px; box-shadow: none; border: 1px solid #364747; }
+body.claude-code-shell .titlebar { background: #26343a; border-color: #526067; }
+body.claude-code-shell .titlebar-center { color: #c2cfc7; }
+body.claude-code-shell .bottombar { border-radius: 2px; box-shadow: none; border: 1px solid #526067; background: #1c242b; }
+body.claude-code-shell .stab, body.claude-code-shell .breplay { min-height: 34px; color: #adbbb4; border-radius: 2px; }
+@media(max-width:600px) { body.claude-code-shell .stab,body.claude-code-shell .breplay { min-height: 44px; } body.claude-code-shell .bottombar { height: auto; padding: 8px; flex-wrap: wrap; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

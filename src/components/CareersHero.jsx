@@ -2,7 +2,7 @@ import React from 'react';
 
 const CareersHero = () => {
   return (
-    <section className="min-h-[1vh] flex flex-col justify-center py-12 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
+    <section className="min-h-[1vh] flex flex-col justify-center py-12 bg-dark-surface   text-center">
         <h1 className="text-4xl font-bold text-light-text max-w-2xl mx-auto mb-4">
           Careers at Plotune
         </h1>

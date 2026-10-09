@@ -11,6 +11,7 @@ import CalculatorIcon from "../assets/icons/billing.svg";
 import PlugIcon from "../assets/icons/stream.svg";
 import CodeIcon from "../assets/icons/profile.svg";
 import ServerIcon from "../assets/icons/api.svg";
+import "../nexusdocs/NexusDocs.css";
 
 // ── Lazy-load every page component ─────────────────────────────────────
 const pageMap = {
@@ -127,7 +128,7 @@ export default function Docs() {
       isSub ? "pl-12 text-sm" : "font-medium",
       isActive
         ? "bg-primary/20 text-primary border-l-4 border-primary"
-        : "text-gray-text hover:text-light-text hover:bg-white/5"
+        : "text-gray-text hover:text-light-text hover:bg-dark-card"
     );
 
     if (tab.href) {
@@ -156,14 +157,14 @@ export default function Docs() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg">
+    <div className="site-public site-docs min-h-screen bg-dark-bg">
       <Seo
         title="Plotune Documentation"
         description="Documentation for Plotune and Plotune Nexus: components, extensions, calculations, and workflows."
         path="/docs"
       />
       {/* ── HERO ── */}
-      <section className="min-h-[40vh] flex flex-col justify-center py-16 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
+      <section className="docs-intro min-h-[40vh] flex flex-col justify-center py-16 bg-dark-surface">
         <div className="container mx-auto px-5">
           <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-4">
             Plotune Documentation
@@ -175,10 +176,10 @@ export default function Docs() {
       </section>
 
       {/* ── LAYOUT ── */}
-      <div className="container mx-auto px-5 py-12 flex flex-col lg:flex-row gap-8">
+      <div className="docs-shell container mx-auto px-5 py-12 flex flex-col lg:flex-row gap-8">
         {/* ── LEFT: Sidebar ── */}
-        <aside className="lg:w-1/4">
-          <div className="bg-dark-card rounded-2xl p-6 border border-white/5 shadow-xl">
+        <aside className="docs-sidebar lg:w-1/4">
+          <div className="bg-dark-card rounded-sm p-6 border border-ink/15 ">
             <nav className="space-y-2">
               {tabs.map((tab) => (
                 <div key={tab.id}>
@@ -195,8 +196,8 @@ export default function Docs() {
         </aside>
 
         {/* ── RIGHT: Content ── */}
-        <main className="lg:w-3/4">
-          <div className="bg-dark-card rounded-2xl p-8 border border-white/5 shadow-xl min-h-[600px]">
+        <main className="docs-main lg:w-3/4">
+          <div className="docs-content bg-dark-card rounded-sm p-8 border border-ink/15 min-h-[600px]">
             <Suspense
               fallback={
                 <div className="flex items-center justify-center h-64">

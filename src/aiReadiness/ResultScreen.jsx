@@ -45,14 +45,14 @@ const ScoreRing = ({ score }) => {
   return (
     <div className="relative mx-auto h-56 w-56 sm:h-64 sm:w-64" role="img" aria-label={`${score} percent AI-ready`} data-score={score}>
       <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90" aria-hidden="true">
-        <circle cx="100" cy="100" r={RADIUS} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="10" />
+        <circle cx="100" cy="100" r={RADIUS} fill="none" stroke="#d2d5ce" strokeWidth="10" />
         <circle
           className="ai-ring-progress"
           cx="100"
           cy="100"
           r={RADIUS}
           fill="none"
-          stroke="#26A69A"
+          stroke="#00796b"
           strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
@@ -75,7 +75,7 @@ const Coverage = ({ assessed, total }) => (
   <div className="mt-5 flex items-center justify-center gap-3 text-sm text-gray-text">
     <span className="flex gap-1.5" aria-hidden="true">
       {Array.from({ length: total }, (_, i) => (
-        <span key={i} className={`h-2 w-6 rounded-full ${i < assessed ? 'bg-primary' : 'bg-white/15'}`} />
+        <span key={i} className={`h-2 w-6 rounded-full ${i < assessed ? 'bg-primary' : 'bg-dark-card'}`} />
       ))}
     </span>
     <span>{assessed} of {total} areas assessed</span>

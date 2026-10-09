@@ -3,10 +3,10 @@
     .biAxis { stroke: rgba(143,155,168,0.20); stroke-width: 2; }
     .biGrid { stroke: rgba(143,155,168,0.10); stroke-width: 1; }
     .biScatter { will-change: opacity; animation: biScatterOut 5s ease-in-out infinite; }
-    .biTrend { stroke: #26A69A; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 315; stroke-dashoffset: 315; animation: biTrendDraw 5s ease-in-out infinite; }
+    .biTrend { stroke: #00796b; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 315; stroke-dashoffset: 315; animation: biTrendDraw 5s ease-in-out infinite; }
     .biNode { will-change: opacity; animation: biNodeIn 5s ease-in-out infinite; }
     .biVerdict { will-change: opacity, transform; animation: biVerdictIn 5s ease-in-out infinite; }
-    .biSweep { stroke: #f5f5f5; stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 12 330; opacity: 0; animation: biSweepMove 2.4s linear infinite, biSweepOn 5s ease-in-out infinite; }
+    .biSweep { stroke: #1c242b; stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 12 330; opacity: 0; animation: biSweepMove 2.4s linear infinite, biSweepOn 5s ease-in-out infinite; }
     .biN0 { animation-delay: 0s; } .biN1 { animation-delay: 0.12s; } .biN2 { animation-delay: 0.24s; }
     .biN3 { animation-delay: 0.36s; } .biN4 { animation-delay: 0.48s; } .biN5 { animation-delay: 0.6s; }
 
@@ -31,7 +31,7 @@
   <line class="biGrid" x1="40" y1="120" x2="360" y2="120"/>
   <line class="biAxis" x1="40" y1="132" x2="360" y2="132"/>
 
-  <g fill="#64748b">
+  <g fill="#526067">
     <circle class="biScatter" cx="70" cy="60" r="4"/>
     <circle class="biScatter" cx="112" cy="98" r="4"/>
     <circle class="biScatter" cx="152" cy="44" r="4"/>
@@ -43,15 +43,15 @@
 
   <path class="biTrend" d="M50 118 L110 104 L170 96 L230 78 L290 64 L350 44"/>
   <path class="biSweep" d="M50 118 L110 104 L170 96 L230 78 L290 64 L350 44"/>
-  <circle class="biNode biN0" cx="50" cy="118" r="4.5" fill="#26A69A"/>
-  <circle class="biNode biN1" cx="110" cy="104" r="4.5" fill="#26A69A"/>
-  <circle class="biNode biN2" cx="170" cy="96" r="4.5" fill="#26A69A"/>
-  <circle class="biNode biN3" cx="230" cy="78" r="4.5" fill="#26A69A"/>
-  <circle class="biNode biN4" cx="290" cy="64" r="4.5" fill="#26A69A"/>
-  <circle class="biNode biN5" cx="350" cy="44" r="4.5" fill="#26A69A"/>
+  <circle class="biNode biN0" cx="50" cy="118" r="4.5" fill="#00796b"/>
+  <circle class="biNode biN1" cx="110" cy="104" r="4.5" fill="#00796b"/>
+  <circle class="biNode biN2" cx="170" cy="96" r="4.5" fill="#00796b"/>
+  <circle class="biNode biN3" cx="230" cy="78" r="4.5" fill="#00796b"/>
+  <circle class="biNode biN4" cx="290" cy="64" r="4.5" fill="#00796b"/>
+  <circle class="biNode biN5" cx="350" cy="44" r="4.5" fill="#00796b"/>
 
   <g class="biVerdict">
-    <rect x="392" y="52" width="60" height="52" rx="14" fill="#171a1f" stroke="rgba(38,166,154,0.32)" stroke-width="1.5"/>
-    <path d="M422 66 L436 84 L428 84 L428 92 L416 92 L416 84 L408 84 Z" fill="#26A69A"/>
+    <rect x="392" y="52" width="60" height="52" rx="14" fill="#eeeee6" stroke="rgba(38,166,154,0.32)" stroke-width="1.5"/>
+    <path d="M422 66 L436 84 L428 84 L428 92 L416 92 L416 84 L408 84 Z" fill="#00796b"/>
   </g>
 </svg>

@@ -16,25 +16,25 @@ export default function Statistical() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-table text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Real-time Table</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-sync text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Auto Updates</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-layer-group text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Multi-Signal</div>
         </div>
-        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-ruler-horizontal text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function Statistical() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface  rounded-sm p-8 border border-ink/15">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -73,7 +73,7 @@ export default function Statistical() {
               "Compact tabular format for easy monitoring",
               "Supports multiple signals in a single view"
             ].map((feature, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <i className="fas fa-check text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{feature}</span>
               </div>
@@ -94,7 +94,7 @@ export default function Statistical() {
               "View live-updating min, max, mean, and std-dev in the table",
               "Use system screenshot to capture current values"
             ].map((step, index) => (
-              <li key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+              <li key={index} className="flex items-start gap-3 p-4 bg-dark-surface  rounded-lg border border-ink/15">
                 <span className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {index + 1}
                 </span>
@@ -118,7 +118,7 @@ export default function Statistical() {
             { metric: "Average", description: "Arithmetic mean of all samples", icon: "fas fa-balance-scale" },
             { metric: "Std Dev", description: "Measure of variation/spread", icon: "fas fa-expand-arrows-alt" }
           ].map((item, index) => (
-            <div key={index} className="p-5 bg-dark-surface backdrop-blur-xl rounded-xl border border-white/5">
+            <div key={index} className="p-5 bg-dark-surface  rounded-sm border border-ink/15">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
                   <i className={`${item.icon} text-secondary`}></i>
@@ -146,7 +146,7 @@ export default function Statistical() {
             "Take screenshots at key moments for reporting",
             "Place in dashboard corner for continuous health checks"
           ].map((tip, index) => (
-            <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
+            <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface  rounded-lg border border-ink/15">
               <i className="fas fa-lightbulb text-secondary mt-1 text-sm"></i>
               <span className="text-gray-text">{tip}</span>
             </div>
@@ -157,7 +157,7 @@ export default function Statistical() {
       {/* Use Cases */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Use Cases
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -167,7 +167,7 @@ export default function Statistical() {
             { icon: "fas fa-flask", title: "Test Summary", description: "Quick numerical snapshot of experiments" },
             { icon: "fas fa-shield-alt", title: "Anomaly Detection", description: "Spot drift using mean and std-dev" }
           ].map((useCase, index) => (
-            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 transition-all duration-300">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
                   <i className={`${useCase.icon} text-primary`}></i>
@@ -182,7 +182,7 @@ export default function Statistical() {
 
       {/* Integration Note */}
       <section className="mb-12">
-        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20 text-center">
+        <div className="bg-dark-surface   rounded-sm p-6 border border-primary/20 text-center">
           <h3 className="text-xl font-bold text-light-text mb-3">
             Simple. Instant. Reliable.
           </h3>
@@ -195,12 +195,12 @@ export default function Statistical() {
       {/* Related Components */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-light-text mb-6 flex items-center gap-3">
-          <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
           Related Components
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <a href="/docs?page=components-oscilloscope" className="group">
-            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 hover: transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-wave-square text-primary"></i>
               </div>
@@ -212,7 +212,7 @@ export default function Statistical() {
           </a>
 
           <a href="/docs?page=components-scatter" className="group">
-            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 hover: transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-chart-scatter text-primary"></i>
               </div>
@@ -224,7 +224,7 @@ export default function Statistical() {
           </a>
 
           <a href="/docs?page=calculations-aggregations" className="group">
-            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15 hover:border-primary/30 hover: transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-calculator text-primary"></i>
               </div>
@@ -238,7 +238,7 @@ export default function Statistical() {
       </section>
 
       {/* Footer */}
-      <div className="text-center pt-8 border-t border-white/10">
+      <div className="text-center pt-8 border-t border-ink/15">
         <p className="text-gray-text italic">
           Last updated: November 2025 — Statistical Component v1.0.0
         </p>

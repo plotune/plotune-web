@@ -23,7 +23,7 @@ const Privacy = () => {
 
   return (
     <>
-      <section className="min-h-[40vh] flex items-center py-36 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
+      <section className="min-h-[40vh] flex items-center py-36 bg-dark-surface   text-center">
         <div className="container mx-auto px-5">
           <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-5">Privacy Policy</h1>
           <p className="text-lg text-gray-text max-w-2xl mx-auto">
@@ -33,8 +33,8 @@ const Privacy = () => {
       </section>
       <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-20">
         <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
-          <div className="bg-dark-card rounded-custom p-5 border border-white/5">
-            <h3 className="text-lg font-semibold text-light-text mb-4 border-b border-white/10 pb-3">Navigation</h3>
+          <div className="bg-dark-card rounded-custom p-5 border border-ink/15">
+            <h3 className="text-lg font-semibold text-light-text mb-4 border-b border-ink/15 pb-3">Navigation</h3>
             <ul className="space-y-2">
               {[
                 { id: 'overview', label: 'Overview' },
@@ -63,9 +63,9 @@ const Privacy = () => {
             </ul>
           </div>
         </div>
-        <div className="flex-1 bg-dark-card rounded-custom p-10 border border-white/5 shadow-custom">
+        <div className="flex-1 bg-dark-card rounded-custom p-10 border border-ink/15 ">
           <Element name="overview" className="privacy-section">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Overview</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Overview</h2>
             <p className="text-gray-text mb-4">
               At Plotune, we prioritize your privacy. This Privacy Policy outlines how we collect, use, store, and protect your information when you use our software, services, and website. This policy applies to all users, including those using the Lite, Pro, or Enterprise editions of Plotune.
             </p>
@@ -74,7 +74,7 @@ const Privacy = () => {
             </p>
           </Element>
           <Element name="data-collection" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Data We Collect</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Data We Collect</h2>
             <p className="text-gray-text mb-4">We collect the following types of information:</p>
             <ul className="list-disc ml-5 space-y-2 text-gray-text">
               <li><strong>Account Information:</strong> Name, email address, username, and other details you provide during registration.</li>
@@ -85,7 +85,7 @@ const Privacy = () => {
             </ul>
           </Element>
           <Element name="cookies" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Cookies & Tracking Technologies</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Cookies & Tracking Technologies</h2>
             <p className="text-gray-text mb-4">
               Our website uses cookies and similar tracking technologies from the following third-party providers to understand site usage and measure marketing performance:
             </p>
@@ -98,7 +98,7 @@ const Privacy = () => {
             </p>
           </Element>
           <Element name="data-usage" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">How We Use Your Data</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">How We Use Your Data</h2>
             <p className="text-gray-text mb-4">We use your information to:</p>
             <ul className="list-disc ml-5 space-y-2 text-gray-text">
               <li>Provide and maintain Plotune services, including account management and extension functionality.</li>
@@ -110,19 +110,19 @@ const Privacy = () => {
             </ul>
           </Element>
           <Element name="telemetry" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Telemetry Data</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Telemetry Data</h2>
             <p className="text-gray-text mb-4">
               Plotune collects anonymous telemetry data to understand how our software is used and to identify areas for improvement. This data includes metrics like feature usage, performance statistics, and error reports, but does not include personally identifiable information.
             </p>
             <p className="text-gray-text mb-4">
               You can opt-out of telemetry data collection through your account settings. Disabling telemetry does not affect your ability to use Plotune.
             </p>
-            <div className="bg-dark-surface backdrop-blur-xl border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="bg-dark-surface  border-l-4 border-primary p-5 my-5 rounded-r-custom">
               <p className="text-gray-text"><strong>Note:</strong> Telemetry data is anonymized and cannot be linked to individual users.</p>
             </div>
           </Element>
           <Element name="data-sharing" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Data Sharing</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Data Sharing</h2>
             <p className="text-gray-text mb-4">
               Plotune does not share or sell your personal information with third parties, except in the following cases:
             </p>
@@ -137,7 +137,7 @@ const Privacy = () => {
             </p>
           </Element>
           <Element name="user-rights" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Your Rights</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Your Rights</h2>
             <p className="text-gray-text mb-4">
               Under GDPR, KVKK, and other applicable laws, you have the following rights regarding your personal data:
             </p>
@@ -154,7 +154,7 @@ const Privacy = () => {
             </p>
           </Element>
           <Element name="security" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Data Security</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Data Security</h2>
             <p className="text-gray-text mb-4">
               We implement industry-standard security measures to protect your data, including encryption, secure servers, and regular security audits. However, no system is completely secure, and we cannot guarantee absolute security.
             </p>
@@ -163,7 +163,7 @@ const Privacy = () => {
             </p>
           </Element>
           <Element name="compliance" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Compliance</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Compliance</h2>
             <p className="text-gray-text mb-4">
               Plotune complies with GDPR, KVKK, and other applicable data protection regulations. We ensure that our data practices align with these standards, including obtaining explicit consent for data processing where required.
             </p>
@@ -172,7 +172,7 @@ const Privacy = () => {
             </p>
           </Element>
           <Element name="contact" className="privacy-section mt-12">
-            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-white/10 pb-4">Contact Us</h2>
+            <h2 className="text-3xl font-bold text-light-text mb-6 border-b border-ink/15 pb-4">Contact Us</h2>
             <p className="text-gray-text mb-4">
               If you have questions about this Privacy Policy or our data practices, please contact us at:
             </p>
@@ -182,7 +182,7 @@ const Privacy = () => {
             <p className="text-gray-text mb-4">
               Last updated: August 25, 2025
             </p>
-            <div className="bg-dark-surface backdrop-blur-xl border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="bg-dark-surface  border-l-4 border-primary p-5 my-5 rounded-r-custom">
               <p className="text-gray-text"><strong>Effective Date:</strong> August 25, 2025</p>
             </div>
           </Element>

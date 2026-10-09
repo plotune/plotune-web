@@ -7,6 +7,9 @@
 // react-dom/test-utils directly, so it needs setting explicitly, once, for every test file.
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
+// Icon styles are loaded by a route effect; jsdom does not render CSS assets.
+jest.mock('@fortawesome/fontawesome-free/css/all.min.css', () => ({}));
+
 // jsdom (CRA jest environment) lacks the Web Streams globals that react-router
 // v7 references at module scope — polyfill them for all tests.
 const { TextEncoder, TextDecoder } = require('util');

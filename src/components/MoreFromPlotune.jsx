@@ -30,7 +30,7 @@ const MoreFromPlotune = () => (
           <Link
             key={item.to}
             to={item.to}
-            className="group flex items-center justify-between gap-4 rounded-2xl bg-dark-card p-6 shadow-custom transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:-translate-y-1"
+            className="group flex items-center justify-between gap-4 rounded-sm bg-dark-card p-6  transition-all duration-300   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
           >
             <div>
               <h3 className="text-xl font-semibold text-light-text">{item.label}</h3>

@@ -13,19 +13,23 @@ const events = initialProjects[0].events;
 test("event history searches arbitrary nested properties and orders timestamps newest first", () => {
   const nested = filterEvents(events, { search: "validation", range: "all" });
   expect(nested.map((e) => e.event)).toEqual(["calibration.loaded"]);
-  const result = filterEvents([...events].reverse(), { range: "all" });
-  expect(result[0].event).toBe("motor");
+  const independent = [
+    { id: "earlier", event: "arbitrary.first", timestamp: "2026-01-01T00:00:00Z", properties: {} },
+    { id: "later", event: "arbitrary.second", timestamp: "2026-01-01T00:00:02Z", properties: {} },
+  ];
+  const result = filterEvents([...independent].reverse(), { range: "all" });
+  expect(result.map((e) => e.id)).toEqual(["later", "earlier"]);
   expect(Date.parse(result[0].timestamp)).toBeGreaterThan(
     Date.parse(result[1].timestamp),
   );
-  expect(result[result.length - 1].event).toBe("firmware.booted");
+  expect(result[result.length - 1].id).toBe("earlier");
 });
 test("time and event-name filters combine without requiring a hardware schema", () => {
   expect(
     filterEvents(events, {
       name: "simulation.completed",
       range: "1h",
-      now: SNAPSHOT,
+      now: "2026-10-07T11:00:00.000Z",
     }),
   ).toHaveLength(1);
   expect(
@@ -79,9 +83,10 @@ test("simulated first event matches the schemaless onboarding example", () => {
 
 test("event envelope context is optional and minimal payloads remain valid", () => {
   const project = initialProjects.find((item) => item.id === "battery");
-  const run = project.events.filter((item) => item.session_id === "run-817");
+  const run = project.events.filter((item) => item.id.startsWith("battery-run-817-"));
   expect(run.map((item) => item.event)).toEqual(["motor.started", "motor.speed_changed", "motor.overtemp", "motor.shutdown", "test.completed"]);
-  expect(run.slice(0, 4).every((item) => item.device_id === "motor-003")).toBe(true);
+  expect(run.slice(0, 4).every((item) => item.device_id === "motor-003" && item.session_id === "run-817")).toBe(true);
+  expect(run[4].device_id).toBe("test-controller-01");
   expect(project.events.some((item) => !item.device_id && !item.session_id)).toBe(true);
   expect(createSimulatedFirstEvent("minimal", SNAPSHOT)).not.toHaveProperty("device_id", "motor-003");
   expect(createSimulatedFirstEvent("minimal", SNAPSHOT)).not.toHaveProperty("session_id", "run-817");

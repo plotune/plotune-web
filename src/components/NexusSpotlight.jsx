@@ -40,8 +40,8 @@ const NexusSpotlight = () => {
             const Icon = pillar.icon;
 
             return (
-              <article key={pillar.title} className="rounded-2xl bg-dark-card p-6 shadow-custom">
-                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+              <article key={pillar.title} className="rounded-sm bg-dark-card p-6 ">
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-sm bg-primary/12 text-primary">
                   <Icon className="text-xl" />
                 </div>
                 <h3 className="text-xl font-semibold text-light-text">{pillar.title}</h3>

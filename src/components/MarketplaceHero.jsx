@@ -2,7 +2,7 @@ import React from 'react';
 
 const MarketplaceHero = () => {
   return (
-    <section className="min-h-[50vh] flex flex-col justify-center py-36 relative overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
+    <section className="min-h-[50vh] flex flex-col justify-center py-36 relative overflow-hidden bg-dark-surface   text-center">
       <div className="container mx-auto px-5">
         <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-5">Extensions Marketplace</h1>
         <p className="text-lg text-gray-text max-w-2xl mx-auto">

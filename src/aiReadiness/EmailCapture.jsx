@@ -66,7 +66,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, submission, nexusTo, onNexusClic
   if (submission) {
     const preview = submission.delivery === 'not_configured';
     return (
-      <div className="ai-step rounded-2xl border border-primary/40 bg-primary/10 p-6 text-center">
+      <div className="ai-step rounded-sm border border-primary/40 bg-primary/10 p-6 text-center">
         <div role="status">
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-dark-bg">
             <FiCheck className="text-2xl" strokeWidth={3} aria-hidden="true" />
@@ -92,7 +92,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, submission, nexusTo, onNexusClic
         <Link
           to={nexusTo}
           onClick={onNexusClick}
-          className="mt-5 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-white/15 px-5 text-sm font-medium text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="mt-5 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-ink/15 px-5 text-sm font-medium text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           Learn about Plotune Nexus
           <FiArrowRight aria-hidden="true" />
@@ -105,7 +105,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, submission, nexusTo, onNexusClic
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="relative rounded-2xl border border-primary/40 bg-dark-card p-6 shadow-custom"
+      className="relative rounded-sm border border-primary/40 bg-dark-card p-6 "
     >
       <h2 className="text-xl font-semibold leading-snug text-light-text sm:text-2xl">
         Want to know what’s holding your setup back?
@@ -149,8 +149,8 @@ const EmailCapture = ({ onFirstInput, onSubmit, submission, nexusTo, onNexusClic
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={error ? 'ai-readiness-email-error' : undefined}
         // text-base (16px) so iOS Safari doesn't zoom the page when the field is focused.
-        className={`mt-2 h-14 w-full rounded-xl border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
-          error ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-white/15 focus:border-primary focus:ring-primary'
+        className={`mt-2 h-14 w-full rounded-sm border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
+          error ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-ink/15 focus:border-primary focus:ring-primary'
         }`}
       />
       <p id="ai-readiness-email-error" role="alert" className={`text-sm text-red-300 ${error ? 'mt-2' : 'sr-only'}`}>

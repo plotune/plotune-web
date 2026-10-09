@@ -44,7 +44,7 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div data-modal-root className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl w-full max-w-md">
+      <div data-modal-root className="bg-dark-card rounded-sm p-6 border border-ink/15  w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-light-text">Create New Stream</h3>
           <button
@@ -64,8 +64,8 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
               type="text"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
-              className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                errors.name ? 'border-red-500' : 'border-white/10 focus:border-primary'
+              className={`w-full p-3 bg-dark-surface  rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                errors.name ? 'border-red-500' : 'border-ink/15 focus:border-primary'
               }`}
               placeholder="my-data-stream"
               maxLength={100}
@@ -78,7 +78,7 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
             <textarea
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+              className="w-full p-3 bg-dark-surface  rounded-lg border border-ink/15 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
               rows="3"
               placeholder="Describe what this stream will be used for..."
               maxLength={500}
@@ -86,7 +86,7 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
           </div>
 
           {/* Stream Limits Display */}
-          <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
+          <div className="bg-dark-surface  rounded-lg p-4 border border-ink/15">
             <h4 className="text-light-text font-medium mb-2">Stream Limits</h4>
             <div className="text-sm text-gray-text space-y-1">
               <p>• {isPremium ? '100' : '5'} messages/second</p>
@@ -100,7 +100,7 @@ const CreateStreamModal = ({ onClose, onSubmit, isPremium = false, isSubmitting 
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex min-h-[44px] items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-dark-surface transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>

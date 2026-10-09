@@ -10,13 +10,13 @@ const DownloadSection = () => {
   useEffect(() => {
     let os = 'windows';
     const ua = navigator.userAgent.toLowerCase();
-    
+
     if (ua.includes('win')) {
       os = 'windows';
     } else if (ua.includes('linux')) {
       os = 'linux';
     }
-    
+
     // Only set if we have download options for this OS
     if (['windows', 'linux'].includes(os)) {
       setActiveTab(os);
@@ -29,11 +29,11 @@ const DownloadSection = () => {
       try {
         setLoading(true);
         const response = await fetch('https://api.github.com/repos/plotune/plotune-dl/releases/latest');
-        
+
         if (!response.ok) {
           throw new Error(`GitHub API responded with status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         setLatestRelease(data);
         setError(null);
@@ -51,7 +51,7 @@ const DownloadSection = () => {
   // Helper function to find asset by pattern
   const findAsset = (pattern) => {
     if (!latestRelease || !latestRelease.assets) return null;
-    return latestRelease.assets.find(asset => 
+    return latestRelease.assets.find(asset =>
       asset.name.toLowerCase().includes(pattern)
     );
   };
@@ -59,11 +59,11 @@ const DownloadSection = () => {
   // Get download URL for Windows
   const getWindowsDownloadUrl = () => {
     if (!latestRelease) return 'https://github.com/plotune/plotune-dl/releases/latest';
-    
+
     // Look for Windows-specific asset
     const windowsAsset = findAsset('plotune-windows') || findAsset('windows');
     if (windowsAsset) return windowsAsset.browser_download_url;
-    
+
     // Fallback to latest release page
     return latestRelease.html_url;
   };
@@ -71,7 +71,7 @@ const DownloadSection = () => {
   // Get download URL for Linux
   const getLinuxDownloadUrl = (type) => {
     if (!latestRelease) return 'https://github.com/plotune/plotune-dl/releases/latest';
-    
+
     switch(type) {
       case 'deb':
         const debAsset = findAsset('.deb');
@@ -86,7 +86,7 @@ const DownloadSection = () => {
       case 'aur':
         return 'https://aur.archlinux.org/packages/plotune-bin';
     }
-    
+
     return latestRelease.html_url;
   };
 
@@ -94,7 +94,7 @@ const DownloadSection = () => {
   const getAssetSize = (pattern) => {
     const asset = findAsset(pattern);
     if (!asset) return null;
-    
+
     // Convert bytes to MB
     const sizeMB = (asset.size / (1024 * 1024)).toFixed(1);
     return `${sizeMB} MB`;
@@ -200,10 +200,10 @@ const DownloadSection = () => {
           {Object.entries(downloadOptions).map(([key, platform]) => (
             <button
               key={key}
-              className={`flex flex-col items-center p-6 rounded-2xl transition-all duration-300 border-2 min-w-[140px] ${
+              className={`flex flex-col items-center p-6 rounded-sm transition-all duration-300 border-2 min-w-[140px] ${
                 activeTab === key
                   ? 'border-primary scale-105 bg-primary/10'
-                  : 'border-white/10 hover:border-white/30 hover:scale-102'
+                  : 'border-ink/15 hover:border-ink/15 hover:scale-102'
               }`}
               onClick={() => setActiveTab(key)}
             >
@@ -235,7 +235,7 @@ const DownloadSection = () => {
               href="https://github.com/plotune/plotune-dl/releases"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-sm hover:bg-primary-dark transition-colors"
             >
               <i className="fab fa-github"></i>
               View Releases Directly
@@ -250,7 +250,7 @@ const DownloadSection = () => {
               {currentPlatform.downloads.map((download, index) => (
                 <div
                   key={index}
-                  className="bg-dark-card rounded-2xl p-8 border-2 border-white/5 hover:border-primary/30 hover:shadow-2xl transition-all duration-300 group"
+                  className="bg-dark-card rounded-sm p-8 border-2 border-ink/15 hover:border-primary/30  transition-all duration-300 group"
                 >
                   <div className="flex items-start justify-between mb-6">
                     <div className="flex-1">
@@ -262,7 +262,7 @@ const DownloadSection = () => {
                           {download.type.toUpperCase()}
                         </span>
                       </div>
-                      
+
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-text mb-4">
                         <span className="flex items-center gap-1">
                           <i className="fas fa-tag"></i>
@@ -290,7 +290,7 @@ const DownloadSection = () => {
                   </p>
 
                   {/* Installation Instructions */}
-                  <div className="bg-black/20 rounded-xl p-6 mb-6">
+                  <div className="bg-black/20 rounded-sm p-6 mb-6">
                     <h4 className="text-light-text font-semibold mb-4 flex items-center gap-2">
                       <i className="fas fa-list-ol text-primary"></i>
                       Installation Steps:
@@ -310,44 +310,44 @@ const DownloadSection = () => {
                   <div className="flex flex-col sm:flex-row gap-3">
                     <a
                       href={download.getDownloadUrl()}
-                      className="flex-1 py-4 px-6 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all duration-300 font-semibold text-center group/download-btn"
+                      className="flex-1 py-4 px-6 bg-primary text-white rounded-sm hover:bg-primary-dark transition-all duration-300 font-semibold text-center group/download-btn"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <i className="fas fa-download mr-2"></i>
                       Download Now
                     </a>
-                    
+
                     {download.installScript && (
                       <a
                         href="https://plotune.net/install.sh"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-4 px-6 border border-primary/50 text-primary rounded-xl hover:bg-primary/10 transition-all duration-300 font-medium text-center"
+                        className="py-4 px-6 border border-primary/50 text-primary rounded-sm hover:bg-primary/10 transition-all duration-300 font-medium text-center"
                       >
                         <i className="fas fa-terminal mr-2"></i>
                         View Install Script
                       </a>
                     )}
-                    
+
                     {download.type === 'snap' && (
                       <a
                         href="https://snapcraft.io/docs"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-4 px-6 border border-white/20 text-gray-text rounded-xl hover:border-primary hover:text-primary transition-all duration-300 font-medium text-center"
+                        className="py-4 px-6 border border-ink/15 text-gray-text rounded-sm hover:border-primary hover:text-primary transition-all duration-300 font-medium text-center"
                       >
                         <i className="fas fa-book mr-2"></i>
                         Snap Guide
                       </a>
                     )}
-                    
+
                     {download.type === 'aur' && (
                       <a
                         href="https://wiki.archlinux.org/title/Arch_User_Repository"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-4 px-6 border border-white/20 text-gray-text rounded-xl hover:border-primary hover:text-primary transition-all duration-300 font-medium text-center"
+                        className="py-4 px-6 border border-ink/15 text-gray-text rounded-sm hover:border-primary hover:text-primary transition-all duration-300 font-medium text-center"
                       >
                         <i className="fas fa-question-circle mr-2"></i>
                         AUR Help
@@ -360,7 +360,7 @@ const DownloadSection = () => {
 
             {/* Release Info Banner */}
             {latestRelease && (
-              <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 mb-8">
+              <div className="bg-primary/5 border border-primary/20 rounded-sm p-6 mb-8">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <i className="fas fa-rocket text-2xl text-primary"></i>
@@ -369,10 +369,10 @@ const DownloadSection = () => {
                         Latest Release: {latestRelease.tag_name}
                       </h4>
                       <p className="text-gray-text text-sm">
-                        Released {new Date(latestRelease.published_at).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
+                        Released {new Date(latestRelease.published_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
                         })}
                         {latestRelease.assets?.length > 0 && ` • ${latestRelease.assets.length} packages available`}
                       </p>
@@ -382,7 +382,7 @@ const DownloadSection = () => {
                     href={latestRelease.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-dark-surface  border border-ink/15 rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
                   >
                     <i className="fab fa-github"></i>
                     View Release Notes
@@ -392,7 +392,7 @@ const DownloadSection = () => {
             )}
 
             {/* Additional Information */}
-            <div className="text-center pt-8 border-t border-white/10">
+            <div className="text-center pt-8 border-t border-ink/15">
               <div className="inline-flex flex-wrap justify-center gap-8 text-gray-text mb-12">
                 <div className="flex items-center gap-2">
                   <i className="fas fa-code text-primary"></i>
@@ -408,7 +408,7 @@ const DownloadSection = () => {
                   href="https://github.com/plotune/plotune-dl/releases"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-xl hover:border-primary hover:text-primary transition-all duration-300 group"
+                  className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 bg-dark-surface  border border-ink/15 rounded-sm hover:border-primary hover:text-primary transition-all duration-300 group"
                 >
                   <i className="fab fa-github text-lg"></i>
                   <span className="font-medium">All Releases on GitHub</span>
@@ -425,7 +425,7 @@ const DownloadSection = () => {
                     community Discord
                   </a> for support.
                 </p>
-                  <p className="text-xs text-gray-text/70 border-t border-white/10 pt-4 mt-4">
+                  <p className="text-xs text-gray-text/70 border-t border-ink/15 pt-4 mt-4">
                     <i className="fas fa-info-circle mr-1"></i>
                     Linux is the primary supported platform. Windows builds are provided on a best-effort basis.
                     <br />

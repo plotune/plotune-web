@@ -5,7 +5,7 @@ import { FaDatabase, FaTrash, FaFilter, FaEye, FaClock, FaKey, FaHashtag } from 
 const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, onClearMessages, onToggleView }) => {
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return 'N/A';
-    
+
     // Convert Unix timestamp (seconds) to milliseconds
     const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString('en-US', {
@@ -30,7 +30,7 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
       <FaDatabase className="w-16 h-16 mb-4 opacity-50" />
       <p className="text-lg mb-2">No messages yet</p>
       <p className="text-sm text-center max-w-md">
-        {connectionStatus === 'connected' 
+        {connectionStatus === 'connected'
           ? 'Messages will appear here as they arrive in real-time'
           : 'Connect to the stream to start receiving messages'}
       </p>
@@ -38,9 +38,9 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
   );
 
   return (
-    <div className="bg-dark-card rounded-xl border border-white/10 h-full flex flex-col">
+    <div className="bg-dark-card rounded-sm border border-ink/15 h-full flex flex-col">
       {/* Header */}
-      <div className="p-5 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-5 border-b border-ink/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <FaDatabase /> Live Message Feed
@@ -62,7 +62,7 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
             </span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {messages.length > 0 && (
             <button
@@ -77,7 +77,7 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
               <span className="hidden sm:inline">Clear All</span>
             </button>
           )}
-          
+
           <button
             onClick={onToggleView}
             className="px-3 py-2 bg-primary/20 text-primary hover:bg-primary/30 rounded-lg text-sm flex items-center gap-2 transition"
@@ -99,11 +99,11 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className="bg-dark-bg/50 rounded-lg p-4 border border-white/5 hover:border-primary/20 transition-colors"
+                className="bg-dark-bg/50 rounded-lg p-4 border border-ink/15 hover:border-primary/20 transition-colors"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs px-2 py-1 bg-gray-800 rounded font-mono flex items-center gap-1">
+                    <span className="text-xs px-2 py-1 bg-dark-surface rounded font-mono flex items-center gap-1">
                       <FaKey className="w-3 h-3" />
                       {msg.key}
                     </span>
@@ -120,7 +120,7 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
                     <span>Received: {formatReceivedAt(msg.receivedAt)}</span>
                   </div>
                 </div>
-                
+
                 {/* Raw JSON */}
                 <div className="mt-2">
                   <pre className="text-xs bg-black/30 p-3 rounded overflow-x-auto font-mono">
@@ -139,7 +139,7 @@ const MessageFeed = ({ messages, activeKey, showAllMessages, connectionStatus, o
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-ink/15">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${

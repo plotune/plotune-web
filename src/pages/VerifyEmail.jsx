@@ -39,7 +39,7 @@ const VerifyEmail = () => {
     setIsSubmitting(true);
     try {
       const response = await api.get(`/auth/verify-email?token=${token}`);
-      
+
       if (response.status === 200) {
         setVerificationStatus('success');
         toast.success('Email verified successfully!');
@@ -61,8 +61,8 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
-      <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl w-full max-w-md">
+    <div className="min-h-screen bg-dark-surface   flex items-center justify-center py-8 px-4">
+      <div className="bg-dark-card rounded-sm p-8 border border-ink/15  w-full max-w-md">
         <div className="text-center mb-8">
           <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
             verificationStatus === 'loading' ? 'bg-blue-500/20' :
@@ -84,13 +84,13 @@ const VerifyEmail = () => {
               </svg>
             )}
           </div>
-          
+
           <h1 className="text-3xl font-bold text-light-text mb-2">
             {verificationStatus === 'loading' && 'Verifying Email'}
             {verificationStatus === 'success' && 'Email Verified!'}
             {verificationStatus === 'error' && 'Verification Failed'}
           </h1>
-          
+
           <p className="text-gray-text">
             {verificationStatus === 'loading' && 'Please wait while we verify your email address...'}
             {verificationStatus === 'success' && 'Your email has been successfully verified.'}
@@ -122,7 +122,7 @@ const VerifyEmail = () => {
                 </span>
               </div>
             </div>
-            
+
             <div className="flex flex-col space-y-3">
               <Link
                 to="/login"
@@ -132,7 +132,7 @@ const VerifyEmail = () => {
               </Link>
               <Link
                 to="/"
-                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
+                className="w-full py-3 bg-dark-surface  text-gray-text border border-ink/15 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Back to Home
               </Link>
@@ -167,7 +167,7 @@ const VerifyEmail = () => {
 
               <Link
                 to="/login"
-                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
+                className="w-full py-3 bg-dark-surface  text-gray-text border border-ink/15 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Back to Login
               </Link>
@@ -177,7 +177,7 @@ const VerifyEmail = () => {
 
         {/* Additional help section */}
         {(verificationStatus === 'error') && (
-          <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-ink/15">
             <p className="text-gray-text text-sm text-center">
               Need help?{' '}
               <a href="mailto:support@plotune.net" className="text-primary hover:underline">

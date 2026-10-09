@@ -1996,3 +1996,26 @@
     min-height: 44px;
   }
 }
+
+/* Shared industrial workspace identity, isolated from legacy account pages. */
+.sw-app { --sw-ink: #1c242b; --sw-muted: #526067; --sw-border: #d2d5ce; --sw-bg: #f7f6f2; --sw-teal: #00796b; --sw-teal-light: #e7eee4; }
+.sw-app .sw-topbar { background: #eeeee6; border-bottom: 1px solid #cbd2c6; box-shadow: none; }
+.sw-app .sw-brand strong { color: #1c242b; font-weight: 650; letter-spacing: -.025em; }
+.sw-app .sw-brand strong span { color: #00796b; }
+.sw-app .sw-sidebar { background: #eeeee6; border-right-color: #cbd2c6; }
+.sw-app .sw-sidebar nav button { border-radius: 2px; }
+.sw-app .sw-sidebar nav button.active { color: #fffffc; background: #00796b; }
+.sw-app .sw-sidebar nav button.active svg { color: #fffffc; }
+.sw-app .sw-page-head { border-bottom: 1px solid #d2d5ce; padding-bottom: 22px; }
+.sw-app .sw-page-head h1 { font-size: 30px; font-weight: 500; letter-spacing: -.035em; }
+.sw-app :is(.sw-panel,.sw-card,.sw-stat,.sw-empty,.sw-dialog,.mvp-summary,.mvp-dashboard-graph,.mvp-onboarding,.mvp-event-detail,.mvp-json) { border-radius: 2px; box-shadow: none; }
+.sw-app .sw-button { border-radius: 2px; min-height: 40px; }
+.sw-app .sw-primary { background: #00796b; color: #fff; }
+.sw-app :is(.sw-sidebar-footer p,.sw-main-footer,.mvp-usage p,.mvp-preview-label) { color: #526067; font-size: 11px; }
+.sw-app .sw-main-footer { border-top: 1px solid #d2d5ce; padding-top: 18px; }
+.sw-app .sw-table th { background: #eeeee6; color: #526067; font-family: 'Roboto Mono',ui-monospace,monospace; font-size: 10px; letter-spacing: .035em; }
+.sw-app .sw-table td { color: #354249; }
+.sw-app .sw-stat strong { font-weight: 500; font-variant-numeric: tabular-nums; }
+.sw-app .mvp-usage progress { height: 4px; }
+.sw-app .sw-dialog::backdrop { background: #1c242b70; backdrop-filter: none; }
+@media(max-width:700px) { .sw-app .sw-page-head h1 { font-size: 27px; } .sw-app .sw-button { min-height: 44px; } }
