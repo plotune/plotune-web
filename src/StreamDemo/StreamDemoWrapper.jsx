@@ -26,7 +26,11 @@ function Invitation({ email, setEmail, error, sending, onSubmit, onDismiss, hone
     const dialog = ref.current;
     const previous = returnFocus.current || document.activeElement;
     dialog.showModal();
-    dialog.querySelector('input[type="email"]')?.focus();
+    // Focus the field only with a mouse/trackpad. On touch screens that would pop the keyboard over
+    // half the dialog before the visitor has read it, so the dialog itself takes focus instead.
+    const finePointer = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: fine)').matches;
+    if (finePointer) dialog.querySelector('input[type="email"]')?.focus();
+    else dialog.focus();
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
@@ -42,7 +46,7 @@ function Invitation({ email, setEmail, error, sending, onSubmit, onDismiss, hone
       }
     };
   }, [returnFocus]);
-  return <dialog ref={ref} className="stream-invitation" aria-labelledby="stream-invitation-title" aria-describedby="stream-invitation-description"
+  return <dialog ref={ref} tabIndex={-1} className="stream-invitation" aria-labelledby="stream-invitation-title" aria-describedby="stream-invitation-description"
     onCancel={(event) => { event.preventDefault(); close.current(); }}>
     <button type="button" className="stream-invitation-close" aria-label="Dismiss early access invitation" onClick={onDismiss}><FiX aria-hidden="true" /></button>
     <p className="stream-invitation-eyebrow">PLOTUNE STREAM / EARLY ACCESS</p>
@@ -51,7 +55,7 @@ function Invitation({ email, setEmail, error, sending, onSubmit, onDismiss, hone
     <form onSubmit={onSubmit} noValidate>
       <div className="stream-invitation-honeypot" aria-hidden="true"><label>Leave this field empty<input ref={honeypot} name="hp_extra_field" tabIndex={-1} autoComplete="off" /></label></div>
       <label htmlFor="stream-early-access-email">Work email address</label>
-      <input id="stream-early-access-email" className="ph-no-capture" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" spellCheck={false} maxLength={254} autoFocus
+      <input id="stream-early-access-email" className="ph-no-capture" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" spellCheck={false} maxLength={254}
         value={email} onChange={(event) => setEmail(event.target.value)} aria-invalid={error ? true : undefined} aria-describedby={error ? 'stream-invitation-error' : undefined} />
       {error && <p id="stream-invitation-error" className="stream-invitation-error" role="alert">{error}</p>}
       <button type="submit" className="stream-invitation-submit" disabled={sending}>{sending ? 'Sending…' : 'Join the early access list'}</button>
