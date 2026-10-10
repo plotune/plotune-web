@@ -51,3 +51,11 @@ export const trackGoogleAdsAiReadinessConversion = (submissionId) => trackConver
   'plotune_gads_ai_readiness_converted',
   submissionId ? { transaction_id: submissionId } : {},
 );
+
+// Independent action: never reuse the ordinary Contact/AI Readiness send_to.
+const STREAM_EARLY_ACCESS_SEND_TO = process.env.REACT_APP_GOOGLE_ADS_STREAM_EARLY_ACCESS_SEND_TO || '';
+export const trackGoogleAdsStreamEarlyAccessConversion = (submissionId) => trackConversion(
+  STREAM_EARLY_ACCESS_SEND_TO,
+  'plotune_gads_stream_early_access_converted',
+  submissionId ? { transaction_id: submissionId } : {},
+);

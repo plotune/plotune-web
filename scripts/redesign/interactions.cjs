@@ -91,7 +91,7 @@ const click = (page, name) => page.getByRole('button', { name, exact: true }).cl
 
   // Stream MVP local demo: search/filter, detail dialog, project creation, dashboard, webhook and setup views.
   await page.setViewportSize({ width: 1440, height: 960 });
-  await page.goto(`${BASE}/stream/workspace?project=battery`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/stream/demo?project=battery`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('heading', { name: /Events/ }).first().waitFor({ timeout: 10000 }).catch(() => {});
   await save(page, 'stream-events-initial');
   const search = page.getByRole('textbox', { name: 'Search events and properties' });

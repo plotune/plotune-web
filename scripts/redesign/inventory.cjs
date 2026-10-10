@@ -14,8 +14,8 @@ for(const [file,prefix] of [['src/content/solutions.js','/solutions/'],['src/con
 }
 const docs=fs.readFileSync('src/pages/Docs.jsx','utf8');
 routes.push(...[...docs.matchAll(/(?:^|\n)\s*(?:"([a-z-]+)"|([a-z-]+)): lazy/g)].map(m=>'/docs?page='+(m[1]||m[2])));
-routes.push(...['events','dashboards','api','mcp','webhooks','settings'].map(v=>'/stream/workspace?view='+v+'&project=battery'));
-routes.push('/stream/workspace?project=robot');
+routes.push(...['events','dashboards','api','mcp','webhooks','settings'].map(v=>'/stream/demo?view='+v+'&project=battery'));
+routes.push('/stream/demo?project=robot');
 routes.push(...['overview','events','runs','measurements','records','alarms','dashboards','sources','live','processors','agents','project-settings'].map(v=>'/stream/prototypes/vision?view='+v));
 routes.push('/not-a-page','/docs/nexus/not-a-doc','/research/articles/not-a-study','/use-cases/claude/','/use-cases/codex/');
 routes=[...new Set(routes)];

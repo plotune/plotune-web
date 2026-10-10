@@ -1,0 +1,26 @@
+/* Marketing overlay only. No rules target or change the frozen workspace. */
+.stream-demo-wrapper { display: contents; }
+.stream-invitation { position: fixed; inset: 0; box-sizing: border-box; width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 32px; border: 1px solid #d9ded8; border-radius: 8px; color: #1c242b; background: #fafaf7; box-shadow: 0 24px 80px #1c242b33; overflow-y: auto; font-family: inherit; }
+.stream-invitation::backdrop { background: #1c242b66; }
+.stream-invitation-close { position: absolute; right: 8px; top: 8px; display: grid; place-items: center; width: 44px; height: 44px; border: 0; background: transparent; color: #52615d; cursor: pointer; }
+.stream-invitation-eyebrow { margin: 0 24px 18px 0; font: 11px/1.6 ui-monospace, monospace; letter-spacing: .06em; color: #00796b; }
+.stream-invitation h2 { margin: 0 0 16px; font-size: 28px; line-height: 1.2; letter-spacing: -.025em; font-weight: 600; }
+.stream-invitation p { line-height: 1.6; }
+.stream-invitation label { display: block; margin: 22px 0 8px; font-size: 14px; font-weight: 500; }
+.stream-invitation input[type=email] { box-sizing: border-box; width: 100%; min-height: 50px; padding: 12px; border: 1px solid #aab5ae; border-radius: 4px; color: #1c242b; background: #fff; font-size: 16px; }
+.stream-invitation-submit,.stream-invitation-ignore { display: block; width: 100%; min-height: 48px; margin-top: 16px; padding: 10px 14px; border-radius: 4px; border: 0; font-size: 15px; font-weight: 600; cursor: pointer; }
+.stream-invitation-submit { background: #00796b; color: #fff; }
+.stream-invitation-submit:disabled { opacity: .7; cursor: wait; }
+.stream-invitation-ignore { background: transparent; color: #52615d; margin-top: 4px; }
+.stream-invitation-footer { font-size: 12px; color: #52615d; margin: 18px 0 0; }
+.stream-invitation-footer a { text-decoration: underline; }
+.stream-invitation-error { color: #a8261f; font-size: 14px; margin-top: 10px; }
+.stream-invitation-honeypot { position: absolute; left: -9999px; width: 0; height: 0; overflow: hidden; }
+.stream-early-access-reopen { position: fixed; right: max(18px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #d9ded8; border-radius: 50%; background: #fafaf7; color: #00796b; box-shadow: 0 4px 16px #1c242b1a; z-index: 70; cursor: pointer; }
+.stream-early-access-success { position: fixed; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); left: 16px; width: fit-content; max-width: calc(100vw - 32px); margin-left: auto; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fafaf7; color: #1f6e42; border: 1px solid #d9ded8; border-radius: 4px; box-shadow: 0 4px 16px #1c242b1a; font-size: 14px; z-index: 70; }
+.stream-early-access-success button { display: grid; place-items: center; min-width: 44px; min-height: 44px; background: transparent; border: 0; color: inherit; cursor: pointer; }
+.stream-invitation :focus-visible,.stream-early-access-reopen:focus-visible,.stream-early-access-success button:focus-visible { outline: 2px solid #00796b; outline-offset: 3px; }
+@media (max-width: 600px) { .stream-invitation { padding: 24px; } .stream-invitation h2 { font-size: 25px; } .stream-early-access-reopen { bottom: max(76px, calc(env(safe-area-inset-bottom) + 64px)); } }
+/* Leave the demo's own notification visible and usable; move only our overlays. */
+.stream-demo-wrapper:has(.sw-toast) ~ .stream-early-access-reopen,
+.stream-demo-wrapper:has(.sw-toast) ~ .stream-early-access-success { bottom: max(120px, calc(env(safe-area-inset-bottom) + 108px)); }
