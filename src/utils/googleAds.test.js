@@ -1,4 +1,4 @@
-const KEYS = ['REACT_APP_GOOGLE_ADS_CONTACT_SEND_TO', 'REACT_APP_GOOGLE_ADS_AI_READINESS_SEND_TO'];
+const KEYS = ['REACT_APP_GOOGLE_ADS_CONTACT_SEND_TO', 'REACT_APP_GOOGLE_ADS_AI_READINESS_SEND_TO', 'REACT_APP_GOOGLE_ADS_STREAM_EARLY_ACCESS_SEND_TO'];
 const load = (env) => {
   let mod;
   const original = Object.fromEntries(KEYS.map((k) => [k, process.env[k]]));
@@ -46,3 +46,13 @@ test('no-op when unconfigured, when the tag is blocked, and never throws', () =>
   window.gtag = () => { throw new Error('boom'); };
   expect(() => configured().trackGoogleAdsContactConversion()).not.toThrow();
 });
+
+ test('Stream conversion is separately configured and deduplicated, with no invented default', () => {
+  window.gtag=jest.fn();
+  expect(load({}).trackGoogleAdsStreamEarlyAccessConversion('stream-1')).toBe(false);
+  const ads=load({REACT_APP_GOOGLE_ADS_STREAM_EARLY_ACCESS_SEND_TO:'AW-test/stream-test'});
+  expect(ads.trackGoogleAdsStreamEarlyAccessConversion('stream-1')).toBe(true);
+  expect(ads.trackGoogleAdsStreamEarlyAccessConversion('stream-1')).toBe(false);
+  expect(window.gtag).toHaveBeenCalledTimes(1);
+  expect(window.gtag).toHaveBeenCalledWith('event','conversion',{send_to:'AW-test/stream-test',transport_type:'beacon',transaction_id:'stream-1'});
+ });

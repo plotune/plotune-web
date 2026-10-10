@@ -1,0 +1,128 @@
+[
+  {
+    "device": "desktop",
+    "state": "landing",
+    "overflow": false,
+    "url": "/stream",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "desktop",
+    "state": "initial",
+    "overflow": false,
+    "url": "/stream/demo",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "desktop",
+    "state": "events-modal",
+    "overflow": false,
+    "url": "/stream/demo?project=project-1791616522235",
+    "dialog": true,
+    "focus": "stream-early-access-email",
+    "errors": []
+  },
+  {
+    "device": "desktop",
+    "state": "dismissed",
+    "overflow": false,
+    "url": "/stream/demo?project=project-1791616522235",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "desktop",
+    "state": "reopened",
+    "overflow": false,
+    "url": "/stream/demo?view=dashboards&project=project-1791616522235",
+    "dialog": true,
+    "focus": "stream-early-access-email",
+    "errors": []
+  },
+  {
+    "device": "desktop",
+    "state": "failure",
+    "overflow": false,
+    "url": "/stream/demo?view=dashboards&project=project-1791616522235",
+    "dialog": true,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "desktop",
+    "state": "success",
+    "overflow": false,
+    "url": "/stream/demo?view=dashboards&project=project-1791616522235",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "landing",
+    "overflow": false,
+    "url": "/stream",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "initial",
+    "overflow": false,
+    "url": "/stream/demo",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "events-modal",
+    "overflow": false,
+    "url": "/stream/demo?project=project-1791616524956",
+    "dialog": true,
+    "focus": "stream-early-access-email",
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "dismissed",
+    "overflow": false,
+    "url": "/stream/demo?project=project-1791616524956",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "reopened",
+    "overflow": false,
+    "url": "/stream/demo?view=dashboards&project=project-1791616524956",
+    "dialog": true,
+    "focus": "stream-early-access-email",
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "failure",
+    "overflow": false,
+    "url": "/stream/demo?view=dashboards&project=project-1791616524956",
+    "dialog": true,
+    "focus": null,
+    "errors": []
+  },
+  {
+    "device": "mobile",
+    "state": "success",
+    "overflow": false,
+    "url": "/stream/demo?view=dashboards&project=project-1791616524956",
+    "dialog": false,
+    "focus": null,
+    "errors": []
+  }
+]

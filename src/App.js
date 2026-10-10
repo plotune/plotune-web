@@ -63,7 +63,8 @@ const Profile = routePage(() => import('./pages/Profile'));
 const Stream = routePage(() => import('./pages/Stream'));
 const Streams = routePage(() => import('./pages/Streams'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
-const StreamMVP = routePage(() => import('./StreamMVP/StreamMVP'));
+const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
+const LegacyStreamDemoRedirect = routePage(() => import('./StreamDemo/LegacyStreamDemoRedirect'));
 const DnsPage = routePage(() => import('./pages/DnsPage'));
 const Partnership = routePage(() => import('./pages/Partnership'));
 const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));
@@ -139,7 +140,7 @@ const ScrollToTop = () => {
 const NavigationWrapper = ({ children }) => {
   const location = useLocation();
   // '/ai-readiness' is a standalone, chrome-free assessment flow (no site Header/Footer).
-  const hideLayoutPaths = ['/streams/connect', '/ai-readiness', '/stream/workspace', '/stream/prototypes/vision'];
+  const hideLayoutPaths = ['/streams/connect', '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision'];
   // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
@@ -207,7 +208,8 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/stream" element={<Stream />} />
               <Route path="/streams" element={<Streams />} />
-              <Route path="/stream/workspace" element={<StreamMVP />} />
+              <Route path="/stream/demo" element={<StreamDemo />} />
+              <Route path="/stream/workspace" element={<LegacyStreamDemoRedirect />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
               <Route path="/dns" element={<DnsPage />} />
               <Route path="/partners" element={<Partnership />} />
@@ -267,7 +269,8 @@ const initialRoutes = [
   [/^\/profile\/?$/, Profile],
   [/^\/stream\/?$/, Stream],
   [/^\/streams\/?$/, Streams],
-  [/^\/stream\/workspace\/?$/, StreamMVP],
+  [/^\/stream\/demo\/?$/, StreamDemo],
+  [/^\/stream\/workspace\/?$/, LegacyStreamDemoRedirect],
   [/^\/stream\/prototypes\/vision\/?$/, StreamWorkspace],
   [/^\/dns\/?$/, DnsPage],
   [/^\/partners\/?$/, Partnership],

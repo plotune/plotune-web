@@ -27,7 +27,7 @@ const routes = [
   '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases',
   '/solutions/agentic-test-development', '/agentic-test-development',
   '/research', '/research/results', '/research/reports', '/research/methodology',
-  '/ai-readiness', '/stream/workspace', '/stream/prototypes/vision',
+  '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision',
 ];
 
 // One route per published research article, read straight from each .mdx file's own
