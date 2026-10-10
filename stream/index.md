@@ -6,7 +6,7 @@ Plotune Stream / Event infrastructure
 
 Event history for physical engineering systems. Send from the tools you already use; inspect names, timestamps, optional device and session context, and arbitrary JSON properties.
 
-[Try the demo experience ↗](https://www.plotune.net/stream/workspace)[Discuss your integration →](https://www.plotune.net/contact)
+[Try the demo experience ↗](https://www.plotune.net/stream/demo)[Discuss your integration →](https://www.plotune.net/contact)
 
 The demo experience runs in your browser with sample data. Its setup examples are complete integrations; the demo itself does not send them to a production event service.
 
@@ -33,7 +33,7 @@ Local dashboard and export exploration
 
 Device and session identifiers are optional, supplied by your application. Event properties carry the context you need without a predefined hardware schema.
 
-[Inspect the example setup →](https://www.plotune.net/stream/workspace?view=api)
+[Inspect the example setup →](https://www.plotune.net/stream/demo?view=api)
 
 Illustrative payload / not a live event 
 
@@ -50,7 +50,7 @@ Illustrative payload / not a live event
 
 03 / Choose your experience  Existing routes, distinct capabilities
 
-[Demo experienceEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/workspace)[Account toolsStream managementThe existing authenticated stream and network management experience.↗](https://www.plotune.net/streams)[Live connectionSignal inspectionThe existing connection interface for configured streams.↗](https://www.plotune.net/streams/connect)
+[Demo experienceEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/demo)[Account toolsStream managementThe existing authenticated stream and network management experience.↗](https://www.plotune.net/streams)[Live connectionSignal inspectionThe existing connection interface for configured streams.↗](https://www.plotune.net/streams/connect)
 
 A separate [future-product reference](https://www.plotune.net/stream/prototypes/vision) explores synthetic runs, measurements and processors. These are prototype capabilities.
 

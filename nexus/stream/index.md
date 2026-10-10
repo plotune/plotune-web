@@ -63,7 +63,7 @@ Follow a device or session across events. Keep the distinction between event his
 
 Nexus documentation describes local artifacts and result retrieval. The Stream demo shows a source-agnostic event envelope and example setup contracts.
 
-[Try the demo experience ↗](https://www.plotune.net/stream/workspace)[Data handling →](https://www.plotune.net/docs/nexus/data-handling)
+[Try the demo experience ↗](https://www.plotune.net/stream/demo)[Data handling →](https://www.plotune.net/docs/nexus/data-handling)
 
 Illustrative event / not a live result 
 

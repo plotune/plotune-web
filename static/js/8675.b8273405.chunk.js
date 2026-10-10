@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkplotune_react=self.webpackChunkplotune_react||[]).push([[8675],{8675:(e,a,t)=>{t.r(a),t.d(a,{default:()=>c});t(6998);var s=t(663),r=t(3446);function c(){const{search:e,hash:a}=(0,s.zy)();return(0,r.jsx)(s.C5,{replace:!0,to:{pathname:"/stream/demo",search:e,hash:a}})}}}]);
+//# sourceMappingURL=8675.b8273405.chunk.js.map
