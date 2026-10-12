@@ -118,7 +118,7 @@ const Header = () => {
           onClick={() => setIsMobileMenuOpen(false)} // External link tıklandığında menüyü kapat
         >
           {item.icon && <NavIcon name={item.icon} className="text-lg" />}
-          {item.keepBrandName ? <span translate="no">{item.label}</span> : item.label}
+          {item.keepBrandName ? <span translate="no">{item.keepBrandName ? <span translate="no">{item.label}</span> : item.label}</span> : item.label}
         </a>
       );
     }
@@ -136,12 +136,12 @@ const Header = () => {
               className={`flex items-center gap-2 ${linkClass}`}
             >
               {item.icon && <NavIcon name={item.icon} className="text-lg" />}
-              {item.label}
+              {item.keepBrandName ? <span translate="no">{item.label}</span> : item.label}
             </Link>
             <button
               type="button"
               className="ml-1 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-dark-text hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label={`${isOpen ? 'Hide' : 'Show'} ${item.label} navigation`}
+              aria-label={`${isOpen ? 'Hide' : 'Show'} ${item.keepBrandName ? <span translate="no">{item.label}</span> : item.label} navigation`}
               aria-controls={dropdownId}
               aria-expanded={isOpen}
               onClick={() => toggleDropdown(item.to)}
@@ -179,7 +179,7 @@ const Header = () => {
         // Ancak useEffect zaten kapatıyor, bu nedenle gerek yok.
       >
         {item.icon && <NavIcon name={item.icon} className="text-lg" />}
-        {item.label}
+        {item.keepBrandName ? <span translate="no">{item.label}</span> : item.label}
       </Link>
     );
   };
