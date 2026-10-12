@@ -71,8 +71,8 @@ const Header = () => {
       { to: '/nexus/use-cases', label: 'Use Cases' },
       { to: '/ai-readiness', label: 'AI Readiness' },
     ] },
-    { to: '/stream', label: 'Stream' },
-    { to: '/research', label: 'Research' },
+    { to: '/stream', label: 'Stream', keepBrandName: true },
+    { to: '/research', label: 'Research', keepBrandName: true },
     { to: '/docs', label: 'Docs', children: [
       { to: '/docs/nexus', label: 'Nexus Documentation' },
       { to: '/download', label: 'Desktop downloads' },
@@ -91,11 +91,11 @@ const Header = () => {
   const userNavItems = [
     { to: '/profile', label: 'Profile', icon: 'person' },
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
-    { to: '/streams', label: 'Streams', icon: 'stream' },
+    { to: '/streams', label: 'Streams', icon: 'stream', keepBrandName: true },
     { to: '/mirror', label: 'Edge', icon: 'account_tree' },
     { to: '/storage', label: 'Storage', icon: 'dns' },
     { to: '/extensions', label: 'Extensions', icon: 'store' },
-    { to: '/research', label: 'Research', icon: 'science' },
+    { to: '/research', label: 'Research', icon: 'science', keepBrandName: true },
   ];
 
   const navItems = isLoggedIn ? userNavItems : guestNavItems;
@@ -118,7 +118,7 @@ const Header = () => {
           onClick={() => setIsMobileMenuOpen(false)} // External link tıklandığında menüyü kapat
         >
           {item.icon && <NavIcon name={item.icon} className="text-lg" />}
-          {item.label}
+          {item.keepBrandName ? <span translate="no">{item.label}</span> : item.label}
         </a>
       );
     }
@@ -190,7 +190,7 @@ const Header = () => {
           <Link to="/" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
         <div className="flex items-center gap-3">
           <img src={logo} alt="Plotune Logo" className="h-8 w-auto" />
-          <span className="site-wordmark text-light-text">
+          <span className="site-wordmark text-light-text" translate="no">
             Plotune
           </span>
         </div>

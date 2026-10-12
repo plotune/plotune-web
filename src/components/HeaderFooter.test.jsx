@@ -57,6 +57,9 @@ test('header exposes named controls for account and navigation disclosure', () =
   const { container, root } = renderHeader();
 
   expect(container.querySelector('a[aria-label="Log in"]')).not.toBeNull();
+  expect(container.querySelector('.site-wordmark[translate="no"]')).not.toBeNull();
+  expect(container.querySelector('a[href="/stream"] [translate="no"]').textContent).toBe('Stream');
+  expect(container.querySelector('a[href="/research"] [translate="no"]').textContent).toBe('Research');
   expect(container.querySelector('button[aria-label="Open main navigation"]')).not.toBeNull();
   expect(container.querySelector('button[aria-label="Show Nexus navigation"]')).not.toBeNull();
 

@@ -42,6 +42,8 @@ test('guests see Log in and Register', () => {
   const { container, root } = renderLayout({ user: null, isLoading: false, logout: jest.fn() });
 
   expect(container.querySelector('a[href="/login"]')).not.toBeNull();
+  expect(container.querySelector('.research-brand-plotune span[translate="no"]').textContent).toBe('Plotune');
+  expect(container.querySelector('.research-brand strong[translate="no"]').textContent).toBe('Research');
   expect(container.querySelector('a[href="/register"]')).not.toBeNull();
   expect(container.querySelector('button.research-logout')).toBeNull();
 
