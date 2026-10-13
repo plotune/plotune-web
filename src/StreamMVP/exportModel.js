@@ -4,8 +4,12 @@ export const EXPORT_FORMATS = ["json", "tsv", "csv"];
 export const MAX_MOCK_EXPORT_EVENTS = 10000;
 
 function flattenValue(value, prefix, output) {
-  if (value && typeof value === "object" && !Array.isArray(value)) {
-    Object.entries(value).forEach(([key, child]) => flattenValue(child, `${prefix}.${key}`, output));
+  if (value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).length) {
+    Object.entries(value).forEach(([key, child]) => {
+      // Bracket paths keep literal dotted keys distinct from nested objects.
+      const path = /^[A-Za-z_$][\w$-]*$/.test(key) ? `${prefix}.${key}` : `${prefix}[${JSON.stringify(key)}]`;
+      flattenValue(child, path, output);
+    });
     return;
   }
   output[prefix] = value;
@@ -34,7 +38,7 @@ export function escapeDelimited(value, delimiter) {
 export function serializeDelimited(events, format = "csv") {
   const delimiter = format === "tsv" ? "\t" : ",";
   const rows = events.map(flattenEvent);
-  const propertyColumns = [...new Set(rows.flatMap((row) => Object.keys(row).filter((key) => key.startsWith("properties."))))].sort();
+  const propertyColumns = [...new Set(rows.flatMap((row) => Object.keys(row).filter((key) => (key.startsWith("properties.") || key.startsWith("properties[")))))].sort();
   const columns = ["id", "event", "timestamp", "device_id", "session_id", ...propertyColumns];
   return [
     columns.map((column) => escapeDelimited(column, delimiter)).join(delimiter),
@@ -61,37 +65,50 @@ export async function createFilteredExport(events, query, format, onProgress = (
     onProgress(matches.length, page.total);
     await yieldToBrowser();
   }
-  const chunks = [];
+  return createEventExport(matches, format, { onProgress });
+}
+
+export async function createEventExport(matches, format, { onProgress = () => {}, signal, maxBytes = 32 * 1024 * 1024 } = {}) {
+  if (!EXPORT_FORMATS.includes(format)) throw new Error("Choose JSON, TSV, or CSV.");
+  const chunks = []; let outputBytes = 0;
+  const encoder = new TextEncoder();
+  const append = (...parts) => {
+    for (const part of parts) {
+      outputBytes += encoder.encode(part).byteLength;
+      if (outputBytes > maxBytes) throw new Error("The converted export exceeds the browser's 32 MB limit. Narrow your filters; no partial export was downloaded.");
+      chunks.push(part);
+    }
+  };
   const pageSize = 250;
-  if (format === "json") chunks.push("[");
+  if (format === "json") append("[");
   let columns;
   if (format === "csv" || format === "tsv") {
     const flattened = matches.map(flattenEvent);
-    columns = ["id", "event", "timestamp", "device_id", "session_id", ...new Set(flattened.flatMap((row) => Object.keys(row).filter((key) => key.startsWith("properties."))))].sort((a, b) => {
-      const baseOrder = ["id", "event", "timestamp", "device_id", "session_id"];
-      return (baseOrder.indexOf(a) < 0 ? 3 : baseOrder.indexOf(a)) - (baseOrder.indexOf(b) < 0 ? 3 : baseOrder.indexOf(b)) || a.localeCompare(b);
-    });
+    const properties = [...new Set(flattened.flatMap((row) => Object.keys(row).filter((key) => (key.startsWith("properties.") || key.startsWith("properties[")))))].sort();
+    columns = ["id", "event", "timestamp", "device_id", "session_id", ...properties];
     const delimiter = format === "tsv" ? "\t" : ",";
-    chunks.push(columns.map((column) => escapeDelimited(column, delimiter)).join(delimiter), "\r\n");
+    append(columns.map((column) => escapeDelimited(column, delimiter)).join(delimiter), "\r\n");
   }
   for (let start = 0; start < matches.length; start += pageSize) {
+    if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
     const page = matches.slice(start, start + pageSize);
     if (format === "json") {
       page.forEach((event, index) => {
-        if (start > 0 || index > 0) chunks.push(",\n");
-        else chunks.push("\n");
-        chunks.push(JSON.stringify(event));
+        if (start > 0 || index > 0) append(",\n");
+        else append("\n");
+        append(JSON.stringify(event));
       });
     } else {
       const delimiter = format === "tsv" ? "\t" : ",";
       page.forEach((event) => {
         const row = flattenEvent(event);
-        chunks.push(columns.map((column) => escapeDelimited(row[column], delimiter)).join(delimiter), "\r\n");
+        append(columns.map((column) => escapeDelimited(row[column], delimiter)).join(delimiter), "\r\n");
       });
     }
     onProgress(Math.min(start + page.length, matches.length), matches.length);
     await yieldToBrowser();
   }
-  if (format === "json") chunks.push(matches.length ? "\n]" : "]");
+  if (format === "json") append(matches.length ? "\n]" : "]");
+  if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
   return { blob: new Blob(chunks, { type: format === "json" ? "application/json" : "text/plain;charset=utf-8" }), count: matches.length };
 }
