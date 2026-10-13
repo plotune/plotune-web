@@ -43,7 +43,7 @@ Discovery can be sampled/truncated; manual property and event entry remains avai
 
 ## Verification
 
-Recorded on 2026-10-13: **214 tests / 42 suites passed**; lint completed with zero errors and five existing warnings; the full default production build, all 46 prerenders and agent-content checks passed. An enabled production build also passed, and the complete synthetic browser flow passed against that production bundle (plus the local development bundle). No staging or production backend was contacted.
+Recorded on 2026-10-13: **215 tests / 42 suites passed**; lint completed with zero errors and five existing warnings; the full default production build, all 46 prerenders and agent-content checks passed. An enabled production build also passed, and the complete synthetic browser flow passed against that production bundle (plus the local development bundle). No staging or production backend was contacted.
 
 Review screenshots: [Explorer desktop](stream-workspace-qa/explorer-desktop.png), [Explorer mobile](stream-workspace-qa/explorer-mobile.png), [Dashboard desktop](stream-workspace-qa/dashboard-desktop.png), [Dashboard mobile](stream-workspace-qa/dashboard-mobile.png), [Widget editor](stream-workspace-qa/widget-editor-desktop.png).
 
@@ -51,6 +51,8 @@ Review screenshots: [Explorer desktop](stream-workspace-qa/explorer-desktop.png)
 - ESLint: CRA `react-app` / `react-app/jest` configuration across changed code and Stream models. Existing warnings in App route regexes, demo effect and login OAuth effect are unrelated; new code has no lint errors.
 - Full production build: `CI=true npm run build`, including all 46 prerendered routes and agent-content checks. Playwright Chromium must be installed. Third-party missing source-map warnings already exist in installed dependencies.
 - Repeatable browser fixtures: run `REACT_APP_STREAM_WORKSPACE_ENABLED=true BROWSER=none npm start`, then `node scripts/stream/check-workspace.cjs`. Optional `STREAM_QA_ORIGIN` and `STREAM_QA_OUTPUT` select the local frontend and screenshot directory. Every non-local request is intercepted; no production analytics, customer data, leads or webhooks are submitted.
+
+The Codex P2 finding about consecutive Saved Filter updates was reproduced by a regression test that fails before the fix. Successful saves now reset the temporary draft and adopt the saved CAS revision. Consecutive updates are covered in unit and browser tests.
 
 Browser coverage includes 110-event complete export, synthetic capture → staged indication → explicit refresh, discovered mixed-type numeric filtering, shared save/reload, full JSON/Escape, independent Saved Filters per widget, preview/breakdown/save/reopen, key rotation/recovery rules, expired cursor recovery, owner project/member/webhook changes, a separate member session and desktop/mobile overflow. Unit coverage also checks operators/type mismatches/null/missing/nested fields, reference updates/breakdowns, escaping, sparse pages, duplicate/repeated/changed pages, cancellation, stale requests, account status errors, resource CAS and memory limits.
 

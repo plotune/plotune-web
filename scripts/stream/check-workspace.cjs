@@ -486,6 +486,32 @@ async function main() {
     .waitFor();
   assert.equal(filters.at(-1).data.conditions[0].value, 1700);
   const savedId = filters.at(-1).id;
+  // Update the same shared definition twice without reselecting or reloading it.
+  for (const value of [1750, 1800]) {
+    await page.locator('[aria-label^="Edit motor.rpm"]').click();
+    await page.getByLabel("Value", { exact: true }).fill(String(value));
+    await page.getByRole("button", { name: "Apply", exact: true }).click();
+    await page.getByRole("button", { name: "Filter", exact: true }).click();
+    await page.locator(".mvp-filter-manage summary").click();
+    await page
+      .getByRole("button", { name: "Update conditions", exact: true })
+      .click();
+    await page
+      .getByText("Shared Saved Filter: High RPM", { exact: true })
+      .waitFor();
+    assert.equal(filters.at(-1).data.conditions[0].value, value);
+    await page
+      .locator('.mvp-filter-popover-head [aria-label="Close filter menu"]')
+      .click();
+  }
+  assert.deepEqual(
+    calls
+      .filter(
+        (c) => c.method === "PUT" && c.path.endsWith(`/filters/${savedId}`),
+      )
+      .map((c) => c.body.revision),
+    [1, 2],
+  );
   await page.reload();
   await page
     .getByText("Shared Saved Filter: High RPM", { exact: true })

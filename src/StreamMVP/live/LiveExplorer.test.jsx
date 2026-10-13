@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React, { act, useState } from "react";
 import { createRoot } from "react-dom/client";
 import LiveExplorer from "./LiveExplorer";
 import WidgetEditor from "../WidgetEditor";
@@ -212,4 +212,73 @@ test("widget save errors keep the draft open and custom property paths remain co
   });
   expect(container.querySelector("dialog")).toBeTruthy();
   expect(container.textContent).toContain("Resource changed");
+});
+
+test("consecutive Saved Filter updates adopt each saved revision and resume queries by ID", async () => {
+  const client = {
+    query: jest.fn().mockResolvedValue(page()),
+    realtime: jest
+      .fn()
+      .mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+  };
+  const initial = {
+    id: "f",
+    name: "Shared",
+    revision: 1,
+    conditions: [
+      {
+        id: "c",
+        path: "motor.rpm",
+        operator: "equals",
+        value: 1680,
+        valueType: "number",
+      },
+    ],
+  };
+  const savedRevisions = [];
+  function SharedFilter() {
+    const [filter, setFilter] = useState(initial);
+    return fixture(client, {
+      filters: [filter],
+      activeFilterId: "f",
+      saveFilter: async (name, conditions, id, baseline) => {
+        savedRevisions.push(baseline.revision);
+        setFilter({
+          ...filter,
+          name,
+          conditions,
+          revision: filter.revision + 1,
+        });
+      },
+    });
+  }
+  act(() => mountRoot(<SharedFilter />));
+  await flush();
+  for (const value of [1700, 1800]) {
+    await click(container.querySelector('[aria-label^="Edit motor.rpm"]'));
+    type(container.querySelector('input[type="number"]'), String(value));
+    await click(button("Apply"));
+    await flush();
+    await click(
+      [...container.querySelectorAll("button")].find((b) =>
+        b.classList.contains("mvp-filter-trigger"),
+      ),
+    );
+    const management = container.querySelector(".mvp-filter-manage");
+    act(() => { management.open = true; });
+    await click(button("Update conditions"));
+    await flush();
+    expect(container.textContent).toContain("Shared Saved Filter: Shared");
+    expect(container.textContent).not.toContain("Temporary changes to");
+    expect(client.query.mock.calls.at(-1)[1]).toMatchObject({
+      filterId: "f",
+      conditions: [],
+    });
+    await click(
+      container.querySelector(
+        '.mvp-filter-popover-head [aria-label="Close filter menu"]',
+      ),
+    );
+  }
+  expect(savedRevisions).toEqual([1, 2]);
 });

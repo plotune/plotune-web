@@ -302,14 +302,17 @@ export default function LiveExplorer({
                 JSON.stringify(saved.conditions) !== JSON.stringify(next),
             );
           }}
-          onSave={(filterName, next, id) =>
-            saveFilter(
+          onSave={async (filterName, next, id) => {
+            await saveFilter(
               filterName,
               next,
               id,
               id === activeFilterId ? filterDraft.current.base : undefined,
-            )
-          }
+            );
+            // The reload has returned the saved revision. Resume selection by ID
+            // and let the draft effect adopt it as the next edit's CAS baseline.
+            setTemporary(false);
+          }}
           onRename={renameFilter}
           onDelete={deleteFilter}
           referenceCount={(id) =>
