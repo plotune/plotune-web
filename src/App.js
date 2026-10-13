@@ -64,7 +64,7 @@ const Stream = routePage(() => import('./pages/Stream'));
 const Streams = routePage(() => import('./pages/Streams'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
 const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
-const LegacyStreamDemoRedirect = routePage(() => import('./StreamDemo/LegacyStreamDemoRedirect'));
+const LiveStreamWorkspace = routePage(() => import('./StreamMVP/live/StreamWorkspace'));
 const DnsPage = routePage(() => import('./pages/DnsPage'));
 const Partnership = routePage(() => import('./pages/Partnership'));
 const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));
@@ -209,7 +209,7 @@ function App() {
               <Route path="/stream" element={<Stream />} />
               <Route path="/streams" element={<Streams />} />
               <Route path="/stream/demo" element={<StreamDemo />} />
-              <Route path="/stream/workspace" element={<LegacyStreamDemoRedirect />} />
+              <Route path="/stream/workspace" element={<LiveStreamWorkspace />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
               <Route path="/dns" element={<DnsPage />} />
               <Route path="/partners" element={<Partnership />} />
@@ -270,7 +270,7 @@ const initialRoutes = [
   [/^\/stream\/?$/, Stream],
   [/^\/streams\/?$/, Streams],
   [/^\/stream\/demo\/?$/, StreamDemo],
-  [/^\/stream\/workspace\/?$/, LegacyStreamDemoRedirect],
+  [/^\/stream\/workspace\/?$/, LiveStreamWorkspace],
   [/^\/stream\/prototypes\/vision\/?$/, StreamWorkspace],
   [/^\/dns\/?$/, DnsPage],
   [/^\/partners\/?$/, Partnership],

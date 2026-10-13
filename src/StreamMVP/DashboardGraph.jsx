@@ -5,9 +5,10 @@ import { DASHBOARD_RANGES } from "./dashboardModel";
 import { buildWidgetSeries } from "./widgetModel";
 import WidgetChart from "./WidgetChart";
 
-export default function DashboardGraph({ widget, events, filters, now, onEdit, onRemove }) {
+export default function DashboardGraph({ widget, events, filters, now, onEdit, onRemove, data }) {
   const [inspectionIndex, setInspectionIndex] = useState(null);
-  const result = useMemo(() => buildWidgetSeries(events, widget, filters, now), [events, widget, filters, now]);
+  const localResult = useMemo(() => buildWidgetSeries(events, widget, filters, now), [events, widget, filters, now]);
+  const result = data || localResult;
   const range = DASHBOARD_RANGES.find((item) => item.id === widget.range) || DASHBOARD_RANGES[1];
   const filter = filters.find((item) => item.id === widget.filterId);
   const title = widget.title || widget.eventName;
@@ -22,6 +23,6 @@ export default function DashboardGraph({ widget, events, filters, now, onEdit, o
   )}>
     {result.status === "missing-filter" ? <div className="mvp-widget-no-data"><p>The Saved Filter used here was deleted.</p><button className="sw-link" type="button" onClick={onEdit}>Choose a replacement</button></div>
       : ready ? <><div className="mvp-graph-chart"><div className="mvp-graph-stage"><WidgetChart series={result.series} visualization={widget.chartType || "line"} label={title} activeIndex={inspectionIndex} onInspectPoint={setInspectionIndex} />{inspectedPoint && <div className="mvp-chart-inspection" role="status" aria-live="polite"><time dateTime={inspectedPoint.timestamp}>{inspectedTime} UTC</time><div>{result.series.map((item, index) => { const point = item.points[inspectionIndex]; return point && Number.isFinite(point.value) ? <span key={item.key}><i className={`mvp-graph-color color-${index % 6}`} /><b>{item.label}</b><strong>{String(point.value)}</strong></span> : null; })}</div></div>}</div></div><div className="mvp-graph-legend" aria-label="Chart series">{result.series.map((item, index) => <span key={item.key}><i className={`mvp-graph-color color-${index % 6}`} />{item.label}</span>)}</div></>
-        : <div className="mvp-graph-empty">{result.events.length ? "No values for this property in the selected range." : "No matching events in this time range."}</div>}
+        : <div className="mvp-graph-empty">{(result.eventCount ?? result.events.length) ? "No values for this property in the selected range." : "No matching events in this time range."}</div>}
   </Panel>;
 }

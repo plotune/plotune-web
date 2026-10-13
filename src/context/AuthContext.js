@@ -1,5 +1,5 @@
 // context/AuthContext.js
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import api from '../services/api';
@@ -9,6 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const tokenRef = useRef(token); tokenRef.current = token;
   const [isLoading, setIsLoading] = useState(true);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
 
@@ -93,7 +94,7 @@ export const AuthProvider = ({ children }) => {
       const storedToken = Cookies.get('auth_token');
       
       if (storedToken) {
-        setToken(storedToken);
+        tokenRef.current = storedToken; setToken(storedToken);
         
         // Validate token first (quick check)
         const validateResponse = await api.post('/auth/validate', {}, {
@@ -121,10 +122,12 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Auth initialization failed:', error);
-      // Invalid token - clear cookie
-      Cookies.remove('auth_token');
-      setToken(null);
-      setUser(null);
+      // An unavailable auth service does not prove the session is invalid.
+      if (error.response?.status === 401) {
+        Cookies.remove('auth_token');
+        setToken(null);
+        setUser(null);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -139,7 +142,7 @@ export const AuthProvider = ({ children }) => {
     // Clean token
     const cleanToken = newToken.replace('', '');
     
-    setToken(cleanToken);
+    tokenRef.current = cleanToken; setToken(cleanToken);
     
     // Set basic user data immediately
     setUser({
@@ -161,8 +164,14 @@ export const AuthProvider = ({ children }) => {
     }, 500);
   };
 
+  const invalidateSession = useCallback((expectedToken) => {
+    if (expectedToken && expectedToken !== tokenRef.current) return;
+    tokenRef.current = null; setToken(null); setUser(null); Cookies.remove('auth_token');
+    Object.keys(sessionStorage).filter(key => key.startsWith('user_profile_')).forEach(key => sessionStorage.removeItem(key));
+  }, []);
+
   const logout = () => {
-    setToken(null);
+    tokenRef.current = null; setToken(null);
     setUser(null);
     
     // Clear cache
@@ -209,7 +218,8 @@ export const AuthProvider = ({ children }) => {
       user, 
       token, 
       login, 
-      logout, 
+      logout,
+      invalidateSession,
       getAuthHeader,
       isLoading,
       isProfileLoading,

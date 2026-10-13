@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import { streamWorkspaceReturn } from '../utils/streamWorkspaceNavigation';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -14,6 +15,14 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
+
+  const workspaceReturn = streamWorkspaceReturn(new URLSearchParams(location.search).get('next'));
+  useEffect(() => { if (workspaceReturn) sessionStorage.setItem('stream_login_return', workspaceReturn); }, [workspaceReturn]);
+  const afterLogin = () => {
+    const target = workspaceReturn || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/dashboard';
+    sessionStorage.removeItem('stream_login_return');
+    navigate(target);
+  };
 
   // Extract token from URL (OAuth callback)
   const extractTokenFromLocation = () => {
@@ -66,7 +75,7 @@ const Login = () => {
       login(bearer, user, rememberMe);
 
       toast.success('Logged in successfully!');
-      navigate('/dashboard');
+      afterLogin();
     } catch (err) {
       console.error('OAuth login failed:', err);
       toast.error(humanLoginError(err));
@@ -151,7 +160,7 @@ const Login = () => {
       login(newToken, newUser, rememberMe);
 
       toast.success('Login successful');
-      navigate('/dashboard');
+      afterLogin();
     } catch (err) {
       console.error('Error response:', err.response?.data);
       toast.error(humanLoginError(err));
