@@ -2,6 +2,7 @@ import React, { act, useState } from "react";
 import { createRoot } from "react-dom/client";
 import LiveExplorer from "./LiveExplorer";
 import WidgetEditor from "../WidgetEditor";
+import FilterPopover from "../FilterPopover";
 import { StreamFailure } from "./client";
 let root, mountRoot, container;
 const now = "2026-10-13T12:00:00.000Z";
@@ -407,4 +408,71 @@ test("live widget configuration permits undiscovered paths when suggestions are 
     "unseen.rpm",
   );
   expect(button("Save widget").disabled).toBe(false);
+});
+
+test("an undiscovered Boolean condition retains its type and operator when edited", async () => {
+  const onApply = jest.fn();
+  act(() =>
+    mountRoot(
+      <FilterPopover
+        events={[]}
+        filters={[]}
+        activeFilterId={null}
+        conditions={[
+          { id: "bool", path: "unseen.enabled", operator: "is_false" },
+        ]}
+        onApply={onApply}
+      />,
+    ),
+  );
+  await click(container.querySelector('[aria-label^="Edit unseen.enabled"]'));
+  expect(container.querySelector('[aria-label="Value type"]').value).toBe(
+    "boolean",
+  );
+  expect(container.querySelector('[aria-label="Operator"]').value).toBe(
+    "is_false",
+  );
+  await click(button("Apply"));
+  expect(onApply.mock.calls[0][0][0]).toMatchObject({
+    path: "unseen.enabled",
+    operator: "is_false",
+  });
+});
+
+test("Clear all removes custom UTC bounds instead of reusing a hidden cleared window", async () => {
+  const client = {
+    query: jest.fn().mockResolvedValue(page()),
+    realtime: jest
+      .fn()
+      .mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+  };
+  act(() => mountRoot(fixture(client)));
+  await flush();
+  const selectRange = (value) =>
+    act(() => {
+      const select = container.querySelector(".live-toolbar select");
+      select.value = value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  selectRange("custom");
+  const inputs = container.querySelectorAll('input[type="datetime-local"]');
+  type(inputs[0], "2026-10-01T12:00");
+  type(inputs[1], "2026-10-02T12:00");
+  await flush();
+  expect(client.query.mock.calls.at(-1)[1]).toMatchObject({
+    startAt: "2026-10-01T12:00:00.000Z",
+    endAt: "2026-10-02T12:00:00.000Z",
+  });
+  await click(button("Clear all"));
+  await flush();
+  const count = client.query.mock.calls.length;
+  selectRange("custom");
+  await flush();
+  expect(
+    [...container.querySelectorAll('input[type="datetime-local"]')].map(
+      (input) => input.value,
+    ),
+  ).toEqual(["", ""]);
+  expect(client.query).toHaveBeenCalledTimes(count);
+  expect(container.textContent).toContain("Choose a start and an end");
 });

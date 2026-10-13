@@ -144,6 +144,8 @@ export default function LiveExplorer({
     setSearch("");
     setName("All events");
     setRange("1h");
+    setStartAt("");
+    setEndAt("");
     setDeviceId("all");
     setSessionId("all");
     setConditions([]);

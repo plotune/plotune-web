@@ -58,7 +58,7 @@ export default function FilterPopover({
   const edit = (condition) => {
     setOpen(true);
     setPath(condition.path);
-    setKind(condition.valueType || "string");
+    setKind(condition.valueType || (["is_true", "is_false"].includes(condition.operator) ? "boolean" : "string"));
     setOperator(condition.operator);
     setValue(condition.value ?? "");
     setEditingId(condition.id);
