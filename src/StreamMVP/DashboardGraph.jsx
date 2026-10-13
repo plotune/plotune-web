@@ -18,7 +18,7 @@ export default function DashboardGraph({ widget, events, filters, now, onEdit, o
     ? new Date(inspectedPoint.timestamp).toLocaleString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "UTC" })
     : "";
 
-  return <Panel title={title} meta={`${filter?.name || "No Saved Filter"} · ${range.label}`} className="mvp-dashboard-graph" action={(
+  return <Panel title={title} meta={`${filter?.name || (widget.filterId ? "Saved Filter" : "No Saved Filter")} · ${range.label}`} className="mvp-dashboard-graph" action={(
     <details className="mvp-dashboard-menu"><summary aria-label={`Options for ${title}`}><FiMoreHorizontal /></summary><div><button type="button" onClick={onEdit}>Edit widget</button><button type="button" className="danger" onClick={onRemove}>Remove widget</button></div></details>
   )}>
     {result.status === "missing-filter" ? <div className="mvp-widget-no-data"><p>The Saved Filter used here was deleted.</p><button className="sw-link" type="button" onClick={onEdit}>Choose a replacement</button></div>

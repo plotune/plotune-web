@@ -265,7 +265,9 @@ test("consecutive Saved Filter updates adopt each saved revision and resume quer
       ),
     );
     const management = container.querySelector(".mvp-filter-manage");
-    act(() => { management.open = true; });
+    act(() => {
+      management.open = true;
+    });
     await click(button("Update conditions"));
     await flush();
     expect(container.textContent).toContain("Shared Saved Filter: Shared");
@@ -281,4 +283,128 @@ test("consecutive Saved Filter updates adopt each saved revision and resume quer
     );
   }
   expect(savedRevisions).toEqual([1, 2]);
+});
+
+test.each([false, true])(
+  "conflict refresh preserves the draft and advances only its rejected CAS baseline (already fresh: %s)",
+  async (alreadyFresh) => {
+    const client = {
+      query: jest.fn().mockResolvedValue(page()),
+      realtime: jest
+        .fn()
+        .mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+    };
+    const initial = {
+      id: "f",
+      name: "Shared",
+      revision: 1,
+      conditions: [
+        {
+          id: "c",
+          path: "motor.rpm",
+          operator: "equals",
+          value: 1680,
+          valueType: "number",
+        },
+      ],
+    };
+    let server = {
+      ...initial,
+      revision: 2,
+      conditions: [{ ...initial.conditions[0], value: 1800 }],
+    };
+    const attempted = [];
+    function SharedFilter() {
+      const [filter, setFilter] = useState(initial);
+      return (
+        <>
+          <button onClick={() => setFilter({ ...server })}>
+            Refresh shared metadata
+          </button>
+          {fixture(client, {
+            filters: [filter],
+            activeFilterId: "f",
+            saveFilter: async (name, conditions, id, baseline) => {
+              attempted.push(baseline.revision);
+              if (baseline.revision !== server.revision)
+                throw new StreamFailure(
+                  409,
+                  "revision_conflict",
+                  "Resource changed; reload before saving",
+                );
+              server = { ...server, conditions, revision: server.revision + 1 };
+              setFilter(server);
+            },
+          })}
+        </>
+      );
+    }
+    act(() => mountRoot(<SharedFilter />));
+    await flush();
+    await click(container.querySelector('[aria-label^="Edit motor.rpm"]'));
+    type(container.querySelector('input[type="number"]'), "1700");
+    await click(button("Apply"));
+    await flush();
+    const refreshButton = button("Refresh shared metadata");
+    if (alreadyFresh) await click(refreshButton);
+    const updateShared = async () => {
+      await click(container.querySelector(".mvp-filter-trigger"));
+      const manage = container.querySelector(".mvp-filter-manage");
+      act(() => {
+        manage.open = true;
+      });
+      await click(button("Update conditions"));
+      await flush();
+    };
+    await updateShared();
+    expect(attempted).toEqual([1]);
+    expect(container.textContent).toContain("Your draft is preserved");
+    await click(
+      container.querySelector(
+        '.mvp-filter-popover-head [aria-label="Close filter menu"]',
+      ),
+    );
+    await click(refreshButton);
+    await flush();
+    expect(
+      container.querySelector('[aria-label^="Edit motor.rpm"]').textContent,
+    ).toContain("1700");
+    expect(container.textContent).toContain("Temporary changes to");
+    await updateShared();
+    expect(attempted).toEqual([1, 2]);
+    expect(server.conditions[0].value).toBe(1700);
+    expect(container.textContent).toContain("Shared Saved Filter: Shared");
+  },
+);
+
+test("live widget configuration permits undiscovered paths when suggestions are unavailable", () => {
+  act(() =>
+    mountRoot(
+      <WidgetEditor
+        widget={{
+          id: "w",
+          eventName: "unseen.sample",
+          measureProperty: "unseen.rpm",
+          visualization: "line",
+          range: "1h",
+          title: "Unseen metric",
+        }}
+        events={[]}
+        filters={[]}
+        now={now}
+        loadPreview={async () => {
+          throw new StreamFailure(503, "service_unavailable", "Unavailable");
+        }}
+        onSave={() => {}}
+        onClose={() => {}}
+      />,
+    ),
+  );
+  expect(container.querySelector('input[aria-label="Event"]').value).toBe(
+    "unseen.sample",
+  );
+  expect(container.querySelector('input[aria-label="Property"]').value).toBe(
+    "unseen.rpm",
+  );
+  expect(button("Save widget").disabled).toBe(false);
 });

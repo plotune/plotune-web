@@ -502,6 +502,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                   now={Date.now()}
                   discovery={discoveryState.data}
                   loadPreview={preview}
+              onRefresh={() => metadata.reload()}
                   dashboards={metadata.dashboards}
                   filters={metadata.filters}
                   selectedDashboardId={dashboardId}

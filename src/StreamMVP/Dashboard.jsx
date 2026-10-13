@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiArrowLeft, FiMoreHorizontal, FiPlus } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import DashboardGraph from "./DashboardGraph";
@@ -12,11 +12,12 @@ function stamp(value) {
 
 export default function Dashboard({
   projectId, events, now, dashboards, filters, selectedDashboardId,
-  onOpen, onBack, onCreate, onRename, onDelete, onSaveWidget, onRemoveWidget, renderGraph, discovery, loadPreview,
+  onOpen, onBack, onCreate, onRename, onDelete, onSaveWidget, onRemoveWidget, renderGraph, discovery, loadPreview, onRefresh,
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [baseDashboard, setBaseDashboard] = useState(null);
+  const [widgetConflict, setWidgetConflict] = useState(false);
   const action = async (operation) => { setError(""); try { await operation(); } catch (cause) { setError(cause.message); } };
   const [createOpen, setCreateOpen] = useState(false);
   const [name, setName] = useState("");
@@ -24,6 +25,11 @@ export default function Dashboard({
   const [editingWidget, setEditingWidget] = useState(null);
   const [widgetOpen, setWidgetOpen] = useState(false);
   const dashboard = dashboards.find((item) => item.id === selectedDashboardId);
+  useEffect(() => {
+    if (widgetConflict && dashboard && baseDashboard && dashboard.id === baseDashboard.id && dashboard.revision !== baseDashboard.revision) {
+      setBaseDashboard(dashboard); setWidgetConflict(false);
+    }
+  }, [widgetConflict, dashboard, baseDashboard]);
   const ordered = useMemo(() => [...dashboards].sort((a, b) => Date.parse(b.updatedAt || 0) - Date.parse(a.updatedAt || 0)), [dashboards]);
 
   const create = async (event) => {
@@ -37,8 +43,11 @@ export default function Dashboard({
     setBusy(false);
     setName(""); setDescription(""); setCreateOpen(false); onOpen(newDashboard.id);
   };
-  const editWidget = (widget = null) => { setEditingWidget(widget); setBaseDashboard(dashboard); setWidgetOpen(true); };
-  const saveWidget = async (widget) => { await onSaveWidget(baseDashboard.id, widget, baseDashboard); setWidgetOpen(false); };
+  const editWidget = (widget = null) => { setEditingWidget(widget); setBaseDashboard(dashboard); setWidgetConflict(false); setWidgetOpen(true); };
+  const saveWidget = async (widget) => {
+    try { await onSaveWidget(baseDashboard.id, widget, baseDashboard); setWidgetOpen(false); }
+    catch (cause) { if (cause.status === 409) setWidgetConflict(true); throw cause; }
+  };
 
   if (!dashboard) {
     return <section className="mvp-dashboard-collection" aria-label="Project dashboards">
@@ -85,6 +94,6 @@ export default function Dashboard({
         return renderGraph ? renderGraph(widget, edit, remove) : <DashboardGraph key={widget.id} widget={widget} events={events} filters={filters} now={now} onEdit={edit} onRemove={remove} />;
       })}
     </div> : <div className="mvp-dashboard-empty"><h2>Your dashboard is empty.</h2><p>Add a chart to monitor selected engineering events.</p></div>}
-    {widgetOpen && <WidgetEditor widget={editingWidget} discovery={discovery} loadPreview={loadPreview} events={events} filters={filters} now={now} onSave={saveWidget} onClose={() => setWidgetOpen(false)} />}
+    {widgetOpen && <WidgetEditor widget={editingWidget} discovery={discovery} loadPreview={loadPreview} onReload={onRefresh} events={events} filters={filters} now={now} onSave={saveWidget} onClose={() => setWidgetOpen(false)} />}
   </section>;
 }

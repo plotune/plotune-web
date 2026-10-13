@@ -582,6 +582,40 @@ async function main() {
   await page
     .getByRole("heading", { name: "Configured simulation RPM" })
     .waitFor();
+  console.log("QA: Authoritative widget configuration during metadata lag");
+  const originalWidget = { ...dashboards[0].data.widgets[0] };
+  dashboards[0].data.widgets[0] = {
+    ...originalWidget,
+    title: "Drone failure events",
+    eventName: "drone.error",
+    visualization: "count",
+    chartType: "bar",
+    measureProperty: "",
+    filterId: null,
+    breakdownProperty: "environment",
+    range: "24h",
+  };
+  dashboards[0].revision++;
+  project.revision++;
+  await page
+    .getByRole("heading", { name: "Drone failure events", exact: true })
+    .waitFor({ timeout: 25000 });
+  const authoritativePanel = page
+    .locator(".mvp-dashboard-graph")
+    .filter({
+      has: page.getByRole("heading", {
+        name: "Drone failure events",
+        exact: true,
+      }),
+    });
+  assert((await authoritativePanel.textContent()).includes("Last 24 hours"));
+  assert(
+    !(await authoritativePanel.textContent()).includes("No matching events"),
+  );
+  dashboards[0].data.widgets[0] = originalWidget;
+  dashboards[0].revision++;
+  project.revision++;
+
   console.log("QA: Shared Filter updates");
   // Editing a shared Filter changes its referencing widgets on the next retrieval.
   filters[0] = wrap(

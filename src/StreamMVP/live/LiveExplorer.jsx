@@ -65,6 +65,7 @@ export default function LiveExplorer({
   const [endAt, setEndAt] = useState("");
   const [conditions, setConditions] = useState([]);
   const [temporary, setTemporary] = useState(false);
+  const [saveConflict, setSaveConflict] = useState(null);
   const [detail, setDetail] = useState(null);
   const [detailError, setDetailError] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -75,8 +76,22 @@ export default function LiveExplorer({
       filterDraft.current = { id: activeFilterId, base: selected };
       setConditions(selected?.conditions || []);
       setTemporary(false);
+      setSaveConflict(null);
+    } else if (
+      filterDraft.current.pendingRebase &&
+      selected &&
+      selected.revision !== filterDraft.current.base?.revision
+    ) {
+      // Rebase once after a rejected write and a fresh shared definition, without
+      // discarding the investigation draft. Background refreshes before a conflict
+      // must not silently give a stale draft permission to overwrite another edit.
+      filterDraft.current = {
+        id: activeFilterId,
+        base: selected,
+        pendingRebase: false,
+      };
     }
-  }, [activeFilterId, selected, temporary]);
+  }, [activeFilterId, selected, temporary, saveConflict]);
   const invalidTime =
     range === "custom" &&
     (!startAt ||
@@ -303,15 +318,26 @@ export default function LiveExplorer({
             );
           }}
           onSave={async (filterName, next, id) => {
-            await saveFilter(
-              filterName,
-              next,
-              id,
-              id === activeFilterId ? filterDraft.current.base : undefined,
-            );
-            // The reload has returned the saved revision. Resume selection by ID
-            // and let the draft effect adopt it as the next edit's CAS baseline.
-            setTemporary(false);
+            try {
+              await saveFilter(
+                filterName,
+                next,
+                id,
+                id === activeFilterId ? filterDraft.current.base : undefined,
+              );
+              // The reload has returned the saved revision. Resume selection by ID
+              // and let the draft effect adopt it as the next edit's CAS baseline.
+              setTemporary(false);
+            } catch (error) {
+              if (error.status === 409 && id === activeFilterId) {
+                filterDraft.current.pendingRebase = true;
+                setSaveConflict({
+                  id,
+                  revision: filterDraft.current.base?.revision,
+                });
+              }
+              throw error;
+            }
           }}
           onRename={renameFilter}
           onDelete={deleteFilter}
@@ -336,6 +362,12 @@ export default function LiveExplorer({
           {temporary ? "Temporary changes to " : "Shared Saved Filter: "}
           {selected?.name ||
             "Deleted filter — choose a replacement or clear filters"}
+        </p>
+      )}
+      {saveConflict && (
+        <p className="live-notice" role="status">
+          Your draft is preserved. Refresh the shared Filter before retrying;
+          saving your draft will replace its current conditions.
         </p>
       )}
       <Failure error={discoveryError} retry={retryDiscovery} />

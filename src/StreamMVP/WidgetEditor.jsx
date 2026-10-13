@@ -6,15 +6,18 @@ import WidgetChart from "./WidgetChart";
 
 const EMPTY = { title: "", eventName: "", visualization: "line", measureProperty: "", filterId: "", breakdownProperty: "", range: "1h" };
 
-export default function WidgetEditor({ widget, events, filters, now, onSave, onClose, discovery, loadPreview }) {
+export default function WidgetEditor({ widget, events, filters, now, onSave, onClose, discovery, loadPreview, onReload }) {
   const [draft, setDraft] = useState(() => ({ ...EMPTY, ...widget, filterId: widget?.filterId || "" }));
   const [more, setMore] = useState(!!(widget?.filterId || widget?.breakdownProperty || widget?.title || (widget?.range && widget.range !== "1h")));
   const [remote, setRemote] = useState(null);
   const [error, setError] = useState("");
+  const [conflict, setConflict] = useState(false);
   const [busy, setBusy] = useState(false);
   const localChoices = useMemo(() => getWidgetChoices(events, draft, filters, now), [events, draft, filters, now]);
-  const choices = discovery ? { status: draft.filterId && !filters.some((f) => f.id === draft.filterId) ? "missing-filter" : "ready", eventNames: discovery.eventNames || [], numericProperties: (discovery.properties || []).filter((p) => p.types.includes("number")).map((p) => p.path), breakdownProperties: (discovery.properties || []).map((p) => p.path) } : localChoices;
-  const numeric = discovery ? draft.measureProperty : choices.numericProperties.includes(draft.measureProperty) ? draft.measureProperty : choices.numericProperties[0] || "";
+  const liveControls = Boolean(discovery || loadPreview);
+  const catalog = discovery || { properties: [], eventNames: [] };
+  const choices = liveControls ? { status: draft.filterId && !filters.some((f) => f.id === draft.filterId) ? "missing-filter" : "ready", eventNames: catalog.eventNames || [], numericProperties: (catalog.properties || []).filter((p) => p.types.includes("number")).map((p) => p.path), breakdownProperties: (catalog.properties || []).map((p) => p.path) } : localChoices;
+  const numeric = liveControls ? draft.measureProperty : choices.numericProperties.includes(draft.measureProperty) ? draft.measureProperty : choices.numericProperties[0] || "";
   const previewWidget = { ...draft, id: draft.id || "preview", measureProperty: numeric };
   useEffect(() => {
     if (!loadPreview || !draft.eventName) { setRemote(null); return undefined; }
@@ -38,13 +41,13 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
       filterId: draft.filterId || null,
       measureProperty: draft.visualization === "count" ? "" : numeric,
       breakdownProperty: draft.breakdownProperty || "",
-    }); } catch (cause) { setError(cause.message); } finally { setBusy(false); }
+    }); } catch (cause) { setError(cause.message); setConflict(cause.status === 409); } finally { setBusy(false); }
   };
 
   return <Dialog title={widget ? "Edit widget" : "Add widget"} subtitle="Choose an event and what to observe." onClose={onClose} className="mvp-widget-editor-dialog">
     <form className="sw-detail-body mvp-widget-editor" onSubmit={submit}>
       <label>Event
-        {discovery ? <><input aria-label="Event" required list="live-event-names" value={draft.eventName} onChange={(event) => update({ eventName: event.target.value })} placeholder="Choose or enter event name" /><datalist id="live-event-names">{choices.eventNames.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })}>
+        {liveControls ? <><input aria-label="Event" required list="live-event-names" value={draft.eventName} onChange={(event) => update({ eventName: event.target.value })} placeholder="Choose or enter event name" /><datalist id="live-event-names">{choices.eventNames.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })}>
           <option value="">Choose an event</option>{choices.eventNames.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>}
       </label>
@@ -56,10 +59,10 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
           </select>
         </label>
         {draft.visualization === "line" && <label>Property
-          <>{discovery ? <><input aria-label="Property" required list="live-numeric-properties" value={numeric} onChange={(event) => update({ measureProperty: event.target.value })} placeholder="e.g. motor.temperature" /><datalist id="live-numeric-properties">{choices.numericProperties.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={numeric} onChange={(event) => update({ measureProperty: event.target.value })}>
+          <>{liveControls ? <><input aria-label="Property" required list="live-numeric-properties" value={numeric} onChange={(event) => update({ measureProperty: event.target.value })} placeholder="e.g. motor.temperature" /><datalist id="live-numeric-properties">{choices.numericProperties.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={numeric} onChange={(event) => update({ measureProperty: event.target.value })}>
             <option value="">Choose a numeric property</option>{choices.numericProperties.map((item) => <option key={item} value={item}>{item}</option>)}
           </select>}</>
-          {!choices.numericProperties.length && <small>This event has no numeric properties in the selected range.</small>}
+          {!choices.numericProperties.length && <small>{liveControls ? "No numeric properties discovered yet. You can enter a property path." : "This event has no numeric properties in the selected range."}</small>}
         </label>}
         <label>Visualization
           <select value={draft.chartType || "line"} onChange={(event) => update({ chartType: event.target.value })}>
@@ -79,7 +82,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
             {choices.status === "missing-filter" && <small className="mvp-widget-warning">This Saved Filter was deleted. Select another filter.</small>}
           </label>
           {draft.eventName && <label>Breakdown by <span>Optional</span>
-            <>{discovery ? <><input aria-label="Breakdown by" list="live-breakdown-properties" value={draft.breakdownProperty} onChange={(event) => update({ breakdownProperty: event.target.value })} placeholder="Any custom property path" /><datalist id="live-breakdown-properties">{choices.breakdownProperties.map((item) => <option key={item} value={item} />)}</datalist></> : <select value={draft.breakdownProperty} onChange={(event) => update({ breakdownProperty: event.target.value })}>
+            <>{liveControls ? <><input aria-label="Breakdown by" list="live-breakdown-properties" value={draft.breakdownProperty} onChange={(event) => update({ breakdownProperty: event.target.value })} placeholder="Any custom property path" /><datalist id="live-breakdown-properties">{choices.breakdownProperties.map((item) => <option key={item} value={item} />)}</datalist></> : <select value={draft.breakdownProperty} onChange={(event) => update({ breakdownProperty: event.target.value })}>
               <option value="">No breakdown</option>{choices.breakdownProperties.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>}</>
           </label>}
@@ -96,6 +99,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
         {preview.series.length > 0 && <div className="mvp-widget-preview-legend">{preview.series.map((item) => <span key={item.key}>{item.label}</span>)}</div>}
       </section>
       {error && <p role="alert">{error}</p>}
+      {conflict && onReload && <div className="mvp-widget-help"><p>Your draft is kept. Refresh the shared dashboard before retrying.</p><button className="sw-button" type="button" disabled={busy} onClick={async () => { setBusy(true); try { await onReload(); } catch (cause) { setError(cause.message); } finally { setBusy(false); } }}>Refresh shared dashboard</button></div>}
       <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={onClose}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!canSave || busy}>{widget ? "Save widget" : "Add widget"}</button></div>
     </form>
   </Dialog>;

@@ -173,12 +173,12 @@ test("changed widget definitions cannot produce a chart from incompatible pages"
   const { client } = setup(
     response({
       status: "ready",
-      widget: { filterId: "real" },
+      widget: { id: "w", filterId: "real" },
       page: page([event("a")], "next"),
     }),
     response({
       status: "ready",
-      widget: { filterId: "simulation" },
+      widget: { id: "w", filterId: "simulation" },
       page: page([event("b")]),
     }),
   );
@@ -334,4 +334,27 @@ test("CSV distinguishes literal dotted keys, nested paths, Unicode keys and empt
   expect(text).toContain("properties.a.b");
   expect(text).toContain('"properties[""温度""]"');
   expect(text).toContain("{}");
+});
+
+test("complete widget retrieval retains the authoritative server definition", async () => {
+  const widget = {
+    id: "w",
+    title: "Current server title",
+    eventName: "drone.error",
+    visualization: "count",
+    chartType: "bar",
+    measureProperty: "",
+    filterId: "failed",
+    breakdownProperty: "code",
+    range: "24h",
+  };
+  const { client } = setup(
+    response({ status: "ready", widget, page: page([event("a")], "next") }),
+    response({ status: "ready", widget, page: page([event("b")]) }),
+  );
+  const result = await collectEvents(
+    client.pages("p", {}, { widget: { dashboardId: "d", id: "w" } }),
+  );
+  expect(result.widget).toEqual(widget);
+  expect(result.events).toHaveLength(2);
 });

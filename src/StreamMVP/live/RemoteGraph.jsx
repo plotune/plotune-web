@@ -45,14 +45,16 @@ export default function RemoteGraph({
           { signal: controller.signal },
         );
         if (!disposed) {
+          const authoritativeWidget = result.widget;
           const series = buildWidgetSeries(
             result.events,
-            { ...widget, filterId: null },
+            { ...authoritativeWidget, filterId: null },
             [],
             result.now,
           );
           setState({
             loading: false,
+            widget: authoritativeWidget,
             result: { ...series, events: [], eventCount: series.events.length },
           });
         }
@@ -91,7 +93,7 @@ export default function RemoteGraph({
         </span>
       )}
       <DashboardGraph
-        widget={widget}
+        widget={state.widget}
         events={[]}
         filters={filters}
         now={Date.now()}

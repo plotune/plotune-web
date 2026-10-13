@@ -198,7 +198,8 @@ export function createStreamClient(
     let cursor = null,
       now = query.now,
       snapshot,
-      definition;
+      definition,
+      resolvedWidget;
     const cursors = new Set();
     const release = await acquireRetrieval(signal);
     try {
@@ -224,6 +225,12 @@ export function createStreamClient(
               "missing_filter",
               "This widget's Saved Filter was deleted. Choose a replacement.",
             );
+          if (result.status !== "ready" || result.widget?.id !== widget.id)
+            throw new StreamFailure(
+              503,
+              "invalid_response",
+              "Stream returned an invalid widget definition.",
+            );
           const serialized = JSON.stringify(result.widget);
           if (definition !== undefined && definition !== serialized)
             throw new StreamFailure(
@@ -232,6 +239,7 @@ export function createStreamClient(
               "Widget configuration changed. Refresh its chart.",
             );
           definition = serialized;
+          resolvedWidget = result.widget;
           page = result.page;
         } else page = await pageRequest(id, payload, { limit: 100, signal });
         eventPage(page);
@@ -256,7 +264,11 @@ export function createStreamClient(
             );
           cursors.add(cursor);
         }
-        yield { ...page, total: null };
+        yield {
+          ...page,
+          total: null,
+          ...(widget ? { widget: resolvedWidget } : {}),
+        };
         await yieldToBrowser();
       } while (cursor);
     } finally {
@@ -346,11 +358,13 @@ export async function collectEvents(
   const events = [],
     ids = new Set();
   let bytes = 0,
-    now;
+    now,
+    widget;
   const encoder = new TextEncoder();
   for await (const page of pages) {
     if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
     now = page.now;
+    if (page.widget) widget = page.widget;
     for (const event of page.items) {
       if (ids.has(event.id))
         throw new StreamFailure(
@@ -370,5 +384,5 @@ export async function collectEvents(
     }
     onProgress(events.length, null);
   }
-  return { events, now };
+  return { events, now, ...(widget ? { widget } : {}) };
 }
