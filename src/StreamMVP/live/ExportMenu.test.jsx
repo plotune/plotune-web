@@ -1,0 +1,53 @@
+import React, { act } from "react";
+import { createRoot } from "react-dom/client";
+import ExportMenu from "../ExportMenu";
+
+test("export progress does not claim success before completion, and cancellation never downloads a partial file", async () => {
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  const root = createRoot(container),
+    mount = root.render.bind(root);
+  const original = URL.createObjectURL;
+  URL.createObjectURL = jest.fn();
+  let complete, progress, signal;
+  const createExport = jest.fn((format, notify, abortSignal) => {
+    progress = notify;
+    signal = abortSignal;
+    notify(10, null);
+    return new Promise((resolve) => {
+      complete = resolve;
+    });
+  });
+  act(() =>
+    mount(
+      <ExportMenu
+        events={[]}
+        query={{}}
+        projectName="Synthetic"
+        createExport={createExport}
+      />,
+    ),
+  );
+  const button = (text) =>
+    [...container.querySelectorAll("button")].find(
+      (b) => b.textContent.trim() === text,
+    );
+  const click = async (el) =>
+    act(async () =>
+      el.dispatchEvent(new MouseEvent("click", { bubbles: true })),
+    );
+  await click(button("Export"));
+  await click(button("JSON"));
+  expect(container.textContent).toContain("Retrieved 10 matching events");
+  act(() => progress(5, 10));
+  expect(container.textContent).toContain("Preparing 5 / 10 events");
+  expect(container.textContent).not.toContain("Exported");
+  await click(button("Cancel"));
+  expect(signal.aborted).toBe(true);
+  await act(async () => complete({ count: 10, blob: new Blob(["[]"]) }));
+  expect(URL.createObjectURL).not.toHaveBeenCalled();
+  expect(container.textContent).not.toContain("Exported");
+  act(() => root.unmount());
+  container.remove();
+  URL.createObjectURL = original;
+});
