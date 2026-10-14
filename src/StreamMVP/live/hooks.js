@@ -21,7 +21,7 @@ export function useWorkspaceMetadata(client, projectId) {
   selected.current = projectId;
   const generation = useRef(0),
     mounted = useRef(true);
-  const verification = useMemo(() => ({ pending: 0 }), [client, projectId]);
+  const verification = useMemo(() => ({ client, projectId, pending: 0 }), [client, projectId]);
   const invalidate = useCallback(() => {
     generation.current++;
   }, []);
