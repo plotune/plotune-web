@@ -31,7 +31,7 @@ const MAX_CONFIRMATIONS_PER_HOUR = 20;  // global cap: the endpoint is public, s
 const DEDUPE_SECONDS = 21600;           // CacheService maximum (6 h)
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_MESSAGE_CHARS = 3000;
-const SCRIPT_VERSION = 3; // shown by doGet, so a deploy can be checked from a browser
+const SCRIPT_VERSION = 4; // shown by doGet, so a deploy can be checked from a browser
 
 const HEADERS = [
   'Received at', 'Email', 'Score %', 'Areas assessed', 'Confidence', 'Band',
@@ -55,13 +55,18 @@ const CONTACT_EMAILS_COLUMN = CONTACT_HEADERS.indexOf('Emails') + 1;
 
 const ORDER_HEADERS = [
   'Received at', 'Email', 'Offer', 'Months', 'Monthly USD', 'Total USD', 'Deposit USD', 'Price USD', 'Support plan',
-  'Country', 'Offer version', 'Status',
+  'Country', 'Sector', 'Offer version', 'Status',
   'Platform', 'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term',
   'Google click id', 'Google campaign id', 'LinkedIn click id', 'Ad landing page', 'Referrer',
   'Submission ID', 'Emails', 'Raw JSON',
 ];
 const ORDER_EMAILS_COLUMN = ORDER_HEADERS.indexOf('Emails') + 1;
 const ORDER_OFFERS = { rent: 'Rent', buy: 'Buy' };
+const ORDER_SECTORS = {
+  automotive: 'Automotive', robotics: 'Robotics / AMR', aerospace_defense: 'Aerospace & defense',
+  industrial: 'Industrial automation', energy: 'Energy', electronics: 'Electronics / embedded',
+  research: 'Research / university', other: 'Other',
+};
 
 // The price list the sheet and the emails use. The endpoint is public, so amounts sent by a browser
 // are never trusted: every amount is computed here from the offer, the months and the support
@@ -247,6 +252,7 @@ function handleOrder_(data, email, raw) {
     supportYearly: offer === 'buy' ? OFFER.supportYearly : '',
     withSupport: offer === 'buy' && quote.withSupport === true, // a choice, not an amount
     country: country,
+    sector: ORDER_SECTORS[data.sector] || '',
     offerVersion: clientVersion === OFFER.version ? OFFER.version : OFFER.version + ' (page sent: ' + (clientVersion || 'none') + ')',
     platform: clean_(attr.platform, 40),
     entrySource: clean_(attr.entry_source, 80),
@@ -265,7 +271,7 @@ function handleOrder_(data, email, raw) {
   const row = saveRow_(ORDER_SHEET_NAME, ORDER_HEADERS, o.submissionId, [
     o.receivedAt, o.email, ORDER_OFFERS[o.offer], o.months, o.monthly, o.total, o.deposit, o.price,
     o.offer === 'buy' ? (o.withSupport ? 'Yes ($' + o.supportYearly + '/year)' : 'No') : '',
-    o.country, o.offerVersion, 'New',
+    o.country, o.sector, o.offerVersion, 'New',
     o.platform, o.entrySource, o.utmSource, o.utmMedium, o.utmCampaign, o.utmContent, o.utmTerm,
     o.gclid, o.gadCampaignId, o.liFatId, o.adLandingPath, o.referrer,
     o.submissionId, 'sending…', raw.slice(0, 5000),
@@ -301,6 +307,7 @@ function notifyOwnerOrder_(o) {
         '',
         'Email:            ' + o.email,
         'Country:          ' + o.country,
+        'Sector:           ' + (o.sector || '-'),
         '',
         '---',
         'Came from:        ' + (o.platform || o.entrySource || 'unknown') + (o.gadCampaignId ? '  (Google campaign ' + o.gadCampaignId + ')' : ''),
@@ -624,6 +631,7 @@ function runTestOrder() {
     months: 3,
     quote: { monthly: 350, total: 1050, deposit: 700, currency: 'USD' },
     country: 'United Kingdom',
+    sector: 'automotive',
     offerVersion: 'TEST',
     attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/nexus/' },
     submissionId: 'test-order-' + new Date().getTime(),

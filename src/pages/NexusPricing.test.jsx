@@ -37,6 +37,7 @@ const setValue = (sel, value) => act(() => {
   Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, value);
   el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
 });
+const agree = () => click(container.querySelector('#order-consent'));
 const submit = () => act(async () => { container.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
 const calls = (event) => posthog.capture.mock.calls.filter(([e]) => e === event).map(([, p]) => p);
 const heading = () => container.querySelector('h1, form h2, [role="status"] h2').textContent;
@@ -66,19 +67,24 @@ test('rent: choose, set the length (deposit tier), see the terms, request; every
   expect(container.textContent).toContain('Refundable deposit of $350 for 8 months');
   click(byText('Request this offer'));
   expect(heading()).toBe('Where should we send the offer?');
-  // Only what the offer needs: where to send it and where it ships.
-  expect([...container.querySelectorAll('form input:not([name="hp_extra_field"]), form select, form textarea')].map((el) => el.id)).toEqual(['order-email', 'order-country']);
+  // Only what the offer needs: where to send it, where it ships, an optional sector, privacy consent.
+  expect([...container.querySelectorAll('form input:not([name="hp_extra_field"]), form select, form textarea')].map((el) => el.id)).toEqual(['order-email', 'order-country', 'order-sector', 'order-consent']);
   setValue('#order-email', 'Eng@Corp.com');
   setValue('#order-country', 'United Kingdom');
   await submit();
+  expect(container.textContent).toContain('Please accept the Privacy Policy');
+  expect(postLead).not.toHaveBeenCalled();
+  setValue('#order-sector', 'automotive');
+  agree();
+  await submit();
   expect(postLead.mock.calls[0][0]).toMatchObject({
-    kind: 'order', offer: 'rent', months: 8, country: 'United Kingdom', quote: { monthly: 350, total: 2800, deposit: 350 },
+    kind: 'order', offer: 'rent', months: 8, country: 'United Kingdom', sector: 'automotive', quote: { monthly: 350, total: 2800, deposit: 350 },
   });
   expect(trackGoogleAdsOrderRequestConversion).toHaveBeenCalledTimes(1);
   expect(container.textContent).toContain('Request received');
   expect(byText('Back')).toBeUndefined();
   expect(calls('pricing_step_completed').map((p) => p.step_name)).toEqual(['choose', 'configure', 'terms']);
-  expect(calls('pricing_request_submitted')[0]).toMatchObject({ offer: 'rent', months: 8, delivery: 'sent', google_ads_conversion: true });
+  expect(calls('pricing_request_submitted')[0]).toMatchObject({ offer: 'rent', months: 8, sector: 'automotive', delivery: 'sent', google_ads_conversion: true });
   const analytics = JSON.stringify(posthog.capture.mock.calls);
   expect(analytics).not.toContain('Eng@Corp.com');
 });
@@ -89,13 +95,14 @@ test('buy: the support plan choice changes the first-year total and travels with
   pick('Buy Nexus');
   expect(heading()).toBe('Add the support plan?');
   expect(container.textContent).toContain('$3,500');
-  click(byText('Yes, add support'));
+  click(byText('Add support'));
   expect(container.textContent).toContain('$3,850');
   expect(calls('pricing_support_chosen')[0]).toEqual(expect.objectContaining({ with_support: true }));
   click(byText('Continue'));
   click(byText('Request this offer'));
   setValue('#order-email', 'eng@corp.com');
   setValue('#order-country', 'Ireland');
+  agree();
   await submit();
   expect(postLead.mock.calls[0][0]).toMatchObject({ offer: 'buy', months: null, quote: { price: 3500, withSupport: true, firstYear: 3850 } });
 });
@@ -138,6 +145,7 @@ test('a filled honeypot (bot) is sent for the server to discard, but never count
   click(byText('Request this offer'));
   setValue('#order-email', 'bot@spam.example');
   setValue('#order-country', 'Nowhere');
+  agree();
   setValue('input[name="hp_extra_field"]', 'http://spam');
   await submit();
   expect(postLead.mock.calls[0][0].website).toBe('http://spam');
