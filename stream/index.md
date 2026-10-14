@@ -1,6 +1,6 @@
 # Your systems emit events.Make them useful.
 
-Plotune Stream / Event infrastructure
+Plotune Stream  / Event infrastructure
 
 
 

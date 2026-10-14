@@ -114,11 +114,19 @@ Local-first operation is documented alongside cloud dependencies, hardware compa
 
 [Security model ↗](https://www.plotune.net/docs/nexus/security-model)[Data handling ↗](https://www.plotune.net/docs/nexus/data-handling)[Protocols ↗](https://www.plotune.net/docs/nexus/protocols)
 
+05 / Rent or buy  Launch price
+
+## Rent it for a project.Or keep it.
+
+Monthly rental or one-time purchase, with full functionality either way. See the options and what they cost for your project.
+
+[See rent & buy options ↗](https://www.plotune.net/nexus/pricing?entry_source=direct&from=nexus_pricing_band)
+
 Start with your test environment
 
 ## Map Nexusto your bench.
 
-Tell us about your hardware, interfaces and first workflow.
+Not sure it fits yet? Tell us about your hardware, interfaces and first workflow.
 
 [Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
 

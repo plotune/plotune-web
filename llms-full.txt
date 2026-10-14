@@ -461,7 +461,7 @@ Source: https://www.plotune.net/faq
 
 # Your systems emit events.Make them useful.
 
-Plotune Stream / Event infrastructure
+Plotune Stream  / Event infrastructure
 
 
 
@@ -635,11 +635,19 @@ Local-first operation is documented alongside cloud dependencies, hardware compa
 
 [Security model ↗](https://www.plotune.net/docs/nexus/security-model)[Data handling ↗](https://www.plotune.net/docs/nexus/data-handling)[Protocols ↗](https://www.plotune.net/docs/nexus/protocols)
 
+05 / Rent or buy  Launch price
+
+## Rent it for a project.Or keep it.
+
+Monthly rental or one-time purchase, with full functionality either way. See the options and what they cost for your project.
+
+[See rent & buy options ↗](https://www.plotune.net/nexus/pricing?entry_source=direct&from=nexus_pricing_band)
+
 Start with your test environment
 
 ## Map Nexusto your bench.
 
-Tell us about your hardware, interfaces and first workflow.
+Not sure it fits yet? Tell us about your hardware, interfaces and first workflow.
 
 [Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
 
@@ -924,6 +932,24 @@ Plotune Nexus can mirror the same flow shape against your own validation cases. 
 Contact Us
 
 Source: https://www.plotune.net/nexus/use-cases
+
+---
+
+# Rent it for a project,or keep it.
+
+[Plotune Nexus](https://www.plotune.net/nexus) / Pricing  Step 1 of 4
+
+Launch price · first 10 customers
+
+
+
+Full functionality either way. Pick one to see the costs; you can switch later.
+
+Launch price for the first 10 customers. Prices in USD, excluding VAT / sales tax and shipping: we confirm the exact tax, shipping and any import duties for your country before you pay.
+
+Questions first? [Talk to us](https://www.plotune.net/contact)
+
+Source: https://www.plotune.net/nexus/pricing
 
 ---
 
