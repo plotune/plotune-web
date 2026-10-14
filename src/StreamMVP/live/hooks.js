@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resourceData, uiConditions } from "./client";
+import { pollWhileVisible } from "./visiblePolling";
 
 const empty = {
   project: null,
@@ -9,7 +10,7 @@ const empty = {
   webhooks: [],
   members: [],
 };
-export function useWorkspaceMetadata(client, projectId) {
+export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
   const [projects, setProjects] = useState([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [detail, setDetail] = useState(empty);
@@ -20,7 +21,8 @@ export function useWorkspaceMetadata(client, projectId) {
   const selected = useRef(projectId);
   selected.current = projectId;
   const generation = useRef(0),
-    mounted = useRef(true);
+    mounted = useRef(true),
+    projectListGeneration = useRef(0);
   const verification = useMemo(() => ({ client, projectId, pending: 0 }), [client, projectId]);
   const invalidate = useCallback(() => {
     generation.current++;
@@ -31,13 +33,24 @@ export function useWorkspaceMetadata(client, projectId) {
       mounted.current = false;
     };
   }, []);
+  useEffect(() => client.subscribeAuthorizationFailure?.((cause) => {
+    if (cause.status === 403 && cause.projectId && cause.projectId !== selected.current) return;
+    generation.current++; projectListGeneration.current++;
+    setDetail(empty); setProjects([]); setError(cause);
+    // A data-plane 403 can precede control propagation for a newly created
+    // project. Hide its UI, but retain the one-time key in memory until fresh
+    // Worker authorization proves the role changed (or the session is invalid).
+    if (cause.status === 401) setKeys({});
+    setLoading(false); setProjectsLoading(false);
+  }), [client]);
   const loadProjects = useCallback(
-    async (signal) => {
+    async (signal, force = true) => {
+      const request = ++projectListGeneration.current;
       try {
-        const result = await client.projects(signal);
-        if (!signal?.aborted && mounted.current) setProjects(result.items);
+        const result = await client.projects(signal, { useCache: !force });
+        if (!signal?.aborted && mounted.current && request === projectListGeneration.current) setProjects(result.items);
       } catch (cause) {
-        if (cause.name !== "AbortError" && mounted.current) setError(cause);
+        if (cause.name !== "AbortError" && mounted.current && request === projectListGeneration.current) setError(cause);
       } finally {
         if (!signal?.aborted && mounted.current) setProjectsLoading(false);
       }
@@ -46,11 +59,11 @@ export function useWorkspaceMetadata(client, projectId) {
   );
   useEffect(() => {
     const abort = new AbortController();
-    loadProjects(abort.signal);
+    loadProjects(abort.signal, false);
     return () => abort.abort();
   }, [loadProjects]);
   const reload = useCallback(
-    async (signal, propagateFailure = false) => {
+    async (signal, propagateFailure = false, force = true) => {
       if (!projectId || selected.current !== projectId || !mounted.current)
         return;
       // Background refresh must not supersede verification of a completed write.
@@ -61,12 +74,12 @@ export function useWorkspaceMetadata(client, projectId) {
         const result = await client.project(projectId, signal);
         const admin = result.membership.role !== "Member";
         const [filters, dashboards, webhooks, members] = await Promise.all([
-          client.resources(projectId, "filters", signal),
-          client.resources(projectId, "dashboards", signal),
-          admin
+          client.resources(projectId, "filters", signal, { useCache: !force }),
+          client.resources(projectId, "dashboards", signal, { useCache: !force }),
+          admin && privilegedView === "webhooks"
             ? client.resources(projectId, "webhooks", signal)
             : { items: [] },
-          admin ? client.members(projectId, signal) : { items: [] },
+          admin && privilegedView === "settings" ? client.members(projectId, signal) : { items: [] },
         ]);
         if (
           request !== generation.current ||
@@ -88,6 +101,7 @@ export function useWorkspaceMetadata(client, projectId) {
           webhooks: webhooks.items.map(resourceData),
           members: members.items,
         });
+        if (!admin) setKeys((current) => { const next = { ...current }; delete next[projectId]; return next; });
         setProjects((current) =>
           current.map((p) => (p.id === projectId ? result.project : p)),
         );
@@ -109,7 +123,7 @@ export function useWorkspaceMetadata(client, projectId) {
           setLoading(false);
       }
     },
-    [client, projectId, verification],
+    [client, projectId, verification, privilegedView],
   );
   useEffect(() => {
     setDetail(empty);
@@ -117,19 +131,12 @@ export function useWorkspaceMetadata(client, projectId) {
     if (!projectId) return undefined;
     setLoading(true);
     const abort = new AbortController();
-    reload(abort.signal);
-    const interval = setInterval(() => {
-      if (document.visibilityState === "visible") reload(abort.signal);
-    }, 60000);
-    const focused = () => {
-      if (document.visibilityState === "visible") reload(abort.signal);
-    };
-    window.addEventListener("focus", focused);
+    // Reuse resource snapshots only after an uncached permission/role check.
+    // Team changes are loaded explicitly, rather than on a timer or window focus.
+    reload(abort.signal, false, false);
     // This sequence counter intentionally invalidates all outstanding requests.
     return () => {
       abort.abort();
-      clearInterval(interval);
-      window.removeEventListener("focus", focused);
       invalidate();
     };
   }, [projectId, reload, invalidate]);
@@ -298,7 +305,6 @@ export function useRealtime(client, projectId, scope) {
     if (!projectId) return undefined;
     const controller = new AbortController();
     let after = "",
-      timer,
       epoch = 0;
     const poll = async () => {
       const version = epoch;
@@ -325,21 +331,16 @@ export function useRealtime(client, projectId, scope) {
         )
           setState((old) => ({ ...old, error }));
       }
-      if (!controller.signal.aborted)
-        timer = setTimeout(
-          poll,
-          document.visibilityState === "visible" ? 5000 : 30000,
-        );
     };
     restart.current = () => {
       epoch++;
       after = "";
       setState({ scope, ids: [], reset: false, error: null });
     };
-    poll();
+    const stop = pollWhileVisible(poll, 5000);
     return () => {
       controller.abort();
-      clearTimeout(timer);
+      stop();
       restart.current = null;
     };
   }, [client, projectId, scope]);

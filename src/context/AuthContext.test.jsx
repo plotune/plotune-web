@@ -27,3 +27,17 @@ test('a stale request cannot invalidate a newer signed-in account', async () => 
   await act(async () => state.login('Bearer new-account-token', { username: 'new account' }));
   act(() => state.invalidateSession('Bearer fixture-token')); expect(state.token).toBe('Bearer new-account-token'); expect(Cookies.remove).not.toHaveBeenCalled();
 });
+
+test('logout and a current-session rejection clear Stream snapshots; stale-session rejection preserves the new session cache', async () => {
+  api.post.mockRejectedValue({ response: { status: 503 } }); await mount();
+  const key = 'plotune-stream-metadata:v1:fixture';
+  sessionStorage.setItem(key, 'private snapshot');
+  act(() => state.logout());
+  expect(sessionStorage.getItem(key)).toBeNull();
+  await act(async () => state.login('Bearer next-session', { username: 'next' }));
+  sessionStorage.setItem(key, 'next snapshot');
+  act(() => state.invalidateSession('Bearer fixture-token'));
+  expect(sessionStorage.getItem(key)).toBe('next snapshot');
+  act(() => state.invalidateSession('Bearer next-session'));
+  expect(sessionStorage.getItem(key)).toBeNull();
+});

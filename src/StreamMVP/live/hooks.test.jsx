@@ -87,3 +87,27 @@ test("switching projects during verification loads the new project immediately a
   expect(state.error).toBeNull();
   act(() => root.unmount());
 });
+
+test("one hour idle and window focus generate no recurring metadata reads; privileged lists load only on their view", async () => {
+  jest.useFakeTimers();
+  const client = {
+    projects: jest.fn().mockResolvedValue({ items: [{ id: "p" }] }),
+    project: jest.fn().mockResolvedValue({ project: { id: "p", name: "Shared", revision: 1 }, membership: { role: "Owner" } }),
+    resources: jest.fn().mockResolvedValue({ items: [] }), members: jest.fn().mockResolvedValue({ items: [] }),
+  };
+  let state;
+  function Probe({ view }) { state = useWorkspaceMetadata(client, "p", view); return null; }
+  const container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  try {
+    await act(async () => mount(<Probe />));
+    expect(client.resources).toHaveBeenCalledTimes(2); expect(client.members).not.toHaveBeenCalled();
+    await act(async () => { jest.advanceTimersByTime(60 * 60000); window.dispatchEvent(new Event("focus")); });
+    expect(client.project).toHaveBeenCalledTimes(1); expect(client.resources).toHaveBeenCalledTimes(2);
+    await act(async () => mount(<Probe view="settings" />));
+    expect(client.members).toHaveBeenCalledTimes(1);
+    expect(client.resources.mock.calls.some((call) => call[1] === "webhooks")).toBe(false);
+    await act(async () => mount(<Probe view="webhooks" />));
+    expect(client.resources.mock.calls.filter((call) => call[1] === "webhooks")).toHaveLength(1);
+    expect(client.members).toHaveBeenCalledTimes(1); expect(state.project.id).toBe("p");
+  } finally { act(() => root.unmount()); jest.useRealTimers(); }
+});

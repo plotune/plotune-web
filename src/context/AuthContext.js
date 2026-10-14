@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect, useCallback, useRef } from '
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import api from '../services/api';
+import { clearStreamMetadataCaches } from '../StreamMVP/live/metadataCache';
 
 export const AuthContext = createContext();
 
@@ -115,6 +116,7 @@ export const AuthProvider = ({ children }) => {
           }, 100);
         } else {
           // Invalid token - clear everything
+          clearStreamMetadataCaches();
           Cookies.remove('auth_token');
           setToken(null);
           setUser(null);
@@ -124,6 +126,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Auth initialization failed:', error);
       // An unavailable auth service does not prove the session is invalid.
       if (error.response?.status === 401) {
+        clearStreamMetadataCaches();
         Cookies.remove('auth_token');
         setToken(null);
         setUser(null);
@@ -139,6 +142,7 @@ export const AuthProvider = ({ children }) => {
 
   // Enhanced login function
   const login = async (newToken, userData, remember = false) => {
+    clearStreamMetadataCaches();
     // Clean token
     const cleanToken = newToken.replace('', '');
     
@@ -166,11 +170,13 @@ export const AuthProvider = ({ children }) => {
 
   const invalidateSession = useCallback((expectedToken) => {
     if (expectedToken && expectedToken !== tokenRef.current) return;
+    clearStreamMetadataCaches();
     tokenRef.current = null; setToken(null); setUser(null); Cookies.remove('auth_token');
     Object.keys(sessionStorage).filter(key => key.startsWith('user_profile_')).forEach(key => sessionStorage.removeItem(key));
   }, []);
 
   const logout = () => {
+    clearStreamMetadataCaches();
     tokenRef.current = null; setToken(null);
     setUser(null);
     

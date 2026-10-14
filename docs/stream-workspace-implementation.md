@@ -6,9 +6,30 @@ Implements the authenticated `/stream/workspace` against [cloud PR #44](https://
 
 The live shell reuses the frozen `StreamMVP` styles, FilterPopover, Dashboard, WidgetEditor, DashboardGraph, Webhooks, ExportMenu and native dialog. `/stream/demo` continues using its own simulations, local state, early-access wrapper and analytics. The richer `/stream/prototypes/vision` is unchanged.
 
-The live workspace uses the existing Plotune account JWT and supports projects, settings, membership, project keys, owner-account usage, shared Saved Filters, dashboards/widgets, Explorer, API/MCP setup and webhook configuration/status. No mock event, simulated capture or local resource persistence is used on this route. Raw project keys remain in React memory only and disappear on refresh/sign-out; existing keys cannot be recovered. Membership adds access for a verified account email; it sends no invitation mail. Only owners/admins see management controls and request management resources.
+The live workspace uses the existing Plotune account JWT and supports projects, settings, membership, project keys, owner-account usage, shared Saved Filters, dashboards/widgets, Explorer, API/MCP setup and webhook configuration/status. No mock event or simulated capture is used on this route. Bounded local metadata snapshots accelerate reads; they do not replace authoritative shared resources. Raw project keys remain in React memory only and disappear on refresh/sign-out; existing keys cannot be recovered. Membership adds access for a verified account email; it sends no invitation mail. Only owners/admins see management controls and request management resources.
 
 A confirmed account 401 closes the workspace session. Project-key MCP failures do not invalidate the account JWT. Auth service outages do not discard an otherwise unexpired cookie. Real workspace DOM is excluded from autocapture and session recording; credentials and event payloads are not emitted as analytics events.
+
+## Cost and cache policy (owner comment on PR #6)
+
+The frontend/backend were reviewed together against cloud PR #44 head `6cef6a4`. The backend already has a byte-bounded cache of decoded immutable R2 batches, shared in-flight object loads, hot-buffer mirrors and a signed control snapshot. Event/data routes bypass Worker and D1; its 30-second control poll and stale-snapshot fail-closed checks remain unchanged. No second backend cache or cached authorization grant is introduced.
+
+Project lists and shared Filter/Dashboard definitions may be reused from account-session/API-origin scoped snapshots for 15 minutes. SessionStorage is bounded to 32 entries / 2 MiB per namespace, uses a SHA-256 session fingerprint rather than a bearer token, and falls back to memory if storage or WebCrypto is unavailable. Already displayed settings remain until explicit refresh; there is no background refresh timer. **Refresh shared settings** bypasses the snapshots. Own successful writes invalidate snapshots and retain uncached post-write verification / CAS behavior.
+
+Each initial/project/privileged-view load checks the selected project against the Worker before reading cached resource definitions. Project detail, membership roles, member lists, raw keys and webhook credentials are not persisted in these snapshots. Member lists and webhook configuration are requested only on their management screens. Account 401/403 failures evict snapshots; scoped late denials cannot clear another currently authorized project. Logout, login/session changes and current-session invalidation clear cache storage and prevent pending reads from restoring it. A transient data-plane 403 can precede control propagation: the private UI is hidden, while a one-time key stays in React memory until fresh Worker authorization proves a Member downgrade or the session becomes invalid.
+
+Application metadata request counts for an Owner on Events (excluding preflights and the existing account login/profile APIs):
+
+| Case | Before | After |
+| --- | --- | --- |
+| Cold page load | 6 | 4; management lists deferred |
+| Warm reload within TTL | 6 | 1 fresh project permission request |
+| One hour open/idle, excluding initial load | 300 plus focus reloads | 0 recurring metadata reads |
+| Explicit shared refresh | 5 plus a separately requested project list | 4, all fresh |
+
+The remaining warm request is deliberately **not zero D1**: the existing Worker performs fresh project/member lookups (including its current repeated membership lookup). These are application request counts, not claims about billed SQL rows or CPU. With empty collections the old periodic reload still performed authorization lookups for five endpoints each minute; larger lists increased row reads further. Security-sensitive reads remain fresh rather than adding unsafe permission TTLs.
+
+Visible widget refreshes move from 15 to 60 seconds (up to 4× fewer full-history refreshes). Delivery reports move from 10 to 30 seconds and pause while hidden. Usage loads on opening its menu or explicit refresh; discovery loads only for Events/Dashboards or explicit event refresh. Explorer realtime retains its five-second visible cadence but makes no hidden-tab requests. Runtime request reduction does not map directly to R2 operations: immutable-cache hits, eviction, query ranges and page counts determine actual GETs. Billed Worker/D1/R2/VPS savings still require staging measurements; capture durability, allowance enforcement and backend control synchronization are unchanged.
 
 ## Query and resource contracts
 
@@ -25,7 +46,7 @@ A confirmed account 401 closes the workspace session. Project-key MCP failures d
 | Usage/status | `GET .../usage` and admin-only `GET .../webhook-deliveries` |
 | Capture/MCP setup | Direct Go `/capture` examples; Worker `/mcp` initialize with the project key |
 
-Saved Filters are shared project resources. Temporary property changes are passed directly as conditions. Unmodified Saved Filters are queried by ID without duplicating their conditions. Widgets store IDs rather than copying definitions. Metadata refreshes on focus and every 60 seconds while visible; charts query their own saved configurations every 15 seconds while visible. New Explorer events are polled every five seconds (30 seconds while hidden) and staged until explicit refresh. Project/filter changes discard incompatible staging and pending requests.
+Saved Filters are shared project resources. Temporary property changes are passed directly as conditions. Unmodified Saved Filters are queried by ID without duplicating their conditions. Widgets store IDs rather than copying definitions. Shared settings refresh explicitly, after writes, or when a new load finds an expired 15-minute snapshot; they do not poll or refetch on focus. Charts query their saved configurations every 60 seconds while visible. New Explorer events are polled every five seconds while visible and staged until explicit refresh. Hidden tabs make no polling requests and refresh once on becoming visible. Project/filter changes discard incompatible staging and pending requests.
 
 Deleting a referenced Filter requires an explicit warning/confirmation, including references detected by the server after a stale client check. References are preserved; affected widgets report missing-filter and offer editing rather than falling back to unfiltered data. CAS prevents concurrent dashboard/widget and Saved Filter edits from silently overwriting another member's changes.
 
@@ -43,7 +64,7 @@ Discovery can be sampled/truncated; manual property and event entry remains avai
 
 ## Verification
 
-Recorded on 2026-10-14: **248 tests / 47 suites passed**; lint completed with zero errors and five existing warnings; the full default production build, all 46 prerenders and agent-content checks passed. An enabled production build also passed, and the complete synthetic browser flow passed against that production bundle (plus the local development bundle). No staging or production backend was contacted.
+Recorded on 2026-10-14: **269 tests / 50 suites passed**; lint completed with zero errors and five existing warnings; the full default production build, all 46 prerenders and agent-content checks passed. An enabled production build also passed, and the complete synthetic desktop/mobile browser flow passed against that production bundle, including cold/warm/explicit-refresh metadata request assertions. No staging or production backend was contacted.
 
 Review screenshots: [Explorer desktop](stream-workspace-qa/explorer-desktop.png), [Explorer mobile](stream-workspace-qa/explorer-mobile.png), [Dashboard desktop](stream-workspace-qa/dashboard-desktop.png), [Dashboard mobile](stream-workspace-qa/dashboard-mobile.png), [Widget editor](stream-workspace-qa/widget-editor-desktop.png).
 

@@ -1,4 +1,6 @@
-// PR #44, finalized Redis/R2 event plane. No demo data or local persistence.
+import { createMetadataCache } from "./metadataCache";
+
+// PR #44, finalized Redis/R2 event plane. Cached snapshots are not server persistence.
 export const STREAM_ORIGIN =
   process.env.REACT_APP_STREAM_API_ORIGIN || "https://stream.plotune.net";
 export const WORKSPACE_ENABLED =
@@ -108,6 +110,7 @@ export function createStreamClient(
     fetcher = fetch,
     timeout = 15000,
     onUnauthorized = () => {},
+    cacheOptions,
   } = {},
 ) {
   const url = new URL(origin);
@@ -121,6 +124,7 @@ export function createStreamClient(
   )
     throw new Error("Stream requires a HTTPS API origin.");
   const authorization = `Bearer ${String(token || "").replace(/^Bearer\s+/i, "")}`;
+  const cache = createMetadataCache(url.origin, authorization, cacheOptions);
   const metadata = (projectId, suffix = "") =>
     `/v1/projects/${encoded(projectId)}${suffix}`;
   const data = (projectId, suffix) =>
@@ -162,9 +166,15 @@ export function createStreamClient(
             `Stream request failed (${response.status}).`,
           response.headers?.get("Retry-After"),
         );
+      if (method !== "GET" && /^\/v1\/projects(?:\/|$)/.test(path)) await cache.invalidate();
       return result;
     } catch (error) {
       if (error instanceof StreamFailure) {
+        if ([401, 403].includes(error.status) && key === undefined) {
+          const scope = path.match(/^\/v1\/(?:data\/)?projects\/([^/]+)/);
+          error.projectId = scope ? decodeURIComponent(scope[1]) : null;
+          await cache.authorizationFailed(error);
+        }
         if (error.status === 401 && key === undefined) onUnauthorized();
         throw error;
       }
@@ -283,9 +293,11 @@ export function createStreamClient(
   return {
     origin: url.origin,
     request,
+    subscribeAuthorizationFailure: (listener) => cache.subscribe(listener),
+    clearMetadataCache: () => cache.invalidate(),
     pages,
     query: pageRequest,
-    projects: (signal) => request("/v1/projects", { signal }),
+    projects: (signal, { useCache = false } = {}) => cache.read("/v1/projects", () => request("/v1/projects", { signal }), { useCache, signal }),
     project: (id, signal) => request(metadata(id), { signal }),
     createProject: (name) =>
       request("/v1/projects", { method: "POST", body: { name } }),
@@ -299,8 +311,8 @@ export function createStreamClient(
         method: remove ? "DELETE" : "PUT",
         body: { revision, ...(!remove ? { role } : {}) },
       }),
-    resources: (id, kind, signal) =>
-      request(metadata(id, `/${kind}`), { signal }),
+    resources: (id, kind, signal, { useCache = false } = {}) =>
+      cache.read(metadata(id, `/${kind}`), () => request(metadata(id, `/${kind}`), { signal }), { useCache, signal }),
     saveResource: (id, kind, record, existing) =>
       request(
         metadata(id, `/${kind}${existing ? `/${encoded(record.id)}` : ""}`),

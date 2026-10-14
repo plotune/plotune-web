@@ -179,10 +179,12 @@ async function main() {
       url: origin,
     },
   ]);
+  const metadataCalls = [];
   await context.route("**/*", async (route) => {
     const req = route.request(),
       u = new URL(req.url());
     if (u.origin === origin) return route.continue();
+    if (req.method() !== "OPTIONS" && u.pathname.startsWith("/v1/projects")) metadataCalls.push(`${req.method()} ${u.pathname}`);
     const respond = (data, status = 200) =>
       route.fulfill({
         status,
@@ -414,6 +416,7 @@ async function main() {
     }
   });
   const page = await context.newPage();
+  await page.clock.install();
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(`${origin}/stream/workspace?project=${project.id}`);
@@ -421,6 +424,17 @@ async function main() {
     .getByRole("button", { name: "motor.sample", exact: true })
     .first()
     .waitFor();
+  console.log("QA: Cache-first metadata request counts");
+  assert.equal(metadataCalls.length, 4, "Cold Events view loads no admin-only lists");
+  const beforeReload = metadataCalls.length;
+  await page.reload();
+  await page.getByRole("button", { name: "motor.sample", exact: true }).first().waitFor();
+  assert.equal(metadataCalls.length - beforeReload, 1, "Warm reload keeps a fresh permission check and reuses shared snapshots");
+  const beforeRefresh = metadataCalls.length;
+  await page.getByRole("button", { name: "Refresh shared settings", exact: true }).click();
+  await page.getByRole("button", { name: "Refresh shared settings", exact: true }).waitFor();
+  await page.waitForFunction(() => ![...document.querySelectorAll("button")].find((button) => button.textContent === "Refresh shared settings")?.disabled);
+  assert.equal(metadataCalls.length - beforeRefresh, 4, "Explicit refresh bypasses shared metadata snapshots");
   await page.screenshot({
     path: path.join(output, "explorer-desktop.png"),
     fullPage: false,
@@ -597,6 +611,7 @@ async function main() {
   };
   dashboards[0].revision++;
   project.revision++;
+  await page.clock.fastForward(60000);
   await page
     .getByRole("heading", { name: "Drone failure events", exact: true })
     .waitFor({ timeout: 25000 });
@@ -727,6 +742,8 @@ async function main() {
   assert(members.some((m) => m.email === "member@example.test"));
   await page.getByRole("button", { name: "Webhooks", exact: true }).click();
   await page.getByRole("button", { name: "Add webhook", exact: true }).click();
+  // Management screens no longer fetch event discovery just to populate suggestions.
+  await page.getByRole("textbox", { name: "Custom event name", exact: true }).fill("motor.sample");
   await page
     .getByRole("textbox", { name: "Webhook URL", exact: true })
     .fill("https://automation.example.test/events");

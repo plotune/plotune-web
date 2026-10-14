@@ -36,6 +36,7 @@ import LiveExplorer, { Failure } from "./LiveExplorer";
 import RemoteGraph from "./RemoteGraph";
 import ProjectSettings from "./ProjectSettings";
 import ConnectionSetup from "./ConnectionSetup";
+import { pollWhileVisible } from "./visiblePolling";
 import logo from "../../assets/logo.png";
 import "../../StreamWorkspace/workspace.css";
 import "../mvp.css";
@@ -141,10 +142,18 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [createOpen, setCreateOpen] = useState(false);
   const [name, setName] = useState("");
   const [createError, setCreateError] = useState(null);
-  const metadata = useWorkspaceMetadata(client, requestedProject);
   const view = NAV.some(([id]) => id === params.get("view"))
     ? params.get("view")
     : "events";
+  const metadata = useWorkspaceMetadata(client, requestedProject, ["settings", "webhooks"].includes(view) ? view : null);
+  const [refreshingShared, setRefreshingShared] = useState(false);
+  const refreshShared = async () => {
+    setRefreshingShared(true);
+    // Check the selected project first; a denied scope must not cancel the fresh
+    // project list that lets a member choose another accessible project.
+    try { await metadata.reload(); await metadata.loadProjects(); }
+    finally { setRefreshingShared(false); }
+  };
   const dashboardId = params.get("dashboard");
   const filterId = params.get("filter");
   const location = useCallback(
@@ -174,13 +183,11 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [deliveries, setDeliveries] = useState([]);
   const [deliveryError, setDeliveryError] = useState(null);
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
+  const [usageRefresh, setUsageRefresh] = useState(0);
+  const needsDiscovery = view === "events" || view === "dashboards";
   useEffect(() => {
     setDiscoveryState({});
-    setUsage(null);
-    setUsageError(null);
-    setDeliveries([]);
-    setDeliveryError(null);
-    if (!project?.id) return undefined;
+    if (!project?.id || !needsDiscovery) return undefined;
     const controller = new AbortController();
     client
       .discovery(project.id, controller.signal)
@@ -190,26 +197,19 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
       .catch((error) => {
         if (!controller.signal.aborted) setDiscoveryState({ error });
       });
-    const loadUsage = () =>
-      client
-        .usage(project.id, controller.signal)
-        .then((result) => {
-          if (!controller.signal.aborted) {
-            setUsage(result);
-            setUsageError(null);
-          }
-        })
-        .catch((error) => {
-          if (!controller.signal.aborted) setUsageError(error);
-        });
-    loadUsage();
-    const timer = setInterval(loadUsage, 30000);
-    return () => {
-      controller.abort();
-      clearInterval(timer);
-    };
-  }, [client, project?.id, discoveryRefresh]);
+    return () => controller.abort();
+  }, [client, project?.id, needsDiscovery, discoveryRefresh]);
   useEffect(() => {
+    setUsage(null); setUsageError(null);
+    if (!project?.id || !accountOpen) return undefined;
+    const controller = new AbortController();
+    client.usage(project.id, controller.signal).then((result) => {
+      if (!controller.signal.aborted) setUsage(result);
+    }).catch((error) => { if (!controller.signal.aborted) setUsageError(error); });
+    return () => controller.abort();
+  }, [client, project?.id, accountOpen, usageRefresh]);
+  useEffect(() => {
+    setDeliveries([]); setDeliveryError(null);
     if (!project?.id || view !== "webhooks" || metadata.role === "Member")
       return undefined;
     const controller = new AbortController();
@@ -225,11 +225,10 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
         .catch((error) => {
           if (!controller.signal.aborted) setDeliveryError(error);
         });
-    load();
-    const timer = setInterval(load, 10000);
+    const stop = pollWhileVisible(load, 30000);
     return () => {
       controller.abort();
-      clearInterval(timer);
+      stop();
     };
   }, [client, project?.id, view, metadata.role]);
   const retryDiscovery = () => setDiscoveryRefresh((r) => r + 1);
@@ -323,7 +322,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 <small>Project owner's account allowance</small>
               </p>
             )}
-            <Failure error={usageError} retry={retryDiscovery} />
+            <Failure error={usageError} retry={() => setUsageRefresh((value) => value + 1)} />
+            <button className="sw-link" onClick={() => setUsageRefresh((value) => value + 1)}>Refresh usage</button>
             <button className="sw-link" onClick={logout}>
               Sign out
             </button>
@@ -413,18 +413,19 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               {view === "events"
                 ? "Inspect event names, timestamps, and your own JSON properties."
                 : view === "dashboards"
-                  ? "Shared views for persistent observation."
+                  ? "Shared views for persistent observation. Charts refresh once a minute while visible."
                   : "Configure your project once and use it repeatedly."}
             </p>
+            <p className="mvp-muted">Shared settings refresh on request. Saved Filters apply the latest shared conditions.</p>
           </div>
+          <button className="sw-button" disabled={refreshingShared || metadata.busy || metadata.loading} onClick={refreshShared}>
+            {refreshingShared ? "Refreshing…" : "Refresh shared settings"}
+          </button>
         </div>
         <div className="sw-content">
           <Failure
             error={metadata.error}
-            retry={() => {
-              metadata.loadProjects();
-              metadata.reload();
-            }}
+            retry={refreshShared}
           />
           {metadata.projectsLoading || metadata.loading ? (
             <p role="status">Loading your workspace…</p>

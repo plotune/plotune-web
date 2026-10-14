@@ -4,6 +4,7 @@ import { Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { buildWidgetSeries } from "../widgetModel";
 import { collectEvents } from "./client";
 import { Failure } from "./LiveExplorer";
+import { pollWhileVisible } from "./visiblePolling";
 
 export default function RemoteGraph({
   client,
@@ -24,17 +25,12 @@ export default function RemoteGraph({
     filters,
   });
   useEffect(() => {
-    let disposed = false,
-      timer;
+    let disposed = false;
     const controller = new AbortController();
     setState((old) => old.definition === definition
       ? { ...old, loading: true, error: null }
       : { loading: true, definition });
     const load = async () => {
-      if (document.visibilityState === "hidden") {
-        timer = setTimeout(load, 15000);
-        return;
-      }
       setState((old) => ({ ...old, loading: true, error: null }));
       try {
         const result = await collectEvents(
@@ -67,13 +63,12 @@ export default function RemoteGraph({
         if (!disposed && error.name !== "AbortError")
           setState((old) => ({ ...old, loading: false, error, ...(error.widget ? { widget: error.widget, result: null } : {}) }));
       }
-      if (!disposed) timer = setTimeout(load, 15000);
     };
-    load();
+    const stop = pollWhileVisible(load, 60000);
     return () => {
       disposed = true;
       controller.abort();
-      clearTimeout(timer);
+      stop();
     };
   }, [client, projectId, dashboard.id, definition, retry, widget]);
   if (state.error || !state.result)
