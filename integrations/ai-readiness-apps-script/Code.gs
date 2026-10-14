@@ -63,6 +63,20 @@ const ORDER_HEADERS = [
 const ORDER_EMAILS_COLUMN = ORDER_HEADERS.indexOf('Emails') + 1;
 const ORDER_OFFERS = { rent: 'Rent', buy: 'Buy' };
 
+// The price list the sheet and the emails use. The endpoint is public, so amounts sent by a browser
+// are never trusted: every amount is computed here from the offer, the months and the support
+// choice. Keep in step with src/utils/nexusOffer.js (same OFFER_VERSION); a request made with any
+// other version is still saved, priced from this list, and its version column says so.
+const OFFER = {
+  version: '2026-10-launch',
+  rentMonthly: 350,
+  minMonths: 1,
+  maxMonths: 24,
+  deposit: function (months) { return months > 12 ? 175 : months > 6 ? 350 : 700; },
+  buyPrice: 3500,
+  supportYearly: 350,
+};
+
 
 /** Opening the web app URL in a browser lands here: a quick "is it deployed?" check. */
 function doGet() {
@@ -217,22 +231,23 @@ function handleOrder_(data, email, raw) {
   if (!offer) return json_({ ok: false, error: 'bad_offer' });
   const country = clean_(data.country, 80);
   if (!country) return json_({ ok: false, error: 'missing_country' });
-  const months = offer === 'rent' ? Math.min(60, Math.max(1, toInt_(data.months) || 1)) : '';
+  const months = offer === 'rent' ? Math.min(OFFER.maxMonths, Math.max(OFFER.minMonths, toInt_(data.months) || 1)) : '';
   const quote = data.quote || {};
+  const clientVersion = clean_(data.offerVersion, 40);
   const attr = data.attribution || {};
   const o = {
     receivedAt: new Date(),
     email: email,
     offer: offer,
     months: months,
-    monthly: offer === 'rent' ? toInt_(quote.monthly) : '',
-    total: offer === 'rent' ? toInt_(quote.total) : '',
-    deposit: offer === 'rent' ? toInt_(quote.deposit) : '',
-    price: offer === 'buy' ? toInt_(quote.price) : '',
-    supportYearly: offer === 'buy' ? toInt_(quote.supportYearly) : '',
-    withSupport: offer === 'buy' && quote.withSupport === true,
+    monthly: offer === 'rent' ? OFFER.rentMonthly : '',
+    total: offer === 'rent' ? OFFER.rentMonthly * months : '',
+    deposit: offer === 'rent' ? OFFER.deposit(months) : '',
+    price: offer === 'buy' ? OFFER.buyPrice : '',
+    supportYearly: offer === 'buy' ? OFFER.supportYearly : '',
+    withSupport: offer === 'buy' && quote.withSupport === true, // a choice, not an amount
     country: country,
-    offerVersion: clean_(data.offerVersion, 40),
+    offerVersion: clientVersion === OFFER.version ? OFFER.version : OFFER.version + ' (page sent: ' + (clientVersion || 'none') + ')',
     platform: clean_(attr.platform, 40),
     entrySource: clean_(attr.entry_source, 80),
     utmSource: clean_(attr.utm_source, 80),

@@ -34,6 +34,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
   const countryRef = useRef(null);
   const doneRef = useRef(null);
   const submissionRef = useRef({ key: null, id: null });
+  const [sent, setSent] = useState(null); // what was actually submitted, for the confirmation
 
   useEffect(() => {
     if ((status === 'sent' || status === 'preview') && doneRef.current) doneRef.current.focus();
@@ -70,6 +71,9 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
     const key = [email.trim().toLowerCase(), country.trim(), offer, JSON.stringify(quote)].join('|');
     if (submissionRef.current.key !== key) submissionRef.current = { key, id: newSubmissionId() };
 
+    // A filled honeypot means a bot: the server discards it but still answers ok, so it must not be
+    // counted as a request or a Google Ads conversion.
+    const honeypot = honeypotRef.current ? honeypotRef.current.value : '';
     setStatus('sending');
     const outcome = await postLead(buildOrderPayload({
       email, country, offer,
@@ -77,16 +81,17 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       quote,
       offerVersion: OFFER_VERSION,
       funnel: getFunnelContext(),
-      website: honeypotRef.current ? honeypotRef.current.value : '',
+      website: honeypot,
       submissionId: submissionRef.current.id,
     }));
-    const googleAdsConversion = outcome.status === 'sent' ? trackGoogleAdsOrderRequestConversion(submissionRef.current.id) : false;
+    const saved = outcome.status === 'sent' && !honeypot;
+    const googleAdsConversion = saved ? trackGoogleAdsOrderRequestConversion(submissionRef.current.id) : false;
     track('pricing_request_submitted', {
       offer,
       months: offer === 'rent' ? months : null,
       with_support: offer === 'buy' ? Boolean(quote.withSupport) : null,
       country: country.trim().slice(0, 80),
-      delivery: outcome.status, // sent | not_configured | error
+      delivery: honeypot ? 'ignored' : outcome.status, // sent | not_configured | error | ignored
       google_ads_conversion: googleAdsConversion,
     });
     if (outcome.status === 'error') {
@@ -94,6 +99,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       setSendError(true);
       return;
     }
+    setSent({ summary, email: email.trim(), country: country.trim() });
     setStatus(outcome.status === 'sent' ? 'sent' : 'preview');
     onDone();
   };
@@ -104,12 +110,12 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
         {status === 'sent' ? (
           <>
             <h2 ref={doneRef} tabIndex={-1}>Request received</h2>
-            <p>{summary}.</p>
+            <p>{sent.summary}.</p>
             <p>
               We&apos;ll email{' '}
               {/* ph-no-capture: keep the address out of session replays. */}
-              <span className="ph-no-capture">{email.trim()}</span> {REPLY_TIME} with availability, the exact tax and
-              shipping for {country.trim()}, and the invoice. Nothing is charged until you approve it.
+              <span className="ph-no-capture">{sent.email}</span> {REPLY_TIME} with availability, the exact tax and
+              shipping for {sent.country}, and the invoice. Nothing is charged until you approve it.
             </p>
           </>
         ) : (

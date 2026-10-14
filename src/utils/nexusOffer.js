@@ -1,7 +1,8 @@
-// Plotune Nexus offer: the one place the public prices and rental terms live. The /nexus offer
-// section, its cost calculator and the order-request payload all read from here, so a price change
-// is a change to this file only (bump OFFER_VERSION so requests in the sheet show which terms the
-// visitor saw).
+// Plotune Nexus offer: the one place the site's prices and rental terms live. /nexus/pricing, its
+// cost calculator and the order-request payload all read from here. The Apps Script that records
+// requests prices them from its own copy (OFFER in integrations/ai-readiness-apps-script/Code.gs),
+// because amounts sent by a browser can't be trusted: change both together and bump OFFER_VERSION,
+// so the sheet shows which terms each visitor saw.
 //
 // All amounts are USD, excluding VAT / sales tax, shipping and any import duties: those depend on
 // the destination country and are quoted personally before payment.

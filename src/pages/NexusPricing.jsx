@@ -101,6 +101,7 @@ const NexusPricing = () => {
 
   // New step: top of the page, focus on the heading (no keyboard pop-up on phones), step timer.
   useEffect(() => {
+    if (step !== STEPS.request) setRequestDone(false); // left the sent form (e.g. phone Back): a new request is possible
     window.clearTimeout(timerRef.current);
     stepEnteredAtRef.current = Date.now();
     advancedFromRef.current = null;
@@ -183,7 +184,7 @@ const NexusPricing = () => {
         </div>
         <div className="pricing-progress" aria-hidden="true"><span style={{ width: `${(step / LAST_STEP) * 100}%` }} /></div>
 
-        {step > STEPS.choose && !requestDone && (
+        {step > STEPS.choose && !(requestDone && step === STEPS.request) && (
           <div className="pricing-topbar">
             <button type="button" className="pricing-back" onClick={handleBack}>← Back</button>
             <span className="pricing-chip">{summary}</span>

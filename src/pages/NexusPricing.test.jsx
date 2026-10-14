@@ -129,3 +129,18 @@ test('a reload restores the choices; a deep link past step 1 without an offer st
   ));
   expect(container.textContent).toContain('Step 1 of 4');
 });
+
+test('a filled honeypot (bot) is sent for the server to discard, but never counted as a request or conversion', async () => {
+  postLead.mockResolvedValue({ status: 'sent' }); // the server answers ok to bots on purpose
+  render();
+  pick('Buy Nexus');
+  click(byText('Continue'));
+  click(byText('Request this offer'));
+  setValue('#order-email', 'bot@spam.example');
+  setValue('#order-country', 'Nowhere');
+  setValue('input[name="hp_extra_field"]', 'http://spam');
+  await submit();
+  expect(postLead.mock.calls[0][0].website).toBe('http://spam');
+  expect(trackGoogleAdsOrderRequestConversion).not.toHaveBeenCalled();
+  expect(calls('pricing_request_submitted')[0]).toMatchObject({ delivery: 'ignored', google_ads_conversion: false });
+});
