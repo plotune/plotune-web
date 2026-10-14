@@ -496,7 +496,8 @@ export default function LiveExplorer({
       <p className="mvp-muted">
         History follows the project retention policy. Browser exports retrieve
         all matches in a stable snapshot, up to 10,000 events or 32 MB. No
-        partial export is downloaded.
+        partial export is downloaded. CSV/TSV prefix formula-like strings with
+        an apostrophe; JSON retains original values.
       </p>
       {detail && (
         <Dialog

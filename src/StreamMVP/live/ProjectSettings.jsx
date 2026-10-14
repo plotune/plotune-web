@@ -6,13 +6,13 @@ export default function ProjectSettings({ client, metadata }) {
   const { project, members, role, mutate, busy } = metadata;
   const [name, setName] = useState(project.name);
   const [baseRevision, setBaseRevision] = useState(project.revision);
-  const [renameConflict, setRenameConflict] = useState(false);
+  const [pendingNameRebase, setPendingNameRebase] = useState(false);
   useEffect(() => {
-    if (renameConflict && project.revision !== baseRevision) {
+    if (pendingNameRebase && project.revision !== baseRevision) {
       setBaseRevision(project.revision);
-      setRenameConflict(false);
+      setPendingNameRebase(false);
     }
-  }, [renameConflict, project.revision, baseRevision]);
+  }, [pendingNameRebase, project.revision, baseRevision]);
   const [email, setEmail] = useState("");
   const [memberRole, setMemberRole] = useState("Member");
   const [error, setError] = useState(null);
@@ -23,9 +23,10 @@ export default function ProjectSettings({ client, metadata }) {
     setMessage("");
     try {
       await mutate(operation);
+      if (!rename) setPendingNameRebase(true);
       done?.();
     } catch (cause) {
-      if (rename && cause.status === 409) setRenameConflict(true);
+      if (rename && cause.status === 409) setPendingNameRebase(true);
       setError(cause);
     }
   };
@@ -38,7 +39,7 @@ export default function ProjectSettings({ client, metadata }) {
             const refreshed = await metadata.reload(undefined, true);
             if (refreshed) {
               setBaseRevision(refreshed.revision);
-              setRenameConflict(false);
+              setPendingNameRebase(false);
             }
             setError(null);
           } catch (cause) {
@@ -55,7 +56,7 @@ export default function ProjectSettings({ client, metadata }) {
             perform(
               () => client.renameProject(project.id, name.trim(), baseRevision),
               () => {
-                setRenameConflict(false);
+                setPendingNameRebase(false);
                 setBaseRevision(null);
                 setMessage("Project name saved.");
               },

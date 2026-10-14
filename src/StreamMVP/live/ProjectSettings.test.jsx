@@ -71,3 +71,45 @@ test("explicit refresh after a successful rename with failed verification adopts
   act(() => root.unmount());
   container.remove();
 });
+
+test.each(["add", "role", "remove"])("successful member %s keeps a pending name draft and advances its rename revision", async (change) => {
+  let server = { id: "p", name: "Original", revision: 1 };
+  const client = {
+    member: jest.fn(async () => { server = { ...server, revision: server.revision + 1 }; }),
+    renameProject: jest.fn(async (id, name, revision) => { expect(revision).toBe(server.revision); server = { ...server, name, revision: revision + 1 }; }),
+  };
+  function Probe() {
+    const [project, setProject] = useState(server);
+    return <ProjectSettings client={client} metadata={{ project, members: [{ email: "colleague@example.com", role: "Member" }], role: "Owner", busy: false,
+      mutate: async (operation) => { await operation(); setProject(server); },
+      reload: async () => { setProject(server); return server; },
+    }} />;
+  }
+  const container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  document.body.appendChild(container);
+  const confirm = jest.spyOn(window, "confirm").mockReturnValue(true);
+  const type = (input, value) => act(() => {
+    const prototype = input.tagName === "SELECT" ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype, "value").set.call(input, value);
+    input.dispatchEvent(new Event(input.tagName === "SELECT" ? "change" : "input", { bubbles: true }));
+  });
+  try {
+    await act(async () => mount(<Probe />));
+    const name = container.querySelector('input[maxlength="64"]');
+    type(name, "My pending name");
+    if (change === "add") {
+      type(container.querySelector('input[type="email"]'), "new@example.com");
+      await act(async () => container.querySelector(".mvp-invite-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
+    } else if (change === "role") {
+      await act(async () => type(container.querySelector('[aria-label="Role for colleague@example.com"]'), "Admin"));
+    } else {
+      await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Remove").click());
+    }
+    expect(client.member).toHaveBeenCalledTimes(1);
+    expect(name.value).toBe("My pending name");
+    await act(async () => container.querySelector(".mvp-settings-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
+    expect(client.renameProject).toHaveBeenLastCalledWith("p", "My pending name", 2);
+  } finally {
+    act(() => root.unmount()); container.remove(); confirm.mockRestore();
+  }
+});

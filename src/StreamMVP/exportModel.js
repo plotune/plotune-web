@@ -29,7 +29,13 @@ function cellValue(value) {
 }
 
 export function escapeDelimited(value, delimiter) {
-  const text = cellValue(value);
+  // Spreadsheet importers can execute quoted formulas. Preserve string cells
+  // as literals, including markers after leading whitespace/control characters.
+  // Actual negative numbers remain numeric; JSON exports remain untouched.
+  // eslint-disable-next-line no-control-regex -- Spreadsheet importers ignore leading controls.
+  const text = typeof value === "string" && /^[\s\u0000-\u001f]*[=+@-]/u.test(value)
+    ? `'${value}`
+    : cellValue(value);
   return text.includes(delimiter) || /["\r\n]/.test(text)
     ? `"${text.replace(/"/g, '""')}"`
     : text;
