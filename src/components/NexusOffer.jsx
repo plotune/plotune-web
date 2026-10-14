@@ -20,6 +20,20 @@ const TIMINGS = [
 ];
 const OFFER_LABEL = { rent: 'Rent', buy: 'Buy' };
 
+// Shown beside the form: what a request commits the visitor to (nothing until they approve).
+const NEXT_STEPS = {
+  rent: [
+    ['We confirm the details', `Availability, tax, shipping and any import duties for your country, ${REPLY_TIME}.`],
+    ['You approve the invoice', 'First month and the refundable deposit. Nothing is charged before you approve.'],
+    ['We ship Nexus ready to connect', 'Return it when the project ends; the deposit comes back after the return check.'],
+  ],
+  buy: [
+    ['We confirm the details', `Availability, tax, shipping and any import duties for your country, ${REPLY_TIME}.`],
+    ['You approve the invoice', 'Nothing is charged before you approve. Add the support plan now or later.'],
+    ['We ship Nexus ready to connect', 'Yours to keep, with the setup guide and software updates.'],
+  ],
+};
+
 // Analytics: choices and outcomes only. Never the email or company name (personal data); the
 // country is kept because it decides tax and shipping and is not personal on its own.
 const track = (event, properties = {}) => {
@@ -227,6 +241,14 @@ const NexusOffer = () => {
 
       {offer && (
         <div className="offer-form-wrap">
+          <aside className="offer-steps" aria-label="What happens next">
+            <p className="technical-label">What happens next</p>
+            <ol>
+              {NEXT_STEPS[offer].map(([title, copy], i) => (
+                <li key={title}><span>0{i + 1}</span><div><strong>{title}</strong><div>{copy}</div></div></li>
+              ))}
+            </ol>
+          </aside>
           {status === 'sent' || status === 'preview' ? (
             <div className="offer-done" role="status">
               {status === 'sent' ? (
