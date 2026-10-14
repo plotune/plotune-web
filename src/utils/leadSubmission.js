@@ -1,12 +1,13 @@
 import { ATTRIBUTION_KEYS, getAttribution } from './attribution';
 
 // ---------------------------------------------------------------------------------------------
-// Lead submission transport, shared by the AI readiness assessment and the contact form.
+// Lead submission transport, shared by the AI readiness assessment, the contact form and the Nexus
+// order request.
 //
-// Both post to the same Google Apps Script web app (integrations/ai-readiness-apps-script/Code.gs,
-// URL in REACT_APP_AI_READINESS_ENDPOINT, see .env.production). The script tells the two apart by
-// the payload's `kind` ('contact'; assessment payloads have none) and files them in separate tabs
-// of the same Google Sheet ("Leads" and "Contact").
+// All post to the same Google Apps Script web app (integrations/ai-readiness-apps-script/Code.gs,
+// URL in REACT_APP_AI_READINESS_ENDPOINT, see .env.production). The script tells them apart by
+// the payload's `kind` ('contact', 'order'; assessment payloads have none) and files them in
+// separate tabs of the same Google Sheet ("Leads", "Contact" and "Orders").
 //
 // postLead() resolves to one of three honest statuses:
 //   'not_configured' -- no endpoint is set; NOTHING was sent or stored. The UI says so.
@@ -86,6 +87,29 @@ export const buildContactPayload = ({ email, message, topic = null, funnel = {},
   email: email.trim(),
   message: message.trim().slice(0, 3000),
   topic,
+  page: window.location.pathname,
+  attribution: readAttribution(funnel),
+  submittedAt: new Date().toISOString(),
+  submissionId,
+  website,
+});
+
+// Nexus rent / buy request (src/components/NexusOffer.jsx). No payment is taken: the request is
+// saved, and we confirm availability, tax and shipping and send an invoice. The quoted amounts
+// travel with it so the sheet shows exactly what the visitor saw (offerVersion says which terms).
+export const buildOrderPayload = ({
+  email, company = '', country = '', timing = '', offer, months = null, quote = null,
+  offerVersion = '', funnel = {}, website = '', submissionId = '',
+}) => ({
+  kind: 'order',
+  email: email.trim(),
+  company: company.trim().slice(0, 120),
+  country: country.trim().slice(0, 80),
+  timing,
+  offer,
+  months: offer === 'rent' ? months : null,
+  quote,
+  offerVersion,
   page: window.location.pathname,
   attribution: readAttribution(funnel),
   submittedAt: new Date().toISOString(),
