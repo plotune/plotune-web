@@ -462,12 +462,12 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                   dashboards={metadata.dashboards}
                   activeFilterId={filterId}
                   onSelectFilter={(filter) => location({ filter })}
-                  saveFilter={async (filterName, conditions, id, baseline) => {
+                  saveFilter={async (filterName, conditions, id, baseline, creationId) => {
                     const base =
                       baseline || metadata.filters.find((f) => f.id === id);
                     const saved = await save(
                       "filters",
-                      { id: id || newId(), name: filterName, conditions },
+                      { id: id || creationId || newId(), name: filterName, conditions },
                       base,
                     );
                     location({ filter: saved.id });

@@ -334,13 +334,14 @@ export default function LiveExplorer({
                 JSON.stringify(saved.conditions) !== JSON.stringify(next),
             );
           }}
-          onSave={async (filterName, next, id) => {
+          onSave={async (filterName, next, id, creationId) => {
             try {
               await saveFilter(
                 filterName,
                 next,
                 id,
                 id === activeFilterId ? filterDraft.current.base : undefined,
+                creationId,
               );
               // The reload has returned the saved revision. Resume selection by ID
               // and let the draft effect adopt it as the next edit's CAS baseline.

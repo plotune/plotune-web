@@ -14,6 +14,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
     () => discoveredEventNames || [...new Set(events.map((event) => event.event))].sort(),
     [events, discoveredEventNames],
   );
+  const [creationId] = useState(() => `hook-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`);
   const [eventChoice, setEventChoice] = useState(eventNames[0] || CUSTOM_EVENT);
   const [customEvent, setCustomEvent] = useState("");
   const [url, setUrl] = useState("");
@@ -31,7 +32,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
     setBusy(true);
-    try { await onCreate(createWebhookRecord(draft)); onClose(); } catch (cause) { setErrors({ submit: cause.message }); } finally { setBusy(false); }
+    try { await onCreate(createWebhookRecord(draft, creationId)); onClose(); } catch (cause) { setErrors({ submit: cause.message }); } finally { setBusy(false); }
   };
 
   return (

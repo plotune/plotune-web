@@ -7,7 +7,7 @@ import WidgetChart from "./WidgetChart";
 const EMPTY = { title: "", eventName: "", visualization: "line", measureProperty: "", filterId: "", breakdownProperty: "", range: "1h" };
 
 export default function WidgetEditor({ widget, events, filters, now, onSave, onClose, discovery, loadPreview, onReload }) {
-  const [draft, setDraft] = useState(() => ({ ...EMPTY, ...widget, filterId: widget?.filterId || "" }));
+  const [draft, setDraft] = useState(() => ({ ...EMPTY, ...widget, id: widget?.id || `widget-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`, filterId: widget?.filterId || "" }));
   const [more, setMore] = useState(!!(widget?.filterId || widget?.breakdownProperty || widget?.title || (widget?.range && widget.range !== "1h")));
   const [remote, setRemote] = useState(null);
   const [error, setError] = useState("");
@@ -36,7 +36,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
     if (!canSave) return;
     setBusy(true); setError("");
     try { await onSave({ ...draft,
-      id: draft.id || `widget-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
+      id: draft.id,
       title: (draft.title.trim() || (draft.visualization === "count" ? `${draft.eventName} count` : `${draft.eventName}.${numeric}`)).slice(0, 64),
       filterId: draft.filterId || null,
       measureProperty: draft.visualization === "count" ? "" : numeric,

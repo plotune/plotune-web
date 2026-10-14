@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowLeft, FiMoreHorizontal, FiPlus } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import DashboardGraph from "./DashboardGraph";
@@ -20,6 +20,7 @@ export default function Dashboard({
   const [widgetConflict, setWidgetConflict] = useState(false);
   const action = async (operation) => { setError(""); try { await operation(); } catch (cause) { setError(cause.message); } };
   const [createOpen, setCreateOpen] = useState(false);
+  const creationId = useRef(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [editingWidget, setEditingWidget] = useState(null);
@@ -34,13 +35,15 @@ export default function Dashboard({
 
   const create = async (event) => {
     event.preventDefault();
+    creationId.current ||= `${projectId}-dashboard-${Date.now()}`;
     const newDashboard = {
-      id: `${projectId}-dashboard-${Date.now()}`,
+      id: creationId.current,
       name: name.trim(), description: description.trim(), widgets: [], updatedAt: new Date().toISOString(),
     };
     setBusy(true); setError("");
     try { await onCreate(newDashboard); } catch (cause) { setError(cause.message); setBusy(false); return; }
     setBusy(false);
+    creationId.current = null;
     setName(""); setDescription(""); setCreateOpen(false); onOpen(newDashboard.id);
   };
   const editWidget = (widget = null) => { setEditingWidget(widget); setBaseDashboard(dashboard); setWidgetConflict(false); setWidgetOpen(true); };
@@ -69,12 +72,12 @@ export default function Dashboard({
           </button>
         </Panel>)}
       </div> : <div className="mvp-dashboard-empty mvp-dashboard-collection-empty"><h2>No dashboards yet</h2><p>Create a project dashboard to keep useful event views together.</p></div>}
-      {createOpen && <Dialog title="New dashboard" subtitle="Create a shared dashboard for this project." onClose={() => setCreateOpen(false)}>
+      {createOpen && <Dialog title="New dashboard" subtitle="Create a shared dashboard for this project." onClose={() => { creationId.current = null; setCreateOpen(false); }}>
         <form className="sw-detail-body mvp-dashboard-create" onSubmit={create}>
           {error && <p role="alert">{error}</p>}
           <label>Name<input autoFocus required maxLength={64} value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Robot validation" /></label>
           <label>Description <span>Optional</span><textarea maxLength={180} rows={3} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="What should this dashboard help you observe?" /></label>
-          <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={() => setCreateOpen(false)}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!name.trim() || busy}>Create dashboard</button></div>
+          <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={() => { creationId.current = null; setCreateOpen(false); }}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!name.trim() || busy}>Create dashboard</button></div>
         </form>
       </Dialog>}
     </section>;

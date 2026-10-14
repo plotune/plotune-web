@@ -34,6 +34,7 @@ export default function FilterPopover({
   const [saveName, setSaveName] = useState("");
   const [showSave, setShowSave] = useState(false);
   const triggerRef = useRef(null);
+  const creationId = useRef(null);
   const close = () => { setOpen(false); window.requestAnimationFrame(() => triggerRef.current?.focus()); };
   const properties = useMemo(() => discoveredProperties || discoverPropertyPaths(events), [events, discoveredProperties]);
   const matches = useMemo(() => searchPropertyPaths(properties, search).slice(0, 8), [properties, search]);
@@ -90,7 +91,9 @@ export default function FilterPopover({
     event.preventDefault();
     const trimmed = saveName.trim();
     if (!trimmed) return;
-    if (!await perform(() => onSave(trimmed, conditions))) return;
+    creationId.current ||= `filter-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+    if (!await perform(() => onSave(trimmed, conditions, undefined, creationId.current))) return;
+    creationId.current = null;
     setSaveName(""); setShowSave(false); close();
   };
 
@@ -179,7 +182,7 @@ export default function FilterPopover({
             <div className="mvp-filter-popover-foot">
               {conditions.length > 0 && <span>{conditions.length} condition{conditions.length === 1 ? "" : "s"} · AND</span>}
               {!showSave ? <button type="button" className="sw-link" disabled={!conditions.length} onClick={() => setShowSave(true)}>{activeFilterId ? "Save as new" : "Save filter"}</button> : (
-                <form onSubmit={saveCurrent}><input aria-label="Saved filter name" autoFocus placeholder="Filter name" value={saveName} onChange={(event) => setSaveName(event.target.value)} required /><button type="submit" disabled={busy}>Save</button><button type="button" onClick={() => setShowSave(false)}>Cancel</button></form>
+                <form onSubmit={saveCurrent}><input aria-label="Saved filter name" autoFocus placeholder="Filter name" value={saveName} onChange={(event) => setSaveName(event.target.value)} required /><button type="submit" disabled={busy}>Save</button><button type="button" onClick={() => { creationId.current = null; setShowSave(false); }}>Cancel</button></form>
               )}
             </div>
           </section>
