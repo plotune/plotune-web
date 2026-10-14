@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import RemoteGraph from "./RemoteGraph";
 
 test("charts aggregate and render the returned widget definition while dashboard metadata is stale", async () => {
+  jest.useFakeTimers();
   const now = "2026-10-13T12:00:00.000Z";
   const current = {
     id: "w",
@@ -73,6 +74,13 @@ test("charts aggregate and render the returned widget definition while dashboard
   );
   await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
   expect(onEdit).toHaveBeenCalledWith(current);
+  client.pages.mockImplementationOnce(async function* () { yield Promise.reject(new Error("Refresh unavailable")); });
+  await act(async () => jest.advanceTimersByTime(15000));
+  expect(container.textContent).toContain("Refresh unavailable");
+  expect(container.querySelector("h2").textContent).toBe("Drone failures");
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
+  expect(onEdit).toHaveBeenLastCalledWith(current);
   act(() => root.unmount());
+  jest.useRealTimers();
   container.remove();
 });

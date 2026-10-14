@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { Failure } from "./LiveExplorer";
 
@@ -6,18 +6,26 @@ export default function ProjectSettings({ client, metadata }) {
   const { project, members, role, mutate, busy } = metadata;
   const [name, setName] = useState(project.name);
   const [baseRevision, setBaseRevision] = useState(project.revision);
+  const [renameConflict, setRenameConflict] = useState(false);
+  useEffect(() => {
+    if (renameConflict && project.revision !== baseRevision) {
+      setBaseRevision(project.revision);
+      setRenameConflict(false);
+    }
+  }, [renameConflict, project.revision, baseRevision]);
   const [email, setEmail] = useState("");
   const [memberRole, setMemberRole] = useState("Member");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState("");
   const admin = role !== "Member";
-  const perform = async (operation, done) => {
+  const perform = async (operation, done, rename = false) => {
     setError(null);
     setMessage("");
     try {
       await mutate(operation);
       done?.();
     } catch (cause) {
+      if (rename && cause.status === 409) setRenameConflict(true);
       setError(cause);
     }
   };
@@ -25,11 +33,17 @@ export default function ProjectSettings({ client, metadata }) {
     <>
       <Failure
         error={error}
-        retry={() => {
-          setName(project.name);
-          setBaseRevision(project.revision);
-          setError(null);
-          metadata.reload();
+        retry={async () => {
+          try {
+            const refreshed = await metadata.reload(undefined, true);
+            if (renameConflict && refreshed) {
+              setBaseRevision(refreshed.revision);
+              setRenameConflict(false);
+            }
+            setError(null);
+          } catch (cause) {
+            setError(cause);
+          }
         }}
       />
       {message && <p role="status">{message}</p>}
@@ -41,9 +55,11 @@ export default function ProjectSettings({ client, metadata }) {
             perform(
               () => client.renameProject(project.id, name.trim(), baseRevision),
               () => {
+                setRenameConflict(false);
                 setBaseRevision(null);
                 setMessage("Project name saved.");
               },
+              true,
             );
           }}
         >

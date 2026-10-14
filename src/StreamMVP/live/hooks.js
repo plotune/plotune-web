@@ -20,7 +20,8 @@ export function useWorkspaceMetadata(client, projectId) {
   const selected = useRef(projectId);
   selected.current = projectId;
   const generation = useRef(0),
-    mounted = useRef(true);
+    mounted = useRef(true),
+    verifying = useRef(0);
   const invalidate = useCallback(() => {
     generation.current++;
   }, []);
@@ -52,6 +53,9 @@ export function useWorkspaceMetadata(client, projectId) {
     async (signal, propagateFailure = false) => {
       if (!projectId || selected.current !== projectId || !mounted.current)
         return;
+      // Background refresh must not supersede verification of a completed write.
+      if (!propagateFailure && verifying.current) return;
+      if (propagateFailure) verifying.current++;
       const request = ++generation.current;
       try {
         const result = await client.project(projectId, signal);
@@ -69,8 +73,10 @@ export function useWorkspaceMetadata(client, projectId) {
           selected.current !== projectId ||
           signal?.aborted ||
           !mounted.current
-        )
+        ) {
+          if (propagateFailure) throw new Error("Workspace changed while refreshing the saved resource. Refresh before retrying.");
           return;
+        }
         setDetail({
           project: result.project,
           role: result.membership.role,
@@ -86,6 +92,7 @@ export function useWorkspaceMetadata(client, projectId) {
           current.map((p) => (p.id === projectId ? result.project : p)),
         );
         setError(null);
+        return result.project;
       } catch (cause) {
         if (
           cause.name !== "AbortError" &&
@@ -97,6 +104,7 @@ export function useWorkspaceMetadata(client, projectId) {
         }
         if (propagateFailure) throw cause;
       } finally {
+        if (propagateFailure) verifying.current--;
         if (request === generation.current && mounted.current)
           setLoading(false);
       }

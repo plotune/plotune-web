@@ -34,3 +34,34 @@ test("a successful write followed by a failed reload rejects without claiming me
   expect(state.error).toBeNull();
   act(() => root.unmount());
 });
+
+test.each([false, true])("background refresh cannot invalidate a pending mutation verification (failure: %s)", async (fails) => {
+  const initial = { project: { id: "p", name: "Project", revision: 1 }, membership: { role: "Member" } };
+  const updated = { ...initial, project: { ...initial.project, revision: 2 } };
+  const client = {
+    projects: jest.fn().mockResolvedValue({ items: [initial.project] }),
+    project: jest.fn().mockResolvedValue(initial),
+    resources: jest.fn().mockResolvedValue({ items: [] }),
+  };
+  let state, finish, reject, pending, caught, resolved = false;
+  function Probe() { state = useWorkspaceMetadata(client, "p"); return null; }
+  const container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  await act(async () => mount(<Probe />));
+  client.project.mockImplementationOnce(() => new Promise((resolve, fail) => { finish = resolve; reject = fail; }));
+  await act(async () => { pending = state.mutate(async () => ({ revision: 2 })).then(() => { resolved = true; }).catch((error) => { caught = error; }); });
+  expect(client.project).toHaveBeenCalledTimes(2);
+  await act(async () => {
+    await state.reload();
+    window.dispatchEvent(new Event("focus"));
+  });
+  expect(client.project).toHaveBeenCalledTimes(2);
+  expect(resolved).toBe(false);
+  expect(state.busy).toBe(true);
+  const failure = new Error("Verification unavailable");
+  await act(async () => { if (fails) reject(failure); else finish(updated); await pending; });
+  expect(resolved).toBe(!fails);
+  expect(caught).toBe(fails ? failure : undefined);
+  expect(state.project.revision).toBe(fails ? 1 : 2);
+  expect(state.busy).toBe(false);
+  act(() => root.unmount());
+});

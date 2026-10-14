@@ -60,7 +60,7 @@ export default function RemoteGraph({
         }
       } catch (error) {
         if (!disposed && error.name !== "AbortError")
-          setState({ loading: false, error });
+          setState((old) => ({ ...old, loading: false, error }));
       }
       if (!disposed) timer = setTimeout(load, 15000);
     };
@@ -73,7 +73,7 @@ export default function RemoteGraph({
   }, [client, projectId, dashboard.id, definition, retry, widget]);
   if (state.error || !state.result)
     return (
-      <Panel title={widget.title} meta="Shared project widget">
+      <Panel title={(state.widget || widget).title} meta="Shared project widget">
         <Failure error={state.error} retry={() => setRetry((r) => r + 1)} />
         {state.loading && (
           <p className="live-pad" role="status">
