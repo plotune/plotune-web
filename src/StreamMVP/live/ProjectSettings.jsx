@@ -36,7 +36,7 @@ export default function ProjectSettings({ client, metadata }) {
         retry={async () => {
           try {
             const refreshed = await metadata.reload(undefined, true);
-            if (renameConflict && refreshed) {
+            if (refreshed) {
               setBaseRevision(refreshed.revision);
               setRenameConflict(false);
             }

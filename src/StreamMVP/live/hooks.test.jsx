@@ -65,3 +65,25 @@ test.each([false, true])("background refresh cannot invalidate a pending mutatio
   expect(state.busy).toBe(false);
   act(() => root.unmount());
 });
+
+test("switching projects during verification loads the new project immediately and isolates old errors", async () => {
+  const response = (id) => ({ project: { id, name: id, revision: 1 }, membership: { role: "Member" } });
+  const client = {
+    projects: jest.fn().mockResolvedValue({ items: [response("p").project, response("q").project] }),
+    project: jest.fn(async (id) => response(id)),
+    resources: jest.fn().mockResolvedValue({ items: [] }),
+  };
+  let state, finish, pending;
+  function Probe({ id }) { state = useWorkspaceMetadata(client, id); return null; }
+  const container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  await act(async () => mount(<Probe id="p" />));
+  client.project.mockImplementationOnce(() => new Promise((resolve) => { finish = resolve; }));
+  await act(async () => { pending = state.mutate(async () => ({})).catch(() => {}); });
+  await act(async () => mount(<Probe id="q" />));
+  expect(state.project.id).toBe("q");
+  expect(state.loading).toBe(false);
+  await act(async () => { finish(response("p")); await pending; });
+  expect(state.project.id).toBe("q");
+  expect(state.error).toBeNull();
+  act(() => root.unmount());
+});

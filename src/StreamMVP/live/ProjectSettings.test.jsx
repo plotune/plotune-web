@@ -36,3 +36,38 @@ test("rename conflict refresh retains the attempted name and retries with the re
   act(() => root.unmount());
   container.remove();
 });
+
+test("explicit refresh after a successful rename with failed verification adopts the saved revision for the next edit", async () => {
+  const initial = { id: "p", name: "Original", revision: 1 };
+  let server = initial;
+  const client = { renameProject: jest.fn(async (id, name, revision) => {
+    expect(revision).toBe(server.revision);
+    server = { ...server, name, revision: revision + 1 };
+    return server;
+  }) };
+  function Probe() {
+    const [project, setProject] = useState(initial);
+    return <ProjectSettings client={client} metadata={{ project, members: [], role: "Owner", busy: false,
+      mutate: async (operation) => { await operation(); throw new StreamFailure(503, "unavailable", "Verification unavailable"); },
+      reload: async () => { setProject(server); return server; },
+    }} />;
+  }
+  const container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  document.body.appendChild(container);
+  await act(async () => mount(<Probe />));
+  const input = container.querySelector('input[maxlength="64"]');
+  const type = (name) => act(() => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(input, name);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  const submit = () => container.querySelector("form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+  type("Saved name");
+  await act(async () => submit());
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent.includes("Retry / refresh")).click());
+  expect(input.value).toBe("Saved name");
+  type("Next name");
+  await act(async () => submit());
+  expect(client.renameProject).toHaveBeenLastCalledWith("p", "Next name", 2);
+  act(() => root.unmount());
+  container.remove();
+});

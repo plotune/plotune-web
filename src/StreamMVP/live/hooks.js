@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resourceData, uiConditions } from "./client";
 
 const empty = {
@@ -20,8 +20,8 @@ export function useWorkspaceMetadata(client, projectId) {
   const selected = useRef(projectId);
   selected.current = projectId;
   const generation = useRef(0),
-    mounted = useRef(true),
-    verifying = useRef(0);
+    mounted = useRef(true);
+  const verification = useMemo(() => ({ pending: 0 }), [client, projectId]);
   const invalidate = useCallback(() => {
     generation.current++;
   }, []);
@@ -54,8 +54,8 @@ export function useWorkspaceMetadata(client, projectId) {
       if (!projectId || selected.current !== projectId || !mounted.current)
         return;
       // Background refresh must not supersede verification of a completed write.
-      if (!propagateFailure && verifying.current) return;
-      if (propagateFailure) verifying.current++;
+      if (!propagateFailure && verification.pending) return;
+      if (propagateFailure) verification.pending++;
       const request = ++generation.current;
       try {
         const result = await client.project(projectId, signal);
@@ -104,12 +104,12 @@ export function useWorkspaceMetadata(client, projectId) {
         }
         if (propagateFailure) throw cause;
       } finally {
-        if (propagateFailure) verifying.current--;
+        if (propagateFailure) verification.pending--;
         if (request === generation.current && mounted.current)
           setLoading(false);
       }
     },
-    [client, projectId],
+    [client, projectId, verification],
   );
   useEffect(() => {
     setDetail(empty);
@@ -142,13 +142,13 @@ export function useWorkspaceMetadata(client, projectId) {
         if (mounted.current) await reload(undefined, true);
         return result;
       } catch (cause) {
-        if (mounted.current) setError(cause);
+        if (mounted.current && selected.current === projectId) setError(cause);
         throw cause;
       } finally {
         if (mounted.current) setBusy(false);
       }
     },
-    [reload],
+    [reload, projectId],
   );
   const create = async (name) => {
     setBusy(true);
