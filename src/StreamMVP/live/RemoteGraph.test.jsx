@@ -80,6 +80,16 @@ test("charts aggregate and render the returned widget definition while dashboard
   expect(container.querySelector("h2").textContent).toBe("Drone failures");
   await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
   expect(onEdit).toHaveBeenLastCalledWith(current);
+  let finishRetry;
+  client.pages.mockImplementationOnce(async function* () {
+    await new Promise((resolve) => { finishRetry = resolve; });
+    yield Promise.reject(new Error("Retry unavailable"));
+  });
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent.includes("Retry / refresh")).click());
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
+  expect(onEdit).toHaveBeenLastCalledWith(current);
+  await act(async () => finishRetry());
+  expect(container.textContent).toContain("Retry unavailable");
   act(() => root.unmount());
   jest.useRealTimers();
   container.remove();

@@ -17,6 +17,8 @@ export default function RemoteGraph({
   const [state, setState] = useState({ loading: true });
   const [retry, setRetry] = useState(0);
   const definition = JSON.stringify({
+    projectId,
+    dashboardId: dashboard.id,
     widget,
     revision: dashboard.revision,
     filters,
@@ -25,7 +27,9 @@ export default function RemoteGraph({
     let disposed = false,
       timer;
     const controller = new AbortController();
-    setState({ loading: true });
+    setState((old) => old.definition === definition
+      ? { ...old, loading: true, error: null }
+      : { loading: true, definition });
     const load = async () => {
       if (document.visibilityState === "hidden") {
         timer = setTimeout(load, 15000);
@@ -53,6 +57,7 @@ export default function RemoteGraph({
             result.now,
           );
           setState({
+            definition,
             loading: false,
             widget: authoritativeWidget,
             result: { ...series, events: [], eventCount: series.events.length },
