@@ -5,7 +5,7 @@ import FilterPopover from "../FilterPopover";
 import ExportMenu from "../ExportMenu";
 import { DASHBOARD_RANGES } from "../dashboardModel";
 import { createEventExport } from "../exportModel";
-import { collectEvents } from "./client";
+import { collectEvents, wireConditions } from "./client";
 import { useExplorer, useRealtime } from "./hooks";
 
 export function Failure({ error, retry }) {
@@ -72,10 +72,22 @@ export default function LiveExplorer({
   const [copied, setCopied] = useState(false);
   const selected = filters.find((f) => f.id === activeFilterId);
   const filterDraft = useRef({ id: activeFilterId, base: selected });
+  const conditionSignature = JSON.stringify(wireConditions(conditions));
   useEffect(() => {
     if (filterDraft.current.id !== activeFilterId || !temporary) {
       filterDraft.current = { id: activeFilterId, base: selected };
       setConditions(selected?.conditions || []);
+      setTemporary(false);
+      setSaveConflict(null);
+    } else if (
+      selected &&
+      selected.revision !== filterDraft.current.base?.revision &&
+      conditionSignature === JSON.stringify(wireConditions(selected.conditions))
+    ) {
+      // An authoritative refresh confirms this exact draft was saved, even if
+      // the write response was followed by a failed metadata verification.
+      filterDraft.current = { id: activeFilterId, base: selected };
+      setConditions(selected.conditions);
       setTemporary(false);
       setSaveConflict(null);
     } else if (
@@ -92,7 +104,7 @@ export default function LiveExplorer({
         pendingRebase: false,
       };
     }
-  }, [activeFilterId, selected, temporary, saveConflict]);
+  }, [activeFilterId, selected, temporary, saveConflict, conditionSignature]);
   const invalidTime =
     range === "custom" &&
     (!startAt ||

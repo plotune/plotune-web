@@ -508,3 +508,50 @@ test("detail loading disables copying until the dedicated endpoint returns full 
   expect(button("Copy JSON").disabled).toBe(false);
   expect(container.querySelector("pre").textContent).toContain('"fullOnly"');
 });
+
+test("refresh confirming a Saved Filter write after failed verification resumes its ID and adopts the saved revision", async () => {
+  const client = {
+    query: jest.fn().mockResolvedValue(page()),
+    realtime: jest.fn().mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+  };
+  let server = { id: "f", name: "Shared", revision: 1, conditions: [{ id: "c", path: "motor.rpm", operator: "equals", value: 1680, valueType: "number" }] };
+  const revisions = [];
+  function SharedFilter() {
+    const [filter, setFilter] = useState(server);
+    return <>
+      <button onClick={() => setFilter({ ...server, conditions: server.conditions.map((condition) => ({ ...condition, id: "rediscovered-condition" })) })}>Refresh shared metadata</button>
+      {fixture(client, { filters: [filter], activeFilterId: "f", saveFilter: async (name, conditions, id, baseline) => {
+        revisions.push(baseline.revision);
+        if (baseline.revision !== server.revision) throw new StreamFailure(409, "revision_conflict", "Stale revision");
+        server = { ...server, conditions, revision: server.revision + 1 };
+        if (revisions.length === 1) throw new StreamFailure(503, "unavailable", "Verification unavailable");
+        setFilter(server);
+      } })}
+    </>;
+  }
+  act(() => mountRoot(<SharedFilter />));
+  await flush();
+  const edit = async (value) => {
+    await click(container.querySelector('[aria-label^="Edit motor.rpm"]'));
+    type(container.querySelector('input[type="number"]'), String(value));
+    await click(button("Apply"));
+    await flush();
+  };
+  const update = async () => {
+    await click(container.querySelector(".mvp-filter-trigger"));
+    act(() => { container.querySelector(".mvp-filter-manage").open = true; });
+    await click(button("Update conditions"));
+    await flush();
+  };
+  await edit(1700);
+  await update();
+  expect(container.textContent).toContain("Verification unavailable");
+  await click(container.querySelector('.mvp-filter-popover-head [aria-label="Close filter menu"]'));
+  await click(button("Refresh shared metadata"));
+  await flush();
+  expect(container.textContent).not.toContain("Temporary changes to");
+  expect(client.query.mock.calls.at(-1)[1]).toMatchObject({ filterId: "f", conditions: [] });
+  await edit(1800);
+  await update();
+  expect(revisions).toEqual([1, 2]);
+});
