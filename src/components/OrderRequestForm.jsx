@@ -7,27 +7,23 @@ import { OFFER_VERSION } from '../utils/nexusOffer';
 
 const CONTACT_EMAIL = 'contact@plotune.net';
 export const REPLY_TIME = 'within 1 business day';
-const TIMINGS = [
-  ['asap', 'As soon as possible'],
-  ['1_month', 'Within a month'],
-  ['1_3_months', 'In 1–3 months'],
-  ['comparing', 'Just comparing costs for now'],
-];
 
 // The Nexus rent / buy request (last step of /nexus/pricing). No payment is taken: the request is
 // saved and emailed to us, and we confirm availability, tax and shipping and send an invoice --
 // said plainly next to the button so nobody expects to pay here. A saved request is the Google
 // Ads "Nexus Order Request" conversion.
 //
+// Two fields only: where to send the offer (work email; its domain already says which company)
+// and the delivery country (tax and shipping depend on it). Anything else is asked by email, not
+// in the way of the request.
+//
 // `summary` (the chosen offer in one line) is repeated on the confirmation; the page shows it above
 // the form already. `track(event, props)` is the page's analytics function. It only ever receives choices and
-// outcomes, never the email or company name; the country is kept because it decides tax and
+// outcomes, never the email address; the country is kept because it decides tax and
 // shipping and is not personal on its own.
 const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, onDone = () => {} }) => {
   const [email, setEmail] = useState('');
-  const [company, setCompany] = useState('');
   const [country, setCountry] = useState('');
-  const [timing, setTiming] = useState('');
   const [errors, setErrors] = useState({});
   const [emailFix, setEmailFix] = useState(null);
   const [status, setStatus] = useState('idle'); // idle | sending | sent | preview
@@ -71,12 +67,12 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
     if (nextErrors.country) { countryRef.current?.focus(); return; }
 
     // The same id for a retry of the same request, so a slow first reply can't make a duplicate.
-    const key = [email.trim().toLowerCase(), company.trim(), country.trim(), timing, offer, JSON.stringify(quote)].join('|');
+    const key = [email.trim().toLowerCase(), country.trim(), offer, JSON.stringify(quote)].join('|');
     if (submissionRef.current.key !== key) submissionRef.current = { key, id: newSubmissionId() };
 
     setStatus('sending');
     const outcome = await postLead(buildOrderPayload({
-      email, company, country, timing, offer,
+      email, country, offer,
       months: offer === 'rent' ? months : null,
       quote,
       offerVersion: OFFER_VERSION,
@@ -89,9 +85,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       offer,
       months: offer === 'rent' ? months : null,
       with_support: offer === 'buy' ? Boolean(quote.withSupport) : null,
-      timing: timing || null,
       country: country.trim().slice(0, 80),
-      has_company: Boolean(company.trim()),
       delivery: outcome.status, // sent | not_configured | error
       google_ads_conversion: googleAdsConversion,
     });
@@ -168,34 +162,21 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
         </div>
       )}
 
-      <div className="field-pair">
-        <div>
-          <label htmlFor="order-company">Company <span>(optional)</span></label>
-          <input id="order-company" className="ph-no-capture" type="text" autoComplete="organization" value={company} maxLength={120}
-            onChange={(e) => { setCompany(e.target.value); markStarted(); }} />
-        </div>
-        <div>
-          <label htmlFor="order-country">Country</label>
-          <input
-            id="order-country"
-            ref={countryRef}
-            type="text"
-            autoComplete="country-name"
-            value={country}
-            maxLength={80}
-            onChange={(e) => { setCountry(e.target.value); if (errors.country) setErrors((x) => ({ ...x, country: undefined })); markStarted(); }}
-            aria-invalid={errors.country ? 'true' : undefined}
-            aria-describedby={errors.country ? 'order-country-error' : undefined}
-          />
-          {errors.country && <div id="order-country-error" role="alert" className="field-error">{errors.country}</div>}
-        </div>
-      </div>
-
-      <label htmlFor="order-timing">When do you need it? <span>(optional)</span></label>
-      <select id="order-timing" value={timing} onChange={(e) => { setTiming(e.target.value); markStarted(); }}>
-        <option value="">Choose…</option>
-        {TIMINGS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-      </select>
+      <label htmlFor="order-country">Delivery country</label>
+      <input
+        id="order-country"
+        ref={countryRef}
+        type="text"
+        autoComplete="country-name"
+        value={country}
+        maxLength={80}
+        onChange={(e) => { setCountry(e.target.value); if (errors.country) setErrors((x) => ({ ...x, country: undefined })); markStarted(); }}
+        aria-invalid={errors.country ? 'true' : undefined}
+        aria-describedby={errors.country ? 'order-country-error' : 'order-country-note'}
+      />
+      {errors.country
+        ? <div id="order-country-error" role="alert" className="field-error">{errors.country}</div>
+        : <div id="order-country-note" className="field-note">For the exact tax, shipping and any import duties.</div>}
 
       {sendError && (
         <div role="alert" className="field-error offer-send-error">
@@ -205,7 +186,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       )}
 
       <button type="submit" className="design-button offer-submit" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Sending…' : 'Send request ↗'}
+        {status === 'sending' ? 'Sending…' : 'Send me the offer ↗'}
       </button>
       {status === 'sending' && <div className="offer-fineprint" role="status">This can take a few seconds.</div>}
       <div className="offer-fineprint">

@@ -52,7 +52,7 @@ const saveChoices = (choices) => {
   }
 };
 
-// Analytics: steps, choices and outcomes only (never the email or company name).
+// Analytics: steps, choices and outcomes only (never the email address).
 const track = (event, properties = {}) => {
   posthog.capture(event, { ...getFunnelContext(), path: '/nexus/pricing', offer_version: OFFER_VERSION, ...properties });
 };

@@ -55,14 +55,14 @@ const CONTACT_EMAILS_COLUMN = CONTACT_HEADERS.indexOf('Emails') + 1;
 
 const ORDER_HEADERS = [
   'Received at', 'Email', 'Offer', 'Months', 'Monthly USD', 'Total USD', 'Deposit USD', 'Price USD', 'Support plan',
-  'Company', 'Country', 'When', 'Offer version', 'Status',
+  'Country', 'Offer version', 'Status',
   'Platform', 'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term',
   'Google click id', 'Google campaign id', 'LinkedIn click id', 'Ad landing page', 'Referrer',
   'Submission ID', 'Emails', 'Raw JSON',
 ];
 const ORDER_EMAILS_COLUMN = ORDER_HEADERS.indexOf('Emails') + 1;
 const ORDER_OFFERS = { rent: 'Rent', buy: 'Buy' };
-const ORDER_TIMINGS = { asap: 'As soon as possible', '1_month': 'Within a month', '1_3_months': 'In 1-3 months', comparing: 'Just comparing costs' };
+
 
 /** Opening the web app URL in a browser lands here: a quick "is it deployed?" check. */
 function doGet() {
@@ -231,9 +231,7 @@ function handleOrder_(data, email, raw) {
     price: offer === 'buy' ? toInt_(quote.price) : '',
     supportYearly: offer === 'buy' ? toInt_(quote.supportYearly) : '',
     withSupport: offer === 'buy' && quote.withSupport === true,
-    company: clean_(data.company, 120),
     country: country,
-    timing: ORDER_TIMINGS[data.timing] || '',
     offerVersion: clean_(data.offerVersion, 40),
     platform: clean_(attr.platform, 40),
     entrySource: clean_(attr.entry_source, 80),
@@ -252,7 +250,7 @@ function handleOrder_(data, email, raw) {
   const row = saveRow_(ORDER_SHEET_NAME, ORDER_HEADERS, o.submissionId, [
     o.receivedAt, o.email, ORDER_OFFERS[o.offer], o.months, o.monthly, o.total, o.deposit, o.price,
     o.offer === 'buy' ? (o.withSupport ? 'Yes ($' + o.supportYearly + '/year)' : 'No') : '',
-    o.company, o.country, o.timing, o.offerVersion, 'New',
+    o.country, o.offerVersion, 'New',
     o.platform, o.entrySource, o.utmSource, o.utmMedium, o.utmCampaign, o.utmContent, o.utmTerm,
     o.gclid, o.gadCampaignId, o.liFatId, o.adLandingPath, o.referrer,
     o.submissionId, 'sending…', raw.slice(0, 5000),
@@ -287,9 +285,7 @@ function notifyOwnerOrder_(o) {
         '(prices excl. tax and shipping; offer ' + o.offerVersion + ')',
         '',
         'Email:            ' + o.email,
-        'Company:          ' + (o.company || '-'),
         'Country:          ' + o.country,
-        'When:             ' + (o.timing || '-'),
         '',
         '---',
         'Came from:        ' + (o.platform || o.entrySource || 'unknown') + (o.gadCampaignId ? '  (Google campaign ' + o.gadCampaignId + ')' : ''),
@@ -612,9 +608,7 @@ function runTestOrder() {
     offer: 'rent',
     months: 3,
     quote: { monthly: 350, total: 1050, deposit: 700, currency: 'USD' },
-    company: 'TEST',
     country: 'United Kingdom',
-    timing: 'asap',
     offerVersion: 'TEST',
     attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/nexus/' },
     submissionId: 'test-order-' + new Date().getTime(),

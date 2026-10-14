@@ -98,14 +98,12 @@ export const buildContactPayload = ({ email, message, topic = null, funnel = {},
 // saved, and we confirm availability, tax and shipping and send an invoice. The quoted amounts
 // travel with it so the sheet shows exactly what the visitor saw (offerVersion says which terms).
 export const buildOrderPayload = ({
-  email, company = '', country = '', timing = '', offer, months = null, quote = null,
+  email, country = '', offer, months = null, quote = null,
   offerVersion = '', funnel = {}, website = '', submissionId = '',
 }) => ({
   kind: 'order',
   email: email.trim(),
-  company: company.trim().slice(0, 120),
   country: country.trim().slice(0, 80),
-  timing,
   offer,
   months: offer === 'rent' ? months : null,
   quote,

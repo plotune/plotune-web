@@ -66,8 +66,9 @@ test('rent: choose, set the length (deposit tier), see the terms, request; every
   expect(container.textContent).toContain('Refundable deposit of $350 for 8 months');
   click(byText('Request this offer'));
   expect(heading()).toBe('Where should we send the offer?');
+  // Only what the offer needs: where to send it and where it ships.
+  expect([...container.querySelectorAll('form input:not([name="hp_extra_field"]), form select, form textarea')].map((el) => el.id)).toEqual(['order-email', 'order-country']);
   setValue('#order-email', 'Eng@Corp.com');
-  setValue('#order-company', 'Acme Robotics');
   setValue('#order-country', 'United Kingdom');
   await submit();
   expect(postLead.mock.calls[0][0]).toMatchObject({
@@ -80,7 +81,6 @@ test('rent: choose, set the length (deposit tier), see the terms, request; every
   expect(calls('pricing_request_submitted')[0]).toMatchObject({ offer: 'rent', months: 8, delivery: 'sent', google_ads_conversion: true });
   const analytics = JSON.stringify(posthog.capture.mock.calls);
   expect(analytics).not.toContain('Eng@Corp.com');
-  expect(analytics).not.toContain('Acme');
 });
 
 test('buy: the support plan choice changes the first-year total and travels with the request', async () => {

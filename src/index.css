@@ -181,6 +181,7 @@ img { max-width: 100%; }
 .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
 .field-hint { min-height: 24px; margin-top: 4px; font-size: 13px; line-height: 1.6; color: #526067; }
 .field-hint button { padding: 10px 0; margin: -10px 0; border: 0; background: none; color: var(--teal); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.field-note { margin-top: 6px; color: #7a868b; font-size: 12px; line-height: 1.6; }
 .field-error { margin-top: 4px; color: #b03a2e; font-size: 13px; line-height: 1.6; }
 .offer-send-error { margin-top: 16px; }
 .offer-send-error a { text-decoration: underline; }
