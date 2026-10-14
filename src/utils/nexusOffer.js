@@ -51,3 +51,11 @@ export const quote = (months) => {
 export const BUY_PAYS_OFF_AFTER_MONTHS = Math.floor(BUY.price / RENT.monthly) + 1;
 
 export const usd = (amount) => `$${Number(amount).toLocaleString('en-US')}`;
+
+// What buying costs in the first year, with or without the optional support plan.
+export const buyQuote = (withSupport) => ({
+  price: BUY.price,
+  supportYearly: BUY.supportYearly,
+  withSupport: Boolean(withSupport),
+  firstYear: BUY.price + (withSupport ? BUY.supportYearly : 0),
+});

@@ -4,7 +4,7 @@
  * Three kinds of submissions, filed in separate tabs of the Google Sheet this script is attached to:
  *   - AI readiness assessment leads (https://www.plotune.net/ai-readiness)  -> "Leads" tab
  *   - Contact-form messages (https://www.plotune.net/contact, kind: 'contact') -> "Contact" tab
- *   - Nexus rent / buy requests (https://www.plotune.net/nexus, kind: 'order') -> "Orders" tab
+ *   - Nexus rent / buy requests (https://www.plotune.net/nexus/pricing, kind: 'order') -> "Orders" tab
  * For each: 1. add one row to its tab, 2. email NOTIFY_EMAIL a summary (Reply goes straight to the
  * visitor), 3. optionally email the visitor a short confirmation (SEND_CONFIRMATION_TO_VISITOR).
  *
@@ -54,7 +54,7 @@ const CONTACT_HEADERS = [
 const CONTACT_EMAILS_COLUMN = CONTACT_HEADERS.indexOf('Emails') + 1;
 
 const ORDER_HEADERS = [
-  'Received at', 'Email', 'Offer', 'Months', 'Monthly USD', 'Total USD', 'Deposit USD', 'Price USD',
+  'Received at', 'Email', 'Offer', 'Months', 'Monthly USD', 'Total USD', 'Deposit USD', 'Price USD', 'Support plan',
   'Company', 'Country', 'When', 'Offer version', 'Status',
   'Platform', 'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term',
   'Google click id', 'Google campaign id', 'LinkedIn click id', 'Ad landing page', 'Referrer',
@@ -230,6 +230,7 @@ function handleOrder_(data, email, raw) {
     deposit: offer === 'rent' ? toInt_(quote.deposit) : '',
     price: offer === 'buy' ? toInt_(quote.price) : '',
     supportYearly: offer === 'buy' ? toInt_(quote.supportYearly) : '',
+    withSupport: offer === 'buy' && quote.withSupport === true,
     company: clean_(data.company, 120),
     country: country,
     timing: ORDER_TIMINGS[data.timing] || '',
@@ -250,6 +251,7 @@ function handleOrder_(data, email, raw) {
   };
   const row = saveRow_(ORDER_SHEET_NAME, ORDER_HEADERS, o.submissionId, [
     o.receivedAt, o.email, ORDER_OFFERS[o.offer], o.months, o.monthly, o.total, o.deposit, o.price,
+    o.offer === 'buy' ? (o.withSupport ? 'Yes ($' + o.supportYearly + '/year)' : 'No') : '',
     o.company, o.country, o.timing, o.offerVersion, 'New',
     o.platform, o.entrySource, o.utmSource, o.utmMedium, o.utmCampaign, o.utmContent, o.utmTerm,
     o.gclid, o.gadCampaignId, o.liFatId, o.adLandingPath, o.referrer,
@@ -266,7 +268,7 @@ function handleOrder_(data, email, raw) {
 function orderSummary_(o) {
   return o.offer === 'rent'
     ? 'Rent for ' + o.months + ' month' + (o.months === 1 ? '' : 's') + ': $' + o.monthly + '/month, $' + o.total + ' in total, + $' + o.deposit + ' refundable deposit'
-    : 'Buy: $' + o.price + ' one-time (optional support plan $' + o.supportYearly + '/year)';
+    : 'Buy: $' + o.price + ' one-time' + (o.withSupport ? ' + support plan $' + o.supportYearly + '/year' : ' (no support plan)');
 }
 
 /** Returns 'sent' or 'failed'. */

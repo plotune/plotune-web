@@ -94,7 +94,7 @@ export const buildContactPayload = ({ email, message, topic = null, funnel = {},
   website,
 });
 
-// Nexus rent / buy request (src/components/NexusOffer.jsx). No payment is taken: the request is
+// Nexus rent / buy request (/nexus/pricing, src/components/OrderRequestForm.jsx). No payment is taken: the request is
 // saved, and we confirm availability, tax and shipping and send an invoice. The quoted amounts
 // travel with it so the sheet shows exactly what the visitor saw (offerVersion says which terms).
 export const buildOrderPayload = ({

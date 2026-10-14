@@ -13,7 +13,9 @@ const { attributionEventProperties, captureAttribution } = require('./utils/attr
 //    any pageview on another path re-arms it, so leaving for /nexus and coming back counts again.
 // Everything else -- rageclicks, scroll depth, replay, every other page -- is untouched.
 const isAssessmentPath = (path) => /^\/ai-readiness(\/|$)/.test(path);
-let lastPageviewWasAssessment = false;
+// /nexus/pricing moves between its steps the same way, so its repeat pageviews are dropped too.
+const stepFlowOf = (path) => (isAssessmentPath(path) ? 'ai-readiness' : /^\/nexus\/pricing(\/|$)/.test(path) ? 'nexus-pricing' : null);
+let lastPageviewFlow = null;
 
 function filterAssessmentNoise(captureResult) {
   if (!captureResult || typeof window === 'undefined') return captureResult;
@@ -22,15 +24,16 @@ function filterAssessmentNoise(captureResult) {
   if (captureResult.event === '$autocapture' && onAssessment) return null;
 
   if (captureResult.event === '$pageview') {
-    const isRepeat = onAssessment && lastPageviewWasAssessment;
-    lastPageviewWasAssessment = onAssessment;
+    const flow = stepFlowOf(window.location.pathname);
+    const isRepeat = flow !== null && flow === lastPageviewFlow;
+    lastPageviewFlow = flow;
     if (isRepeat) return null;
   }
   return captureResult;
 }
 
 // Test hook: the filter keeps one bit of module state.
-const resetAssessmentNoiseFilter = () => { lastPageviewWasAssessment = false; };
+const resetAssessmentNoiseFilter = () => { lastPageviewFlow = null; };
 
 // Every event carries the visit's ad/campaign attribution as attr_* properties (see
 // utils/attribution.js), so pages reached after the landing page -- /contact, the email click,
