@@ -49,7 +49,7 @@ export function useWorkspaceMetadata(client, projectId) {
     return () => abort.abort();
   }, [loadProjects]);
   const reload = useCallback(
-    async (signal) => {
+    async (signal, propagateFailure = false) => {
       if (!projectId || selected.current !== projectId || !mounted.current)
         return;
       const request = ++generation.current;
@@ -95,6 +95,7 @@ export function useWorkspaceMetadata(client, projectId) {
           setError(cause);
           if ([401, 403, 404].includes(cause.status)) setDetail(empty);
         }
+        if (propagateFailure) throw cause;
       } finally {
         if (request === generation.current && mounted.current)
           setLoading(false);
@@ -130,7 +131,7 @@ export function useWorkspaceMetadata(client, projectId) {
       setError(null);
       try {
         const result = await operation();
-        if (mounted.current) await reload();
+        if (mounted.current) await reload(undefined, true);
         return result;
       } catch (cause) {
         if (mounted.current) setError(cause);

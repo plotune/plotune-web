@@ -104,3 +104,25 @@ test("widget conflict refresh retains its draft and merges into the latest dashb
   act(() => root.unmount());
   container.remove();
 });
+
+test("opening a remotely refreshed chart edits its authoritative definition rather than stale dashboard metadata", async () => {
+  const stale = { id: "w", title: "Old title", eventName: "motor.sample", visualization: "count", chartType: "bar", range: "1h", filterId: null, breakdownProperty: "", measureProperty: "" };
+  const current = { ...stale, title: "Current title", eventName: "drone.error", filterId: "failed", range: "24h", breakdownProperty: "code" };
+  const save = jest.fn();
+  const container = document.createElement("div"), root = createRoot(container);
+  document.body.appendChild(container);
+  const mount = root.render.bind(root);
+  await act(async () => mount(<Dashboard
+    projectId="p" events={[]} now="2026-10-13T12:00:00.000Z"
+    dashboards={[{ id: "d", name: "Shared", revision: 1, widgets: [stale] }]}
+    filters={[{ id: "failed", name: "Failed", conditions: [] }]} selectedDashboardId="d"
+    onSaveWidget={save}
+    renderGraph={(widget, edit) => <button key={widget.id} onClick={() => edit(current)}>Edit refreshed chart</button>}
+  />));
+  await act(async () => container.querySelector(".mvp-dashboard-grid button").click());
+  expect(container.querySelector('dialog input[maxlength="64"]').value).toBe("Current title");
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Save widget").click());
+  expect(save.mock.calls[0][1]).toMatchObject(current);
+  act(() => root.unmount());
+  container.remove();
+});

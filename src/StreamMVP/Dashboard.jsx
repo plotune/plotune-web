@@ -89,7 +89,7 @@ export default function Dashboard({
     {dashboard.description && <p className="mvp-dashboard-description">{dashboard.description}</p>}
     {dashboard.widgets?.length ? <div className="mvp-dashboard-grid">
       {dashboard.widgets.map((widget) => {
-        const edit = () => editWidget(widget);
+        const edit = (current) => editWidget(current?.id ? current : widget);
         const remove = () => { if (window.confirm(`Remove “${widget.title || widget.eventName}” from this dashboard?`)) action(() => onRemoveWidget(dashboard.id, widget.id)); };
         return renderGraph ? renderGraph(widget, edit, remove) : <DashboardGraph key={widget.id} widget={widget} events={events} filters={filters} now={now} onEdit={edit} onRemove={remove} />;
       })}

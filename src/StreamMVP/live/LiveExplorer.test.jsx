@@ -476,3 +476,35 @@ test("Clear all removes custom UTC bounds instead of reusing a hidden cleared wi
   expect(client.query).toHaveBeenCalledTimes(count);
   expect(container.textContent).toContain("Choose a start and an end");
 });
+
+test("detail retrieval failure never exposes or copies the selected page row as full JSON", async () => {
+  const client = {
+    query: jest.fn().mockResolvedValue(page([event])),
+    realtime: jest.fn().mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+    event: jest.fn().mockRejectedValue(new Error("Full event unavailable")),
+  };
+  act(() => mountRoot(fixture(client)));
+  await flush();
+  await click(button("motor.sample"));
+  const dialog = container.querySelector('[role="dialog"], dialog');
+  expect(dialog.textContent).toContain("Full event unavailable");
+  expect(dialog.querySelector("pre")).toBeNull();
+  expect(button("Copy JSON").disabled).toBe(true);
+});
+
+test("detail loading disables copying until the dedicated endpoint returns full properties", async () => {
+  let resolveDetail;
+  const client = {
+    query: jest.fn().mockResolvedValue(page([event])),
+    realtime: jest.fn().mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+    event: jest.fn(() => new Promise((resolve) => { resolveDetail = resolve; })),
+  };
+  act(() => mountRoot(fixture(client)));
+  await flush();
+  await click(button("motor.sample"));
+  expect(button("Copy JSON").disabled).toBe(true);
+  expect(container.textContent).toContain("Loading complete event JSON");
+  await act(async () => resolveDetail({ ...event, properties: { fullOnly: { value: null } } }));
+  expect(button("Copy JSON").disabled).toBe(false);
+  expect(container.querySelector("pre").textContent).toContain('"fullOnly"');
+});

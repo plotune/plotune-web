@@ -68,6 +68,7 @@ export default function LiveExplorer({
   const [saveConflict, setSaveConflict] = useState(null);
   const [detail, setDetail] = useState(null);
   const [detailError, setDetailError] = useState(null);
+  const [fullDetail, setFullDetail] = useState(null);
   const [copied, setCopied] = useState(false);
   const selected = filters.find((f) => f.id === activeFilterId);
   const filterDraft = useRef({ id: activeFilterId, base: selected });
@@ -161,10 +162,12 @@ export default function LiveExplorer({
     if (!detail?.id) return undefined;
     const controller = new AbortController();
     setDetailError(null);
+    setFullDetail(null);
+    setCopied(false);
     client
       .event(project.id, detail.id, controller.signal)
       .then((event) => {
-        if (!controller.signal.aborted) setDetail(event);
+        if (!controller.signal.aborted) setFullDetail(event);
       })
       .catch((error) => {
         if (!controller.signal.aborted) setDetailError(error);
@@ -432,6 +435,7 @@ export default function LiveExplorer({
                         className="sw-link sw-mono"
                         onClick={() => {
                           setCopied(false);
+                          setFullDetail(null);
                           setDetail(event);
                         }}
                       >
@@ -443,6 +447,7 @@ export default function LiveExplorer({
                         className="sw-link live-properties"
                         onClick={() => {
                           setCopied(false);
+                          setFullDetail(null);
                           setDetail(event);
                         }}
                       >
@@ -488,15 +493,16 @@ export default function LiveExplorer({
         >
           <div className="sw-detail-body">
             <Failure error={detailError} />
-            <pre className="sw-code" tabIndex={0}>
-              {JSON.stringify(detail, null, 2)}
-            </pre>
+            {fullDetail ? <pre className="sw-code" tabIndex={0}>
+              {JSON.stringify(fullDetail, null, 2)}
+            </pre> : !detailError && <p role="status">Loading complete event JSON…</p>}
             <button
               className="sw-button"
+              disabled={!fullDetail}
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(
-                    JSON.stringify(detail, null, 2),
+                    JSON.stringify(fullDetail, null, 2),
                   );
                   setCopied(true);
                 } catch {

@@ -80,7 +80,7 @@ export default function RemoteGraph({
             Loading matching events…
           </p>
         )}
-        <button className="sw-link live-pad" onClick={onEdit}>
+        <button className="sw-link live-pad" onClick={() => onEdit(state.widget || widget)}>
           Edit widget
         </button>
       </Panel>
@@ -98,7 +98,7 @@ export default function RemoteGraph({
         filters={filters}
         now={Date.now()}
         data={state.result}
-        onEdit={onEdit}
+        onEdit={() => onEdit(state.widget)}
         onRemove={onRemove}
       />
     </div>

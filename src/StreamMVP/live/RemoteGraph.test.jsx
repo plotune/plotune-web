@@ -24,6 +24,7 @@ test("charts aggregate and render the returned widget definition while dashboard
     breakdownProperty: "sw_version",
     range: "1h",
   };
+  const onEdit = jest.fn();
   const client = {
     pages: jest.fn(async function* () {
       yield {
@@ -54,7 +55,7 @@ test("charts aggregate and render the returned widget definition while dashboard
         dashboard={{ id: "d", revision: 1 }}
         widget={stale}
         filters={[]}
-        onEdit={() => {}}
+        onEdit={onEdit}
         onRemove={() => {}}
       />,
     ),
@@ -70,6 +71,8 @@ test("charts aggregate and render the returned widget definition while dashboard
     {},
     expect.objectContaining({ widget: { dashboardId: "d", id: "w" } }),
   );
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
+  expect(onEdit).toHaveBeenCalledWith(current);
   act(() => root.unmount());
   container.remove();
 });
