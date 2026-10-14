@@ -1,6 +1,7 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import RemoteGraph from "./RemoteGraph";
+import { createStreamClient } from "./client";
 
 test("charts aggregate and render the returned widget definition while dashboard metadata is stale", async () => {
   jest.useFakeTimers();
@@ -93,4 +94,20 @@ test("charts aggregate and render the returned widget definition while dashboard
   act(() => root.unmount());
   jest.useRealTimers();
   container.remove();
+});
+
+test("a missing-filter response opens replacement editing with its authoritative widget, without charting partial data", async () => {
+  const current = { id: "w", title: "Current drone count", eventName: "drone.error", visualization: "count", filterId: "deleted", range: "24h", breakdownProperty: "code", measureProperty: "", chartType: "bar" };
+  const stale = { ...current, title: "Old motor", eventName: "motor.sample", filterId: "real", range: "1h" };
+  const client = createStreamClient("Bearer test", { fetcher: jest.fn().mockResolvedValue({ ok: true, status: 200, headers: { get: () => null }, json: async () => ({ status: "missing-filter", widget: current, page: null }) }) });
+  const onEdit = jest.fn(), container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  document.body.appendChild(container);
+  try {
+    await act(async () => mount(<RemoteGraph client={client} projectId="p" dashboard={{ id: "d", revision: 1 }} widget={stale} filters={[]} onEdit={onEdit} />));
+    expect(container.querySelector("h2").textContent).toBe("Current drone count");
+    expect(container.textContent).toContain("Saved Filter was deleted");
+    expect(container.querySelector('[role="img"]')).toBeNull();
+    await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
+    expect(onEdit).toHaveBeenCalledWith(current);
+  } finally { act(() => root.unmount()); container.remove(); }
 });

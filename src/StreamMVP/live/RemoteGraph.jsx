@@ -65,7 +65,7 @@ export default function RemoteGraph({
         }
       } catch (error) {
         if (!disposed && error.name !== "AbortError")
-          setState((old) => ({ ...old, loading: false, error }));
+          setState((old) => ({ ...old, loading: false, error, ...(error.widget ? { widget: error.widget, result: null } : {}) }));
       }
       if (!disposed) timer = setTimeout(load, 15000);
     };

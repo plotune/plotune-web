@@ -160,13 +160,13 @@ test("widget retrieval uses saved dashboard references and handles deleted filte
   };
   const { client, fetcher } = setup(
     response({ status: "ready", widget, page: page([event("a")], "next") }),
-    response({ status: "missing-filter", widget, page: null }),
+    response({ status: "missing-filter", widget: { ...widget, filterId: "deleted", eventName: "drone.error" }, page: null }),
   );
   await expect(
     collectEvents(
       client.pages("p", {}, { widget: { dashboardId: "d", id: "w" } }),
     ),
-  ).rejects.toMatchObject({ code: "missing_filter" });
+  ).rejects.toMatchObject({ code: "missing_filter", widget: { ...widget, filterId: "deleted", eventName: "drone.error" } });
   expect(fetcher.mock.calls[0][0]).toContain("/dashboards/d/widgets/w/data");
 });
 test("changed widget definitions cannot produce a chart from incompatible pages", async () => {
@@ -186,7 +186,7 @@ test("changed widget definitions cannot produce a chart from incompatible pages"
     collectEvents(
       client.pages("p", {}, { widget: { dashboardId: "d", id: "w" } }),
     ),
-  ).rejects.toMatchObject({ code: "widget_changed" });
+  ).rejects.toMatchObject({ code: "widget_changed", widget: { id: "w", filterId: "simulation" } });
 });
 test.each([401, 403, 429, 503])(
   "status %s stays explicit without redirecting or clearing auth",
@@ -357,4 +357,16 @@ test("complete widget retrieval retains the authoritative server definition", as
   );
   expect(result.widget).toEqual(widget);
   expect(result.events).toHaveLength(2);
+});
+
+test("missing-filter responses validate widget identity before exposing replacement metadata", async () => {
+  const { client } = setup(response({ status: "missing-filter", widget: { id: "different-widget" }, page: null }));
+  await expect(collectEvents(client.pages("p", {}, { widget: { dashboardId: "d", id: "w" } })))
+    .rejects.toMatchObject({ code: "invalid_response" });
+});
+
+test("browser collection limits retain confirmed widget metadata without returning partial chart events", async () => {
+  const widget = { id: "w", title: "Current count", eventName: "drone.error", range: "24h" };
+  async function* pages() { yield { ...page([event("a"), event("b")]), widget }; }
+  await expect(collectEvents(pages(), { maxEvents: 1 })).rejects.toMatchObject({ code: "browser_limit", widget });
 });

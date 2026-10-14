@@ -219,17 +219,18 @@ export function createStreamClient(
             ),
             { method: "POST", body: payload, signal },
           );
+          if (!["ready", "missing-filter"].includes(result.status) || result.widget?.id !== widget.id)
+            throw new StreamFailure(
+              503,
+              "invalid_response",
+              "Stream returned an invalid widget definition.",
+            );
+          resolvedWidget = result.widget;
           if (result.status === "missing-filter")
             throw new StreamFailure(
               409,
               "missing_filter",
               "This widget's Saved Filter was deleted. Choose a replacement.",
-            );
-          if (result.status !== "ready" || result.widget?.id !== widget.id)
-            throw new StreamFailure(
-              503,
-              "invalid_response",
-              "Stream returned an invalid widget definition.",
             );
           const serialized = JSON.stringify(result.widget);
           if (definition !== undefined && definition !== serialized)
@@ -239,7 +240,6 @@ export function createStreamClient(
               "Widget configuration changed. Refresh its chart.",
             );
           definition = serialized;
-          resolvedWidget = result.widget;
           page = result.page;
         } else page = await pageRequest(id, payload, { limit: 100, signal });
         eventPage(page);
@@ -271,6 +271,11 @@ export function createStreamClient(
         };
         await yieldToBrowser();
       } while (cursor);
+    } catch (error) {
+      // Definition metadata is authoritative even when event retrieval cannot
+      // complete. Carry it to the editor without presenting partial chart data.
+      if (resolvedWidget) error.widget = resolvedWidget;
+      throw error;
     } finally {
       release();
     }
@@ -361,28 +366,33 @@ export async function collectEvents(
     now,
     widget;
   const encoder = new TextEncoder();
-  for await (const page of pages) {
-    if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
-    now = page.now;
-    if (page.widget) widget = page.widget;
-    for (const event of page.items) {
-      if (ids.has(event.id))
-        throw new StreamFailure(
-          503,
-          "invalid_response",
-          "Duplicate events in a snapshot. Restart retrieval.",
-        );
-      ids.add(event.id);
-      bytes += encoder.encode(JSON.stringify(event)).byteLength;
-      if (events.length >= maxEvents || bytes > maxBytes)
-        throw new StreamFailure(
-          413,
-          "browser_limit",
-          `This browser can retrieve up to ${maxEvents.toLocaleString()} matching events or ${Math.round(maxBytes / 1024 / 1024)} MB. Narrow the event or time filters and try again; no partial result was used.`,
-        );
-      events.push(event);
+  try {
+    for await (const page of pages) {
+      if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
+      now = page.now;
+      if (page.widget) widget = page.widget;
+      for (const event of page.items) {
+        if (ids.has(event.id))
+          throw new StreamFailure(
+            503,
+            "invalid_response",
+            "Duplicate events in a snapshot. Restart retrieval.",
+          );
+        ids.add(event.id);
+        bytes += encoder.encode(JSON.stringify(event)).byteLength;
+        if (events.length >= maxEvents || bytes > maxBytes)
+          throw new StreamFailure(
+            413,
+            "browser_limit",
+            `This browser can retrieve up to ${maxEvents.toLocaleString()} matching events or ${Math.round(maxBytes / 1024 / 1024)} MB. Narrow the event or time filters and try again; no partial result was used.`,
+          );
+        events.push(event);
+      }
+      onProgress(events.length, null);
     }
-    onProgress(events.length, null);
+  } catch (error) {
+    if (widget && !error.widget) error.widget = widget;
+    throw error;
   }
   return { events, now, ...(widget ? { widget } : {}) };
 }
