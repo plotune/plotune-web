@@ -59,3 +59,12 @@ export const trackGoogleAdsStreamEarlyAccessConversion = (submissionId) => track
   'plotune_gads_stream_early_access_converted',
   submissionId ? { transaction_id: submissionId } : {},
 );
+
+// "Nexus Order Request": a rent / buy request for Nexus confirmed saved by the backend (no payment
+// is taken on the site). The strongest buying signal we have, so its own action with its own value.
+const ORDER_REQUEST_SEND_TO = process.env.REACT_APP_GOOGLE_ADS_ORDER_REQUEST_SEND_TO || '';
+export const trackGoogleAdsOrderRequestConversion = (submissionId) => trackConversion(
+  ORDER_REQUEST_SEND_TO,
+  'plotune_gads_order_request_converted',
+  submissionId ? { transaction_id: submissionId } : {},
+);

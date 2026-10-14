@@ -1,9 +1,10 @@
 /**
  * Plotune AI Readiness: lead collector (Google Apps Script web app)
  *
- * Two kinds of submissions, filed in separate tabs of the Google Sheet this script is attached to:
+ * Three kinds of submissions, filed in separate tabs of the Google Sheet this script is attached to:
  *   - AI readiness assessment leads (https://www.plotune.net/ai-readiness)  -> "Leads" tab
  *   - Contact-form messages (https://www.plotune.net/contact, kind: 'contact') -> "Contact" tab
+ *   - Nexus rent / buy requests (https://www.plotune.net/nexus/pricing, kind: 'order') -> "Orders" tab
  * For each: 1. add one row to its tab, 2. email NOTIFY_EMAIL a summary (Reply goes straight to the
  * visitor), 3. optionally email the visitor a short confirmation (SEND_CONFIRMATION_TO_VISITOR).
  *
@@ -21,6 +22,7 @@ const NOTIFY_EMAIL = 'contact@plotune.net';       // who gets "new lead" emails
 const SEND_CONFIRMATION_TO_VISITOR = true;        // false = only you are emailed
 const SHEET_NAME = 'Leads';                       // assessment leads tab (created automatically)
 const CONTACT_SHEET_NAME = 'Contact';             // contact-form messages tab (created automatically)
+const ORDER_SHEET_NAME = 'Orders';                // Nexus rent / buy requests tab (created automatically)
 // -----------------------------------------------------------------------------------------
 
 const MAX_BODY_CHARS = 20000;
@@ -29,7 +31,7 @@ const MAX_CONFIRMATIONS_PER_HOUR = 20;  // global cap: the endpoint is public, s
 const DEDUPE_SECONDS = 21600;           // CacheService maximum (6 h)
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_MESSAGE_CHARS = 3000;
-const SCRIPT_VERSION = 2; // shown by doGet, so a deploy can be checked from a browser
+const SCRIPT_VERSION = 3; // shown by doGet, so a deploy can be checked from a browser
 
 const HEADERS = [
   'Received at', 'Email', 'Score %', 'Areas assessed', 'Confidence', 'Band',
@@ -51,9 +53,34 @@ const CONTACT_HEADERS = [
 ];
 const CONTACT_EMAILS_COLUMN = CONTACT_HEADERS.indexOf('Emails') + 1;
 
+const ORDER_HEADERS = [
+  'Received at', 'Email', 'Offer', 'Months', 'Monthly USD', 'Total USD', 'Deposit USD', 'Price USD', 'Support plan',
+  'Country', 'Offer version', 'Status',
+  'Platform', 'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term',
+  'Google click id', 'Google campaign id', 'LinkedIn click id', 'Ad landing page', 'Referrer',
+  'Submission ID', 'Emails', 'Raw JSON',
+];
+const ORDER_EMAILS_COLUMN = ORDER_HEADERS.indexOf('Emails') + 1;
+const ORDER_OFFERS = { rent: 'Rent', buy: 'Buy' };
+
+// The price list the sheet and the emails use. The endpoint is public, so amounts sent by a browser
+// are never trusted: every amount is computed here from the offer, the months and the support
+// choice. Keep in step with src/utils/nexusOffer.js (same OFFER_VERSION); a request made with any
+// other version is still saved, priced from this list, and its version column says so.
+const OFFER = {
+  version: '2026-10-launch',
+  rentMonthly: 350,
+  minMonths: 1,
+  maxMonths: 24,
+  deposit: function (months) { return months > 12 ? 175 : months > 6 ? 350 : 700; },
+  buyPrice: 3500,
+  supportYearly: 350,
+};
+
+
 /** Opening the web app URL in a browser lands here: a quick "is it deployed?" check. */
 function doGet() {
-  return json_({ ok: true, service: 'plotune-ai-readiness-leads', version: SCRIPT_VERSION, kinds: ['assessment', 'contact'] });
+  return json_({ ok: true, service: 'plotune-ai-readiness-leads', version: SCRIPT_VERSION, kinds: ['assessment', 'contact', 'order'] });
 }
 
 /** The website posts here. */
@@ -71,6 +98,7 @@ function doPost(e) {
     if (!EMAIL_RE.test(email)) return json_({ ok: false, error: 'invalid_email' });
 
     if (data.kind === 'contact') return handleContact_(data, email, raw);
+    if (data.kind === 'order') return handleOrder_(data, email, raw);
 
     const lead = toLead_(data, email);
     const row = saveLead_(lead, raw);  // if this throws, the site shows an error (nothing was saved)
@@ -189,6 +217,139 @@ function confirmContactVisitor_(c) {
     return 'sent';
   } catch (err) {
     console.error('confirmContactVisitor_ failed: ' + err);
+    return 'failed';
+  }
+}
+
+// ---- Nexus rent / buy requests -------------------------------------------------------------
+// No payment is taken on the site: the request is saved and you confirm availability, tax and
+// shipping by email and send the invoice. The amounts are what the visitor saw on the page
+// (offerVersion says which price list); they are a record, not a charge.
+
+function handleOrder_(data, email, raw) {
+  const offer = ORDER_OFFERS[data.offer] ? data.offer : '';
+  if (!offer) return json_({ ok: false, error: 'bad_offer' });
+  const country = clean_(data.country, 80);
+  if (!country) return json_({ ok: false, error: 'missing_country' });
+  const months = offer === 'rent' ? Math.min(OFFER.maxMonths, Math.max(OFFER.minMonths, toInt_(data.months) || 1)) : '';
+  const quote = data.quote || {};
+  const clientVersion = clean_(data.offerVersion, 40);
+  const attr = data.attribution || {};
+  const o = {
+    receivedAt: new Date(),
+    email: email,
+    offer: offer,
+    months: months,
+    monthly: offer === 'rent' ? OFFER.rentMonthly : '',
+    total: offer === 'rent' ? OFFER.rentMonthly * months : '',
+    deposit: offer === 'rent' ? OFFER.deposit(months) : '',
+    price: offer === 'buy' ? OFFER.buyPrice : '',
+    supportYearly: offer === 'buy' ? OFFER.supportYearly : '',
+    withSupport: offer === 'buy' && quote.withSupport === true, // a choice, not an amount
+    country: country,
+    offerVersion: clientVersion === OFFER.version ? OFFER.version : OFFER.version + ' (page sent: ' + (clientVersion || 'none') + ')',
+    platform: clean_(attr.platform, 40),
+    entrySource: clean_(attr.entry_source, 80),
+    utmSource: clean_(attr.utm_source, 80),
+    utmMedium: clean_(attr.utm_medium, 80),
+    utmCampaign: clean_(attr.utm_campaign, 120),
+    utmContent: clean_(attr.utm_content, 120),
+    utmTerm: clean_(attr.utm_term, 120),
+    gclid: clean_(attr.gclid || attr.gbraid || attr.wbraid, 300),
+    gadCampaignId: clean_(attr.gad_campaignid, 40),
+    liFatId: clean_(attr.li_fat_id, 300),
+    adLandingPath: clean_(attr.ad_landing_path, 120),
+    referrer: clean_(attr.referrer, 300),
+    submissionId: clean_(data.submissionId, 64),
+  };
+  const row = saveRow_(ORDER_SHEET_NAME, ORDER_HEADERS, o.submissionId, [
+    o.receivedAt, o.email, ORDER_OFFERS[o.offer], o.months, o.monthly, o.total, o.deposit, o.price,
+    o.offer === 'buy' ? (o.withSupport ? 'Yes ($' + o.supportYearly + '/year)' : 'No') : '',
+    o.country, o.offerVersion, 'New',
+    o.platform, o.entrySource, o.utmSource, o.utmMedium, o.utmCampaign, o.utmContent, o.utmTerm,
+    o.gclid, o.gadCampaignId, o.liFatId, o.adLandingPath, o.referrer,
+    o.submissionId, 'sending…', raw.slice(0, 5000),
+  ]);
+  if (row === 0) return json_({ ok: true }); // retry of a request already saved
+
+  const owner = notifyOwnerOrder_(o);
+  const visitor = confirmOrderVisitor_(o);
+  setCell_(ORDER_SHEET_NAME, ORDER_HEADERS, row, ORDER_EMAILS_COLUMN, 'owner: ' + owner + ' / visitor: ' + visitor);
+  return json_({ ok: true });
+}
+
+function orderSummary_(o) {
+  return o.offer === 'rent'
+    ? 'Rent for ' + o.months + ' month' + (o.months === 1 ? '' : 's') + ': $' + o.monthly + '/month, $' + o.total + ' in total, + $' + o.deposit + ' refundable deposit'
+    : 'Buy: $' + o.price + ' one-time' + (o.withSupport ? ' + support plan $' + o.supportYearly + '/year' : ' (no support plan)');
+}
+
+/** Returns 'sent' or 'failed'. */
+function notifyOwnerOrder_(o) {
+  try {
+    MailApp.sendEmail({
+      to: NOTIFY_EMAIL,
+      replyTo: o.email,
+      name: 'Plotune Nexus Orders',
+      subject: 'New Nexus ' + (o.offer === 'rent' ? 'rental' : 'purchase') + ' request: ' + o.email + ' (' + o.country + ')',
+      body: [
+        'New Nexus request from plotune.net. No payment was taken: confirm availability, tax and',
+        'shipping and send the invoice.',
+        '',
+        orderSummary_(o),
+        '(prices excl. tax and shipping; offer ' + o.offerVersion + ')',
+        '',
+        'Email:            ' + o.email,
+        'Country:          ' + o.country,
+        '',
+        '---',
+        'Came from:        ' + (o.platform || o.entrySource || 'unknown') + (o.gadCampaignId ? '  (Google campaign ' + o.gadCampaignId + ')' : ''),
+        'UTM:              ' + [o.utmSource, o.utmMedium, o.utmCampaign, o.utmContent].filter(String).join(' / '),
+        'First page:       ' + o.adLandingPath,
+        '',
+        'All requests: ' + SpreadsheetApp.getActiveSpreadsheet().getUrl(),
+        '',
+        'Hit Reply to answer the requester directly.',
+      ].join('\n'),
+    });
+    return 'sent';
+  } catch (err) {
+    console.error('notifyOwnerOrder_ failed: ' + err);
+    return 'failed';
+  }
+}
+
+/** Returns 'sent', 'off', 'skipped (...)' or 'failed'. */
+function confirmOrderVisitor_(o) {
+  if (!SEND_CONFIRMATION_TO_VISITOR) return 'off';
+  try {
+    const skip = confirmationLimit_('order-confirmed:', o.email);
+    if (skip) return skip;
+    MailApp.sendEmail({
+      to: o.email,
+      replyTo: NOTIFY_EMAIL,
+      name: 'Plotune',
+      subject: 'Your Plotune Nexus ' + (o.offer === 'rent' ? 'rental' : 'purchase') + ' request',
+      body: [
+        'Hi,',
+        '',
+        'Thanks for your interest in Plotune Nexus. We received your request:',
+        '',
+        orderSummary_(o),
+        'Delivery country: ' + o.country,
+        '',
+        'Nothing has been charged. Within 1 business day we will email you availability, the exact',
+        'tax, shipping and any import duties for ' + o.country + ', and an invoice for you to approve.',
+        '',
+        'Questions about your bench or setup? Just reply to this email.',
+        '',
+        'The Plotune team',
+        'https://www.plotune.net/nexus',
+      ].join('\n'),
+    });
+    return 'sent';
+  } catch (err) {
+    console.error('confirmOrderVisitor_ failed: ' + err);
     return 'failed';
   }
 }
@@ -449,6 +610,23 @@ function runTestContact() {
     page: '/contact',
     attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/nexus/' },
     submissionId: 'test-contact-' + new Date().getTime(),
+  };
+  const out = doPost({ postData: { contents: JSON.stringify(sample) } });
+  Logger.log(out.getContent());
+}
+
+/** Like runTest, for the Nexus rent / buy request: adds one TEST row to the "Orders" tab (delete it after). */
+function runTestOrder() {
+  const sample = {
+    kind: 'order',
+    email: NOTIFY_EMAIL,
+    offer: 'rent',
+    months: 3,
+    quote: { monthly: 350, total: 1050, deposit: 700, currency: 'USD' },
+    country: 'United Kingdom',
+    offerVersion: 'TEST',
+    attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/nexus/' },
+    submissionId: 'test-order-' + new Date().getTime(),
   };
   const out = doPost({ postData: { contents: JSON.stringify(sample) } });
   Logger.log(out.getContent());

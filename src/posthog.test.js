@@ -59,8 +59,21 @@ describe('filterAssessmentNoise', () => {
     expect(filterAssessmentNoise({ event: '$pageview' })).not.toBeNull();
   });
 
+  test('the Nexus pricing steps count one pageview per visit too, and keep their clicks', () => {
+    at('/nexus/pricing/?from=nexus_pricing_band');
+    const first = { event: '$pageview' };
+    expect(filterAssessmentNoise(first)).toBe(first);
+    expect(filterAssessmentNoise({ event: '$pageview' })).toBeNull();
+    const click = { event: '$autocapture' };
+    expect(filterAssessmentNoise(click)).toBe(click);
+    at('/ai-readiness'); // a different step flow is a new page
+    expect(filterAssessmentNoise({ event: '$pageview' })).not.toBeNull();
+    at('/nexus/pricing');
+    expect(filterAssessmentNoise({ event: '$pageview' })).not.toBeNull();
+  });
+
   test('never touches other pages: repeat pageviews and autocapture pass, incl. look-alike paths', () => {
-    ['/', '/nexus', '/ai-readiness-fake', '/research/ai-readiness'].forEach((path) => {
+    ['/', '/nexus', '/ai-readiness-fake', '/research/ai-readiness', '/nexus/pricing-old'].forEach((path) => {
       at(path);
       const click = { event: '$autocapture' };
       const view1 = { event: '$pageview' };
