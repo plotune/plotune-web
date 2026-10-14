@@ -113,3 +113,30 @@ test.each(["add", "role", "remove"])("successful member %s keeps a pending name 
     act(() => root.unmount()); container.remove(); confirm.mockRestore();
   }
 });
+
+test("pristine project names follow refreshed metadata while active drafts retain their original conflict protection", async () => {
+  let server = { id: "p", name: "Original", revision: 1 };
+  const client = { renameProject: jest.fn().mockRejectedValue(new StreamFailure(409, "revision_conflict", "Project changed")) };
+  function Probe() {
+    const [project, setProject] = useState(server);
+    return <>
+      <button onClick={() => { server = { ...server, name: `Colleague ${server.revision + 1}`, revision: server.revision + 1 }; setProject(server); }}>Refresh project</button>
+      <ProjectSettings client={client} metadata={{ project, members: [], role: "Owner", busy: false, mutate: async (operation) => operation(), reload: async () => server }} />
+    </>;
+  }
+  const container = document.createElement("div"), root = createRoot(container), mount = root.render.bind(root);
+  document.body.appendChild(container);
+  try {
+    await act(async () => mount(<Probe />));
+    const refresh = () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Refresh project").click();
+    await act(async () => refresh());
+    const input = container.querySelector('input[maxlength="64"]');
+    expect(input.value).toBe("Colleague 2");
+    expect([...container.querySelectorAll("button")].find((button) => button.textContent === "Save name").disabled).toBe(true);
+    act(() => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(input, "My draft"); input.dispatchEvent(new Event("input", { bubbles: true })); });
+    await act(async () => refresh());
+    expect(input.value).toBe("My draft");
+    await act(async () => container.querySelector(".mvp-settings-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
+    expect(client.renameProject).toHaveBeenCalledWith("p", "My draft", 2);
+  } finally { act(() => root.unmount()); container.remove(); }
+});

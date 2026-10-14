@@ -6,13 +6,18 @@ export default function ProjectSettings({ client, metadata }) {
   const { project, members, role, mutate, busy } = metadata;
   const [name, setName] = useState(project.name);
   const [baseRevision, setBaseRevision] = useState(project.revision);
+  const [nameDirty, setNameDirty] = useState(false);
   const [pendingNameRebase, setPendingNameRebase] = useState(false);
   useEffect(() => {
-    if (pendingNameRebase && project.revision !== baseRevision) {
+    if (!nameDirty) {
+      setName(project.name);
+      setBaseRevision(project.revision);
+      setPendingNameRebase(false);
+    } else if (pendingNameRebase && project.revision !== baseRevision) {
       setBaseRevision(project.revision);
       setPendingNameRebase(false);
     }
-  }, [pendingNameRebase, project.revision, baseRevision]);
+  }, [nameDirty, pendingNameRebase, project.name, project.revision, baseRevision]);
   const [email, setEmail] = useState("");
   const [memberRole, setMemberRole] = useState("Member");
   const [error, setError] = useState(null);
@@ -58,6 +63,7 @@ export default function ProjectSettings({ client, metadata }) {
               () => {
                 setPendingNameRebase(false);
                 setBaseRevision(null);
+                setNameDirty(false);
                 setMessage("Project name saved.");
               },
               true,
@@ -73,6 +79,7 @@ export default function ProjectSettings({ client, metadata }) {
               value={name}
               onChange={(e) => {
                 if (baseRevision === null) setBaseRevision(project.revision);
+                setNameDirty(e.target.value !== project.name);
                 setName(e.target.value);
               }}
             />
