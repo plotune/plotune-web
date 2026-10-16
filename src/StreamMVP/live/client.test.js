@@ -217,7 +217,8 @@ test("capture snippets escape manual keys and use the configured API origin", ()
     "https://local.example",
   );
   expect(snippet).toContain("https://local.example/capture");
-  expect(snippet).not.toContain("device_id");
+  expect(snippet).toContain("device_id");
+  expect(snippet).toContain("session_id");
   expect(captureExample("cURL", "a'b", "https://local.example")).toContain(
     `'"'"'`,
   );

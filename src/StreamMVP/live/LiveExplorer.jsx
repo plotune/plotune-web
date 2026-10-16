@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, Empty } from "../../StreamWorkspace/WorkspaceUI";
 import { streamWorkspaceLogin } from "../../utils/streamWorkspaceNavigation";
 import FilterPopover from "../FilterPopover";
+import EventRow from "./EventRow";
+import CaptureGuide from "./CaptureGuide";
+import { FiSearch, FiTerminal } from "react-icons/fi";
 import ExportMenu from "../ExportMenu";
 import { DASHBOARD_RANGES } from "../dashboardModel";
 import { createEventExport } from "../exportModel";
@@ -55,10 +58,12 @@ export default function LiveExplorer({
   saveFilter,
   renameFilter,
   deleteFilter,
+  projectKey,
+  onOpenSetup,
 }) {
   const [search, setSearch] = useState("");
   const [name, setName] = useState("All events");
-  const [range, setRange] = useState("1h");
+  const [range, setRange] = useState("24h");
   const [deviceId, setDeviceId] = useState("all");
   const [sessionId, setSessionId] = useState("all");
   const [startAt, setStartAt] = useState("");
@@ -156,7 +161,7 @@ export default function LiveExplorer({
   const clear = () => {
     setSearch("");
     setName("All events");
-    setRange("1h");
+    setRange("24h");
     setStartAt("");
     setEndAt("");
     setDeviceId("all");
@@ -190,7 +195,7 @@ export default function LiveExplorer({
     ...p,
     type: p.types.length === 1 ? p.types[0] : "mixed",
   }));
-  const exportAll = async (format, onProgress, signal) => {
+  const exportMatchingEvents = async (format, onProgress, signal) => {
     // Only a completely retrieved snapshot can become a downloadable file.
     const result = await collectEvents(
       client.pages(
@@ -202,20 +207,37 @@ export default function LiveExplorer({
     );
     return createEventExport(result.events, format, { signal, onProgress });
   };
+  const showSetup = projectKey && !explorer.loading && !explorer.error && !explorer.page.items.length && !search && name === "All events" && !activeFilterId && !conditions.length && deviceId === "all" && sessionId === "all" && range === "24h" && !explorer.page.nextCursor && !explorer.index;
+  if (showSetup) return <>
+    <Failure error={discoveryError} retry={retryDiscovery} />
+    <Failure error={realtime.error} retry={refresh} />
+    {(realtime.ids.length > 0 || realtime.reset) && <div className="live-notice" role="status">New project events are available.<button className="sw-button" onClick={refresh}>Load latest events</button></div>}
+    <section className="mvp-first-event live-first-event">
+                <span className="mvp-first-icon"><FiTerminal /></span>
+                <p className="sw-eyebrow">CONNECT YOUR SYSTEM</p>
+                <h2>Send an event from your system</h2>
+                <p>Run an example below, then load the new events when they arrive.</p>
+                <p className="live-key-reminder"><strong>Save your project key now.</strong> It will not be shown again after a refresh. The example below includes it.</p>
+                <CaptureGuide apiKey={projectKey} origin={client.origin} compact />
+                <button className="sw-link" onClick={onOpenSetup}>Open API setup and save key</button>
+              </section>
+    <button className="sw-link live-pad" onClick={refresh}>Check for events</button>
+  </>;
   return (
     <>
-      <div className="live-toolbar">
-        <label>
-          Search
+      <div className="sw-toolbar mvp-filters live-explorer-toolbar live-toolbar">
+        <label className="sw-search">
+          <FiSearch aria-hidden="true" />
           <input
             type="search"
-            placeholder="Search recent events…"
+            aria-label="Search events and properties"
+            placeholder="Search event names and properties…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
-        <label>
-          Event
+        <label className="live-event-select">
+          <span className="live-sr-only">Event</span>
           <input
             list="live-event-names-explorer"
             value={name === "All events" ? "" : name}
@@ -228,8 +250,8 @@ export default function LiveExplorer({
             ))}
           </datalist>
         </label>
-        <label>
-          Time range
+        <label className="live-time-select">
+          <span className="live-sr-only">Time range</span>
           <select value={range} onChange={(e) => setRange(e.target.value)}>
             {DASHBOARD_RANGES.map((r) => (
               <option key={r.id} value={r.id}>
@@ -260,6 +282,38 @@ export default function LiveExplorer({
             </label>
           </>
         )}
+          <label className="live-context-select">
+            <span className="live-sr-only">Device ID</span>
+            <select
+              value={deviceId}
+              onChange={(e) => setDeviceId(e.target.value)}
+            >
+              <option value="all">All devices</option>
+              <option value="unspecified">Not supplied</option>
+              {deviceId !== "all" && deviceId !== "unspecified" && !discovery?.deviceIds?.includes(deviceId) && <option value={deviceId}>{deviceId}</option>}
+              {(discovery?.deviceIds || []).map((id) => (
+                <option key={id} value={id}>
+                  {id}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="live-context-select">
+            <span className="live-sr-only">Session ID</span>
+            <select
+              value={sessionId}
+              onChange={(e) => setSessionId(e.target.value)}
+            >
+              <option value="all">All sessions</option>
+              <option value="unspecified">Not supplied</option>
+              {sessionId !== "all" && sessionId !== "unspecified" && !discovery?.sessionIds?.includes(sessionId) && <option value={sessionId}>{sessionId}</option>}
+              {(discovery?.sessionIds || []).map((id) => (
+                <option key={id} value={id}>
+                  {id}
+                </option>
+              ))}
+            </select>
+          </label>
         <button
           className="sw-button"
           onClick={refresh}
@@ -270,44 +324,6 @@ export default function LiveExplorer({
         <button className="sw-link" onClick={clear}>
           Clear all
         </button>
-      </div>
-      <details className="live-envelope">
-        <summary>
-          Envelope IDs <span>Optional</span>
-        </summary>
-        <div className="live-toolbar">
-          <label>
-            Device ID
-            <select
-              value={deviceId}
-              onChange={(e) => setDeviceId(e.target.value)}
-            >
-              <option value="all">All IDs</option>
-              <option value="unspecified">Not supplied</option>
-              {(discovery?.deviceIds || []).map((id) => (
-                <option key={id} value={id}>
-                  {id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Session ID
-            <select
-              value={sessionId}
-              onChange={(e) => setSessionId(e.target.value)}
-            >
-              <option value="all">All IDs</option>
-              <option value="unspecified">Not supplied</option>
-              {(discovery?.sessionIds || []).map((id) => (
-                <option key={id} value={id}>
-                  {id}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      </details>
       {invalidTime && (
         <p role="alert">
           Choose a start and an end, with the end after the start.
@@ -371,9 +387,10 @@ export default function LiveExplorer({
             events={[]}
             query={query}
             projectName={project.name}
-            createExport={exportAll}
+            createExport={exportMatchingEvents}
           />
         )}
+      </div>
       </div>
       {activeFilterId && (
         <p className="mvp-muted">
@@ -417,16 +434,9 @@ export default function LiveExplorer({
           !explorer.error &&
           !explorer.page.items.length && (
             <Empty
-              title={
-                explorer.page.nextCursor
-                  ? "Continue searching this snapshot"
-                  : "No matching events"
-              }
-              description={
-                explorer.page.nextCursor
-                  ? "No matches in this section. Continue to search the remaining history."
-                  : "Change your filters or send an event using API setup."
-              }
+              title={explorer.page.nextCursor ? "Continue searching this snapshot" : "No events match this view"}
+              description={explorer.page.nextCursor ? "No matches in this section. Continue to search the remaining history." : "Try another event name, clear your filters, or widen the time range."}
+              action={!explorer.page.nextCursor && <div className="live-empty-actions"><button className="sw-button" onClick={clear}>Clear filters</button>{onOpenSetup && <button className="sw-link" onClick={onOpenSetup}>Send an event</button>}</div>}
             />
           )}
         {explorer.page.items.length > 0 && (
@@ -434,40 +444,19 @@ export default function LiveExplorer({
             <table className="sw-table mvp-table">
               <thead>
                 <tr>
-                  <th>Time · UTC</th>
+                  <th>Timestamp · UTC</th>
                   <th>Event</th>
                   <th>Properties</th>
+                  <th aria-label="Open event" />
                 </tr>
               </thead>
               <tbody>
                 {explorer.page.items.map((event) => (
-                  <tr key={event.id}>
-                    <td className="sw-mono sw-muted">{event.timestamp}</td>
-                    <td>
-                      <button
-                        className="sw-link sw-mono"
-                        onClick={() => {
-                          setCopied(false);
-                          setFullDetail(null);
-                          setDetail(event);
-                        }}
-                      >
-                        {event.event}
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="sw-link live-properties"
-                        onClick={() => {
-                          setCopied(false);
-                          setFullDetail(null);
-                          setDetail(event);
-                        }}
-                      >
-                        {JSON.stringify(event.properties)}
-                      </button>
-                    </td>
-                  </tr>
+                  <EventRow key={event.id} event={event} onInspect={() => {
+                    setCopied(false);
+                    setFullDetail(null);
+                    setDetail(event);
+                  }} />
                 ))}
               </tbody>
             </table>
@@ -482,7 +471,7 @@ export default function LiveExplorer({
             Previous
           </button>
           <span>
-            Page {explorer.index + 1} · {explorer.page.items.length} events
+            Page {explorer.index + 1} · {explorer.page.items.length} {explorer.page.items.length === 1 ? "event" : "events"}
           </span>
           <button
             className="sw-button"
@@ -493,23 +482,37 @@ export default function LiveExplorer({
           </button>
         </div>
       </div>
-      <p className="mvp-muted">
-        History follows the project retention policy. Browser exports retrieve
-        all matches in a stable snapshot, up to 10,000 events or 32 MB. No
-        partial export is downloaded. CSV/TSV prefix formula-like strings with
-        an apostrophe; JSON retains original values.
-      </p>
       {detail && (
         <Dialog
           title={detail.event}
-          subtitle="Complete event JSON"
+          subtitle="Event detail"
           onClose={() => setDetail(null)}
         >
-          <div className="sw-detail-body">
+          <div className="sw-detail-body mvp-event-detail">
             <Failure error={detailError} />
-            {fullDetail ? <pre className="sw-code" tabIndex={0}>
-              {JSON.stringify(fullDetail, null, 2)}
-            </pre> : !detailError && <p role="status">Loading complete event JSON…</p>}
+            {fullDetail ? <>
+              <div className="mvp-detail-field"><span>Exact timestamp · UTC</span><code>{fullDetail.timestamp}</code></div>
+              <div className="mvp-detail-field"><span>Event name</span><code>{fullDetail.event}</code></div>
+              {[['Device ID', 'device_id', 'deviceId', 'device'], ['Session ID', 'session_id', 'sessionId', 'session']].map(([label, field, queryField, kind]) => (
+                <div className="mvp-detail-field mvp-context-detail" key={field}>
+                  <span>{label}</span>
+                  <div><code>{fullDetail[field] || "Unspecified"}</code>
+                    {fullDetail[field] && <button className="sw-button" onClick={() => {
+                      setSearch("");
+                      setName("All events");
+                      setConditions([]);
+                      setTemporary(false);
+                      onSelectFilter(null);
+                      setDeviceId(queryField === 'deviceId' ? fullDetail[field] : 'all');
+                      setSessionId(queryField === 'sessionId' ? fullDetail[field] : 'all');
+                      setDetail(null);
+                    }}>View {kind} events</button>}
+                  </div>
+                </div>
+              ))}
+              <h3>Complete event JSON</h3>
+              <pre className="sw-code" tabIndex={0} aria-label="Complete event JSON">{JSON.stringify(fullDetail, null, 2)}</pre>
+            </> : !detailError && <p role="status">Loading complete event JSON…</p>}
             <button
               className="sw-button"
               disabled={!fullDetail}

@@ -55,14 +55,12 @@ const Legal = routePage(() => import('./pages/Legal'));
 const Docs = routePage(() => import('./pages/Docs'));
 const NexusDocsOverview = routePage(() => import('./pages/NexusDocsOverview'));
 const NexusDocPage = routePage(() => import('./pages/NexusDocPage'));
-const Dashboard = routePage(() => import('./pages/Dashboard'));
 const Privacy = routePage(() => import('./pages/Privacy'));
 const ContactPage = routePage(() => import('./pages/Contact'));
 const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
 const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
 const Profile = routePage(() => import('./pages/Profile'));
 const Stream = routePage(() => import('./pages/Stream'));
-const Streams = routePage(() => import('./pages/Streams'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
 const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
 const LiveStreamWorkspace = routePage(() => import('./StreamMVP/live/StreamWorkspace'));
@@ -70,12 +68,9 @@ const DnsPage = routePage(() => import('./pages/DnsPage'));
 const Partnership = routePage(() => import('./pages/Partnership'));
 const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));
 const PartnerPortal = routePage(() => import('./pages/PartnerPortal'));
-const StorageManager = routePage(() => import('./pages/StorageManager'));
-const PackageMirror = routePage(() => import('./pages/PackageMirror'));
 const Embeddings = routePage(() => import('./pages/Embeddings'));
 const SolutionPage = routePage(() => import('./pages/SolutionPage'));
 const AgenticTestDevelopmentPage = routePage(() => import('./pages/AgenticTestDevelopmentPage'));
-const StreamOverviewPage = routePage(() => import('./components/streams/StreamOverviewPage'));
 const ResearchOverview = routePage(() => import('./research/ResearchOverview'));
 const ResearchArticle = routePage(() => import('./research/ResearchArticle'));
 const ResearchResults = routePage(() => import('./research/ResearchResults'));
@@ -141,7 +136,7 @@ const ScrollToTop = () => {
 const NavigationWrapper = ({ children }) => {
   const location = useLocation();
   // '/ai-readiness' is a standalone, chrome-free assessment flow (no site Header/Footer).
-  const hideLayoutPaths = ['/streams/connect', '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision'];
+  const hideLayoutPaths = ['/mirror', '/storage', '/dashboard', '/streams', '/streams/connect', '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision'];
   // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
@@ -205,10 +200,10 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/reset-password" element={<ForgotPassword />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Navigate to="/stream/workspace" replace />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/stream" element={<Stream />} />
-              <Route path="/streams" element={<Streams />} />
+              <Route path="/streams" element={<Navigate to="/stream/workspace" replace />} />
               <Route path="/stream/demo" element={<StreamDemo />} />
               <Route path="/stream/workspace" element={<LiveStreamWorkspace />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
@@ -216,8 +211,8 @@ function App() {
               <Route path="/partners" element={<Partnership />} />
               <Route path="/partner-portal" element={<PartnerPortal />} />
               <Route path="/partners/apply" element={<PartnerApplication />} />
-              <Route path="/storage" element={<StorageManager />} />
-              <Route path="/mirror" element={<PackageMirror />} />
+              <Route path="/storage" element={<Navigate to="/stream/workspace" replace />} />
+              <Route path="/mirror" element={<Navigate to="/stream/workspace" replace />} />
               <Route path="/embed" element={<Embeddings />} />
               <Route path="/nexus" element={<Nexus />} />
               <Route path="/solutions/agentic-test-development" element={<AgenticTestDevelopmentPage />} />
@@ -232,7 +227,7 @@ function App() {
               <Route path="/research/reports" element={<ResearchReports />} />
               <Route path="/research/methodology" element={<ResearchMethodology />} />
               <Route path="/research/articles/:slug" element={<ResearchArticle />} />
-              <Route path="/streams/connect" element={<StreamOverviewPage />} />
+              <Route path="/streams/connect" element={<Navigate to="/stream/workspace" replace />} />
               <Route path="/ai-readiness" element={<AiReadinessPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
@@ -267,10 +262,10 @@ const initialRoutes = [
   [/^\/contact\/?$/, ContactPage],
   [/^\/verify-email\/?$/, VerifyEmail],
   [/^\/reset-password\/?$/, ForgotPassword],
-  [/^\/dashboard\/?$/, Dashboard],
+  [/^\/dashboard\/?$/, LiveStreamWorkspace],
   [/^\/profile\/?$/, Profile],
   [/^\/stream\/?$/, Stream],
-  [/^\/streams\/?$/, Streams],
+  [/^\/streams\/?$/, LiveStreamWorkspace],
   [/^\/stream\/demo\/?$/, StreamDemo],
   [/^\/stream\/workspace\/?$/, LiveStreamWorkspace],
   [/^\/stream\/prototypes\/vision\/?$/, StreamWorkspace],
@@ -278,8 +273,8 @@ const initialRoutes = [
   [/^\/partners\/?$/, Partnership],
   [/^\/partner-portal\/?$/, PartnerPortal],
   [/^\/partners\/apply\/?$/, PartnerApplication],
-  [/^\/storage\/?$/, StorageManager],
-  [/^\/mirror\/?$/, PackageMirror],
+  [/^\/storage\/?$/, LiveStreamWorkspace],
+  [/^\/mirror\/?$/, LiveStreamWorkspace],
   [/^\/embed\/?$/, Embeddings],
   [/^\/solutions\/agentic-test-development\/?$/, AgenticTestDevelopmentPage],
   [/^\/solutions\/[^\/]+\/?$/, SolutionPage],
@@ -288,7 +283,7 @@ const initialRoutes = [
   [/^\/research\/reports\/?$/, ResearchReports],
   [/^\/research\/methodology\/?$/, ResearchMethodology],
   [/^\/research\/articles\/[^\/]+\/?$/, ResearchArticle],
-  [/^\/streams\/connect\/?$/, StreamOverviewPage],
+  [/^\/streams\/connect\/?$/, LiveStreamWorkspace],
 ];
 export const prepareInitialRoute = (pathname) => {
   const match = initialRoutes.find(([pattern]) => pattern.test(pathname));

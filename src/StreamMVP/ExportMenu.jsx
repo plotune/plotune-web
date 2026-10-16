@@ -42,7 +42,6 @@ export default function ExportMenu({ events, query, projectName, createExport })
       {open && <>
         <button className="mvp-popover-dismiss" aria-label="Close export menu" onClick={() => setOpen(false)} />
         <div className="mvp-export-options" role="menu" aria-label="Export matching events">
-          <span>Export matching events as</span>
           {["json", "csv", "tsv"].map((format) => <button role="menuitem" key={format} type="button" onClick={() => run(format)}>{format.toUpperCase()}</button>)}
         </div>
       </>}

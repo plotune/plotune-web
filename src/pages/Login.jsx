@@ -19,7 +19,7 @@ const Login = () => {
   const workspaceReturn = streamWorkspaceReturn(new URLSearchParams(location.search).get('next'));
   useEffect(() => { if (workspaceReturn) sessionStorage.setItem('stream_login_return', workspaceReturn); }, [workspaceReturn]);
   const afterLogin = () => {
-    const target = workspaceReturn || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/dashboard';
+    const target = workspaceReturn || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/stream/workspace';
     sessionStorage.removeItem('stream_login_return');
     navigate(target);
   };

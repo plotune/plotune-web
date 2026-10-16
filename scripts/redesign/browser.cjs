@@ -20,7 +20,7 @@ async function fixtures(context,authenticated){
  else if(p==='/s3/user/total_usage')data={storage:0};
  else if(p==='/auth/stream')data={token:'local-stream-fixture'};
  else if(/extension|package|network/.test(p))data=[];
- }else if(u.hostname==='stream.plotune.net')data=/network/.test(u.pathname)?[]:{streams:[],shared_streams:[]};
+ }else if(u.hostname==='stream.plotune.net')data=u.pathname==='/v1/projects'?{items:[]}: /network/.test(u.pathname)?[]:{streams:[],shared_streams:[]};
  else if(u.hostname==='api.github.com')data={tag_name:'QA fixture',html_url:'https://github.com/plotune/plotune-dl/releases/latest',assets:[]};
  else if(u.hostname==='script.google.com'||u.hostname==='script.googleusercontent.com')data={ok:true};
  else if(u.hostname==='t.plotune.net')data=/flags|decide/.test(u.pathname)?{featureFlags:{}}:{status:1};

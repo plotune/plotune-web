@@ -47,7 +47,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
   return <Dialog title={widget ? "Edit widget" : "Add widget"} subtitle="Choose an event and what to observe." onClose={onClose} className="mvp-widget-editor-dialog">
     <form className="sw-detail-body mvp-widget-editor" onSubmit={submit}>
       <label>Event
-        {liveControls ? <><input aria-label="Event" required list="live-event-names" value={draft.eventName} onChange={(event) => update({ eventName: event.target.value })} placeholder="Choose or enter event name" /><datalist id="live-event-names">{choices.eventNames.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })}>
+        {liveControls ? <><input aria-label="Event" required list="live-event-names" value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })} placeholder="Choose or enter event name" /><datalist id="live-event-names">{choices.eventNames.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })}>
           <option value="">Choose an event</option>{choices.eventNames.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>}
       </label>

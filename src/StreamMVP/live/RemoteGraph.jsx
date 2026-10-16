@@ -71,7 +71,7 @@ export default function RemoteGraph({
       stop();
     };
   }, [client, projectId, dashboard.id, definition, retry, widget]);
-  if (state.error || !state.result)
+  if (!state.result)
     return (
       <Panel title={(state.widget || widget).title} meta="Shared project widget">
         <Failure error={state.error} retry={() => setRetry((r) => r + 1)} />
@@ -87,6 +87,7 @@ export default function RemoteGraph({
     );
   return (
     <div aria-busy={state.loading}>
+      {state.error && <><Failure error={state.error} retry={() => setRetry((r) => r + 1)} /><p className="mvp-muted">Showing the last successfully loaded chart.</p></>}
       {state.loading && (
         <span className="mvp-muted" role="status">
           Refreshing chart…

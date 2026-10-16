@@ -182,6 +182,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [usageError, setUsageError] = useState(null);
   const [deliveries, setDeliveries] = useState([]);
   const [deliveryError, setDeliveryError] = useState(null);
+  const [deliveryLoading, setDeliveryLoading] = useState(false);
+  const [deliveryRefresh, setDeliveryRefresh] = useState(0);
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
   const [usageRefresh, setUsageRefresh] = useState(0);
   const needsDiscovery = view === "events" || view === "dashboards";
@@ -209,12 +211,13 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     return () => controller.abort();
   }, [client, project?.id, accountOpen, usageRefresh]);
   useEffect(() => {
-    setDeliveries([]); setDeliveryError(null);
+    setDeliveries([]); setDeliveryError(null); setDeliveryLoading(false);
     if (!project?.id || view !== "webhooks" || metadata.role === "Member")
       return undefined;
     const controller = new AbortController();
-    const load = () =>
-      client
+    const load = () => {
+      setDeliveryLoading(true);
+      return client
         .deliveries(project.id, controller.signal)
         .then((r) => {
           if (!controller.signal.aborted) {
@@ -224,13 +227,14 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
         })
         .catch((error) => {
           if (!controller.signal.aborted) setDeliveryError(error);
-        });
+        }).finally(() => { if (!controller.signal.aborted) setDeliveryLoading(false); });
+    };
     const stop = pollWhileVisible(load, 30000);
     return () => {
       controller.abort();
       stop();
     };
-  }, [client, project?.id, view, metadata.role]);
+  }, [client, project?.id, view, metadata.role, deliveryRefresh]);
   const retryDiscovery = () => setDiscoveryRefresh((r) => r + 1);
   const save = (kind, record, base) =>
     metadata.mutate(() =>
@@ -311,6 +315,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               {user?.full_name || user?.username || "Your Plotune account"}
             </strong>
             {user?.email && <span>{user.email}</span>}
+            {project && !usage && !usageError && <p role="status">Loading usage…</p>}
             {usage && (
               <p>
                 {usage.accepted.toLocaleString()} /{" "}
@@ -384,18 +389,23 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           </button>
         </div>
         <nav aria-label="Workspace navigation">
-          {NAV.map(([id, label, Icon]) => (
-            <div className="sw-nav-group" key={id}>
-              <button
-                className={view === id ? "active" : ""}
-                aria-current={view === id ? "page" : undefined}
-                onClick={() => location({ view: id, dashboard: null })}
-              >
-                <Icon />
-                {label}
-              </button>
+          {[NAV.slice(0, 2), NAV.slice(2, 5)].map((items, index) => (
+            <div className="sw-nav-group" key={index}>
+              {index === 1 && <p>SETUP</p>}
+              {items.map(([id, label, Icon]) => (
+                <button key={id} className={view === id ? "active" : ""}
+                  aria-current={view === id ? "page" : undefined}
+                  onClick={() => location({ view: id, dashboard: null })}>
+                  <Icon />{label}
+                </button>
+              ))}
             </div>
           ))}
+          <button className={`sw-settings-link ${view === "settings" ? "active" : ""}`}
+            aria-current={view === "settings" ? "page" : undefined}
+            onClick={() => location({ view: "settings", dashboard: null })}>
+            <FiSettings />Project Settings
+          </button>
         </nav>
       </aside>
       <main className="sw-main">
@@ -411,14 +421,19 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
             <h1>{title}</h1>
             <p>
               {view === "events"
-                ? "Inspect event names, timestamps, and your own JSON properties."
+                ? "Inspect what your systems send. Event names, timestamps, and properties."
                 : view === "dashboards"
-                  ? "Shared views for persistent observation. Charts refresh once a minute while visible."
-                  : "Configure your project once and use it repeatedly."}
+                  ? dashboard?.description || "Project dashboards for recurring event views."
+                  : view === "api"
+                    ? "Send an event from your device, test bench, or simulation."
+                    : view === "mcp"
+                      ? "Query this project's events from your AI agent."
+                      : view === "webhooks"
+                        ? "Forward selected events to an HTTPS endpoint."
+                        : "Manage your project and team access."}
             </p>
-            <p className="mvp-muted">Shared settings refresh on request. Saved Filters apply the latest shared conditions.</p>
           </div>
-          <button className="sw-button" disabled={refreshingShared || metadata.busy || metadata.loading} onClick={refreshShared}>
+          <button className="sw-link live-shared-refresh" disabled={refreshingShared || metadata.busy || metadata.loading} onClick={refreshShared}>
             {refreshingShared ? "Refreshing…" : "Refresh shared settings"}
           </button>
         </div>
@@ -456,6 +471,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 <LiveExplorer
                   client={client}
                   project={project}
+                  projectKey={metadata.keys[project.id]}
+                  onOpenSetup={() => location({ view: "api", dashboard: null })}
                   discovery={discoveryState.data}
                   discoveryError={discoveryState.error}
                   retryDiscovery={retryDiscovery}
@@ -612,7 +629,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                       }}
                     />
                     <Panel title="Delivery status">
-                      <Failure error={deliveryError} />
+                      <Failure error={deliveryError} retry={() => setDeliveryRefresh((value) => value + 1)} />
+                      {deliveryLoading && <p className="live-pad" role="status">Loading delivery status…</p>}
                       {deliveries.length ? (
                         <div className="sw-table-wrap">
                           <table className="sw-table">
@@ -621,7 +639,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                                 <th>Event</th>
                                 <th>Status</th>
                                 <th>Attempts</th>
-                                <th>Next attempt</th>
+                                <th>Next attempt · UTC</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -630,13 +648,13 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                                   <td>{d.eventId}</td>
                                   <td>{d.status}</td>
                                   <td>{d.attempts}</td>
-                                  <td>{d.nextAt || "—"}</td>
+                                  <td>{d.nextAt ? <time dateTime={d.nextAt}>{new Date(d.nextAt).toLocaleString("en-GB", { timeZone: "UTC" })}</time> : "—"}</td>
                                 </tr>
                               ))}
                             </tbody>
                           </table>
                         </div>
-                      ) : (
+                      ) : !deliveryLoading && !deliveryError && (
                         <p className="live-pad">
                           No queued deliveries reported.
                         </p>
@@ -663,7 +681,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 const created = await metadata.create(name.trim());
                 location({
                   project: created.id,
-                  view: "api",
+                  view: "events",
                   dashboard: null,
                   filter: null,
                 });

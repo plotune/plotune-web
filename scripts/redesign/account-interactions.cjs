@@ -30,9 +30,6 @@ const save = async (page, name) => {
     if (!['api.plotune.net', 'stream.plotune.net'].includes(u.hostname)) return route.fallback();
     const method = route.request().method();
     report.mockedWrites.push({ method, path: u.pathname });
-    if (u.hostname === 'stream.plotune.net' && u.pathname === '/streams/list') {
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ streams: [{ name: 'qa-sensor-feed', created_at: '2026-10-01T12:00:00Z', description: 'Local test feed', max_messages_per_second: 20 }], shared_streams: [] }) });
-    }
     if (u.hostname === 'api.plotune.net' && method === 'PUT' && u.pathname === '/profile') {
       return route.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
     }
@@ -81,38 +78,13 @@ const save = async (page, name) => {
   record('profile edit saves through mocked PUT', report.mockedWrites.some(x => x.method === 'PUT' && x.path === '/profile'));
   await save(page, 'profile-saved');
 
-  await page.goto(`${BASE}/dashboard`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('heading', { name: 'Dashboard', exact: true }).waitFor({ timeout: 8000 });
-  await page.getByText("Couldn't load your dashboard data.", { exact: true }).waitFor({ timeout: 8000 });
-  await save(page, 'dashboard-backend-error');
-  record('dashboard renders under mocked backend error', await page.getByText("Couldn't load your dashboard data.", { exact: true }).count() > 0);
-  await page.goto(`${BASE}/storage`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('heading', { name: 'Storage', exact: true }).waitFor({ timeout: 8000 });
-  await page.getByText("Couldn't load your files.", { exact: true }).waitFor({ timeout: 8000 });
-  await save(page, 'storage-backend-error');
-  record('storage screen renders under mocked backend errors', (await page.locator('body').innerText()).includes('Storage'));
-
-  await page.goto(`${BASE}/streams`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('heading', { name: /streams/i }).first().waitFor({ timeout: 10000 }).catch(() => {});
-  await save(page, 'streams-empty');
-  const create = page.getByRole('button', { name: /new stream/i }).first();
-  if (await create.count()) {
-    await create.click();
-    await save(page, 'stream-create-modal');
-    record('Stream creation modal opens', await page.getByRole('heading', { name: 'Create New Stream' }).count() > 0);
-    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  for (const route of ['/dashboard', '/streams', '/streams/connect', '/mirror', '/storage']) {
+    await page.goto(`${BASE}${route}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForURL('**/stream/workspace');
+    await page.getByRole('heading', { name: 'Create your first project', exact: true }).waitFor();
+    record(`${route} opens the workspace`, new URL(page.url()).pathname === '/stream/workspace');
   }
-  const connect = page.getByRole('link', { name: 'Connect to stream' }).first();
-  record('Stream list renders the fixture stream and connect action', await page.getByText('qa-sensor-feed').count() > 0 && await connect.count() > 0);
-  if (await connect.count()) {
-    await connect.click();
-    await page.getByText('Connection Details').waitFor({ timeout: 8000 });
-    await save(page, 'stream-connection-disconnected');
-    await page.getByRole('button', { name: /connect/i }).first().click();
-    await page.waitForTimeout(300);
-    record('Stream connect uses intercepted WebSocket', report.webSockets.length > 0, `${report.webSockets.length} WebSocket interception(s); no production connection was made.`);
-    await save(page, 'stream-connection-intercepted');
-  } else record('Stream connect uses intercepted WebSocket', false, 'Fixture stream connect action was missing.');
+  await save(page, 'retired-routes-workspace');
 
   record('no uncaught page errors', errors.length === 0, errors.join(' | '));
   fs.writeFileSync(path.join(OUT, 'results.json'), JSON.stringify(report, null, 2));

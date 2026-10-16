@@ -78,6 +78,8 @@ test("charts aggregate and render the returned widget definition while dashboard
   client.pages.mockImplementationOnce(async function* () { yield Promise.reject(new Error("Refresh unavailable")); });
   await act(async () => jest.advanceTimersByTime(60000));
   expect(container.textContent).toContain("Refresh unavailable");
+  expect(container.textContent).toContain("Showing the last successfully loaded chart.");
+  expect(container.querySelector('[role="img"]')).toBeTruthy();
   expect(container.querySelector("h2").textContent).toBe("Drone failures");
   await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Edit widget").click());
   expect(onEdit).toHaveBeenLastCalledWith(current);

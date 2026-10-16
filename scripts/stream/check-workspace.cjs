@@ -78,10 +78,16 @@ let webhooks = [],
   sequence = 1,
   expireNext = false;
 const incoming = [];
+let freshProject = null;
+const freshEvents = [];
+const freshKey = "plt_fresh-synthetic-key";
+let deliveryUnavailable = false;
 const events = Array.from({ length: 110 }, (_, i) => ({
   id: `event-${i}`,
   event: i % 11 === 0 ? "drone.error" : "motor.sample",
   timestamp: new Date(Date.now() - i * 10000).toISOString(),
+  device_id: "motor-003",
+  session_id: "test-run-817",
   properties: {
     robot_id: "R-001",
     environment: i % 2 ? "simulation" : "real",
@@ -172,6 +178,7 @@ async function main() {
     viewport: { width: 1440, height: 1000 },
     acceptDownloads: true,
   });
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await context.addCookies([
     {
       name: "auth_token",
@@ -209,6 +216,22 @@ async function main() {
       parts = u.pathname.split("/").filter(Boolean);
     calls.push({ path: u.pathname, method: req.method(), body: q });
     try {
+      if (u.pathname === "/capture" && q.api_key === freshKey) {
+        const e = { id: "fresh-event", event: q.event, timestamp: new Date().toISOString(), device_id: q.device_id, session_id: q.session_id, properties: q.properties };
+        freshEvents.push(e);
+        return respond({ accepted: true, event: e, duplicate: false }, 201);
+      }
+      if (parts[2] === "fresh-project") {
+        if (parts.length === 3) return respond({ project: freshProject, membership: members[0] });
+        return respond({ items: [] });
+      }
+      if (parts[1] === "data" && parts[3] === "fresh-project") {
+        const endpoint = parts.slice(4).join("/");
+        if (endpoint === "discovery") return respond({ eventNames: freshEvents.length ? ["motor.sample"] : [], deviceIds: ["motor-003"], sessionIds: ["test-run-817"], properties: [], truncated: false });
+        if (endpoint === "events/query") return respond({ items: freshEvents, nextCursor: null, now, snapshot: 1 });
+        if (endpoint === "realtime") return respond({ ids: q.after ? freshEvents.map((event) => event.id) : [], cursor: String(freshEvents.length), reset: false });
+        throw new Error(`Unexpected fresh-project endpoint ${endpoint}`);
+      }
       if (u.pathname === "/capture") {
         if (q.api_key !== key)
           return respond(
@@ -223,7 +246,7 @@ async function main() {
         };
         events.unshift(e);
         incoming.push({ seq: sequence, id: e.id });
-        return respond({ id: e.id }, 202);
+        return respond({ accepted: true, event: e, duplicate: false }, 201);
       }
       if (u.pathname === "/mcp")
         return respond({
@@ -231,7 +254,13 @@ async function main() {
           id: 1,
           result: { protocolVersion: "2025-06-18" },
         });
-      if (u.pathname === "/v1/projects") return respond({ items: [project] });
+      if (u.pathname === "/v1/projects") {
+        if (req.method() === "POST") {
+          freshProject = { ...project, id: "fresh-project", name: q.name, revision: 1 };
+          return respond({ project: freshProject, api_key: freshKey }, 201);
+        }
+        return respond({ items: freshProject ? [project, freshProject] : [project] });
+      }
       if (parts[1] === "data") {
         const endpoint = parts.slice(4).join("/");
         if (endpoint === "usage")
@@ -284,7 +313,9 @@ async function main() {
             cursor: String(sequence),
             reset: false,
           });
-        if (endpoint === "webhook-deliveries") return respond({ items: [] });
+        if (endpoint === "webhook-deliveries") return deliveryUnavailable
+          ? respond({ error: { code: "service_unavailable", message: "Delivery status unavailable" } }, 503)
+          : respond({ items: [] });
         if (endpoint.startsWith("dashboards/")) {
           const d = dashboards.find((d) => d.id === parts[5]),
             w = d.data.widgets.find((w) => w.id === parts[7]);
@@ -439,9 +470,13 @@ async function main() {
     path: path.join(output, "explorer-desktop.png"),
     fullPage: false,
   });
+  assert.equal(await page.getByText("SETUP", { exact: true }).count(), 1);
+  assert.equal(await page.locator("tbody tr").first().locator("td").nth(2).getByText("motor-003", { exact: true }).count(), 1);
+  assert(!(await page.locator("tbody tr").first().locator("td").nth(2).innerText()).includes('"robot_id":'));
   console.log("QA: Complete export");
   // Every matching page, not merely the first 50, is exported.
   await page.getByRole("button", { name: "Export", exact: true }).click();
+  await page.screenshot({ path: path.join(output, "export-desktop.png"), fullPage: false });
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("menuitem", { name: "JSON" }).click();
   const download = await downloadPromise;
@@ -531,12 +566,31 @@ async function main() {
     .getByText("Shared Saved Filter: High RPM", { exact: true })
     .waitFor();
   assert.equal(new URL(page.url()).searchParams.get("filter"), savedId);
+  // Export must preserve the user's active Saved Filter, excluding other events.
+  await page.getByRole("button", { name: "Export", exact: true }).click();
+  const exportOptions = page.getByRole("menu", { name: "Export matching events", exact: true });
+  assert.deepEqual((await exportOptions.innerText()).trim().split(/\s+/), ["JSON", "CSV", "TSV"]);
+  const filteredDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("menuitem", { name: "JSON", exact: true }).click();
+  const filteredDownload = await filteredDownloadPromise;
+  const filteredEvents = JSON.parse(await fs.readFile(await filteredDownload.path(), "utf8"));
+  assert(filteredEvents.length > 0 && filteredEvents.length < events.length);
+  assert.equal(filteredEvents.length, select({ filterId: savedId }).length);
+  assert(filteredEvents.every((event) => typeof event.properties.motor?.rpm === "number" && event.properties.motor.rpm > 1800));
+
   await page
     .getByRole("button", { name: "motor.sample", exact: true })
     .first()
     .click();
   await page.getByRole("dialog").waitFor();
   assert.match(await page.locator("dialog pre").textContent(), /"properties"/);
+  await page.screenshot({ path: path.join(output, "event-detail-desktop.png"), fullPage: false });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(output, "event-detail-mobile.png"), fullPage: false });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.waitForTimeout(300);
   await page.keyboard.press("Escape");
   assert.equal(await page.getByRole("dialog").count(), 0);
   console.log("QA: Independent saved widgets");
@@ -584,6 +638,12 @@ async function main() {
     path: path.join(output, "widget-editor-desktop.png"),
     fullPage: true,
   });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(output, "widget-editor-mobile.png"), fullPage: false });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.waitForTimeout(300);
   await page
     .getByRole("button", { name: "Add widget", exact: true })
     .last()
@@ -647,6 +707,25 @@ async function main() {
   console.log("QA: One-time key rotation");
   // Rotation: raw key is returned once and never stored in browser persistence.
   await page.getByRole("button", { name: "API setup", exact: true }).click();
+  console.log("QA: Hardware integration choices and MCP presentation");
+  for (const language of ["curl", "Python", "C/C++", "Arduino / ESP32", "MATLAB", "ROS 2", "CAPL", "JavaScript"]) {
+    await page.getByRole("button", { name: language, exact: true }).click();
+    assert(await page.getByLabel(`${language} integration snippet`, { exact: true }).isVisible());
+    assert((await page.getByLabel(`${language} integration snippet`, { exact: true }).innerText()).includes("motor.sample"));
+  }
+  await page.getByRole("button", { name: "C/C++", exact: true }).click();
+  await page.getByRole("button", { name: "Copy integration snippet", exact: true }).click();
+  assert.equal(await page.evaluate(() => navigator.clipboard.readText()), await page.getByLabel("C/C++ integration snippet", { exact: true }).innerText());
+  await page.screenshot({ path: path.join(output, "api-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(output, "api-mobile.png"), fullPage: true });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByRole("button", { name: "MCP setup", exact: true }).click();
+  await page.getByRole("heading", { name: "Your event history, available through MCP." }).waitFor();
+  await page.screenshot({ path: path.join(output, "mcp-desktop.png"), fullPage: true });
+  await page.getByRole("button", { name: "API setup", exact: true }).click();
   page.once("dialog", (d) => d.accept());
   await page.getByRole("button", { name: "Rotate API key" }).click();
   await page.getByLabel("New project API key").waitFor();
@@ -661,6 +740,19 @@ async function main() {
       )
     ).includes("plt_rotated"),
   );
+  console.log("QA: Inline setup for a project without visible events");
+  const savedEvents = events.splice(0);
+  await page.getByRole("button", { name: "Events", exact: true }).click();
+  await page.getByRole("button", { name: "Clear all", exact: true }).click();
+  await page.getByRole("heading", { name: "Send an event from your system", exact: true }).waitFor();
+  await page.screenshot({ path: path.join(output, "first-event-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(output, "first-event-mobile.png"), fullPage: true });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  events.push(...savedEvents);
+  await page.getByRole("button", { name: "API setup", exact: true }).click();
   await page.reload();
   await page
     .getByText("Existing keys cannot be recovered.", { exact: false })
@@ -715,6 +807,11 @@ async function main() {
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   );
+  await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
+  await page.getByRole("combobox", { name: "Project", exact: true }).focus();
+  await page.keyboard.press("Escape");
+  assert.equal(await page.getByRole("button", { name: "Open workspace navigation", exact: true }).getAttribute("aria-expanded"), "false");
+  assert(await page.getByRole("button", { name: "Open workspace navigation", exact: true }).evaluate((button) => button === document.activeElement));
   console.log("QA: Owner settings, webhooks and a shared member session");
   // Owner configuration and a separate member session reuse the same shared resource IDs.
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -740,7 +837,19 @@ async function main() {
     })
     .waitFor();
   assert(members.some((m) => m.email === "member@example.test"));
+  await page.screenshot({ path: path.join(output, "settings-desktop.png"), fullPage: true });
   await page.getByRole("button", { name: "Webhooks", exact: true }).click();
+  await page.getByText("No queued deliveries reported.", { exact: true }).waitFor();
+  await page.screenshot({ path: path.join(output, "webhooks-empty-desktop.png"), fullPage: true });
+  deliveryUnavailable = true;
+  await page.getByRole("button", { name: "Events", exact: true }).click();
+  await page.getByRole("button", { name: "Webhooks", exact: true }).click();
+  await page.getByText("Delivery status unavailable", { exact: true }).waitFor();
+  assert.equal(await page.getByText("No queued deliveries reported.", { exact: true }).count(), 0);
+  await page.screenshot({ path: path.join(output, "webhooks-error-desktop.png"), fullPage: true });
+  deliveryUnavailable = false;
+  await page.getByRole("button", { name: "Retry / refresh", exact: true }).click();
+  await page.getByText("No queued deliveries reported.", { exact: true }).waitFor();
   await page.getByRole("button", { name: "Add webhook", exact: true }).click();
   // Management screens no longer fetch event discovery just to populate suggestions.
   await page.getByRole("textbox", { name: "Custom event name", exact: true }).fill("motor.sample");
@@ -757,6 +866,24 @@ async function main() {
     .click();
   await page.waitForTimeout(300);
   assert.equal(webhooks[0].data.enabled, false);
+  await page.screenshot({ path: path.join(output, "webhooks-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(output, "webhooks-mobile.png"), fullPage: true });
+  for (const [label, name] of [["Project Settings", "settings"], ["MCP setup", "mcp"], ["API setup", "api"]]) {
+    await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
+    await page.getByRole("navigation", { name: "Workspace navigation", exact: true }).getByRole("button", { name: label, exact: true }).click();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(output, `${name}-mobile.png`), fullPage: true });
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  }
+  await page.getByRole("button", { name: "Account", exact: true }).click();
+  await page.getByText("Project owner's account allowance", { exact: true }).waitFor();
+  await page.screenshot({ path: path.join(output, "usage-mobile.png"), fullPage: false });
+  await page.getByRole("button", { name: "Close", exact: true }).click();
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.waitForTimeout(300);
+  await page.getByRole("button", { name: "Webhooks", exact: true }).click();
   await context.addCookies([
     { name: "auth_token", value: "Bearer synthetic-member-token", url: origin },
   ]);
@@ -777,6 +904,30 @@ async function main() {
     .getByRole("heading", { name: "Configured simulation RPM" })
     .waitFor();
   assert.equal(dashboards[0].data.widgets.at(-1).filterId, "simulation");
+  console.log("QA: Create project → save key → capture → visible event");
+  await context.addCookies([{ name: "auth_token", value: "Bearer synthetic-account-token", url: origin }]);
+  await page.reload();
+  await page.getByRole("button", { name: "Create project", exact: true }).click();
+  const createDialog = page.getByRole("dialog", { name: "Create a project", exact: true });
+  await createDialog.getByLabel("Project name").fill("Motor bench quick start");
+  await createDialog.getByRole("button", { name: "Create project", exact: true }).click();
+  await page.getByRole("heading", { name: "Send an event from your system", exact: true }).waitFor();
+  assert.equal(new URL(page.url()).searchParams.get("view"), "events");
+  assert((await page.getByLabel("curl integration snippet", { exact: true }).innerText()).includes(freshKey));
+  assert(!(await page.evaluate(() => JSON.stringify({ local: localStorage, session: sessionStorage }))).includes("plt_fresh"));
+  await page.screenshot({ path: path.join(output, "created-project-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(output, "created-project-mobile.png"), fullPage: true });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.evaluate(async (api_key) => {
+    await fetch("https://stream.plotune.net/capture", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ api_key, event: "motor.sample", device_id: "motor-003", session_id: "test-run-817", properties: { temperature: 72.4, rpm: 1840, state: "running" } }) });
+  }, freshKey);
+  await page.getByRole("button", { name: "Load latest events", exact: true }).waitFor({ timeout: 12000 });
+  await page.getByRole("button", { name: "Load latest events", exact: true }).click();
+  await page.getByRole("button", { name: "motor.sample", exact: true }).waitFor();
+  assert.equal(await page.getByRole("heading", { name: "Send an event from your system", exact: true }).count(), 0);
+  await page.screenshot({ path: path.join(output, "first-capture-mobile.png"), fullPage: false });
   assert.deepEqual(errors, []);
   await browser.close();
   console.log(

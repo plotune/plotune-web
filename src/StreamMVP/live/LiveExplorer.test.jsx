@@ -555,3 +555,48 @@ test("refresh confirming a Saved Filter write after failed verification resumes 
   await update();
   expect(revisions).toEqual([1, 2]);
 });
+
+test("device inspection uses the full event identity and keeps undiscovered context selectable", async () => {
+  const client = {
+    query: jest.fn().mockResolvedValue(page([event])),
+    realtime: jest.fn().mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+    event: jest.fn().mockResolvedValue({ ...event, device_id: "motor-undiscovered", session_id: "run-817" }),
+  };
+  act(() => mountRoot(fixture(client)));
+  await flush();
+  await click(button("motor.sample"));
+  await click(button("View device events"));
+  await flush();
+  expect(container.querySelector("dialog")).toBeNull();
+  expect(client.query.mock.calls.at(-1)[1]).toMatchObject({ deviceId: "motor-undiscovered", sessionId: "all", name: "All events", range: "24h" });
+  const device = [...container.querySelectorAll("select")].find((select) => select.closest("label").textContent.includes("Device ID"));
+  expect(device.value).toBe("motor-undiscovered");
+});
+
+test("inline setup guides real capture without simulation or a false claim that retained history is empty", async () => {
+  const client = {
+    origin: "https://stream.example.test",
+    query: jest.fn().mockResolvedValue(page()),
+    realtime: jest.fn().mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+  };
+  act(() => mountRoot(fixture(client, { projectKey: "plt_synthetic-key", onOpenSetup: () => {} })));
+  await flush();
+  expect(container.textContent).toContain("Save your project key now");
+  expect(container.textContent).toContain("Send an event from your system");
+  expect(container.textContent).not.toContain("Simulate event");
+  expect(container.querySelector('[aria-label="curl integration snippet"]').textContent).toContain("https://stream.example.test/capture");
+  expect(container.querySelector('input[type="search"]')).toBeNull();
+  expect(client.query.mock.calls.at(-1)[1]).toMatchObject({ range: "24h" });
+});
+
+test("changing a live widget's event clears metrics from the previous event", async () => {
+  act(() => mountRoot(<WidgetEditor
+    widget={{ id: "w", eventName: "motor.sample", measureProperty: "rpm", breakdownProperty: "controller", visualization: "line", title: "Motor speed", range: "1h" }}
+    events={[]} filters={[]} now={now} discovery={{ eventNames: ["motor.sample", "battery.sample"], properties: [] }}
+    onSave={() => {}} onClose={() => {}}
+  />));
+  type(container.querySelector('input[aria-label="Event"]'), "battery.sample");
+  expect(container.querySelector('input[aria-label="Property"]').value).toBe("");
+  expect(container.querySelector('input[aria-label="Breakdown by"]').value).toBe("");
+  expect(button("Save widget").disabled).toBe(true);
+});

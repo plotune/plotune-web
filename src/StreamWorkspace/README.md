@@ -2,7 +2,7 @@
 
 Reference route: `/stream/prototypes/vision` (also accepts a trailing slash). The route is lazy loaded,
 uses a separate light application shell, and is emitted as a real static route by
-the existing GitHub Pages build. The existing `/streams` page is unchanged.
+the existing GitHub Pages build. Retired `/streams` and `/streams/connect` entry points now redirect to the live `/stream/workspace`.
 
 ## Explore the product
 
@@ -50,8 +50,7 @@ Playwright Chromium and network access for the Download page's release lookup.
 Deploy using the existing `npm run deploy` / gh-pages flow.
 
 Before publishing, inspect desktop/tablet/mobile, try the interactions above, ensure
-no horizontal document overflow or runtime errors, and verify `/streams` still
-renders its original application. `/stream` itself was not an existing route and
+no horizontal document overflow or runtime errors, and verify `/streams` opens the live workspace. `/stream` itself was not an existing route and
 is intentionally not added or redirected by this feature.
 
 The shipped-MVP exploration is separate in `src/StreamMVP` at `/stream/workspace`.

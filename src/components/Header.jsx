@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShare2, FiServer, FiShoppingBag, FiBookOpen, FiChevronDown } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiUser, FiActivity, FiShoppingBag, FiBookOpen, FiChevronDown } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
 
@@ -8,8 +8,7 @@ import { AuthContext } from '../context/AuthContext';
 // load, and when it fails (slow network, ad blocker, offline) the ligature falls back to its
 // literal name as visible text (e.g. a login link showing "account_circle").
 const navIconMap = {
-  person: FiUser, dashboard: FiGrid, stream: FiActivity, account_tree: FiShare2,
-  dns: FiServer, store: FiShoppingBag, science: FiBookOpen,
+  person: FiUser, stream: FiActivity, store: FiShoppingBag, science: FiBookOpen,
 };
 const NavIcon = ({ name, className }) => {
   const Icon = navIconMap[name];
@@ -90,10 +89,9 @@ const Header = () => {
   // Navigation items for logged-in users with Material Icons
   const userNavItems = [
     { to: '/profile', label: 'Profile', icon: 'person' },
-    { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
-    { to: '/streams', label: 'Streams', icon: 'stream', keepBrandName: true },
-    { to: '/mirror', label: 'Edge', icon: 'account_tree' },
-    { to: '/storage', label: 'Storage', icon: 'dns' },
+    { to: '/stream/workspace', label: 'Workspace', icon: 'stream' },
+    // Mirror and Storage are unavailable; keep them out of navigation.
+
     { to: '/extensions', label: 'Extensions', icon: 'store' },
     { to: '/research', label: 'Research', icon: 'science', keepBrandName: true },
   ];

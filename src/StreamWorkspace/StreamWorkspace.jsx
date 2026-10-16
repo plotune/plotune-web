@@ -1889,7 +1889,7 @@ export default function StreamWorkspace() {
             <br />
             Changes stay in this session.
           </p>
-          <a href="/streams">
+          <a href="/stream/workspace">
             Existing Streams <FiArrowRight />
           </a>
         </div>

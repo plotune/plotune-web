@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Panel } from "../../StreamWorkspace/WorkspaceUI";
-import { captureExample, mcpExample } from "./examples";
+import { mcpExample } from "./examples";
+import CaptureGuide from "./CaptureGuide";
+import { FiCopy, FiTerminal } from "react-icons/fi";
 import { Failure } from "./LiveExplorer";
 
 export default function ConnectionSetup({ client, metadata, mcp = false }) {
-  const [language, setLanguage] = useState("curl");
   const [suppliedKey, setSuppliedKey] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState(null);
@@ -12,9 +13,7 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
   const [revealed, setRevealed] = useState(false);
   const raw = metadata.keys[metadata.project.id];
   const key = raw || suppliedKey;
-  const snippet = mcp
-    ? mcpExample(key || "YOUR_PROJECT_KEY", client.origin)
-    : captureExample(language, key || "YOUR_PROJECT_KEY", client.origin);
+  const snippet = mcpExample(key || "YOUR_PROJECT_KEY", client.origin);
   const copy = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -25,9 +24,25 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
   };
   return (
     <>
-      <Panel title="Project API key" meta={metadata.project.name}>
-        <div className="mvp-connection">
-          {raw ? (
+      {mcp && <Panel title="Query events from your AI agent">
+        <div className="mvp-mcp-intro">
+          <span className="mvp-first-icon"><FiTerminal /></span>
+          <div><h3>Your event history, available through MCP.</h3>
+            <p>Connect an MCP-capable client to investigate this project's events.</p>
+            <p className="mvp-muted">Read-only event history access. This connection does not control hardware.</p>
+          </div>
+        </div>
+        <div className="mvp-mcp-example"><span>Try asking</span><q>Find motor.sample events from motor-003 in test-run-817 and summarize their temperatures.</q></div>
+      </Panel>}
+      <Panel title={mcp ? "MCP connection" : "Project connection"} meta={metadata.project.name}>
+        <div className="mvp-connection live-project-connection">
+          <label>{mcp ? "MCP endpoint" : "Ingestion endpoint"}
+            <div className="mvp-endpoint">
+              <code>{client.origin}/{mcp ? "mcp" : "capture"}</code>
+              <button className="sw-icon-button" aria-label={mcp ? "Copy MCP endpoint" : "Copy ingestion endpoint"} onClick={() => copy(`${client.origin}/${mcp ? "mcp" : "capture"}`)}><FiCopy /></button>
+            </div>
+          </label>
+          <div className="live-project-key">{raw ? (
             <>
               <p>
                 Copy this key now. It is held only in this browser session and
@@ -69,12 +84,13 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
               </label>
             </>
           )}
+          </div>
           <p>
             This key allows event capture and read-only MCP access. Keep it in
             your own system's secret store.
           </p>
           {metadata.role !== "Member" && (
-            <button
+            <div className="live-key-rotation"><p>Replace the key only if you need to update or revoke client access.</p><button
               className="sw-button"
               disabled={metadata.busy}
               onClick={async () => {
@@ -94,47 +110,18 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
               }}
             >
               Rotate API key
-            </button>
+            </button></div>
           )}
         </div>
       </Panel>
-      <Panel title={mcp ? "Connect your AI agent" : "Send your first event"}>
-        <div className="mvp-connection">
-          <p>
-            {mcp
-              ? "Connect to the read-only event history endpoint. Configuration format varies by MCP client."
-              : "Send any event name and arbitrary JSON properties from an HTTP-capable system."}
-          </p>
-          <code>
-            {client.origin || "https://stream.plotune.net"}/
-            {mcp ? "mcp" : "capture"}
-          </code>
-          {!mcp && (
-            <label>
-              Example language
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-              >
-                <option value="curl">cURL</option>
-                <option value="Python">Python</option>
-                <option value="JavaScript">JavaScript</option>
-              </select>
-            </label>
-          )}
+      <Panel title={mcp ? "Client configuration" : "Capture an event"}>
+        {!mcp ? <CaptureGuide apiKey={key} origin={client.origin} /> : <div className="mvp-connection live-mcp-config">
+          <p>Configuration format varies by MCP client. Use the endpoint and project key below in your client's remote MCP settings.</p>
           <div className="sw-code-head">
-            <span>
-              {key
-                ? "Client example"
-                : "Replace YOUR_PROJECT_KEY with your stored key"}
-            </span>
-            <button className="sw-link" onClick={() => copy(snippet)}>
-              Copy example
-            </button>
+            <span>Client configuration</span>
+            <button className="sw-link" onClick={() => copy(snippet)}>Copy example</button>
           </div>
-          <pre className="sw-code" tabIndex={0}>
-            {snippet}
-          </pre>
+          <pre className="sw-code" tabIndex={0} aria-label="MCP configuration">{snippet}</pre>
           {mcp && (
             <button
               className="sw-button"
@@ -163,10 +150,10 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
               {checking ? "Checking…" : "Check MCP connection"}
             </button>
           )}
-          <Failure error={error} />
-          {status && <p role="status">{status}</p>}
-        </div>
+        </div>}
       </Panel>
+      <Failure error={error} />
+      {status && <p role="status">{status}</p>}
     </>
   );
 }
