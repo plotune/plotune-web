@@ -511,7 +511,7 @@ Illustrative payload / not a live event
 
 03 / Choose your experience  Existing routes, distinct capabilities
 
-[Demo experienceEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/demo)[Account toolsStream managementThe existing authenticated stream and network management experience.↗](https://www.plotune.net/streams)[Live connectionSignal inspectionThe existing connection interface for configured streams.↗](https://www.plotune.net/streams/connect)
+[Demo experienceEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/demo)[Your workspacePlotune StreamCreate projects, capture events from your systems, and explore their history with your team.↗](https://www.plotune.net/stream/workspace)
 
 A separate [future-product reference](https://www.plotune.net/stream/prototypes/vision) explores synthetic runs, measurements and processors. These are prototype capabilities.
 
