@@ -51,3 +51,24 @@ test("export progress does not claim success before completion, and cancellation
   container.remove();
   URL.createObjectURL = original;
 });
+
+test("export menu supports keyboard navigation and returns focus on Escape", () => {
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  const root = createRoot(container);
+  act(() => root.render(<ExportMenu events={[]} query={{}} projectName="Synthetic" />));
+  const trigger = container.querySelector('button[aria-haspopup="menu"]');
+  act(() => trigger.click());
+  const items = [...container.querySelectorAll('[role="menuitem"]')];
+  expect(items.map((item) => item.textContent)).toEqual(["JSON", "CSV", "TSV"]);
+  expect(document.activeElement).toBe(items[0]);
+  act(() => items[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })));
+  expect(document.activeElement).toBe(items[1]);
+  act(() => items[1].dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true })));
+  expect(document.activeElement).toBe(items[2]);
+  act(() => items[2].dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true })));
+  expect(container.querySelector('[role="menu"]')).toBeNull();
+  expect(document.activeElement).toBe(trigger);
+  act(() => root.unmount());
+  container.remove();
+});

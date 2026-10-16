@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog } from "../StreamWorkspace/WorkspaceUI";
 import { DASHBOARD_RANGES } from "./dashboardModel";
 import { buildWidgetSeries, getWidgetChoices } from "./widgetModel";
@@ -7,6 +7,19 @@ import WidgetChart from "./WidgetChart";
 const EMPTY = { title: "", eventName: "", visualization: "line", measureProperty: "", filterId: "", breakdownProperty: "", range: "1h" };
 
 export default function WidgetEditor({ widget, events, filters, now, onSave, onClose, discovery, loadPreview, onReload }) {
+  const fields = useRef(null);
+  useEffect(() => {
+    let frame;
+    const revealFocus = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        if (fields.current?.contains(document.activeElement)) document.activeElement.scrollIntoView({ block: "nearest" });
+      });
+    };
+    window.addEventListener("resize", revealFocus);
+    window.visualViewport?.addEventListener("resize", revealFocus);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("resize", revealFocus); window.visualViewport?.removeEventListener("resize", revealFocus); };
+  }, []);
   const [draft, setDraft] = useState(() => ({ ...EMPTY, ...widget, id: widget?.id || `widget-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`, filterId: widget?.filterId || "" }));
   const [more, setMore] = useState(!!(widget?.filterId || widget?.breakdownProperty || widget?.title || (widget?.range && widget.range !== "1h")));
   const [remote, setRemote] = useState(null);
@@ -45,7 +58,8 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
   };
 
   return <Dialog title={widget ? "Edit widget" : "Add widget"} subtitle="Choose an event and what to observe." onClose={onClose} className="mvp-widget-editor-dialog">
-    <form className="sw-detail-body mvp-widget-editor" onSubmit={submit}>
+    <form className="mvp-widget-editor" onSubmit={submit}>
+      <div ref={fields} className="sw-detail-body mvp-widget-fields" onFocusCapture={(event) => event.target.scrollIntoView({ block: "nearest" })}>
       <label>Event
         {liveControls ? <><input aria-label="Event" required list="live-event-names" value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })} placeholder="Choose or enter event name" /><datalist id="live-event-names">{choices.eventNames.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })}>
           <option value="">Choose an event</option>{choices.eventNames.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -100,6 +114,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
       </section>
       {error && <p role="alert">{error}</p>}
       {conflict && onReload && <div className="mvp-widget-help"><p>Your draft is kept. Refresh the shared dashboard before retrying.</p><button className="sw-button" type="button" disabled={busy} onClick={async () => { setBusy(true); try { await onReload(); } catch (cause) { setError(cause.message); } finally { setBusy(false); } }}>Refresh shared dashboard</button></div>}
+      </div>
       <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={onClose}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!canSave || busy}>{widget ? "Save widget" : "Add widget"}</button></div>
     </form>
   </Dialog>;

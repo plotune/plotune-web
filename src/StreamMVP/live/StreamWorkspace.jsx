@@ -139,6 +139,22 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
       menuRef.current?.focus();
   }, [mobile, navOpen]);
   const [accountOpen, setAccountOpen] = useState(false);
+  const accountTrigger = useRef(null);
+  const accountMenu = useRef(null);
+  useEffect(() => {
+    if (!accountOpen) return undefined;
+    const dismiss = (event) => {
+      if (event.type === "keydown") {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        accountTrigger.current?.focus();
+      } else if (accountMenu.current?.contains(event.target) || accountTrigger.current?.contains(event.target)) return;
+      setAccountOpen(false);
+    };
+    document.addEventListener("keydown", dismiss);
+    document.addEventListener("pointerdown", dismiss);
+    return () => { document.removeEventListener("keydown", dismiss); document.removeEventListener("pointerdown", dismiss); };
+  }, [accountOpen]);
   const [createOpen, setCreateOpen] = useState(false);
   const [name, setName] = useState("");
   const [createError, setCreateError] = useState(null);
@@ -300,6 +316,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
         <div className="sw-top-end">
           <button
             className="sw-avatar"
+            ref={accountTrigger}
             aria-label="Account"
             aria-expanded={accountOpen}
             onClick={() => setAccountOpen(!accountOpen)}
@@ -310,7 +327,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           </button>
         </div>
         {accountOpen && (
-          <div className="mvp-account-menu">
+          <div ref={accountMenu} className="mvp-account-menu" aria-label="Your Plotune account">
             <strong>
               {user?.full_name || user?.username || "Your Plotune account"}
             </strong>
@@ -328,11 +345,13 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               </p>
             )}
             <Failure error={usageError} retry={() => setUsageRefresh((value) => value + 1)} />
+            <Link className="sw-link" to="/dashboard">Dashboard</Link>
+            <Link className="sw-link" to="/profile">Manage account</Link>
             <button className="sw-link" onClick={() => setUsageRefresh((value) => value + 1)}>Refresh usage</button>
             <button className="sw-link" onClick={logout}>
               Sign out
             </button>
-            <button className="sw-link" onClick={() => setAccountOpen(false)}>
+            <button className="sw-link" onClick={() => { setAccountOpen(false); accountTrigger.current?.focus(); }}>
               Close
             </button>
           </div>
@@ -423,7 +442,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               {view === "events"
                 ? "Inspect what your systems send. Event names, timestamps, and properties."
                 : view === "dashboards"
-                  ? dashboard?.description || "Project dashboards for recurring event views."
+                  ? "Project dashboards for recurring event views."
                   : view === "api"
                     ? "Send an event from your device, test bench, or simulation."
                     : view === "mcp"
