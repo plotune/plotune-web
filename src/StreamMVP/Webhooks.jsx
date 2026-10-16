@@ -9,11 +9,12 @@ import {
 
 const CUSTOM_EVENT = "__custom_event__";
 
-function AddWebhookDialog({ events, onClose, onCreate }) {
+export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNames }) {
   const eventNames = useMemo(
-    () => [...new Set(events.map((event) => event.event))].sort(),
-    [events],
+    () => discoveredEventNames || [...new Set(events.map((event) => event.event))].sort(),
+    [events, discoveredEventNames],
   );
+  const [creationId] = useState(() => `hook-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`);
   const [eventChoice, setEventChoice] = useState(eventNames[0] || CUSTOM_EVENT);
   const [customEvent, setCustomEvent] = useState("");
   const [url, setUrl] = useState("");
@@ -23,14 +24,15 @@ function AddWebhookDialog({ events, onClose, onCreate }) {
   const [errors, setErrors] = useState({});
   const eventName = eventChoice === CUSTOM_EVENT ? customEvent : eventChoice;
 
-  const submit = (e) => {
+  const [busy, setBusy] = useState(false);
+  const submit = async (e) => {
     e.preventDefault();
     const draft = { eventName, url, authType, headerName, headerValue };
     const nextErrors = validateWebhookDraft(draft);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
-    onCreate(createWebhookRecord(draft));
-    onClose();
+    setBusy(true);
+    try { await onCreate(createWebhookRecord(draft, creationId)); onClose(); } catch (cause) { setErrors({ submit: cause.message }); } finally { setBusy(false); }
   };
 
   return (
@@ -108,7 +110,8 @@ function AddWebhookDialog({ events, onClose, onCreate }) {
         <p className="mvp-webhook-note">
           The complete Stream event is sent as JSON. Header credentials are kept separate from the event payload.
         </p>
-        <button className="sw-button sw-primary" type="submit">
+        {errors.submit && <p role="alert">{errors.submit}</p>}
+        <button className="sw-button sw-primary" type="submit" disabled={busy}>
           Add webhook
         </button>
       </form>
@@ -126,6 +129,8 @@ function endpointHost(value) {
 
 export default function Webhooks({
   projectId,
+  busy = false,
+  discoveredEventNames,
   events,
   webhooks,
   onCreate,
@@ -165,6 +170,7 @@ export default function Webhooks({
                 <label className="mvp-webhook-enabled">
                   <input
                     type="checkbox"
+                    disabled={busy}
                     checked={webhook.enabled}
                     aria-label={`Enable webhook for ${webhook.eventName}`}
                     onChange={() => onToggle(webhook.id)}
@@ -173,6 +179,7 @@ export default function Webhooks({
                 </label>
                 <button
                   className="sw-icon-button"
+                  disabled={busy}
                   aria-label={`Delete webhook for ${webhook.eventName}`}
                   onClick={() => onDelete(webhook.id)}
                 >
@@ -187,6 +194,7 @@ export default function Webhooks({
         <AddWebhookDialog
           key={projectId}
           events={events}
+          discoveredEventNames={discoveredEventNames}
           onClose={() => setAdding(false)}
           onCreate={onCreate}
         />

@@ -19,8 +19,11 @@ function describe(condition) {
 }
 
 export default function FilterPopover({
-  events, filters, activeFilterId, conditions, onApply, onSave, onRename, onDelete, referenceCount,
+  events, discoveredProperties, filters, activeFilterId, conditions, onApply, onSave, onRename, onDelete, referenceCount,
 }) {
+  const [failure, setFailure] = useState("");
+  const [busy, setBusy] = useState(false);
+  const perform = async (operation) => { setBusy(true); setFailure(""); try { await operation(); return true; } catch (error) { setFailure(error.message); return false; } finally { setBusy(false); } };
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [path, setPath] = useState("");
@@ -31,13 +34,14 @@ export default function FilterPopover({
   const [saveName, setSaveName] = useState("");
   const [showSave, setShowSave] = useState(false);
   const triggerRef = useRef(null);
+  const creationId = useRef(null);
   const close = () => { setOpen(false); window.requestAnimationFrame(() => triggerRef.current?.focus()); };
-  const properties = useMemo(() => discoverPropertyPaths(events), [events]);
+  const properties = useMemo(() => discoveredProperties || discoverPropertyPaths(events), [events, discoveredProperties]);
   const matches = useMemo(() => searchPropertyPaths(properties, search).slice(0, 8), [properties, search]);
   const discovered = properties.find((item) => item.path === path);
   const type = discovered && !["mixed", "null", "object"].includes(discovered.type)
     ? discovered.type
-    : discovered && discovered.type !== "mixed" ? discovered.type : kind;
+    : kind;
   const operators = [...UNIVERSAL_OPERATORS, ...(PROPERTY_OPERATORS[type] || PROPERTY_OPERATORS.string)];
   const selectedFilter = filters.find((filter) => filter.id === activeFilterId);
   const changed = selectedFilter && JSON.stringify(selectedFilter.conditions) !== JSON.stringify(conditions);
@@ -55,7 +59,7 @@ export default function FilterPopover({
   const edit = (condition) => {
     setOpen(true);
     setPath(condition.path);
-    setKind(condition.valueType || "string");
+    setKind(condition.valueType || (["is_true", "is_false"].includes(condition.operator) ? "boolean" : "string"));
     setOperator(condition.operator);
     setValue(condition.value ?? "");
     setEditingId(condition.id);
@@ -83,11 +87,13 @@ export default function FilterPopover({
     setPath(""); setValue(""); setEditingId(null); setSearch(""); close();
   };
 
-  const saveCurrent = (event) => {
+  const saveCurrent = async (event) => {
     event.preventDefault();
     const trimmed = saveName.trim();
     if (!trimmed) return;
-    onSave(trimmed, conditions);
+    creationId.current ||= `filter-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+    if (!await perform(() => onSave(trimmed, conditions, undefined, creationId.current))) return;
+    creationId.current = null;
     setSaveName(""); setShowSave(false); close();
   };
 
@@ -111,6 +117,7 @@ export default function FilterPopover({
         <>
           <button className="mvp-popover-dismiss" tabIndex={-1} aria-label="Close filter menu" onClick={close} />
           <section className="mvp-filter-popover" role="dialog" aria-label="Filter events" onKeyDown={(event) => { if (event.key === "Escape") close(); }}>
+            {failure && <p role="alert">{failure}</p>}
             <div className="mvp-filter-popover-head">
               <strong>Filter events</strong>
               <button className="sw-icon-button" type="button" aria-label="Close filter menu" onClick={close}><FiX /></button>
@@ -130,15 +137,15 @@ export default function FilterPopover({
               <details className="mvp-filter-manage">
                 <summary>Saved filter options</summary>
                 <div>
-                  {changed && <button type="button" onClick={() => onSave(selectedFilter.name, conditions, selectedFilter.id)}>Update conditions</button>}
+                  {changed && <button type="button" disabled={busy} onClick={() => perform(() => onSave(selectedFilter.name, conditions, selectedFilter.id))}>Update conditions</button>}
                   <button type="button" onClick={() => {
                     const name = window.prompt("Rename saved filter", selectedFilter.name);
-                    if (name?.trim()) onRename(selectedFilter.id, name.trim());
+                    if (name?.trim()) perform(() => onRename(selectedFilter.id, name.trim()));
                   }}>Rename</button>
                   <button type="button" className="danger" onClick={() => {
                     const refs = referenceCount(selectedFilter.id);
                     const warning = refs ? ` ${refs} dashboard widget${refs === 1 ? "" : "s"} will need a new filter.` : "";
-                    if (window.confirm(`Delete “${selectedFilter.name}”?${warning}`)) onDelete(selectedFilter.id);
+                    if (window.confirm(`Delete “${selectedFilter.name}”?${warning}`)) perform(() => onDelete(selectedFilter.id, refs > 0));
                   }}>Delete</button>
                 </div>
               </details>
@@ -151,12 +158,12 @@ export default function FilterPopover({
             {!path ? (
               <div className="mvp-property-options" role="listbox" aria-label="Discovered properties">
                 {matches.map((item) => (
-                  <button type="button" role="option" key={item.path} onClick={() => choosePath(item.path)}>
+                  <button type="button" role="option" aria-selected={false} key={item.path} onClick={() => choosePath(item.path)}>
                     <code>{item.path}</code><small>{item.type}</small>
                   </button>
                 ))}
                 {search.trim() && !properties.some((item) => item.path === search.trim()) && (
-                  <button type="button" role="option" className="manual" onClick={() => choosePath(search.trim())}><code>{search.trim()}</code><small>Use custom path</small></button>
+                  <button type="button" role="option" aria-selected={false} className="manual" onClick={() => choosePath(search.trim())}><code>{search.trim()}</code><small>Use custom path</small></button>
                 )}
                 {!matches.length && !search.trim() && <p>Type to search or enter a custom property path.</p>}
               </div>
@@ -164,9 +171,9 @@ export default function FilterPopover({
               <form className="mvp-condition-form" onSubmit={submit}>
                 <div className="mvp-selected-property"><button type="button" onClick={() => { setPath(""); setValue(""); }}>{path} <small>{discovered?.type || "custom"} · change</small></button></div>
                 {(!discovered || ["mixed", "null", "object"].includes(discovered.type)) && (
-                  <label>Value type<select value={kind} onChange={(event) => { setKind(event.target.value); setOperator(PROPERTY_OPERATORS[event.target.value][0]); }}><option value="string">String</option><option value="number">Number</option><option value="boolean">Boolean</option></select></label>
+                  <label>Value type<select aria-label="Value type" value={kind} onChange={(event) => { setKind(event.target.value); setOperator(PROPERTY_OPERATORS[event.target.value][0]); }}><option value="string">String</option><option value="number">Number</option><option value="boolean">Boolean</option></select></label>
                 )}
-                <label>Operator<select value={operator} onChange={(event) => setOperator(event.target.value)}>{operators.map((item) => <option key={item} value={item}>{LABELS[item]}</option>)}</select></label>
+                <label>Operator<select aria-label="Operator" value={operator} onChange={(event) => setOperator(event.target.value)}>{operators.map((item) => <option key={item} value={item}>{LABELS[item]}</option>)}</select></label>
                 {!NO_VALUE.includes(operator) && type === "number" && <label>Value<input autoFocus type="number" step="any" required value={value} onChange={(event) => setValue(event.target.value)} /></label>}
                 {!NO_VALUE.includes(operator) && type === "string" && <label>Value<input autoFocus list="mvp-filter-values" value={value} onChange={(event) => setValue(event.target.value)} /><datalist id="mvp-filter-values">{suggestions.map((item) => <option key={item} value={item} />)}</datalist></label>}
                 <div className="mvp-condition-actions"><button type="button" className="sw-link" onClick={() => { setPath(""); setEditingId(null); }}>Back</button><button className="sw-button sw-primary" type="submit">Apply</button></div>
@@ -175,7 +182,7 @@ export default function FilterPopover({
             <div className="mvp-filter-popover-foot">
               {conditions.length > 0 && <span>{conditions.length} condition{conditions.length === 1 ? "" : "s"} · AND</span>}
               {!showSave ? <button type="button" className="sw-link" disabled={!conditions.length} onClick={() => setShowSave(true)}>{activeFilterId ? "Save as new" : "Save filter"}</button> : (
-                <form onSubmit={saveCurrent}><input aria-label="Saved filter name" autoFocus placeholder="Filter name" value={saveName} onChange={(event) => setSaveName(event.target.value)} required /><button type="submit">Save</button><button type="button" onClick={() => setShowSave(false)}>Cancel</button></form>
+                <form onSubmit={saveCurrent}><input aria-label="Saved filter name" autoFocus placeholder="Filter name" value={saveName} onChange={(event) => setSaveName(event.target.value)} required /><button type="submit" disabled={busy}>Save</button><button type="button" onClick={() => { creationId.current = null; setShowSave(false); }}>Cancel</button></form>
               )}
             </div>
           </section>

@@ -1,4 +1,4 @@
-import { createFilteredExport, escapeDelimited, flattenEvent, serializeExport } from "./exportModel";
+import { createEventExport, createFilteredExport, escapeDelimited, flattenEvent, serializeExport } from "./exportModel";
 
 const events = [
   { id: "evt_1", event: "drone.error", timestamp: "2026-10-08T09:00:00Z", properties: { message: 'motor, "overheat"\nstop', diagnostic: { reading: null, retry: 2 } } },
@@ -61,4 +61,31 @@ test("browser export includes all matching rows across multiple retrieval pages"
   }));
   const result = await createFilteredExport(many, { range: "all", now: "2026-10-08T10:00:00Z" }, "json");
   expect(JSON.parse(await readBlob(result.blob))).toHaveLength(501);
+});
+
+test("spreadsheet formula markers after leading whitespace or controls are emitted as literal text", () => {
+  for (const value of ["=1+1", "+SUM(A1:A2)", "-10", "@SUM(A1)", " \t=1+1", "\r=1+1", "\u0000=1+1"]) {
+    for (const delimiter of [",", "\t"]) {
+      const escaped = escapeDelimited(value, delimiter);
+      expect(escaped.startsWith("'") || escaped.startsWith('"\'')).toBe(true);
+    }
+  }
+  expect(escapeDelimited(-10, ",")).toBe("-10");
+  expect(escapeDelimited(0, ",")).toBe("0");
+  expect(escapeDelimited("ordinary text", ",")).toBe("ordinary text");
+});
+
+test("formula neutralization happens before delimiter and quote escaping", () => {
+  expect(escapeDelimited('=HYPERLINK("https://example.com","open")', ","))
+    .toBe('"\'=HYPERLINK(""https://example.com"",""open"")"');
+});
+
+test.each(["csv", "tsv"])("browser and synchronous %s exports neutralize event/property text while JSON retains original values", async (format) => {
+  const rows = [{ id: "e", event: "=custom", timestamp: "2026-10-14T12:00:00Z", properties: { formula: "=1+1", negativeNumber: -10, negativeText: "-10" } }];
+  const delimiter = format === "tsv" ? "\t" : ",";
+  for (const output of [serializeExport(rows, format), await readBlob((await createEventExport(rows, format)).blob)]) {
+    expect(output).toContain(`${delimiter}'=custom${delimiter}`);
+    expect(output).toContain(`${delimiter}'=1+1${delimiter}-10${delimiter}'-10`);
+  }
+  expect(JSON.parse(await readBlob((await createEventExport(rows, "json")).blob))).toEqual(rows);
 });

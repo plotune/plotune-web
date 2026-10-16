@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowLeft, FiMoreHorizontal, FiPlus } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import DashboardGraph from "./DashboardGraph";
@@ -12,30 +12,49 @@ function stamp(value) {
 
 export default function Dashboard({
   projectId, events, now, dashboards, filters, selectedDashboardId,
-  onOpen, onBack, onCreate, onRename, onDelete, onSaveWidget, onRemoveWidget,
+  onOpen, onBack, onCreate, onRename, onDelete, onSaveWidget, onRemoveWidget, renderGraph, discovery, loadPreview, onRefresh,
 }) {
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [baseDashboard, setBaseDashboard] = useState(null);
+  const [widgetConflict, setWidgetConflict] = useState(false);
+  const action = async (operation) => { setError(""); try { await operation(); } catch (cause) { setError(cause.message); } };
   const [createOpen, setCreateOpen] = useState(false);
+  const creationId = useRef(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [editingWidget, setEditingWidget] = useState(null);
   const [widgetOpen, setWidgetOpen] = useState(false);
   const dashboard = dashboards.find((item) => item.id === selectedDashboardId);
+  useEffect(() => {
+    if (widgetConflict && dashboard && baseDashboard && dashboard.id === baseDashboard.id && dashboard.revision !== baseDashboard.revision) {
+      setBaseDashboard(dashboard); setWidgetConflict(false);
+    }
+  }, [widgetConflict, dashboard, baseDashboard]);
   const ordered = useMemo(() => [...dashboards].sort((a, b) => Date.parse(b.updatedAt || 0) - Date.parse(a.updatedAt || 0)), [dashboards]);
 
-  const create = (event) => {
+  const create = async (event) => {
     event.preventDefault();
+    creationId.current ||= `${projectId}-dashboard-${Date.now()}`;
     const newDashboard = {
-      id: `${projectId}-dashboard-${Date.now()}`,
+      id: creationId.current,
       name: name.trim(), description: description.trim(), widgets: [], updatedAt: new Date().toISOString(),
     };
-    onCreate(newDashboard);
+    setBusy(true); setError("");
+    try { await onCreate(newDashboard); } catch (cause) { setError(cause.message); setBusy(false); return; }
+    setBusy(false);
+    creationId.current = null;
     setName(""); setDescription(""); setCreateOpen(false); onOpen(newDashboard.id);
   };
-  const editWidget = (widget = null) => { setEditingWidget(widget); setWidgetOpen(true); };
-  const saveWidget = (widget) => { onSaveWidget(dashboard.id, widget); setWidgetOpen(false); };
+  const editWidget = (widget = null) => { setEditingWidget(widget); setBaseDashboard(dashboard); setWidgetConflict(false); setWidgetOpen(true); };
+  const saveWidget = async (widget) => {
+    try { await onSaveWidget(baseDashboard.id, widget, baseDashboard); setWidgetOpen(false); }
+    catch (cause) { if (cause.status === 409) setWidgetConflict(true); throw cause; }
+  };
 
   if (!dashboard) {
     return <section className="mvp-dashboard-collection" aria-label="Project dashboards">
+      {error && <p role="alert">{error}</p>}
       <div className="mvp-dashboard-collection-head">
         <span>{dashboards.length} project dashboard{dashboards.length === 1 ? "" : "s"}</span>
         <button className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(true)}><FiPlus /> New dashboard</button>
@@ -44,8 +63,8 @@ export default function Dashboard({
         {ordered.map((item) => <Panel key={item.id} title={item.name} meta={`${item.widgets?.length || 0} widgets · Updated ${stamp(item.updatedAt)}`} className="mvp-dashboard-list-item" action={(
           <details className="mvp-dashboard-menu"><summary aria-label={`Options for ${item.name}`}><FiMoreHorizontal /></summary><div>
             <button type="button" onClick={() => onOpen(item.id)}>Open dashboard</button>
-            <button type="button" onClick={() => { const next = window.prompt("Rename dashboard", item.name); if (next?.trim()) onRename(item.id, next.trim(), item.description); }}>Rename</button>
-            <button type="button" className="danger" onClick={() => { if (window.confirm(`Delete “${item.name}” and its widgets?`)) onDelete(item.id); }}>Delete</button>
+            <button type="button" onClick={() => { const next = window.prompt("Rename dashboard", item.name); if (next?.trim()) action(() => onRename(item.id, next.trim(), item.description)); }}>Rename</button>
+            <button type="button" className="danger" onClick={() => { if (window.confirm(`Delete “${item.name}” and its widgets?`)) action(() => onDelete(item.id)); }}>Delete</button>
           </div></details>
         )}>
           <button className="mvp-dashboard-open" type="button" onClick={() => onOpen(item.id)}>
@@ -53,26 +72,31 @@ export default function Dashboard({
           </button>
         </Panel>)}
       </div> : <div className="mvp-dashboard-empty mvp-dashboard-collection-empty"><h2>No dashboards yet</h2><p>Create a project dashboard to keep useful event views together.</p></div>}
-      {createOpen && <Dialog title="New dashboard" subtitle="Create a shared dashboard for this project." onClose={() => setCreateOpen(false)}>
+      {createOpen && <Dialog title="New dashboard" subtitle="Create a shared dashboard for this project." onClose={() => { creationId.current = null; setCreateOpen(false); }}>
         <form className="sw-detail-body mvp-dashboard-create" onSubmit={create}>
+          {error && <p role="alert">{error}</p>}
           <label>Name<input autoFocus required maxLength={64} value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Robot validation" /></label>
           <label>Description <span>Optional</span><textarea maxLength={180} rows={3} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="What should this dashboard help you observe?" /></label>
-          <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={() => setCreateOpen(false)}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!name.trim()}>Create dashboard</button></div>
+          <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={() => { creationId.current = null; setCreateOpen(false); }}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!name.trim() || busy}>Create dashboard</button></div>
         </form>
       </Dialog>}
     </section>;
   }
 
   return <section className="mvp-dashboard-detail" aria-label={dashboard.name}>
+    {error && <p role="alert">{error}</p>}
     <div className="mvp-dashboard-detail-head">
       <button className="sw-link" type="button" onClick={onBack}><FiArrowLeft /> Dashboards</button>
-      <div className="mvp-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) onRename(dashboard.id, next.trim(), dashboard.description); }}>Edit dashboard</button><button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button></div>
+      <div className="mvp-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) action(() => onRename(dashboard.id, next.trim(), dashboard.description)); }}>Edit dashboard</button><button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button></div>
     </div>
     {dashboard.description && <p className="mvp-dashboard-description">{dashboard.description}</p>}
     {dashboard.widgets?.length ? <div className="mvp-dashboard-grid">
-      {dashboard.widgets.map((widget) => <DashboardGraph key={widget.id} widget={widget} events={events} filters={filters} now={now}
-        onEdit={() => editWidget(widget)} onRemove={() => { if (window.confirm(`Remove “${widget.title || widget.eventName}” from this dashboard?`)) onRemoveWidget(dashboard.id, widget.id); }} />)}
+      {dashboard.widgets.map((widget) => {
+        const edit = (current) => editWidget(current?.id ? current : widget);
+        const remove = () => { if (window.confirm(`Remove “${widget.title || widget.eventName}” from this dashboard?`)) action(() => onRemoveWidget(dashboard.id, widget.id)); };
+        return renderGraph ? renderGraph(widget, edit, remove) : <DashboardGraph key={widget.id} widget={widget} events={events} filters={filters} now={now} onEdit={edit} onRemove={remove} />;
+      })}
     </div> : <div className="mvp-dashboard-empty"><h2>Your dashboard is empty.</h2><p>Add a chart to monitor selected engineering events.</p></div>}
-    {widgetOpen && <WidgetEditor widget={editingWidget} events={events} filters={filters} now={now} onSave={saveWidget} onClose={() => setWidgetOpen(false)} />}
+    {widgetOpen && <WidgetEditor widget={editingWidget} discovery={discovery} loadPreview={loadPreview} onReload={onRefresh} events={events} filters={filters} now={now} onSave={saveWidget} onClose={() => setWidgetOpen(false)} />}
   </section>;
 }
