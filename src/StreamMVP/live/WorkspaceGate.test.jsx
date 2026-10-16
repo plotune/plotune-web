@@ -5,6 +5,11 @@ import { HelmetProvider } from "react-helmet-async";
 import { AuthContext } from "../../context/AuthContext";
 import StreamWorkspace from "./StreamWorkspace";
 
+jest.mock("./client", () => ({
+  ...jest.requireActual("./client"),
+  WORKSPACE_ENABLED: false,
+}));
+
 test("disabled workspace stays available as an honest gate without calling the inactive backend", () => {
   const fetcher = jest.fn();
   const previousFetch = global.fetch;

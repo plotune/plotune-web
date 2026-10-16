@@ -4,7 +4,7 @@ import { createMetadataCache } from "./metadataCache";
 export const STREAM_ORIGIN =
   process.env.REACT_APP_STREAM_API_ORIGIN || "https://stream.plotune.net";
 export const WORKSPACE_ENABLED =
-  process.env.REACT_APP_STREAM_WORKSPACE_ENABLED === "true";
+  process.env.REACT_APP_STREAM_WORKSPACE_ENABLED !== "false";
 export class StreamFailure extends Error {
   constructor(status, code, message, retryAfter = null) {
     super(message);
