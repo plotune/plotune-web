@@ -50,13 +50,13 @@ test('guests see Log in and Register', () => {
   act(() => root.unmount());
 });
 
-test('logged-in users see Workspace and Log out instead of Log in and Register', () => {
+test('logged-in users see Dashboard and Log out instead of Log in and Register', () => {
   const logout = jest.fn();
   const { container, root } = renderLayout({ user: { username: 'Ada' }, isLoading: false, logout });
 
   expect(container.querySelector('a[href="/login"]')).toBeNull();
   expect(container.querySelector('a[href="/register"]')).toBeNull();
-  expect(container.querySelector('a[href="/stream/workspace"]')).not.toBeNull();
+  expect(container.querySelector('a[href="/dashboard"]')).not.toBeNull();
 
   act(() => {
     container.querySelector('button.research-logout').dispatchEvent(new MouseEvent('click', { bubbles: true }));

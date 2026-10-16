@@ -224,32 +224,33 @@ Example references reviewed: [ESP32 Wi-Fi API](https://docs.espressif.com/projec
 hardware examples in the frozen demo supplied the language/platform scope.
 
 
-## Retired account entry points
+## Account dashboard and retired product entry points
 
-Owner follow-up: `/dashboard`, `/streams`, `/streams/connect`, `/mirror` and
-`/storage` now replace their URL with `/stream/workspace`. Both trailing-slash
-forms work. Legacy query parameters are discarded rather than treating old
-stream identifiers as workspace project identifiers.
+`/dashboard` is the shared account landing page for Plotune's products. Ordinary
+login opens it; a valid explicit Stream return link still opens that project or
+workspace view after authentication. The dashboard offers Nexus setup, Stream
+Workspace, Desktop downloads, Extensions and account management. It does not call
+the retired account statistics API or display invented usage totals.
 
-Signed-in header and Research navigation link directly to Workspace, and ordinary
-login now defaults there while retaining valid explicit workspace return targets.
-Mirror/Storage navigation entries are disabled. Their source files remain in the
-repository, but their route imports and preload entries are disabled. The retired
-Dashboard and Streams top-level page implementations were removed. The Stream
-landing page no longer advertises the retired connection/management experience.
+The main signed-in navigation exposes Dashboard and Stream workspace separately.
+Research links back to Dashboard. Mirror and Storage remain unavailable and hidden
+from navigation; their source files remain in the repository without route imports.
+Their old URLs lead back to Dashboard. `/streams` and `/streams/connect` continue
+to lead directly to Stream Workspace, with legacy query parameters discarded.
 
-GitHub Pages build output includes real static entry files for all five old paths,
-which then perform client-side navigation; these are not server-side HTTP 301s.
-Production source-map inspection confirmed that none of the five retired page
-implementations remain in the bundle.
+GitHub Pages output includes real static entry files for the old paths. Navigation
+is performed client-side, not as server-side HTTP 301s. The old Streams page is
+removed and the old stream-connection, Mirror and Storage implementations remain
+outside the production bundle. The Stream landing page no longer advertises the
+retired connection/management experience.
 
-Validation: 282 repository tests passed; production build and all 47 prerenders
-passed. `scripts/stream/check-entry-routes.cjs` passed 40 URL-entry cases across
-desktop/mobile, signed-in/signed-out sessions and both slash forms, plus ordinary
-login and active navigation checks. All remote APIs were mocked; no retired API
-calls or page errors occurred. Screenshots were inspected in
-`/tmp/plotune-entry-routes-production`. Production modules have no lint errors;
-five existing warnings remain. The pre-existing ResearchLayout test lint findings
-remain unchanged (13 before and after); the test suite itself passes.
-
-Changes remain local; no deployment or publication was performed.
+Verification is recorded by `scripts/stream/check-entry-routes.cjs`: it checks
+ordinary login → account Dashboard, explicit Stream login → requested workspace
+view, account/product navigation, desktop/mobile layouts, both slash forms, and
+absence of retired API calls. All API responses use isolated synthetic fixtures.
+No production account or customer data is used. The repository's 282 tests pass.
+The production build passed all 47 prerenders and agent-content checks. The final
+browser run passed all 40 account/product entry cases plus both login flows on
+desktop and mobile. Dashboard screenshots were visually inspected at
+`/tmp/plotune-account-dashboard-production`. Changes remain local until the owner
+deploys them.

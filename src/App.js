@@ -60,6 +60,7 @@ const ContactPage = routePage(() => import('./pages/Contact'));
 const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
 const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
 const Profile = routePage(() => import('./pages/Profile'));
+const Dashboard = routePage(() => import('./pages/Dashboard'));
 const Stream = routePage(() => import('./pages/Stream'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
 const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
@@ -136,7 +137,7 @@ const ScrollToTop = () => {
 const NavigationWrapper = ({ children }) => {
   const location = useLocation();
   // '/ai-readiness' is a standalone, chrome-free assessment flow (no site Header/Footer).
-  const hideLayoutPaths = ['/mirror', '/storage', '/dashboard', '/streams', '/streams/connect', '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision'];
+  const hideLayoutPaths = ['/mirror', '/storage', '/streams', '/streams/connect', '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision'];
   // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
@@ -200,7 +201,7 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/reset-password" element={<ForgotPassword />} />
-              <Route path="/dashboard" element={<Navigate to="/stream/workspace" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/stream" element={<Stream />} />
               <Route path="/streams" element={<Navigate to="/stream/workspace" replace />} />
@@ -211,8 +212,8 @@ function App() {
               <Route path="/partners" element={<Partnership />} />
               <Route path="/partner-portal" element={<PartnerPortal />} />
               <Route path="/partners/apply" element={<PartnerApplication />} />
-              <Route path="/storage" element={<Navigate to="/stream/workspace" replace />} />
-              <Route path="/mirror" element={<Navigate to="/stream/workspace" replace />} />
+              <Route path="/storage" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/mirror" element={<Navigate to="/dashboard" replace />} />
               <Route path="/embed" element={<Embeddings />} />
               <Route path="/nexus" element={<Nexus />} />
               <Route path="/solutions/agentic-test-development" element={<AgenticTestDevelopmentPage />} />
@@ -262,7 +263,7 @@ const initialRoutes = [
   [/^\/contact\/?$/, ContactPage],
   [/^\/verify-email\/?$/, VerifyEmail],
   [/^\/reset-password\/?$/, ForgotPassword],
-  [/^\/dashboard\/?$/, LiveStreamWorkspace],
+  [/^\/dashboard\/?$/, Dashboard],
   [/^\/profile\/?$/, Profile],
   [/^\/stream\/?$/, Stream],
   [/^\/streams\/?$/, LiveStreamWorkspace],
@@ -273,8 +274,8 @@ const initialRoutes = [
   [/^\/partners\/?$/, Partnership],
   [/^\/partner-portal\/?$/, PartnerPortal],
   [/^\/partners\/apply\/?$/, PartnerApplication],
-  [/^\/storage\/?$/, LiveStreamWorkspace],
-  [/^\/mirror\/?$/, LiveStreamWorkspace],
+  [/^\/storage\/?$/, Dashboard],
+  [/^\/mirror\/?$/, Dashboard],
   [/^\/embed\/?$/, Embeddings],
   [/^\/solutions\/agentic-test-development\/?$/, AgenticTestDevelopmentPage],
   [/^\/solutions\/[^\/]+\/?$/, SolutionPage],

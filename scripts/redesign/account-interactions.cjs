@@ -78,11 +78,13 @@ const save = async (page, name) => {
   record('profile edit saves through mocked PUT', report.mockedWrites.some(x => x.method === 'PUT' && x.path === '/profile'));
   await save(page, 'profile-saved');
 
-  for (const route of ['/dashboard', '/streams', '/streams/connect', '/mirror', '/storage']) {
+  for (const route of ['/streams', '/streams/connect', '/mirror', '/storage']) {
     await page.goto(`${BASE}${route}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForURL('**/stream/workspace');
-    await page.getByRole('heading', { name: 'Create your first project', exact: true }).waitFor();
-    record(`${route} opens the workspace`, new URL(page.url()).pathname === '/stream/workspace');
+    const account = route === '/mirror' || route === '/storage';
+    const destination = account ? '/dashboard' : '/stream/workspace';
+    await page.waitForURL(`**${destination}`);
+    await page.getByRole('heading', { name: account ? 'Dashboard' : 'Create your first project', exact: true }).waitFor();
+    record(`${route} opens ${destination}`, new URL(page.url()).pathname === destination);
   }
   await save(page, 'retired-routes-workspace');
 

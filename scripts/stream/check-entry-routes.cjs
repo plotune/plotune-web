@@ -6,7 +6,7 @@ const path = require('node:path');
 
 const origin = process.env.STREAM_QA_ORIGIN || 'http://localhost:3000';
 const output = process.env.STREAM_QA_OUTPUT || '/tmp/plotune-entry-routes';
-const retired = ['/dashboard', '/streams', '/streams/connect', '/mirror', '/storage'];
+const entries = [['/dashboard', '/dashboard'], ['/streams', '/stream/workspace'], ['/streams/connect', '/stream/workspace'], ['/mirror', '/dashboard'], ['/storage', '/dashboard']];
 
 async function main() {
   await fs.mkdir(output, { recursive: true });
@@ -41,11 +41,14 @@ async function main() {
           const page = await context.newPage();
           const errors = [];
           page.on('pageerror', (error) => errors.push(error.message));
-          for (const retiredPath of retired) {
+          for (const [entryPath, destination] of entries) {
             for (const suffix of ['', '/']) {
-              await page.goto(`${origin}${retiredPath}${suffix}?stream=retired&token=not-forwarded`);
-              await page.waitForURL(`${origin}/stream/workspace`);
-              await page.getByRole('heading', { name: authenticated ? 'Create your first project' : 'Open your Stream workspace', exact: true }).waitFor();
+              await page.goto(`${origin}${entryPath}${suffix}${entryPath === '/dashboard' ? '' : '?stream=retired&token=not-forwarded'}`);
+              const account = destination === '/dashboard';
+              const expectedPath = account && !authenticated ? '/login' : entryPath === destination ? `${destination}${suffix}` : destination;
+              await page.waitForURL(`${origin}${expectedPath}`);
+              const heading = account ? (authenticated ? 'Dashboard' : 'Login to Plotune') : (authenticated ? 'Create your first project' : 'Open your Stream workspace');
+              await page.getByRole('heading', { name: heading, exact: true }).waitFor();
               assert.equal(new URL(page.url()).search, '', 'Old identifiers and credentials must not be forwarded');
               assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
             }
@@ -54,23 +57,36 @@ async function main() {
           if (authenticated) {
             await page.goto(`${origin}/`);
             if (device === 'mobile') await page.getByRole('button', { name: 'Open main navigation', exact: true }).click();
-            await page.getByRole('link', { name: 'Workspace', exact: true }).waitFor({ state: 'attached' });
-            for (const retiredPath of retired) assert.equal(await page.locator(`header a[href="${retiredPath}"]`).count(), 0);
+            await page.getByRole('link', { name: 'Dashboard', exact: true }).waitFor({ state: 'attached' });
+            await page.getByRole('link', { name: 'Stream workspace', exact: true }).waitFor({ state: 'attached' });
+            for (const retiredPath of ['/streams', '/streams/connect', '/mirror', '/storage']) assert.equal(await page.locator(`header a[href="${retiredPath}"]`).count(), 0);
             await page.screenshot({ path: path.join(output, `navigation-${device}.png`), fullPage: false });
             await page.goto(`${origin}/research`);
             if (device === 'mobile') await page.getByRole('button', { name: 'Menu', exact: true }).click();
-            await page.getByRole('link', { name: 'Workspace', exact: true }).waitFor({ state: 'attached' });
+            await page.getByRole('link', { name: 'Dashboard', exact: true }).waitFor({ state: 'attached' });
           } else {
             await page.goto(`${origin}/login`);
             await page.locator('#login-username').fill('fixture-owner');
             await page.locator('#login-password').fill('SyntheticOnly123!');
             await page.getByRole('button', { name: 'Login', exact: true }).click();
-            await page.waitForURL(`${origin}/stream/workspace`);
+            await page.waitForURL(`${origin}/dashboard`);
+            await page.getByRole('heading', { name: 'Dashboard', exact: true }).waitFor();
+            for (const destination of ['/docs/nexus/quick-start', '/stream/workspace', '/download', '/extensions']) assert.equal(await page.locator(`main a[href="${destination}"]`).count(), 1);
+            assert.equal(await page.locator('main a[href="/mirror"], main a[href="/storage"]').count(), 0);
+            await page.screenshot({ path: path.join(output, `account-dashboard-${device}.png`), fullPage: true });
+            // A deliberate Stream deep link still returns to Stream after login.
+            await context.clearCookies();
+            const target = '/stream/workspace?view=dashboards';
+            await page.goto(`${origin}/login?next=${encodeURIComponent(target)}`);
+            await page.locator('#login-username').fill('fixture-owner');
+            await page.locator('#login-password').fill('SyntheticOnly123!');
+            await page.getByRole('button', { name: 'Login', exact: true }).click();
+            await page.waitForURL(`${origin}${target}`);
             await page.getByRole('heading', { name: 'Create your first project', exact: true }).waitFor();
           }
           assert.deepEqual(unexpected, [], 'Retired pages must not request their unsupported APIs');
           assert.deepEqual(errors, []);
-          console.log(`PASS: ${device}, ${authenticated ? 'signed in' : 'signed out'} redirects and workspace navigation`);
+          console.log(`PASS: ${device}, ${authenticated ? 'signed in' : 'signed out'} account/product routing and navigation`);
         } finally {
           await context.close();
         }
@@ -79,7 +95,7 @@ async function main() {
   } finally {
     await browser.close();
   }
-  console.log('PASS: 40 retired-route entries, clean query strings, login destination, active navigation, and no retired API calls.');
+  console.log('PASS: 40 account/product entries, normal login → Dashboard, explicit Stream return, clean queries, product navigation, and no retired API calls.');
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });
