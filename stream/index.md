@@ -1,57 +1,144 @@
-# Your systems emit events.Make them useful.
+# Know what happened.Keep the context.
 
-Plotune Stream  / Event infrastructure
+Plotune Stream  / Event history for engineering systems
 
 
 
-Event history for physical engineering systems. Send from the tools you already use; inspect names, timestamps, optional device and session context, and arbitrary JSON properties.
+Bring events from your tools, test benches, and scripts into one explorable history. Find the moment, follow the device or session, and see the details that matter.
 
-[Try the demo experience ↗](https://www.plotune.net/stream/demo)[Discuss your integration →](https://www.plotune.net/contact)
+[Try the demo](https://www.plotune.net/stream/demo)[Open workspace](https://www.plotune.net/stream/workspace)
 
-The demo experience runs in your browser with sample data. Its setup examples are complete integrations; the demo itself does not send them to a production event service.
+ Explore without an account, or connect your own events.
 
-01 / Source-agnostic ingestion  HTTP
+Choose a source  Follow its event
 
-## Your tools.
+Plotune Stream Events, with their context.
 
-Python · C/C++ · CAPL · MATLAB
-ROS · shell · Nexus · HTTP clients
+ HTTP
 
-## Event history.
+Event history  Device · session · properties
 
-Event name · timestamp
-Optional identifiers · JSON properties
+motor-003 / test-run-817 motor.sample
 
-## Inspection.
+Temperature
 
-Search · filters · event details
-Local dashboard and export exploration
+72.4 °C
 
-02 / Start with an event
+Speed
 
-## Context from the sender.Clarity in the explorer.
+1,840 rpm
 
-Device and session identifiers are optional, supplied by your application. Event properties carry the context you need without a predefined hardware schema.
+State
 
-[Inspect the example setup →](https://www.plotune.net/stream/demo?view=api)
+Running
 
-Illustrative payload / not a live event 
+test.completed  device.connected
 
-```
-{
-  "event": "motor.started",
-  "device_id": "motor-01",
-  "session_id": "test-01",
-  "properties": {
-    "rpm": 1200
-  }
-}
-```
+Python: motor.sample, from motor-003, session test-run-817.
 
-03 / Choose your experience  Existing routes, distinct capabilities
+Different systems. One place to understand them.
 
-[Demo experienceEvent workspaceLocal event explorer, dashboards, example API/MCP setup, webhooks and settings.↗](https://www.plotune.net/stream/demo)[Your workspacePlotune StreamCreate projects, capture events from your systems, and explore their history with your team.↗](https://www.plotune.net/stream/workspace)
+Works with the tools you use 
 
-A separate [future-product reference](https://www.plotune.net/stream/prototypes/vision) explores synthetic runs, measurements and processors. These are prototype capabilities.
+Python  C/C++  CAPL  MATLAB  ROS 2  Nexus  HTTP clients
+
+ Any system that can send an HTTP request.
+
+01 / Interactive demo 
+
+## One event.The whole picture.
+
+Choose an engineering workflow. 
+See the context that travels with each event.
+
+A motor test bench 
+
+### Motor sample
+
+A reading becomes an event with the device, test session, and values kept together.
+
+From source to inspection
+
+Your systemSupplies the event
+
+HTTP capturePreserves its context
+
+Event inspectionMakes it explorable
+
+Event name
+
+#### motor.sample
+
+Device
+
+motor-003
+
+Session
+
+test-run-817
+
+ Event properties 
+
+temperature
+
+72.4
+
+rpm
+
+1840
+
+state
+
+running
+
+ Keep exploring 
+
+### From one eventto the bigger picture.
+
+Search event history, filter by device or session, and explore dashboards in the full demo.
+
+- Find the events that matter.
+
+- Follow context across your systems.
+
+- Build a view of your event history.
+
+[Try the demo](https://www.plotune.net/stream/demo)[Open workspace](https://www.plotune.net/stream/workspace)
+
+ Ready to connect your systems? Open your workspace.
+
+Motor sample selected
+
+02 / Built for your next investigation 
+
+## Less searching.More understanding.
+
+From a single device to a shared test session, keep the event and its context together.
+
+01
+
+### Find the moment.
+
+Search and filter event history to narrow an investigation to the events that matter.
+
+02
+
+### Keep the details.
+
+Inspect device and session identifiers alongside the properties your application provides.
+
+03
+
+### Explore the pattern.
+
+Bring event history into dashboards and saved views you can return to.
+
+03 / Choose your next step 
+
+## Explore Stream.Or bring your own events.
+
+Get a feel for Stream in the demo, or open your workspace to connect your systems.
+
+[New to Stream?See what youcan discover.Explore event history, filters, and dashboards. Get a feel for the workspace before connecting your tools.Try the demo](https://www.plotune.net/stream/demo)[Ready to connect?Bring yourown events.Open your projects and start capturing events from your engineering systems with your Plotune account.Open workspace](https://www.plotune.net/stream/workspace)
 
 Source: https://www.plotune.net/stream

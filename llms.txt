@@ -51,7 +51,7 @@ Technical documentation describes implementation status and limitations. Researc
 ## Optional
 
 - [Questions about Plotune and Nexus.](https://www.plotune.net/faq/index.md): Answers to common questions about Plotune Nexus and the Plotune DataOps platform: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation.
-- [Your systems emit events.Make them useful.](https://www.plotune.net/stream/index.md): Explore source-agnostic engineering event infrastructure and the hands-on Plotune Stream demo experience. Send events from any system that can make HTTP requests.
+- [Know what happened.Keep the context.](https://www.plotune.net/stream/index.md): Understand events from your engineering systems in one explorable history. Try the Plotune Stream demo or open your workspace to connect your tools, test benches, and scripts.
 - [Tell us about your test environment.](https://www.plotune.net/contact/index.md): Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps.
 - [Engineering systems.Connected with intent.](https://www.plotune.net/about/index.md): Plotune helps engineering teams orchestrate, process, and govern their data, and builds Plotune Nexus for controlled, AI-ready work on real test hardware.
 - [Careers at Plotune](https://www.plotune.net/careers/index.md): Published page content.
