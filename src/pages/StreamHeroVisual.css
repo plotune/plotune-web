@@ -1,0 +1,70 @@
+/* Source → event history: an interactive illustration of Stream's product model. */
+.shv { margin:0; min-width:0; padding:24px; box-sizing:border-box; border:1px solid #ccd6c5; border-radius:12px; background:#ecefe5; color:#19382f; box-shadow:8px 10px 0 #e3e8dc; font-family:Inter,system-ui,sans-serif; }
+.shv svg { width:22px; height:22px; flex:none; }
+.shv-top { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#586b5c; font:10px/1.5 ui-monospace,monospace; }
+.shv-top>span:first-child { text-transform:uppercase; letter-spacing:.07em; }
+.shv-sources { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:24px; }
+.shv-sources button { position:relative; min-width:0; display:flex; flex-direction:column; align-items:center; gap:9px; padding:18px 6px 14px; border:1px solid #cbd7c3; border-radius:7px; background:#fffffc; color:#19382f; text-align:center; cursor:pointer; transition:background .18s,border-color .18s; }
+.shv-sources button:hover { border-color:#00725a; background:#f3f7ed; }
+.shv-sources button[aria-pressed=true] { border-color:#00725a; background:#e4eedb; box-shadow:inset 0 2px #00725a; }
+.shv-sources button:focus-visible { outline:2px solid #00725a; outline-offset:4px; }
+.shv-sources svg { color:#00725a; }
+.shv-sources b { font-size:12px; font-weight:600; }
+.shv-sources small { font-size:10px; line-height:1.5; color:#586b5c; }
+.shv .shv-source-check { position:absolute; top:7px; right:7px; width:11px; height:11px; }
+.shv .shv-join { display:block; width:100%; height:42px; }
+.shv-active-path { stroke-dasharray:1; stroke-dashoffset:0; animation:shv-route .4s ease both; }
+@keyframes shv-route { from{stroke-dashoffset:1} to{stroke-dashoffset:0} }
+.shv-hub { display:flex; align-items:center; gap:13px; padding:17px; border:1px solid #355346; border-radius:7px; background:#19382f; color:#f0f4e9; }
+.shv-hub-icon { display:grid; place-items:center; width:38px; height:38px; flex:none; border:1px solid #61764b; border-radius:7px; background:#2d4d3a; color:#c5de8d; }
+.shv-hub strong { display:block; font-size:17px; font-weight:600; letter-spacing:-.025em; }
+.shv-hub small { display:block; margin-top:5px; font-size:10px; color:#c1d2bb; }
+.shv-http { margin-left:auto; padding:5px 7px; border:1px solid #50694f; border-radius:4px; color:#d0e5a5; font:10px ui-monospace,monospace; }
+.shv-trunk { position:relative; width:1px; height:25px; margin:auto; background:#9caf98; }
+.shv-trunk i { position:absolute; top:0; left:-2px; width:5px; height:5px; border-radius:50%; background:#00725a; animation:shv-deliver .45s .15s ease both; }
+@keyframes shv-deliver { from{transform:translateY(0);opacity:0} 20%{opacity:1} to{transform:translateY(23px);opacity:1} }
+.shv-history { min-width:0; border:1px solid #c5d1bc; border-radius:7px; background:#fffffc; overflow:hidden; }
+.shv-history-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px 8px; padding:12px 15px; border-bottom:1px solid #d7dfd0; color:#51664f; font-size:10px; line-height:1.5; }
+.shv-history-top>span:first-child { font-weight:600; }
+.shv-record { display:flex; align-items:center; gap:11px; padding:16px 15px 13px; }
+.shv-record>div { min-width:0; }
+.shv-event-mark { display:grid; place-items:center; flex:none; width:32px; height:32px; border:1px solid #d2dfc3; border-radius:6px; background:#e8efdf; color:#00725a; }
+.shv-event-mark svg { width:17px; height:17px; }
+.shv-record small { display:block; color:#586b5c; font:10px/1.6 ui-monospace,monospace; overflow-wrap:anywhere; }
+.shv-record strong { display:block; margin-top:2px; color:#19382f; font:400 clamp(22px,2.2vw,28px)/1.35 Georgia,serif; overflow-wrap:anywhere; }
+.shv-readings { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; min-height:60px; margin:0; padding:0 15px 16px; }
+.shv-readings>div { min-width:0; padding-left:10px; border-left:1px solid #d5decd; }
+.shv-readings>div:first-child { padding-left:0; border:0; }
+.shv-readings dt { margin-bottom:6px; color:#586b5c; font-size:10px; line-height:1.5; }
+.shv-readings dd { display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 4px; color:#19382f; font:500 14px/1.5 ui-monospace,monospace; }
+.shv-readings dd>span { color:#586b5c; font:10px/1.5 system-ui,sans-serif; }
+.shv-readings .shv-state { align-items:center; gap:5px; font:500 11px/2 system-ui,sans-serif; }
+.shv-history-stack { display:flex; flex-wrap:wrap; align-items:center; gap:9px 18px; min-height:38px; padding:10px 15px; border-top:1px solid #d7dfd0; background:#f2f5ec; color:#556a50; font:10px/1.6 ui-monospace,monospace; }
+.shv-history-stack>span { display:flex; align-items:center; gap:5px; }
+.shv-history-stack svg { width:12px; height:12px; }
+.shv figcaption { margin-top:20px; padding-top:16px; border-top:1px solid #c8d4bf; color:#486341; font-size:11px; line-height:1.6; }
+.shv-status { position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media(max-width:1000px) {
+ .shv { padding:20px 17px; }
+ .shv-sources { gap:7px; }
+ .shv-sources button { padding:17px 4px 13px; }
+ .shv-sources b { font-size:11px; }
+ .shv-hub { padding:13px 12px; gap:10px; }
+ .shv-hub strong { font-size:16px; }
+ .shv-hub-icon { width:32px; height:32px; }
+ .shv-http { padding:4px 5px; }
+ .shv-history-top { padding:11px 12px; }
+ .shv-record { gap:9px; padding:14px 12px 12px; }
+ .shv-readings { padding:0 12px 14px; }
+ .shv-readings>div { padding-left:8px; }
+ .shv-readings dd { font-size:13px; }
+ .shv-readings .shv-state { gap:4px; font-size:10px; }
+ .shv-history-stack { gap:7px 12px; padding:9px 12px; }
+}
+@media(max-width:700px) { .shv { margin-right:5px; box-shadow:5px 6px 0 #e3e8dc; } .shv-top { gap:8px; } .shv figcaption { margin-top:17px; font-size:10px; } }
+@media(prefers-reduced-motion:reduce) { .shv *, .shv *:before, .shv *:after { transition:none!important; animation:none!important; } }
+@media(max-width:360px) {
+ .shv-record { min-height:92px; box-sizing:border-box; }
+ .shv-readings { min-height:76px; }
+ .shv-history-stack { display:grid; grid-template-columns:1fr; gap:7px; }
+}

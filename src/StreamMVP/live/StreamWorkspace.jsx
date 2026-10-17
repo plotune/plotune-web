@@ -36,6 +36,7 @@ import LiveExplorer, { Failure } from "./LiveExplorer";
 import RemoteGraph from "./RemoteGraph";
 import ProjectSettings from "./ProjectSettings";
 import ConnectionSetup from "./ConnectionSetup";
+import WorkspaceEntry from "./WorkspaceEntry";
 import { pollWhileVisible } from "./visiblePolling";
 import logo from "../../assets/logo.png";
 import "../../StreamWorkspace/workspace.css";
@@ -68,30 +69,11 @@ export default function StreamWorkspace() {
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       {!WORKSPACE_ENABLED ? (
-        <div className="live-entry">
-          <h1>Plotune Stream workspace</h1>
-          <p>The authenticated workspace is awaiting backend activation.</p>
-          <Link className="sw-button sw-primary" to="/stream/demo">
-            Explore the interactive demo
-          </Link>
-        </div>
+        <WorkspaceEntry unavailable />
       ) : auth.isLoading ? (
-        <div className="live-entry" role="status">
-          Checking your session…
-        </div>
+        <WorkspaceEntry loading />
       ) : !auth.token ? (
-        <div className="live-entry">
-          <h1>Open your Stream workspace</h1>
-          <p>
-            Sign in with your Plotune account to access your shared projects.
-          </p>
-          <Link
-            className="sw-button sw-primary"
-            to={streamWorkspaceLogin(loginLocation.search)}
-          >
-            Sign in
-          </Link>
-        </div>
+        <WorkspaceEntry loginTo={streamWorkspaceLogin(loginLocation.search)} sharedLink={!!loginLocation.search} />
       ) : (
         <Workspace
           key={auth.token}
