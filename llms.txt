@@ -32,7 +32,7 @@ Technical documentation describes implementation status and limitations. Researc
 
 ## Research
 
-- [Agentic Test & Validation](https://www.plotune.net/research/index.md): Visual comparisons from Plotune's final agentic engineering test and validation benchmark.
+- [How well do agentshandle the real work?](https://www.plotune.net/research/index.md): Explore Plotune's final agentic engineering benchmark. Compare model performance, cost, and task duration across six workflows.
 - [Research reports](https://www.plotune.net/research/reports/index.md): Monthly reports and reading for Plotune Research.
 - [Agentic Test & Validation Protocol](https://www.plotune.net/research/methodology/index.md): Agentic Test and Validation Protocol.
 - [Agentic ECU Testing: From CAN Signals to Autonomous Test Execution](https://www.plotune.net/research/articles/agentic-ecu-testing-can-to-execution/index.md): A look at the decode layer underneath CAN test automation: why DBC-based signal decode, not raw frames, is what makes ECU test automation and autonomous execution trustworthy.
