@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import Seo from '../components/Seo';
 import { publishedResearchArticles } from './content/articles';
 import { getTopicVisual } from './content/topicVisuals';
 
 const ALL_TOPICS = 'All topics';
+const MotionLink = motion(Link);
 
 const ReportThumbnail = ({ topic }) => {
   const { from, to, Icon } = getTopicVisual(topic);
@@ -22,6 +24,7 @@ const ChevronIcon = () => (
 );
 
 const ResearchReports = () => {
+  const reduceMotion = useReducedMotion();
   const [query, setQuery] = useState('');
   const [topic, setTopic] = useState(ALL_TOPICS);
   const [sortOrder, setSortOrder] = useState('newest');
@@ -95,7 +98,7 @@ const ResearchReports = () => {
             <span className="section-label">Library</span>
             <h2>Published reports</h2>
           </div>
-          <span className="result-count">{filteredArticles.length} {filteredArticles.length === 1 ? 'report' : 'reports'}</span>
+          <span className="result-count" role="status" aria-live="polite">{filteredArticles.length} {filteredArticles.length === 1 ? 'report' : 'reports'}</span>
         </div>
 
         {filteredArticles.length === 0 ? (
@@ -108,7 +111,7 @@ const ResearchReports = () => {
           </div>
         ) : (
           filteredArticles.map((article) => (
-            <Link className="report-row" to={`/research/articles/${article.slug}`} key={article.slug}>
+            <MotionLink layout={!reduceMotion} initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.25 }} className="report-row" to={`/research/articles/${article.slug}`} key={article.slug}>
               <ReportThumbnail topic={article.topic} />
               <div className="report-body">
                 <span className="report-meta">{article.publishedAt} · {article.readingTime} · {article.topic}</span>
@@ -118,7 +121,7 @@ const ResearchReports = () => {
               <span className="report-chevron" aria-hidden="true">
                 <ChevronIcon />
               </span>
-            </Link>
+            </MotionLink>
           ))
         )}
       </section>

@@ -6,11 +6,12 @@ const Plot = createPlotlyComponent(Plotly);
 
 const touchDevice = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
-const InteractivePlotly = ({ chart }) => (
+const InteractivePlotly = ({ chart, onPointSelect }) => (
   <Plot
     data={chart.data}
     layout={{ ...chart.layout, autosize: true, ...(touchDevice ? { dragmode: false } : {}) }}
     config={chart.config}
+    onClick={onPointSelect ? (event) => onPointSelect(event.points?.[0]?.customdata) : undefined}
     useResizeHandler
     style={{ width: '100%', height: '100%' }}
   />

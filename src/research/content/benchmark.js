@@ -99,6 +99,7 @@ export const buildScatterChart = (rows, xMetric, yMetric) => {
       type: 'scatter', mode: 'markers', name: provider,
       x: providerRows.map((row) => row[xConfig.key]),
       y: providerRows.map((row) => row[yConfig.key]),
+      customdata: providerRows.map((row) => ({ model: row.model, score: row.score, cost: row.cost, time: row.time })),
       text: providerRows.map((row) => `<b>${row.model}</b><br>${xConfig.label}: ${formatMetricValue(row[xConfig.key], xMetric)}<br>${yConfig.label}: ${formatMetricValue(row[yConfig.key], yMetric)}`),
       hovertemplate: '%{text}<extra></extra>',
       marker: { color: providerRows[0].providerColor, size: 11, line: { color: '#fff', width: 1 } },
@@ -127,8 +128,8 @@ export const buildScatterChart = (rows, xMetric, yMetric) => {
       margin: { l: 56, r: 20, t: 16, b: 48 },
       paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#fbfcfe',
       font: { family: 'Inter, sans-serif', color: '#334155', size: 12 },
-      xaxis: { title: `${xConfig.label} (${xConfig.higher ? 'higher is better' : 'lower is better'})`, gridcolor: '#e2e8f0', range: [xMin - xPad, xMax + xPad], fixedrange: true },
-      yaxis: { title: `${yConfig.label} (${yConfig.higher ? 'higher is better' : 'lower is better'})`, gridcolor: '#e2e8f0', range: [yMin - yPad, yMax + yPad], fixedrange: true },
+      xaxis: { title: { text: `${xConfig.label} (${xConfig.higher ? 'higher is better' : 'lower is better'})` }, automargin: true, gridcolor: '#e2e8f0', range: [xMin - xPad, xMax + xPad], fixedrange: true },
+      yaxis: { title: { text: `${yConfig.label} (${yConfig.higher ? 'higher is better' : 'lower is better'})` }, automargin: true, gridcolor: '#e2e8f0', range: [yMin - yPad, yMax + yPad], fixedrange: true },
       legend: { orientation: 'h', y: -0.22, font: { size: 11 } },
       hoverlabel: { bgcolor: '#0f172a', font: { color: '#ffffff' } },
       shapes: [{
