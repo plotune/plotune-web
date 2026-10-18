@@ -6,7 +6,7 @@ const phase = process.argv[2] || 'after';
 const out = path.resolve('docs/redesign/evidence/stream-oauth', phase);
 fs.mkdirSync(out, { recursive: true });
 const fixture = {
-  request: { name: 'Claude Desktop', clientId: 'mcp_local_visual_fixture', redirect: 'https://client.example.test/oauth/callback', scope: ['events:read', 'dashboards:read', 'context:read'] },
+  request: { name: 'Claude Desktop', clientId: 'mcp_local_visual_fixture', redirect: 'https://client.example.test/oauth/callback', scope: ['events:read', 'dashboards:read', 'context:read', 'aggregate:run', 'usage:read'] },
   projects: [{ id: 'project-1', name: 'Vehicle telemetry', role: 'owner' }, { id: 'project-2', name: 'Bench validation', role: 'viewer' }],
 };
 (async () => {
