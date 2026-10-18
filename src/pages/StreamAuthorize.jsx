@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { streamWorkspaceReturn } from "../utils/streamWorkspaceNavigation";
+import "./StreamAuthorize.css";
 
 // Stream MCP OAuth consent (works with workers/stream /oauth/*).
 // The page never sees or stores credentials: the signed request blob is opaque,
@@ -119,153 +120,151 @@ export function StreamAuthorize() {
     }
   };
 
-  const buttonBase =
-    "flex-1 min-h-[44px] rounded-sm px-5 py-2.5 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-card disabled:cursor-not-allowed disabled:opacity-50";
-
   return (
-    <div className="min-h-screen bg-dark-surface flex items-center justify-center py-8 px-4">
-      <div className="bg-dark-card rounded-sm p-8 border border-ink/15 w-full max-w-lg">
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-primary/10">
+    <main className="stream-authorize" aria-labelledby="stream-authorize-title">
+      <div className="stream-authorize__shell">
+        <div className="stream-authorize__eyebrow technical-label">Stream / Authorization</div>
+        <header className="stream-authorize__header">
+          <span className="stream-authorize__icon">
             {status === "returning" ? (
-              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             ) : (
-              <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             )}
+          </span>
+          <div>
+            <h1 id="stream-authorize-title">Approve access request</h1>
+            <p>An application is asking for read-only access to one of your Stream projects.</p>
           </div>
-          <h1 className="text-2xl font-semibold text-white">Approve access request</h1>
-          <p className="mt-2 text-sm text-ink/70">
-            An application is asking for read-only access to one of your Stream projects.
-          </p>
-        </div>
+        </header>
 
-        {status === "loading" && (
-          <p className="text-center text-sm text-ink/60" aria-live="polite">
-            Checking the authorization request…
-          </p>
-        )}
-
-        {status === "error" && (
-          <div className="space-y-4">
-            <div className="rounded-sm border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200" role="alert" aria-live="assertive">
-              {error}
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {recoverable && (
-                <button type="button" onClick={() => window.location.reload()} className={`${buttonBase} bg-primary text-white hover:opacity-90`}>
-                  Try again
-                </button>
-              )}
-              <Link to="/stream/workspace" className={`${buttonBase} text-center border border-ink/30 text-ink/80 hover:bg-ink/5`}>
-                Go to Stream
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {status === "empty" && (
-          <div className="space-y-4">
-            <div className="rounded-sm border border-ink/15 bg-dark-surface p-4 text-sm text-ink/80" aria-live="polite">
-              Your account has no Stream projects yet. Create one in the Stream workspace, then restart sign-in from your MCP client.
-            </div>
-            <Link to="/stream/workspace" className={`${buttonBase} text-center bg-primary text-white hover:opacity-90`}>
-              Open Stream
-            </Link>
-          </div>
-        )}
-
-        {status === "consent" && context && (
-          <div className="space-y-6">
-            {/* Common region: everything identifying the requester lives in one bordered block. */}
-            <div className="rounded-sm border border-ink/15 bg-dark-surface p-4">
-              <p className="text-xs uppercase tracking-wider text-ink/50">Application</p>
-              <p className="mt-1 text-lg font-medium text-white break-all">{context.request.name || context.request.clientId}</p>
-              <p className="mt-2 text-xs text-ink/60 break-all">
-                Authorization results will be sent to{" "}
-                <span className="text-ink/80">{redirectHost(context.request.redirect)}</span>
-              </p>
-              {/* Progressive disclosure: transparency without clutter. */}
-              <details className="mt-3 group">
-                <summary className="cursor-pointer list-none text-xs text-ink/50 underline underline-offset-2 hover:text-ink/70">
-                  Where exactly is this sent?
-                </summary>
-                <p className="mt-2 break-all text-xs text-ink/60">{context.request.redirect}</p>
-                <p className="mt-1 break-all text-xs text-ink/60">Application ID: {context.request.clientId}</p>
-              </details>
-            </div>
-
-            <div>
-              <p className="text-xs uppercase tracking-wider text-ink/50 mb-2">Requested access</p>
-              <ul className="space-y-2">
-                {context.request.scope.map((scope) => (
-                  <li key={scope} className="flex items-start gap-2 text-sm text-ink/80">
-                    <svg className="w-4 h-4 mt-0.5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    {describeScope(scope)}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-3 text-xs text-ink/50">Read-only. Role changes or removal in Stream apply to this access immediately.</p>
-            </div>
-
-            <div>
-              <label htmlFor="project" className="text-xs uppercase tracking-wider text-ink/50">
-                Project to share
-              </label>
-              <select
-                id="project"
-                value={projectId}
-                onChange={(event) => setProjectId(event.target.value)}
-                className="mt-2 w-full min-h-[44px] rounded-sm border border-ink/15 bg-dark-surface px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-              >
-                {context.projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name} ({project.role})
-                  </option>
-                ))}
-              </select>
-              <p className="mt-2 text-xs text-ink/50">Only this one project is shared. Applications that need another project must ask separately.</p>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => decide("approve")}
-                disabled={Boolean(pending)}
-                aria-busy={pending === "approve"}
-                className={`${buttonBase} bg-primary text-white hover:opacity-90`}
-              >
-                {pending === "approve" ? "Approving…" : "Approve and continue"}
-              </button>
-              <button
-                type="button"
-                onClick={() => decide("deny")}
-                disabled={Boolean(pending)}
-                aria-busy={pending === "deny"}
-                className={`${buttonBase} border border-ink/30 text-ink/80 hover:bg-ink/5`}
-              >
-                {pending === "deny" ? "Denying…" : "Deny request"}
-              </button>
-            </div>
-
-            <p className="text-xs text-ink/50">
-              You can revoke this access at any time by removing the application's authorization in Stream or letting it expire.
+        <div className="stream-authorize__panel">
+          {status === "loading" && (
+            <p className="stream-authorize__status" role="status">
+              Checking the authorization request…
             </p>
-          </div>
-        )}
+          )}
 
-        {status === "returning" && (
-          <p className="text-center text-sm text-ink/60" aria-live="polite">
-            Returning you to the application…
-          </p>
-        )}
+          {status === "error" && (
+            <div className="stream-authorize__state">
+              <div className="stream-authorize__error" role="alert" aria-live="assertive">{error}</div>
+              <div className="stream-authorize__actions">
+                {recoverable && (
+                  <button type="button" onClick={() => window.location.reload()} className="design-button">
+                    Try again
+                  </button>
+                )}
+                <Link to="/stream/workspace" className="design-button secondary">Go to Stream</Link>
+              </div>
+            </div>
+          )}
+
+          {status === "empty" && (
+            <div className="stream-authorize__state">
+              <p className="stream-authorize__status" role="status">
+                Your account has no Stream projects yet. Create one in the Stream workspace, then restart sign-in from your MCP client.
+              </p>
+              <Link to="/stream/workspace" className="design-button">Open Stream</Link>
+            </div>
+          )}
+
+          {status === "consent" && context && (
+            <>
+              <section className="stream-authorize__application" aria-labelledby="stream-application-title">
+                <div className="stream-authorize__application-heading">
+                  <div>
+                    <h2 id="stream-application-title" className="technical-label">Application</h2>
+                    <p className="stream-authorize__application-name">{context.request.name || context.request.clientId}</p>
+                  </div>
+                  <span className="stream-authorize__badge">Read-only access</span>
+                </div>
+                <p className="stream-authorize__destination">
+                  Authorization results will be sent to <strong>{redirectHost(context.request.redirect)}</strong>
+                </p>
+                <details className="stream-authorize__details">
+                  <summary>Where exactly is this sent?</summary>
+                  <div>
+                    <p>{context.request.redirect}</p>
+                    <p>Application ID: {context.request.clientId}</p>
+                  </div>
+                </details>
+              </section>
+
+              <div className="stream-authorize__review">
+                <section aria-labelledby="stream-permissions-title">
+                  <h2 id="stream-permissions-title" className="stream-authorize__section-title">Requested access</h2>
+                  <ul className="stream-authorize__permissions">
+                    {context.request.scope.map((scope) => (
+                      <li key={scope}>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
+                        </svg>
+                        <span>{describeScope(scope)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="stream-authorize__hint">Read-only. Role changes or removal in Stream apply to this access immediately.</p>
+                </section>
+
+                <section className="stream-authorize__project" aria-labelledby="stream-project-title">
+                  <h2 id="stream-project-title" className="stream-authorize__section-title">
+                    <label htmlFor="project">Project to share</label>
+                  </h2>
+                  <select
+                    id="project"
+                    value={projectId}
+                    onChange={(event) => setProjectId(event.target.value)}
+                    disabled={Boolean(pending)}
+                    aria-describedby="stream-project-hint"
+                  >
+                    {context.projects.map((project) => (
+                      <option key={project.id} value={project.id}>{project.name} ({project.role})</option>
+                    ))}
+                  </select>
+                  <p id="stream-project-hint" className="stream-authorize__hint">
+                    Only this one project is shared. Applications that need another project must ask separately.
+                  </p>
+                </section>
+              </div>
+
+              <div className="stream-authorize__decision">
+                <div className="stream-authorize__actions">
+                  <button
+                    type="button"
+                    onClick={() => decide("approve")}
+                    disabled={Boolean(pending)}
+                    aria-busy={pending === "approve"}
+                    className="design-button"
+                  >
+                    {pending === "approve" ? "Approving…" : "Approve and continue"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => decide("deny")}
+                    disabled={Boolean(pending)}
+                    aria-busy={pending === "deny"}
+                    className="design-button secondary"
+                  >
+                    {pending === "deny" ? "Denying…" : "Deny request"}
+                  </button>
+                </div>
+                <p className="stream-authorize__hint">
+                  You can revoke this access at any time by removing the application's authorization in Stream or letting it expire.
+                </p>
+              </div>
+            </>
+          )}
+
+          {status === "returning" && (
+            <p className="stream-authorize__status" role="status">Returning you to the application…</p>
+          )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -278,3 +277,4 @@ function redirectHost(redirectUri) {
 }
 
 export default StreamAuthorize;
+
