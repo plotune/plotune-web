@@ -68,10 +68,11 @@ test('each requested permission is described in plain language, including aggreg
   fetchMock.mockResolvedValue({
     status: 200,
     ok: true,
-    json: async () => ({ request: { clientId: 'mcp_x', name: 'Agent', redirect: 'https://client.example/callback', scope: ['events:read', 'aggregate:run'] }, projects: [{ id: 'p1', name: 'Bench rig', role: 'Owner' }] }),
+    json: async () => ({ request: { clientId: 'mcp_x', name: 'Agent', redirect: 'https://client.example/callback', scope: ['events:read', 'aggregate:run', 'usage:read'] }, projects: [{ id: 'p1', name: 'Bench rig', role: 'Owner' }] }),
   });
   render('/stream/authorize?request=blob.signature');
   await act(async () => { await Promise.resolve(); await Promise.resolve(); });
   expect(container.textContent).toContain("Summarize this project's event history");
-  expect(container.textContent).not.toContain('aggregate:run');
+  expect(container.textContent).toContain("See your account's event usage");
+  expect(container.textContent).not.toMatch(/aggregate:run|usage:read/);
 });
