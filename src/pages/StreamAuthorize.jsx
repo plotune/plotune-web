@@ -9,6 +9,13 @@ import { streamWorkspaceReturn } from "../utils/streamWorkspaceNavigation";
 const STREAM_ORIGIN =
   process.env.REACT_APP_STREAM_API_ORIGIN || "https://stream.plotune.net";
 
+// The auth_token cookie stores the credential including its "Bearer " prefix
+// (see services/api.js and StreamMVP/live/client.js); normalize before use.
+const authorizationHeader = () => {
+  const token = Cookies.get("auth_token");
+  return token ? `Bearer ${String(token).replace(/^Bearer\s+/i, "")}` : "";
+};
+
 const SCOPE_DESCRIPTIONS = {
   "events:read": "Read this project's event history, discovery catalog and Saved Filters",
   "dashboards:read": "Read this project's shared Dashboards and their widgets",
@@ -39,7 +46,7 @@ export function StreamAuthorize() {
       setStatus("error");
       return undefined;
     }
-    const token = Cookies.get("auth_token");
+    const token = authorizationHeader();
     if (!token) {
       const next = streamWorkspaceReturn(`/stream/authorize?request=${encodeURIComponent(request)}`);
       window.location.assign(`/login?next=${encodeURIComponent(next || "/stream/authorize")}`);
@@ -50,7 +57,7 @@ export function StreamAuthorize() {
       try {
         const response = await fetch(
           `${STREAM_ORIGIN}/oauth/authorize/context?request=${encodeURIComponent(request)}`,
-          { headers: { Authorization: `Bearer ${token}` } },
+          { headers: { Authorization: token } },
         );
         if (cancelled) return;
         if (response.status === 401) {
@@ -92,7 +99,7 @@ export function StreamAuthorize() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("auth_token")}`,
+          Authorization: authorizationHeader(),
         },
         body: JSON.stringify({ request, decision, ...(decision === "approve" ? { projectId } : {}) }),
       });
