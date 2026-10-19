@@ -36,6 +36,7 @@ import LiveExplorer, { Failure } from "./LiveExplorer";
 import RemoteGraph from "./RemoteGraph";
 import ProjectSettings from "./ProjectSettings";
 import ConnectionSetup from "./ConnectionSetup";
+import AccountUsage from "./AccountUsage";
 import WorkspaceEntry from "./WorkspaceEntry";
 import { pollWhileVisible } from "./visiblePolling";
 import logo from "../../assets/logo.png";
@@ -176,14 +177,11 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   }, [requestedProject, metadata.projects, location]);
   const project = metadata.project;
   const [discoveryState, setDiscoveryState] = useState({});
-  const [usage, setUsage] = useState(null);
-  const [usageError, setUsageError] = useState(null);
   const [deliveries, setDeliveries] = useState([]);
   const [deliveryError, setDeliveryError] = useState(null);
   const [deliveryLoading, setDeliveryLoading] = useState(false);
   const [deliveryRefresh, setDeliveryRefresh] = useState(0);
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
-  const [usageRefresh, setUsageRefresh] = useState(0);
   const needsDiscovery = view === "events" || view === "dashboards";
   useEffect(() => {
     setDiscoveryState({});
@@ -199,15 +197,6 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
       });
     return () => controller.abort();
   }, [client, project?.id, needsDiscovery, discoveryRefresh]);
-  useEffect(() => {
-    setUsage(null); setUsageError(null);
-    if (!project?.id || !accountOpen) return undefined;
-    const controller = new AbortController();
-    client.usage(project.id, controller.signal).then((result) => {
-      if (!controller.signal.aborted) setUsage(result);
-    }).catch((error) => { if (!controller.signal.aborted) setUsageError(error); });
-    return () => controller.abort();
-  }, [client, project?.id, accountOpen, usageRefresh]);
   useEffect(() => {
     setDeliveries([]); setDeliveryError(null); setDeliveryLoading(false);
     if (!project?.id || view !== "webhooks" || metadata.role === "Member")
@@ -314,22 +303,9 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               {user?.full_name || user?.username || "Your Plotune account"}
             </strong>
             {user?.email && <span>{user.email}</span>}
-            {project && !usage && !usageError && <p role="status">Loading usage…</p>}
-            {usage && (
-              <p>
-                {usage.accepted.toLocaleString()} /{" "}
-                {usage.allowance.toLocaleString()} events this month
-                <br />
-                {usage.acceptedToday.toLocaleString()} /{" "}
-                {usage.dailyAllowance.toLocaleString()} today
-                <br />
-                <small>Project owner's account allowance</small>
-              </p>
-            )}
-            <Failure error={usageError} retry={() => setUsageRefresh((value) => value + 1)} />
+            <AccountUsage client={client} projectId={project?.id} role={metadata.role} />
             <Link className="sw-link" to="/dashboard">Dashboard</Link>
             <Link className="sw-link" to="/profile">Manage account</Link>
-            <button className="sw-link" onClick={() => setUsageRefresh((value) => value + 1)}>Refresh usage</button>
             <button className="sw-link" onClick={logout}>
               Sign out
             </button>
