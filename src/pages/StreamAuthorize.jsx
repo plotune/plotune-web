@@ -16,7 +16,7 @@ const SCOPE_DESCRIPTIONS = {
   "dashboards:read": "Read this project's shared Dashboards and their widgets",
   "context:read": "Read this project's context, health observations and operator documentation",
   "aggregate:run": "Summarize this project's event history (counts, totals, averages); results are visible only to you",
-  "usage:read": "See your account's event usage and allowance (project owners only)",
+  "usage:read": "See the event usage and allowance this project counts against",
 };
 const describeScope = (scope) => SCOPE_DESCRIPTIONS[scope] || scope;
 
