@@ -18,6 +18,7 @@ import {
   FiMenu,
   FiPlus,
   FiChevronRight,
+  FiCpu,
 } from "react-icons/fi";
 import { streamWorkspaceLogin } from "../../utils/streamWorkspaceNavigation";
 import { AuthContext } from "../../context/AuthContext";
@@ -36,6 +37,7 @@ import LiveExplorer, { Failure } from "./LiveExplorer";
 import RemoteGraph from "./RemoteGraph";
 import ProjectSettings from "./ProjectSettings";
 import ConnectionSetup from "./ConnectionSetup";
+import DevicesHealth from "./DevicesHealth";
 import WorkspaceEntry from "./WorkspaceEntry";
 import { pollWhileVisible } from "./visiblePolling";
 import logo from "../../assets/logo.png";
@@ -46,6 +48,7 @@ import "./live.css";
 const NAV = [
   ["events", "Events", FiActivity],
   ["dashboards", "Dashboards", FiBarChart2],
+  ["devices", "Devices", FiCpu],
   ["api", "API setup", FiCode],
   ["mcp", "MCP setup", FiTerminal],
   ["webhooks", "Webhooks", FiSend],
@@ -390,7 +393,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           </button>
         </div>
         <nav aria-label="Workspace navigation">
-          {[NAV.slice(0, 2), NAV.slice(2, 5)].map((items, index) => (
+          {[NAV.slice(0, 3), NAV.slice(3, 6)].map((items, index) => (
             <div className="sw-nav-group" key={index}>
               {index === 1 && <p>SETUP</p>}
               {items.map(([id, label, Icon]) => (
@@ -425,6 +428,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 ? "Inspect what your systems send. Event names, timestamps, and properties."
                 : view === "dashboards"
                   ? "Project dashboards for recurring event views."
+                  : view === "devices"
+                  ? "Which devices are sending, and anything that needs attention."
                   : view === "api"
                     ? "Send an event from your device, test bench, or simulation."
                     : view === "mcp"
@@ -581,6 +586,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                   )}
                 />
               )}
+              {view === "devices" && <DevicesHealth client={client} project={project} />}
               {(view === "api" || view === "mcp") && (
                 <ConnectionSetup
                   key={view}

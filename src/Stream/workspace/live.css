@@ -343,3 +343,54 @@
   /* Balanced rows (3 + 2) instead of one tab stranded on its own line. */
   .live-workspace .mcp-setup-tabs { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); }
 }
+
+/* Devices & health: glance-level state first; evidence and checks open on request. */
+.live-workspace .dh-clear { display: flex; align-items: center; gap: 12px; padding: 20px 23px; flex-wrap: wrap; }
+.live-workspace .dh-clear p { margin: 0; color: #51656c; }
+.live-workspace .dh-issues { list-style: none; margin: 0; padding: 8px 23px 16px; }
+.live-workspace .dh-issues li { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e6ecec; }
+.live-workspace .dh-issues li:last-child { border-bottom: 0; }
+.live-workspace .dh-issue-text { flex: 1; min-width: 0; color: #18292e; overflow-wrap: anywhere; }
+.live-workspace .dh-issues .sw-button { min-height: 40px; }
+.live-workspace .dh-table-wrap { overflow-x: auto; padding: 8px 23px 0; }
+.live-workspace .dh-devices { width: 100%; border-collapse: collapse; }
+.live-workspace .dh-devices th,
+.live-workspace .dh-devices td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid #e6ecec; vertical-align: middle; }
+.live-workspace .dh-devices thead th { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #78918c; }
+.live-workspace .dh-devices tbody th { font-weight: 400; }
+.live-workspace .dh-devices code { overflow-wrap: anywhere; }
+.live-workspace .dh-devices td:last-child { text-align: right; padding-right: 0; }
+.live-workspace .dh-devices .sw-button { min-height: 40px; }
+.live-workspace .dh-more { margin: 16px 23px 0; min-height: 44px; }
+.live-workspace .sw-panel-head .sw-link { min-height: 40px; }
+.live-workspace .dh-note { margin: 12px 23px 0; font-size: 12px; color: #78918c; }
+.live-workspace .dh-note:last-child { margin-bottom: 20px; }
+.live-workspace .dh-detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0 0 16px; }
+.live-workspace .dh-detail dt { color: #78918c; }
+.live-workspace .dh-detail dd { margin: 0; overflow-wrap: anywhere; }
+.live-workspace .dh-detail h3 { font-size: 14px; margin: 16px 0 8px; }
+.live-workspace .dh-verdict { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.live-workspace .dh-checks { list-style: none; margin: 12px 0 0; padding: 0; }
+.live-workspace .dh-checks li { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #e6ecec; }
+.live-workspace .dh-checks li > svg { flex: none; margin-top: 2px; }
+.live-workspace .dh-checks li div { display: flex; flex-direction: column; gap: 2px; }
+.live-workspace .dh-checks span { color: #51656c; }
+.live-workspace .dh-check-pass > svg { color: #2e7d32; }
+.live-workspace .dh-check-warn > svg { color: #b26a00; }
+.live-workspace .dh-check-fail > svg { color: #c62828; }
+.live-workspace .dh-check-unknown > svg { color: #78918c; }
+@media (max-width: 600px) {
+  /* Narrow screens: each device becomes a card (name, last event and status, check). */
+  .live-workspace .dh-table-wrap { overflow: visible; }
+  .live-workspace .dh-devices thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .live-workspace .dh-devices tr { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 12px 0; border-bottom: 1px solid #e6ecec; }
+  .live-workspace .dh-devices th,
+  .live-workspace .dh-devices td { display: block; padding: 0; border: 0; }
+  .live-workspace .dh-devices tbody th { grid-column: 1 / -1; }
+  .live-workspace .dh-devices td:last-child { grid-column: 1 / -1; text-align: left; }
+  .live-workspace .dh-devices .sw-button { width: 100%; min-height: 44px; }
+  .live-workspace .dh-issues li { flex-wrap: wrap; }
+  .live-workspace .dh-issue-text { flex-basis: 100%; order: 2; }
+  .live-workspace .dh-issues .sw-button { order: 3; }
+  .live-workspace .dh-detail dl { grid-template-columns: 1fr; }
+}
