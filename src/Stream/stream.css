@@ -1389,3 +1389,25 @@
 .st-account-menu > a { display:block; text-decoration:none; padding:8px 0; }
 
 .st-widget-fields input, .st-widget-fields select, .st-widget-fields button { scroll-margin-block:10px; }
+/* Credits: account menu glance and the Add credits dialog. */
+.cr-summary { display: flex; flex-direction: column; gap: 6px; padding: 9px 0; border-top: 1px solid #e7eeec; border-bottom: 1px solid #e7eeec; }
+.cr-row { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; color: #7c9197; }
+.cr-row b { color: #24373d; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cr-meter { height: 5px; background: #e9efee; border-radius: 3px; overflow: hidden; }
+.cr-meter i { display: block; height: 100%; background: #1f8a70; border-radius: 3px; }
+.cr-meter i.cr-near { background: #c98a12; }
+.cr-meter i.cr-full { background: #c2412d; }
+.cr-add { align-self: flex-start; margin-top: 2px; }
+.cr-form label { font-size: 12px; font-weight: 600; color: #24373d; }
+.cr-input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.cr-input-row input { flex: 1 1 180px; min-width: 0; font: 600 14px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase;
+  padding: 8px 10px; border: 1px solid #cfdbd8; border-radius: 5px; }
+.cr-input-row input:focus-visible { outline: 2px solid #1f8a70; outline-offset: 1px; }
+.st-app .cr-form > .cr-help { font-size: 12px; color: #6d8288; margin: 0; }
+.st-app .cr-form > .cr-error { font-size: 12px; color: #b03a28; font-weight: 600; margin: 0; }
+.st-app .cr-form > .cr-done { font-size: 12px; color: #1d7a5f; font-weight: 600; margin: 0; }
+.cr-ledger h3 { font-size: 12px; margin: 6px 0 4px; }
+.cr-ledger ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.cr-ledger li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; font-size: 12px; color: #52666c; }
+.cr-ledger li b { color: #1d7a5f; font-variant-numeric: tabular-nums; }
+.cr-input-row input::placeholder { text-transform: none; letter-spacing: 0; font-weight: 400; font-family: inherit; color: #9aaba8; }

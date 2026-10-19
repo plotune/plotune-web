@@ -10,7 +10,7 @@ const project = { id: 'robot-validation', name: 'Robot validation', ownerId: 'o'
 const dev = (id, min) => ({ deviceId: id, lastSeenAt: iso(min), lastSeenDay: iso(min).slice(0, 10), precision: 'minute' });
 const scenario = {
   issues: [
-    { id: 'quota_daily', kind: 'quota_daily', severity: 'warning', subject: null, summary: 'The account has used 86% of its daily event allowance.', observedAt: iso(0) },
+    { id: 'quota_daily', kind: 'quota_daily', severity: 'warning', subject: null, summary: 'The account has used 86% of its daily credits.', observedAt: iso(0) },
     { id: 'device_silent:bench-02', kind: 'device_silent', severity: 'warning', subject: 'bench-02', summary: 'Device bench-02 has sent no events for 3 hours.', observedAt: iso(180) },
   ],
   devices: [dev('motor-003', 2), dev('drone-11', 14), dev('bench-02', 180), dev('rig-legacy-7', 9 * 1440), { deviceId: 'recovered-4', lastSeenAt: null, lastSeenDay: iso(2 * 1440).slice(0, 10), precision: 'day' }],
@@ -32,19 +32,19 @@ async function run(browser, device, width, height, empty) {
     const endpoint = parts.slice(4).join('/');
     if (endpoint === 'health') {
       const id = u.searchParams.get('id');
-      if (id) return respond({ projectId: project.id, asOf: iso(0), issue: { ...scenario.issues.find((i) => i.id === id), evidence: id === 'quota_daily' ? { accepted: 1720, allowance: 2000, resetsAt: new Date(Date.UTC(2026, 9, 20)).toISOString() } : { lastSeenAt: iso(180), silentAfterMinutes: 60 }, nextSteps: id === 'quota_daily' ? ['Reduce capture volume or sampling on devices.', 'The allowance is shared by every project of the owner account.'] : ["Check the device's power, network and capture client logs.", 'Run a device check for a step-by-step diagnosis.'] } });
+      if (id) return respond({ projectId: project.id, asOf: iso(0), issue: { ...scenario.issues.find((i) => i.id === id), evidence: id === 'quota_daily' ? { used: 2580, limit: 3000, resetsAt: new Date(Date.UTC(2026, 9, 20)).toISOString() } : { lastSeenAt: iso(180), silentAfterMinutes: 60 }, nextSteps: id === 'quota_daily' ? ['Reduce capture volume or sampling on devices.', 'Read usage_get for the current credits; every project of the owner account shares them.'] : ["Check the device's power, network and capture client logs.", 'Run a device check for a step-by-step diagnosis.'] } });
       return respond({ projectId: project.id, asOf: iso(0), issues: empty ? [] : scenario.issues });
     }
     if (endpoint === 'devices') return respond({ projectId: project.id, asOf: iso(0), items: empty ? [] : scenario.devices, nextAfter: null, total: empty ? 0 : scenario.devices.length, truncated: false, lastCaptureAt: empty ? null : iso(2) });
     if (endpoint === 'diagnose') return respond({ projectId: project.id, asOf: iso(0), deviceId: u.searchParams.get('deviceId'), verdict: 'degraded', checks: [
       { id: 'project_settings', status: 'pass', summary: 'The runtime has current project settings, so the project key resolves.' },
-      { id: 'allowance', status: 'pass', summary: "The account's event allowance has room." },
+      { id: 'allowance', status: 'pass', summary: 'The account has credits left.' },
       { id: 'buffer', status: 'pass', summary: 'The capture buffer has room.' },
       { id: 'recent_capture', status: 'pass', summary: `The project accepted an event at ${iso(2)}.` },
       { id: 'device', status: 'warn', summary: `Device last seen at ${iso(180)}.` },
       { id: 'history', status: 'pass', summary: 'Buffered events are reaching long-term history on schedule.' }],
       nextSteps: ["Check the device's power, network and capture client logs."], limits: [] });
-    if (endpoint === 'usage') return respond({ month: '2026-10', accepted: 1720, allowance: 30000, day: iso(0).slice(0, 10), acceptedToday: 1720, dailyAllowance: 2000, scope: 'project-owner-account' });
+    if (endpoint === 'usage') return respond({ unit: 'credits', month: '2026-10', monthly: { used: 344, allowance: 30000 }, day: iso(0).slice(0, 10), daily: { used: 344, limit: 3000 }, added: { balance: 0, granted: 0, spent: 0 }, available: 2656, prices: {}, scope: 'project-owner-account' });
     if (endpoint === 'discovery') return respond({ eventNames: ['motor.sample'], properties: [], deviceIds: [], sessionIds: [], truncated: false });
     return respond({ items: [], nextCursor: null, now: iso(0), snapshot: 1 });
   });

@@ -20,9 +20,11 @@ export function Failure({ error, retry }) {
           ? "Your session expired. Sign in again."
           : error.status === 403
             ? "You do not have access to this project or action."
-            : error.status === 429
-              ? "Your account's event allowance has been reached."
-              : error.message}
+            : error.code === "daily_credit_limit_reached"
+              ? "The account reached today's credit limit. It resets at 00:00 UTC."
+              : error.code === "credits_exhausted"
+                ? "The account is out of credits. Add credits or wait for the monthly reset."
+                : error.message}
       </strong>
       {error.status === 401 && (
         <a href={streamWorkspaceLogin(window.location.search)}>Sign in</a>

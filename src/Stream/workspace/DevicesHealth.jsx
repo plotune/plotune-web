@@ -8,8 +8,8 @@ const ACTIVE_MINUTES = 60;
 const SEVERITY = { critical: "Critical", warning: "Warning", info: "Info" };
 const ISSUE_TITLE = {
   control_stale: "Project settings out of date",
-  quota_daily: "Daily event allowance",
-  quota_monthly: "Monthly event allowance",
+  quota_daily: "Daily credit limit",
+  quota_monthly: "Monthly credits",
   buffer_pressure: "Capture buffer filling up",
   history_lagging: "Long-term history delayed",
   catalog_truncated: "Discovery list full",
@@ -20,7 +20,7 @@ const ISSUE_TITLE = {
 const CHECK_ICON = { pass: FiCheckCircle, warn: FiAlertTriangle, fail: FiXCircle, unknown: FiHelpCircle };
 const CHECK_LABEL = {
   project_settings: "Project settings",
-  allowance: "Event allowance",
+  allowance: "Credits",
   buffer: "Capture buffer",
   recent_capture: "Recent events",
   device: "This device",
@@ -36,8 +36,10 @@ const VERDICT = {
 const EVIDENCE = {
   lastSeenAt: "Last event",
   silentAfterMinutes: "Quiet after (minutes)",
-  accepted: "Events accepted",
-  allowance: "Allowance",
+  used: "Credits used",
+  limit: "Daily limit",
+  allowance: "Monthly credits",
+  addedBalance: "Added credits left",
   resetsAt: "Resets",
   bufferedBytes: "Waiting to be stored (bytes)",
   capacityBytes: "Buffer size (bytes)",

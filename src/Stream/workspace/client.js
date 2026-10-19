@@ -341,6 +341,10 @@ export function createStreamClient(
       }),
     discovery: (id, signal) => request(data(id, "/discovery"), { signal }),
     usage: (id, signal) => request(data(id, "/usage"), { signal }),
+    // Added credits belong to the signed-in account, not to a project.
+    credits: (signal) => request("/v1/projects/credits", { signal }),
+    redeem: (code) =>
+      request("/v1/projects/credits/redeem", { method: "POST", body: { code } }),
     event: (id, eventId, signal) =>
       request(data(id, `/events/${encoded(eventId)}`), { signal }),
     realtime: (id, after, signal) =>
