@@ -56,7 +56,7 @@ test("shows issues most severe first with details on request, and devices with t
   expect(states).toEqual([["m-1", "Active"], ["m-2", "Quiet"]]);
   await act(async () => [...view.container.querySelectorAll(".dh-issues button")][1].click());
   await flush();
-  expect(client.health).toHaveBeenLastCalledWith("p", { issueId: "device_silent:m-2" });
+  expect(client.health).toHaveBeenLastCalledWith("p", { issueId: "device_silent:m-2" }, expect.any(AbortSignal));
   const dialog = view.container.querySelector("dialog");
   expect(dialog.querySelector("h2").textContent).toBe("Quiet device");
   expect(dialog.textContent).toContain("Last event");
@@ -88,7 +88,7 @@ test("device check shows the verdict and each step in plain words", async () => 
   await view.render(); await flush();
   await act(async () => button(view.container, "Check device m-2").click());
   await flush();
-  expect(client.diagnose).toHaveBeenCalledWith("p", "m-2");
+  expect(client.diagnose).toHaveBeenCalledWith("p", "m-2", expect.any(AbortSignal));
   const dialog = view.container.querySelector("dialog");
   expect(dialog.textContent).toContain("Needs attention");
   expect([...dialog.querySelectorAll(".dh-checks li")].map((li) => li.className)).toEqual(["dh-check-pass", "dh-check-warn"]);
@@ -140,5 +140,40 @@ test("a failed load shows the error with a retry", async () => {
   await act(async () => retry.click());
   await flush();
   expect(view.container.textContent).toContain("No active issues");
+  view.unmount();
+});
+
+test("a late detail response never reopens a closed dialog or replaces another device's check", async () => {
+  const pending = {};
+  const client = {
+    health: jest.fn(async () => ({ projectId: "p", asOf: ago(0), issues: [] })),
+    devices: jest.fn(async () => devices([minute("m-1", 3), minute("m-2", 180)])),
+    diagnose: jest.fn((_id, deviceId, signal) => new Promise((resolve, reject) => {
+      pending[deviceId] = resolve;
+      signal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")));
+    })),
+  };
+  const result = (deviceId, verdict) => ({ projectId: "p", asOf: ago(0), deviceId, verdict, checks: [], nextSteps: [], limits: [] });
+  const view = mount(client);
+  await view.render(); await flush();
+  // 1. Close the dialog while the check is still running: it stays closed.
+  await act(async () => button(view.container, "Check device m-1").click());
+  expect(view.container.querySelector("dialog")).not.toBeNull();
+  expect(client.diagnose.mock.calls[0][2].aborted).toBe(false);
+  await act(async () => button(view.container, "Close detail").click());
+  expect(client.diagnose.mock.calls[0][2].aborted).toBe(true);
+  await act(async () => pending["m-1"](result("m-1", "healthy")));
+  await flush();
+  expect(view.container.querySelector("dialog")).toBeNull();
+  // 2. Open m-1, then m-2 before m-1 answers: m-1's late answer must not replace m-2.
+  await act(async () => button(view.container, "Check device m-1").click());
+  await act(async () => button(view.container, "Check device m-2").click());
+  await act(async () => pending["m-1"](result("m-1", "healthy")));
+  await act(async () => pending["m-2"](result("m-2", "blocked")));
+  await flush();
+  const dialog = view.container.querySelector("dialog");
+  expect(dialog.querySelector("h2").textContent).toBe("Device m-2");
+  expect(dialog.textContent).toContain("Blocked");
+  expect(dialog.textContent).not.toContain("Healthy");
   view.unmount();
 });

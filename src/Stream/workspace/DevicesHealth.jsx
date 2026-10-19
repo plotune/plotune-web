@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FiCheckCircle, FiAlertTriangle, FiXCircle, FiHelpCircle } from "react-icons/fi";
 import { Badge, Dialog, Empty, Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { Failure } from "./LiveExplorer";
@@ -78,6 +78,22 @@ export default function DevicesHealth({ client, project }) {
   const [error, setError] = useState(null);
   const [issue, setIssue] = useState(null);
   const [check, setCheck] = useState(null);
+  // Only the dialog that is open now may receive a response: closing or opening
+  // another detail aborts the earlier request, and late answers are dropped.
+  const detailRequest = useRef(null);
+  const startDetail = () => {
+    detailRequest.current?.abort();
+    detailRequest.current = new AbortController();
+    return detailRequest.current;
+  };
+  const current = (request) => detailRequest.current === request && !request.signal.aborted;
+  const closeDetail = () => {
+    detailRequest.current?.abort();
+    detailRequest.current = null;
+    setIssue(null);
+    setCheck(null);
+  };
+  useEffect(() => () => detailRequest.current?.abort(), []);
 
   const load = useCallback(async (signal) => {
     setLoading(true);
@@ -114,20 +130,25 @@ export default function DevicesHealth({ client, project }) {
     }
   };
   const openIssue = async (summary) => {
+    const request = startDetail();
+    setCheck(null);
     setIssue({ summary, detail: null, error: null });
     try {
-      const detail = await client.health(project.id, { issueId: summary.id });
-      setIssue({ summary, detail: detail.issue, error: null });
+      const detail = await client.health(project.id, { issueId: summary.id }, request.signal);
+      if (current(request)) setIssue({ summary, detail: detail.issue, error: null });
     } catch (cause) {
-      setIssue({ summary, detail: null, error: cause });
+      if (current(request)) setIssue({ summary, detail: null, error: cause });
     }
   };
   const openCheck = async (deviceId) => {
+    const request = startDetail();
+    setIssue(null);
     setCheck({ deviceId, result: null, error: null });
     try {
-      setCheck({ deviceId, result: await client.diagnose(project.id, deviceId), error: null });
+      const result = await client.diagnose(project.id, deviceId, request.signal);
+      if (current(request)) setCheck({ deviceId, result, error: null });
     } catch (cause) {
-      setCheck({ deviceId, result: null, error: cause });
+      if (current(request)) setCheck({ deviceId, result: null, error: cause });
     }
   };
 
@@ -197,7 +218,7 @@ export default function DevicesHealth({ client, project }) {
         </Panel>
       )}
       {issue && (
-        <Dialog title={ISSUE_TITLE[issue.summary.kind] || SEVERITY[issue.summary.severity]} subtitle={issue.summary.summary} onClose={() => setIssue(null)}>
+        <Dialog title={ISSUE_TITLE[issue.summary.kind] || SEVERITY[issue.summary.severity]} subtitle={issue.summary.summary} onClose={closeDetail}>
           <Failure error={issue.error?.status === 404 ? null : issue.error} />
           {!issue.detail && !issue.error && <p role="status">Loading details…</p>}
           {issue.detail && (
@@ -217,7 +238,7 @@ export default function DevicesHealth({ client, project }) {
         </Dialog>
       )}
       {check && (
-        <Dialog title={`Device ${check.deviceId}`} subtitle="Capture path check" onClose={() => setCheck(null)}>
+        <Dialog title={`Device ${check.deviceId}`} subtitle="Capture path check" onClose={closeDetail}>
           <Failure error={check.error} />
           {!check.result && !check.error && <p role="status">Checking…</p>}
           {check.result && (() => {
