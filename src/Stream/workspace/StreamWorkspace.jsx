@@ -23,6 +23,7 @@ import {
 import { streamWorkspaceLogin } from "../../utils/streamWorkspaceNavigation";
 import { AuthContext } from "../../context/AuthContext";
 import { Dialog, Empty, Panel } from "../../StreamWorkspace/WorkspaceUI";
+import { AddCreditsDialog, CreditsSummary } from "./Credits";
 import Dashboard from "../Dashboard";
 import Webhooks from "../Webhooks";
 import { buildWidgetSeries } from "../widgetModel";
@@ -187,6 +188,17 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [deliveryRefresh, setDeliveryRefresh] = useState(0);
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
   const [usageRefresh, setUsageRefresh] = useState(0);
+  // A shared promo link (?redeem=CODE) opens Add credits once, prefilled.
+  const [redeem, setRedeem] = useState(() => {
+    const code = params.get("redeem");
+    return code ? { code: code.slice(0, 32) } : null;
+  });
+  useEffect(() => {
+    if (!params.has("redeem")) return;
+    const next = new URLSearchParams(params);
+    next.delete("redeem");
+    setParams(next, { replace: true });
+  }, [params, setParams]);
   const needsDiscovery = view === "events" || view === "dashboards";
   useEffect(() => {
     setDiscoveryState({});
@@ -317,22 +329,14 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               {user?.full_name || user?.username || "Your Plotune account"}
             </strong>
             {user?.email && <span>{user.email}</span>}
-            {project && !usage && !usageError && <p role="status">Loading usage…</p>}
-            {usage && (
-              <p>
-                {usage.accepted.toLocaleString()} /{" "}
-                {usage.allowance.toLocaleString()} events this month
-                <br />
-                {usage.acceptedToday.toLocaleString()} /{" "}
-                {usage.dailyAllowance.toLocaleString()} today
-                <br />
-                <small>Project owner's account allowance</small>
-              </p>
+            {project && !usage && !usageError && <p role="status">Loading credits…</p>}
+            {usage?.monthly && (
+              <CreditsSummary usage={usage} onAdd={() => { setAccountOpen(false); setRedeem({ code: "" }); }} />
             )}
             <Failure error={usageError} retry={() => setUsageRefresh((value) => value + 1)} />
             <Link className="sw-link" to="/dashboard">Dashboard</Link>
             <Link className="sw-link" to="/profile">Manage account</Link>
-            <button className="sw-link" onClick={() => setUsageRefresh((value) => value + 1)}>Refresh usage</button>
+            <button className="sw-link" onClick={() => setUsageRefresh((value) => value + 1)}>Refresh credits</button>
             <button className="sw-link" onClick={logout}>
               Sign out
             </button>
@@ -673,6 +677,14 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           )}
         </div>
       </main>
+      {redeem && (
+        <AddCreditsDialog
+          client={client}
+          initialCode={redeem.code}
+          onClose={() => setRedeem(null)}
+          onRedeemed={() => setUsageRefresh((value) => value + 1)}
+        />
+      )}
       {createOpen && (
         <Dialog
           title="Create a project"
