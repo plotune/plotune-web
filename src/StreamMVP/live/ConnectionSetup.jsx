@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { mcpExample } from "./examples";
 import CaptureGuide from "./CaptureGuide";
+import McpSetup from "./McpSetup";
 import { FiCopy, FiTerminal } from "react-icons/fi";
 import { Failure } from "./LiveExplorer";
 
@@ -11,30 +12,29 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
   const [error, setError] = useState(null);
   const [checking, setChecking] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [copied, setCopied] = useState(null);
   const raw = metadata.keys[metadata.project.id];
   const key = raw || suppliedKey;
   const snippet = mcpExample(key || "YOUR_PROJECT_KEY", client.origin);
-  const copy = async (text) => {
+  const mcpUrl = `${client.origin}/mcp`;
+  useEffect(() => {
+    if (!copied) return undefined;
+    const timer = setTimeout(() => setCopied(null), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
+  // Feedback appears on the button that was used; the status line is for keyboard and screen readers.
+  const copy = async (text, id = null) => {
     try {
       await navigator.clipboard.writeText(text);
+      setError(null);
+      setCopied(id);
       setStatus("Copied.");
     } catch {
       setError(new Error("Copy failed. Select the text to copy manually."));
     }
   };
-  return (
-    <>
-      {mcp && <Panel title="Query events from your AI agent">
-        <div className="mvp-mcp-intro">
-          <span className="mvp-first-icon"><FiTerminal /></span>
-          <div><h3>Your event history, available through MCP.</h3>
-            <p>Connect an MCP-capable client to investigate this project's events.</p>
-            <p className="mvp-muted">Read-only event history access. This connection does not control hardware.</p>
-          </div>
-        </div>
-        <div className="mvp-mcp-example"><span>Try asking</span><q>Find motor.sample events from motor-003 in test-run-817 and summarize their temperatures.</q></div>
-      </Panel>}
-      <Panel title={mcp ? "MCP connection" : "Project connection"} meta={metadata.project.name}>
+  const keyAccess = (
+      <Panel title={mcp ? "Project key access" : "Project connection"} meta={metadata.project.name}>
         <div className="mvp-connection live-project-connection">
           <label>{mcp ? "MCP endpoint" : "Ingestion endpoint"}
             <div className="mvp-endpoint">
@@ -114,16 +114,45 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
           )}
         </div>
       </Panel>
-      <Panel title={mcp ? "Client configuration" : "Capture an event"}>
-        {!mcp ? <CaptureGuide apiKey={key} origin={client.origin} /> : <div className="mvp-connection live-mcp-config">
+  );
+  if (!mcp) return (
+    <>
+      {keyAccess}
+      <Panel title="Capture an event">
+        <CaptureGuide apiKey={key} origin={client.origin} />
+      </Panel>
+      <Failure error={error} />
+      {status && <p role="status">{status}</p>}
+    </>
+  );
+  return (
+    <>
+      <Panel title="Query events from your AI agent">
+        <div className="mvp-mcp-intro">
+          <span className="mvp-first-icon"><FiTerminal /></span>
+          <div><h3>Your event history, available to your AI agent.</h3>
+            <p>Connect your AI client, sign in once, and ask about this project's events, devices and health.</p>
+            <p className="mvp-muted">Reads events, dashboards and health. This connection does not control hardware.</p>
+          </div>
+        </div>
+        <div className="mvp-mcp-example"><span>Try asking</span><q>Which devices stopped sending in the last hour, and why?</q></div>
+      </Panel>
+      <Panel title="Connect your AI client" meta={metadata.project.name}>
+        <McpSetup url={mcpUrl} projectName={metadata.project.name} copy={copy} copied={copied} />
+      </Panel>
+      <details className="mcp-key-alternative">
+        <summary>Use a project key instead</summary>
+        <p className="mvp-muted">For clients without sign-in support. A project key reads event history only; dashboards, analysis and health need sign-in.</p>
+        {keyAccess}
+        <Panel title="Client configuration">
+        <div className="mvp-connection live-mcp-config">
           <p>Configuration format varies by MCP client. Use the endpoint and project key below in your client's remote MCP settings.</p>
           <div className="sw-code-head">
             <span>Client configuration</span>
             <button className="sw-link" onClick={() => copy(snippet)}>Copy example</button>
           </div>
           <pre className="sw-code" tabIndex={0} aria-label="MCP configuration">{snippet}</pre>
-          {mcp && (
-            <button
+          <button
               className="sw-button"
               disabled={!key || checking}
               onClick={async () => {
@@ -149,9 +178,9 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
             >
               {checking ? "Checking…" : "Check MCP connection"}
             </button>
-          )}
-        </div>}
-      </Panel>
+        </div>
+        </Panel>
+      </details>
       <Failure error={error} />
       {status && <p role="status">{status}</p>}
     </>

@@ -268,3 +268,75 @@
   .live-workspace .mvp-more-properties,
   .live-workspace .sw-sidebar nav button { min-height: 44px; }
 }
+
+/* MCP setup: one client at a time (tabs), three short steps, copy on every command. */
+.live-workspace .mcp-setup-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid #d7e0e1;
+  border-radius: 8px;
+  background: #f5f8f8;
+  width: fit-content;
+  max-width: 100%;
+}
+.live-workspace .mcp-setup-tabs [role="tab"] {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #51656c;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.live-workspace .mcp-setup-tabs [role="tab"]:hover { color: #18292e; }
+.live-workspace .mcp-setup-tabs [role="tab"].active {
+  background: #fff;
+  color: #00695c;
+  box-shadow: 0 1px 2px rgba(24, 41, 46, 0.12);
+}
+.live-workspace .mcp-setup-steps {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.live-workspace .mcp-setup-steps li { display: flex; gap: 14px; align-items: flex-start; }
+.live-workspace .mcp-setup-steps li > div { flex: 1; min-width: 0; }
+.live-workspace .mcp-setup-steps p { margin: 4px 0 8px; color: #18292e; }
+.live-workspace .mcp-step-number {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0f2f1;
+  color: #00695c;
+  font-weight: 700;
+}
+.live-workspace .mcp-step-code { display: flex; gap: 8px; align-items: stretch; }
+.live-workspace .mcp-step-code .sw-code { flex: 1; min-width: 0; margin: 0; white-space: pre; }
+.live-workspace .mcp-copy { flex: none; min-width: 92px; min-height: 44px; }
+.live-workspace .mcp-key-alternative { margin-top: 4px; }
+.live-workspace .mcp-key-alternative > summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  color: #00695c;
+  font-weight: 600;
+}
+.live-workspace .mcp-key-alternative > p { margin: 0 0 12px; }
+@media (max-width: 600px) {
+  .live-workspace .mcp-step-code { flex-direction: column; }
+  .live-workspace .mcp-copy { align-self: flex-start; }
+  .live-workspace .mcp-setup-tabs { width: 100%; }
+  .live-workspace .mcp-setup-tabs [role="tab"] { flex: 1 1 auto; }
+}
