@@ -8,8 +8,8 @@ export default function CaptureGuide({ apiKey, origin = "https://stream.plotune.
   const [error, setError] = useState("");
   const snippet = captureExample(language, apiKey || "YOUR_PROJECT_KEY", origin);
   return (
-    <div className={`mvp-integration ${compact ? "compact" : ""}`}>
-      <div className="mvp-example-heading">
+    <div className={`st-integration ${compact ? "compact" : ""}`}>
+      <div className="st-example-heading">
         <strong>Send an event over HTTP</strong>
         <span>From your device, test bench, or simulation. Your own event names and properties.</span>
       </div>
@@ -19,9 +19,9 @@ export default function CaptureGuide({ apiKey, origin = "https://stream.plotune.
             onClick={() => { setLanguage(item); setCopied(""); setError(""); }}>{item}</button>
         ))}
       </div>
-      <p className="mvp-contract-note">{EXAMPLE_NOTES[language]}</p>
-      <div className="mvp-snippet">
-        <button className="sw-button mvp-copy-code" aria-label="Copy integration snippet" onClick={async () => {
+      <p className="st-contract-note">{EXAMPLE_NOTES[language]}</p>
+      <div className="st-snippet">
+        <button className="sw-button st-copy-code" aria-label="Copy integration snippet" onClick={async () => {
           try { await navigator.clipboard.writeText(snippet); setCopied(snippet); setError(""); }
           catch { setError("Copy failed. Select the example to copy it manually."); }
         }}><FiCopy />{copied === snippet ? "Copied" : "Copy"}</button>
@@ -29,7 +29,7 @@ export default function CaptureGuide({ apiKey, origin = "https://stream.plotune.
       </div>
       {error && <p role="alert">{error}</p>}
       {copied === snippet && <span className="live-sr-only" role="status">Example copied</span>}
-      <p className="mvp-contract-note">
+      <p className="st-contract-note">
         {apiKey ? "This example uses your project key. Keep it private." : "Replace YOUR_PROJECT_KEY with your stored key."}
         {" "}A successful capture returns HTTP 201. Open Events and load the new events when they appear.
       </p>

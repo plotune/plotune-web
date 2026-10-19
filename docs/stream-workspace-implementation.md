@@ -4,7 +4,7 @@ Implements the authenticated `/stream/workspace` against [cloud PR #44](https://
 
 ## Screens and ownership
 
-The live shell reuses the frozen `StreamMVP` styles, FilterPopover, Dashboard, WidgetEditor, DashboardGraph, Webhooks, ExportMenu and native dialog. `/stream/demo` continues using its own simulations, local state, early-access wrapper and analytics. The richer `/stream/prototypes/vision` is unchanged.
+The live shell reuses the frozen demo (`src/Stream/DemoWorkspace.jsx`) styles, FilterPopover, Dashboard, WidgetEditor, DashboardGraph, Webhooks, ExportMenu and native dialog. `/stream/demo` continues using its own simulations, local state, early-access wrapper and analytics. The richer `/stream/prototypes/vision` is unchanged.
 
 The live workspace uses the existing Plotune account JWT and supports projects, settings, membership, project keys, owner-account usage, shared Saved Filters, dashboards/widgets, Explorer, API/MCP setup and webhook configuration/status. No mock event or simulated capture is used on this route. Bounded local metadata snapshots accelerate reads; they do not replace authoritative shared resources. Raw project keys remain in React memory only and disappear on refresh/sign-out; existing keys cannot be recovered. Membership adds access for a verified account email; it sends no invitation mail. Only owners/admins see management controls and request management resources.
 

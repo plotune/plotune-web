@@ -35,9 +35,9 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
   };
   const keyAccess = (
       <Panel title={mcp ? "Project key access" : "Project connection"} meta={metadata.project.name}>
-        <div className="mvp-connection live-project-connection">
+        <div className="st-connection live-project-connection">
           <label>{mcp ? "MCP endpoint" : "Ingestion endpoint"}
-            <div className="mvp-endpoint">
+            <div className="st-endpoint">
               <code>{client.origin}/{mcp ? "mcp" : "capture"}</code>
               <button className="sw-icon-button" aria-label={mcp ? "Copy MCP endpoint" : "Copy ingestion endpoint"} onClick={() => copy(`${client.origin}/${mcp ? "mcp" : "capture"}`)}><FiCopy /></button>
             </div>
@@ -128,24 +128,24 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
   return (
     <>
       <Panel title="Query events from your AI agent">
-        <div className="mvp-mcp-intro">
-          <span className="mvp-first-icon"><FiTerminal /></span>
+        <div className="st-mcp-intro">
+          <span className="st-first-icon"><FiTerminal /></span>
           <div><h3>Your event history, available to your AI agent.</h3>
             <p>Connect your AI client, sign in once, and ask about this project's events, devices and health.</p>
-            <p className="mvp-muted">Reads events, dashboards and health. This connection does not control hardware.</p>
+            <p className="st-muted">Reads events, dashboards and health. This connection does not control hardware.</p>
           </div>
         </div>
-        <div className="mvp-mcp-example"><span>Try asking</span><q>Which devices stopped sending in the last hour, and why?</q></div>
+        <div className="st-mcp-example"><span>Try asking</span><q>Which devices stopped sending in the last hour, and why?</q></div>
       </Panel>
       <Panel title="Connect your AI client" meta={metadata.project.name}>
         <McpSetup url={mcpUrl} projectName={metadata.project.name} copy={copy} copied={copied} />
       </Panel>
       <details className="mcp-key-alternative">
         <summary>Use a project key instead</summary>
-        <p className="mvp-muted">For clients without sign-in support. A project key reads event history only; dashboards, analysis and health need sign-in.</p>
+        <p className="st-muted">For clients without sign-in support. A project key reads event history only; dashboards, analysis and health need sign-in.</p>
         {keyAccess}
         <Panel title="Client configuration">
-        <div className="mvp-connection live-mcp-config">
+        <div className="st-connection live-mcp-config">
           <p>Configuration format varies by MCP client. Use the endpoint and project key below in your client's remote MCP settings.</p>
           <div className="sw-code-head">
             <span>Client configuration</span>

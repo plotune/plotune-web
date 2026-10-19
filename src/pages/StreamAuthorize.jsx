@@ -21,7 +21,7 @@ const SCOPE_DESCRIPTIONS = {
 const describeScope = (scope) => SCOPE_DESCRIPTIONS[scope] || scope;
 
 // The auth_token cookie stores the credential including its "Bearer " prefix
-// (see services/api.js and StreamMVP/live/client.js); normalize before use.
+// (see services/api.js and Stream/workspace/client.js); normalize before use.
 const authorizationHeader = () => {
   const token = Cookies.get("auth_token");
   return token ? `Bearer ${String(token).replace(/^Bearer\s+/i, "")}` : "";

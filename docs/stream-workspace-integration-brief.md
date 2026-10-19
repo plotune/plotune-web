@@ -8,7 +8,7 @@ Deliver the frontend integration for the real authenticated Plotune Stream works
 
 Inspect PR #44's final reviewed implementation, API contracts, auth, browser adapters and deployment readiness before finalizing integration. Earlier D1-event contracts have been superseded by Redis-buffer + R2-history; do not implement against stale PR descriptions or historical READMEs. Planning, repository inspection and isolated frontend preparation may start now; final wiring and acceptance depend on the finalized backend.
 
-Use the frozen src/StreamMVP experience and [web PR #4](https://github.com/plotune/plotune-web/pull/4) as the product reference. Preserve the public /stream/demo, its simulations, early-access wrapper, marketing pages and existing analytics behavior. Replace the reserved /stream/workspace redirect with the real authenticated experience when integration is ready. Do not redesign or expand into the richer future-product prototype.
+Use the frozen src/Stream experience and [web PR #4](https://github.com/plotune/plotune-web/pull/4) as the product reference. Preserve the public /stream/demo, its simulations, early-access wrapper, marketing pages and existing analytics behavior. Replace the reserved /stream/workspace redirect with the real authenticated experience when integration is ready. Do not redesign or expand into the richer future-product prototype.
 
 ## Intended experience
 

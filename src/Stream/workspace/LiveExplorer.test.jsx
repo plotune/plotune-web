@@ -262,10 +262,10 @@ test("consecutive Saved Filter updates adopt each saved revision and resume quer
     await flush();
     await click(
       [...container.querySelectorAll("button")].find((b) =>
-        b.classList.contains("mvp-filter-trigger"),
+        b.classList.contains("st-filter-trigger"),
       ),
     );
-    const management = container.querySelector(".mvp-filter-manage");
+    const management = container.querySelector(".st-filter-manage");
     act(() => {
       management.open = true;
     });
@@ -279,7 +279,7 @@ test("consecutive Saved Filter updates adopt each saved revision and resume quer
     });
     await click(
       container.querySelector(
-        '.mvp-filter-popover-head [aria-label="Close filter menu"]',
+        '.st-filter-popover-head [aria-label="Close filter menu"]',
       ),
     );
   }
@@ -349,8 +349,8 @@ test.each([false, true])(
     const refreshButton = button("Refresh shared metadata");
     if (alreadyFresh) await click(refreshButton);
     const updateShared = async () => {
-      await click(container.querySelector(".mvp-filter-trigger"));
-      const manage = container.querySelector(".mvp-filter-manage");
+      await click(container.querySelector(".st-filter-trigger"));
+      const manage = container.querySelector(".st-filter-manage");
       act(() => {
         manage.open = true;
       });
@@ -362,7 +362,7 @@ test.each([false, true])(
     expect(container.textContent).toContain("Your draft is preserved");
     await click(
       container.querySelector(
-        '.mvp-filter-popover-head [aria-label="Close filter menu"]',
+        '.st-filter-popover-head [aria-label="Close filter menu"]',
       ),
     );
     await click(refreshButton);
@@ -538,15 +538,15 @@ test("refresh confirming a Saved Filter write after failed verification resumes 
     await flush();
   };
   const update = async () => {
-    await click(container.querySelector(".mvp-filter-trigger"));
-    act(() => { container.querySelector(".mvp-filter-manage").open = true; });
+    await click(container.querySelector(".st-filter-trigger"));
+    act(() => { container.querySelector(".st-filter-manage").open = true; });
     await click(button("Update conditions"));
     await flush();
   };
   await edit(1700);
   await update();
   expect(container.textContent).toContain("Verification unavailable");
-  await click(container.querySelector('.mvp-filter-popover-head [aria-label="Close filter menu"]'));
+  await click(container.querySelector('.st-filter-popover-head [aria-label="Close filter menu"]'));
   await click(button("Refresh shared metadata"));
   await flush();
   expect(container.textContent).not.toContain("Temporary changes to");

@@ -99,7 +99,7 @@ test.each(["add", "role", "remove"])("successful member %s keeps a pending name 
     type(name, "My pending name");
     if (change === "add") {
       type(container.querySelector('input[type="email"]'), "new@example.com");
-      await act(async () => container.querySelector(".mvp-invite-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
+      await act(async () => container.querySelector(".st-invite-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
     } else if (change === "role") {
       await act(async () => type(container.querySelector('[aria-label="Role for colleague@example.com"]'), "Admin"));
     } else {
@@ -107,7 +107,7 @@ test.each(["add", "role", "remove"])("successful member %s keeps a pending name 
     }
     expect(client.member).toHaveBeenCalledTimes(1);
     expect(name.value).toBe("My pending name");
-    await act(async () => container.querySelector(".mvp-settings-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
+    await act(async () => container.querySelector(".st-settings-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
     expect(client.renameProject).toHaveBeenLastCalledWith("p", "My pending name", 2);
   } finally {
     act(() => root.unmount()); container.remove(); confirm.mockRestore();
@@ -136,7 +136,7 @@ test("pristine project names follow refreshed metadata while active drafts retai
     act(() => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(input, "My draft"); input.dispatchEvent(new Event("input", { bubbles: true })); });
     await act(async () => refresh());
     expect(input.value).toBe("My draft");
-    await act(async () => container.querySelector(".mvp-settings-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
+    await act(async () => container.querySelector(".st-settings-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
     expect(client.renameProject).toHaveBeenCalledWith("p", "My draft", 2);
   } finally { act(() => root.unmount()); container.remove(); }
 });

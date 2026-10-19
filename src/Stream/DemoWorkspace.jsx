@@ -31,7 +31,7 @@ import { loadProjectResources, saveProjectResources } from "./projectResourceSto
 import { deleteDashboard as deleteDashboardResource, removeDashboardWidget, saveDashboardWidget, updateDashboard as updateDashboardResource, upsertDashboard } from "./dashboardResourceModel";
 import plotuneLogo from "../assets/logo.png";
 import "../StreamWorkspace/workspace.css";
-import "./mvp.css";
+import "./stream.css";
 import {
   initialProjects,
   CAPTURE_ENDPOINT,
@@ -63,7 +63,7 @@ const eventDate = (value) =>
 const mockKey = (id) =>
   `plt_demo_${id}_${Math.random().toString(16).slice(2, 10)}`;
 
-export default function StreamMVP() {
+export default function DemoWorkspace() {
   const [params, setParams] = useSearchParams();
   const view = navigation.some(([id]) => id === params.get("view"))
     ? params.get("view")
@@ -330,7 +330,7 @@ export default function StreamMVP() {
     notify("New demo events added. Filters reset so you can inspect them.");
   };
   const apiKey = (
-    <div className="mvp-key">
+    <div className="st-key">
       <FiKey />
       <code aria-label="Project API key">
         {revealed ? project.key : "plt_demo_••••••••••••••••"}
@@ -352,8 +352,8 @@ export default function StreamMVP() {
     </div>
   );
   const example = (compact = false) => (
-    <div className={`mvp-integration ${compact ? "compact" : ""}`}>
-      <div className="mvp-example-heading">
+    <div className={`st-integration ${compact ? "compact" : ""}`}>
+      <div className="st-example-heading">
         <strong>Send an event over HTTP</strong>
         <span>Any language. Any JSON properties.</span>
       </div>
@@ -369,9 +369,9 @@ export default function StreamMVP() {
           </button>
         ))}
       </div>
-      <div className="mvp-snippet">
+      <div className="st-snippet">
         <button
-          className="sw-button mvp-copy-code"
+          className="sw-button st-copy-code"
           aria-label="Copy integration snippet"
           onClick={() =>
             copy(
@@ -391,7 +391,7 @@ export default function StreamMVP() {
           {ingestionSnippet(language, project.key)}
         </pre>
       </div>
-      <p className="mvp-contract-note">
+      <p className="st-contract-note">
         Uses this project's demo key. Replace it with your project key; this demo doesn't send requests.
         {language === "C/C++" ? " Requires libcurl." : ""}
         {language === "Arduino / ESP32" ? " Paste the server's root CA certificate into ROOT_CA." : ""}
@@ -401,8 +401,8 @@ export default function StreamMVP() {
     </div>
   );
   const firstEvent = (
-    <div className="mvp-first-event">
-      <span className="mvp-first-icon">
+    <div className="st-first-event">
+      <span className="st-first-icon">
         <FiTerminal />
       </span>
       <p className="sw-eyebrow">PROJECT CREATED</p>
@@ -410,12 +410,12 @@ export default function StreamMVP() {
       <p>
         Stream is listening. Send an HTTP event from any system to see it arrive here.
       </p>
-      <div className={`mvp-listening ${accepting ? "receiving" : ""}`} role="status">
-        <span className="mvp-listening-dot" />
+      <div className={`st-listening ${accepting ? "receiving" : ""}`} role="status">
+        <span className="st-listening-dot" />
         {accepting ? "Receiving motor.sample…" : "Listening for events"}
       </div>
       {example(true)}
-      <div className="mvp-activation-preview">
+      <div className="st-activation-preview">
         <button
           className="sw-button sw-primary"
           disabled={accepting}
@@ -425,7 +425,7 @@ export default function StreamMVP() {
           <FiArrowRight />
         </button>
       </div>
-      <p className="mvp-first-foot">Use the example above to send your first event. The simulation demonstrates the experience in this browser.</p>
+      <p className="st-first-foot">Use the example above to send your first event. The simulation demonstrates the experience in this browser.</p>
     </div>
   );
 
@@ -433,15 +433,15 @@ export default function StreamMVP() {
     if (!hasEvents) return firstEvent;
     return (
       <>
-        {nativeOpen && <button className="mvp-native-dismiss" aria-label="Close native filter" tabIndex={-1} onClick={() => setNativeOpen(null)} />}
+        {nativeOpen && <button className="st-native-dismiss" aria-label="Close native filter" tabIndex={-1} onClick={() => setNativeOpen(null)} />}
         {invitePrompt[projectId] && (
-          <div className="mvp-invite-prompt">
+          <div className="st-invite-prompt">
             <div><strong>First event received</strong><span>motor.sample · just now</span></div>
             <button className="sw-button sw-primary" onClick={() => { setInvitePrompt((prev) => ({ ...prev, [projectId]: false })); setLocation("settings"); }}>Invite your colleagues</button>
             <button className="sw-link" onClick={() => setInvitePrompt((prev) => ({ ...prev, [projectId]: false }))}>Skip</button>
           </div>
         )}
-        <div className="mvp-event-summary">
+        <div className="st-event-summary">
           <span>
             <strong>{project.events.length}</strong> demo events in this project
           </span>
@@ -450,7 +450,7 @@ export default function StreamMVP() {
             <strong>{latest ? eventTime(latest.timestamp) : "—"}</strong> UTC
           </span>
         </div>
-        <div className="sw-toolbar mvp-filters">
+        <div className="sw-toolbar st-filters">
           <label className="sw-search">
             <FiSearch />
             <input
@@ -475,17 +475,17 @@ export default function StreamMVP() {
             <option value="7d">Last 7 days</option>
             <option value="all">All time</option>
           </select>
-          <div className="mvp-native-filter">
+          <div className="st-native-filter">
             <button type="button" className={`sw-button ${deviceId !== "all" ? "is-active" : ""}`} aria-expanded={nativeOpen === "device"} onClick={() => setNativeOpen(nativeOpen === "device" ? null : "device")}>Device{deviceId === "all" ? "" : ` · ${deviceId === "unspecified" ? "Unspecified" : deviceId}`}</button>
-            {nativeOpen === "device" && <div className="mvp-native-popover" role="dialog" aria-label="Filter by device"><strong>Device ID</strong><input aria-label="Search device IDs" type="search" placeholder="Search identifiers" value={nativeSearch} onChange={(e) => setNativeSearch(e.target.value)} /><button type="button" onClick={() => { applyContext({ deviceId: "all" }); setNativeOpen(null); }}>All devices</button><button type="button" onClick={() => { applyContext({ deviceId: "unspecified" }); setNativeOpen(null); }}>Unspecified</button>{deviceIds.filter((id) => id.toLowerCase().includes(nativeSearch.toLowerCase())).map((id) => <button type="button" key={id} onClick={() => { applyContext({ deviceId: id }); setNativeOpen(null); }}>{id}</button>)}{!deviceIds.length && <small>No device IDs in project</small>}</div>}
+            {nativeOpen === "device" && <div className="st-native-popover" role="dialog" aria-label="Filter by device"><strong>Device ID</strong><input aria-label="Search device IDs" type="search" placeholder="Search identifiers" value={nativeSearch} onChange={(e) => setNativeSearch(e.target.value)} /><button type="button" onClick={() => { applyContext({ deviceId: "all" }); setNativeOpen(null); }}>All devices</button><button type="button" onClick={() => { applyContext({ deviceId: "unspecified" }); setNativeOpen(null); }}>Unspecified</button>{deviceIds.filter((id) => id.toLowerCase().includes(nativeSearch.toLowerCase())).map((id) => <button type="button" key={id} onClick={() => { applyContext({ deviceId: id }); setNativeOpen(null); }}>{id}</button>)}{!deviceIds.length && <small>No device IDs in project</small>}</div>}
           </div>
-          <div className="mvp-native-filter">
+          <div className="st-native-filter">
             <button type="button" className={`sw-button ${sessionId !== "all" ? "is-active" : ""}`} aria-expanded={nativeOpen === "session"} onClick={() => setNativeOpen(nativeOpen === "session" ? null : "session")}>Session{sessionId === "all" ? "" : ` · ${sessionId === "unspecified" ? "Unspecified" : sessionId}`}</button>
-            {nativeOpen === "session" && <div className="mvp-native-popover" role="dialog" aria-label="Filter by session"><strong>Session ID</strong><input aria-label="Search session IDs" type="search" placeholder="Search identifiers" value={nativeSearch} onChange={(e) => setNativeSearch(e.target.value)} /><button type="button" onClick={() => { applyContext({ sessionId: "all", name: "All events" }); setNativeOpen(null); }}>All sessions</button><button type="button" onClick={() => { applyContext({ sessionId: "unspecified", name: "All events" }); setNativeOpen(null); }}>Unspecified</button>{sessionIds.filter((id) => id.toLowerCase().includes(nativeSearch.toLowerCase())).map((id) => <button type="button" key={id} onClick={() => { applyContext({ sessionId: id, name: "All events" }); setNativeOpen(null); }}>{id}</button>)}{!sessionIds.length && <small>No session IDs in project</small>}</div>}
+            {nativeOpen === "session" && <div className="st-native-popover" role="dialog" aria-label="Filter by session"><strong>Session ID</strong><input aria-label="Search session IDs" type="search" placeholder="Search identifiers" value={nativeSearch} onChange={(e) => setNativeSearch(e.target.value)} /><button type="button" onClick={() => { applyContext({ sessionId: "all", name: "All events" }); setNativeOpen(null); }}>All sessions</button><button type="button" onClick={() => { applyContext({ sessionId: "unspecified", name: "All events" }); setNativeOpen(null); }}>Unspecified</button>{sessionIds.filter((id) => id.toLowerCase().includes(nativeSearch.toLowerCase())).map((id) => <button type="button" key={id} onClick={() => { applyContext({ sessionId: id, name: "All events" }); setNativeOpen(null); }}>{id}</button>)}{!sessionIds.length && <small>No session IDs in project</small>}</div>}
           </div>
-          <div className="mvp-native-filter">
+          <div className="st-native-filter">
             <button type="button" className={`sw-button ${startAt || endAt ? "is-active" : ""}`} aria-expanded={nativeOpen === "time"} onClick={() => setNativeOpen(nativeOpen === "time" ? null : "time")}><FiClock /> {startAt || endAt ? `${startAt ? new Date(startAt).toISOString().slice(11, 16) : "…"}–${endAt ? new Date(endAt).toISOString().slice(11, 16) : "…"} UTC` : "Time range"}</button>
-            {nativeOpen === "time" && <div className="mvp-native-popover mvp-time-popover" role="dialog" aria-label="Custom event time range"><strong>Event time · UTC</strong><label>From<input type="datetime-local" value={startAt ? new Date(Date.parse(startAt)).toISOString().slice(0,16) : ""} onChange={(e) => applyContext({ startAt: e.target.value ? new Date(`${e.target.value}Z`).toISOString() : "", range: "all" })} /></label><label>Until (exclusive)<input type="datetime-local" value={endAt ? new Date(Date.parse(endAt)).toISOString().slice(0,16) : ""} onChange={(e) => applyContext({ endAt: e.target.value ? new Date(`${e.target.value}Z`).toISOString() : "", range: "all" })} /></label>{startAt && endAt && Date.parse(startAt) > Date.parse(endAt) && <small role="alert">Start must be before end.</small>}<button type="button" onClick={() => { applyContext({ startAt: "", endAt: "", range: "24h" }); setNativeOpen(null); }}>Reset time</button></div>}
+            {nativeOpen === "time" && <div className="st-native-popover st-time-popover" role="dialog" aria-label="Custom event time range"><strong>Event time · UTC</strong><label>From<input type="datetime-local" value={startAt ? new Date(Date.parse(startAt)).toISOString().slice(0,16) : ""} onChange={(e) => applyContext({ startAt: e.target.value ? new Date(`${e.target.value}Z`).toISOString() : "", range: "all" })} /></label><label>Until (exclusive)<input type="datetime-local" value={endAt ? new Date(Date.parse(endAt)).toISOString().slice(0,16) : ""} onChange={(e) => applyContext({ endAt: e.target.value ? new Date(`${e.target.value}Z`).toISOString() : "", range: "all" })} /></label>{startAt && endAt && Date.parse(startAt) > Date.parse(endAt) && <small role="alert">Start must be before end.</small>}<button type="button" onClick={() => { applyContext({ startAt: "", endAt: "", range: "24h" }); setNativeOpen(null); }}>Reset time</button></div>}
           </div>
           <FilterPopover
             events={project.events}
@@ -509,7 +509,7 @@ export default function StreamMVP() {
             </button>
           )}
         </div>
-        <div className="mvp-list-status">
+        <div className="st-list-status">
           <span>{page.items.length} events on this page · {EVENTS_PER_PAGE} per page · newest first · UTC</span>
           <button className="sw-link" onClick={queuePreviewEvent}>
             <FiPlus />
@@ -517,17 +517,17 @@ export default function StreamMVP() {
           </button>
         </div>
         {pendingEvents.length > 0 && (
-          <button className="mvp-new-events" onClick={acceptPending}>
+          <button className="st-new-events" onClick={acceptPending}>
             <FiActivity />
             {pendingEvents.length} new demo{" "}
             {pendingEvents.length === 1 ? "event" : "events"} · Show newest
             <FiArrowRight />
           </button>
         )}
-        <div className="sw-panel mvp-events-panel">
+        <div className="sw-panel st-events-panel">
           {filtered.length ? (
             <div className="sw-table-wrap">
-              <table className="sw-table mvp-table">
+              <table className="sw-table st-table">
                 <thead>
                   <tr>
                     <th>Timestamp · UTC</th>
@@ -541,7 +541,7 @@ export default function StreamMVP() {
                     <tr key={e.id}>
                       <td>
                         <button
-                          className="mvp-time-button"
+                          className="st-time-button"
                           onClick={() => setDialog({ kind: "event", event: e })}
                           title={e.timestamp}
                         >
@@ -560,8 +560,8 @@ export default function StreamMVP() {
                         </button>
                       </td>
                       <td>
-                        <div className="mvp-property-preview">
-                          {(e.device_id || e.session_id) ? <div className="mvp-event-context"><span>Device <b>{e.device_id || "Unspecified"}</b></span><span>Session <b>{e.session_id || "Unspecified"}</b></span></div> : <span className="mvp-event-context-unspecified">Context unspecified</span>}
+                        <div className="st-property-preview">
+                          {(e.device_id || e.session_id) ? <div className="st-event-context"><span>Device <b>{e.device_id || "Unspecified"}</b></span><span>Session <b>{e.session_id || "Unspecified"}</b></span></div> : <span className="st-event-context-unspecified">Context unspecified</span>}
                           {Object.entries(e.properties)
                             .slice(0, 3)
                             .map(([k, v]) => (
@@ -575,7 +575,7 @@ export default function StreamMVP() {
                             ))}
                           {Object.keys(e.properties).length > 3 && (
                             <button
-                              className="mvp-more-properties"
+                              className="st-more-properties"
                               aria-label={`Show all properties for ${e.event} at ${eventTime(e.timestamp)}`}
                               onClick={() =>
                                 setDialog({ kind: "event", event: e })
@@ -585,7 +585,7 @@ export default function StreamMVP() {
                             </button>
                           )}
                           {Object.keys(e.properties).length === 0 && (
-                            <span className="mvp-no-properties">
+                            <span className="st-no-properties">
                               No properties
                             </span>
                           )}
@@ -606,7 +606,7 @@ export default function StreamMVP() {
               </table>
             </div>
           ) : (
-            <div className="mvp-filter-empty">
+            <div className="st-filter-empty">
               <FiSearch />
               <h2>No events match these filters</h2>
               <p>
@@ -619,7 +619,7 @@ export default function StreamMVP() {
           )}
         </div>
         {(page.nextCursor || cursorStack.length > 1) && (
-          <nav className="mvp-pagination" aria-label="Event pages">
+          <nav className="st-pagination" aria-label="Event pages">
             <button
               className="sw-button"
               disabled={cursorStack.length === 1}
@@ -637,7 +637,7 @@ export default function StreamMVP() {
             </button>
           </nav>
         )}
-        <p className="mvp-explorer-foot">
+        <p className="st-explorer-foot">
           Event names and properties are defined by your systems. No schema
           configuration is required.
         </p>
@@ -652,10 +652,10 @@ export default function StreamMVP() {
           meta={project.name}
           action={<button className="sw-link" onClick={() => setDialog({ kind: "regenerate" })}>Regenerate key</button>}
         >
-          <div className="mvp-connection mvp-api-credentials">
+          <div className="st-connection st-api-credentials">
             <label>
               Project ID
-              <div className="mvp-endpoint">
+              <div className="st-endpoint">
                 <code>{project.id}</code>
                 <button
                   className="sw-icon-button"
@@ -669,7 +669,7 @@ export default function StreamMVP() {
             <label>Tracker key{apiKey}</label>
             <label>
               Ingestion endpoint
-              <div className="mvp-endpoint">
+              <div className="st-endpoint">
                 <code>{CAPTURE_ENDPOINT}</code>
                 <button
                   className="sw-icon-button"
@@ -688,7 +688,7 @@ export default function StreamMVP() {
         </Panel>
         <Panel title="Capture an event">
           {example()}
-          <div className="mvp-api-bottom">
+          <div className="st-api-bottom">
             <p>
               Use HTTP from CAPL, C/C++, Python, ROS, MATLAB, Nexus, or any
               other system. No source registration is needed.
@@ -702,8 +702,8 @@ export default function StreamMVP() {
     return (
       <>
         <Panel title="Query events from your AI agent">
-          <div className="mvp-mcp-intro">
-            <span className="mvp-first-icon">
+          <div className="st-mcp-intro">
+            <span className="st-first-icon">
               <FiTerminal />
             </span>
             <div>
@@ -712,13 +712,13 @@ export default function StreamMVP() {
                 Connect an MCP-capable client to query this project's event
                 names, timestamps, and properties.
               </p>
-              <p className="mvp-muted">
+              <p className="st-muted">
                 This connection provides event-history access. It does not
                 control hardware.
               </p>
             </div>
           </div>
-          <div className="mvp-mcp-example">
+          <div className="st-mcp-example">
             <span>Try asking</span>
             <q>
               Find recent test.failed events and summarize their properties.
@@ -726,10 +726,10 @@ export default function StreamMVP() {
           </div>
         </Panel>
         <Panel title="MCP connection" meta={project.name}>
-          <div className="mvp-connection">
+          <div className="st-connection">
             <label>
               MCP endpoint
-              <div className="mvp-endpoint">
+              <div className="st-endpoint">
                 <code>{MCP_ENDPOINT}</code>
                 <button
                   className="sw-icon-button"
@@ -745,7 +745,7 @@ export default function StreamMVP() {
               project key below selects <strong>{project.name}</strong>.
             </p>
           </div>
-          <div className="mvp-mcp-config">
+          <div className="st-mcp-config">
             <div className="sw-code-head">
               <span>Illustrative client configuration</span>
               <button
@@ -768,14 +768,14 @@ export default function StreamMVP() {
             >
               {mcpSnippet(project.key)}
             </pre>
-            <p className="mvp-contract-note">
+            <p className="st-contract-note">
               Configuration format varies by client. Endpoint, key, and
               connection check are mocked.
             </p>
           </div>
-          <div className="mvp-mcp-status">
+          <div className="st-mcp-status">
             <span
-              className={`mvp-connection-dot ${mcpState === "Demo connection ready" ? "ready" : ""}`}
+              className={`st-connection-dot ${mcpState === "Demo connection ready" ? "ready" : ""}`}
             />
             <span role="status">
               {mcpState === "Checking" ? "Checking demo connection…" : mcpState}
@@ -801,7 +801,7 @@ export default function StreamMVP() {
       <>
         <Panel title="Project">
           <form
-            className="mvp-settings-form"
+            className="st-settings-form"
             onSubmit={(e) => {
               e.preventDefault();
               updateProject({ name: projectName.trim() });
@@ -833,7 +833,7 @@ export default function StreamMVP() {
           </form>
         </Panel>
         <Panel title="Project members" meta={`${(members[projectId] || []).length} people`}>
-          <form className="mvp-invite-form" onSubmit={(e) => {
+          <form className="st-invite-form" onSubmit={(e) => {
             e.preventDefault();
             const email = inviteEmail.trim().toLowerCase();
             if (!email) return;
@@ -845,14 +845,14 @@ export default function StreamMVP() {
             <label>Role<select value={inviteRole} onChange={(e) => setInviteRole(e.target.value)}><option>Admin</option><option>Member</option></select></label>
             <button className="sw-button sw-primary" type="submit">Invite colleague</button>
           </form>
-          <div className="mvp-member-list">{(members[projectId] || []).map((member) => <div key={member.id}>
+          <div className="st-member-list">{(members[projectId] || []).map((member) => <div key={member.id}>
             <div><strong>{member.name}</strong><span>{member.email}</span></div>
-            {member.role === "Owner" ? <span className="mvp-role owner">Owner</span> : <>
+            {member.role === "Owner" ? <span className="st-role owner">Owner</span> : <>
               <select aria-label={`Role for ${member.email}`} value={member.role} onChange={(e) => setMembers((prev) => ({ ...prev, [projectId]: prev[projectId].map((m) => m.id === member.id ? { ...m, role: e.target.value } : m) }))}><option>Admin</option><option>Member</option></select>
               <button className="sw-link" onClick={() => setMembers((prev) => ({ ...prev, [projectId]: prev[projectId].filter((m) => m.id !== member.id) }))}>Remove</button>
             </>}
           </div>)}</div>
-          <p className="mvp-members-note">Owners control project and membership settings. Admins manage the project and members. Members can inspect and query events.</p>
+          <p className="st-members-note">Owners control project and membership settings. Admins manage the project and members. Members can inspect and query events.</p>
         </Panel>
       </>
     );
@@ -864,8 +864,8 @@ export default function StreamMVP() {
       const e = dialog.event;
       return (
         <Dialog title={e.event} subtitle="Event detail" onClose={close}>
-          <div className="sw-detail-body mvp-event-detail">
-            <div className="mvp-detail-field">
+          <div className="sw-detail-body st-event-detail">
+            <div className="st-detail-field">
               <span>Exact timestamp · UTC</span>
               <div>
                 <code>{e.timestamp}</code>
@@ -878,7 +878,7 @@ export default function StreamMVP() {
                 </button>
               </div>
             </div>
-            <div className="mvp-detail-field">
+            <div className="st-detail-field">
               <span>Event name</span>
               <div>
                 <code>{e.event}</code>
@@ -891,10 +891,10 @@ export default function StreamMVP() {
                 </button>
               </div>
             </div>
-            <div className="mvp-detail-field mvp-context-detail">
+            <div className="st-detail-field st-context-detail">
               <span>Device ID</span><div><code>{e.device_id || "Unspecified"}</code>{e.device_id && <button className="sw-button" type="button" onClick={() => { navigateContext({ deviceId: e.device_id, name: "All events" }); setDialog(null); notify(`Showing events from ${e.device_id}.`); }}>View device events</button>}</div>
             </div>
-            <div className="mvp-detail-field mvp-context-detail">
+            <div className="st-detail-field st-context-detail">
               <span>Session ID</span><div><code>{e.session_id || "Unspecified"}</code>{e.session_id && <button className="sw-button" type="button" onClick={() => { navigateContext({ sessionId: e.session_id, name: "All events" }); setDialog(null); notify(`Showing all event types in ${e.session_id}.`); }}>View session events</button>}</div>
             </div>
             <div className="sw-code-head">
@@ -910,7 +910,7 @@ export default function StreamMVP() {
               </button>
             </div>
             <pre
-              className="sw-code mvp-properties-json"
+              className="sw-code st-properties-json"
               tabIndex={0}
               aria-label="Complete event properties"
             >
@@ -938,7 +938,7 @@ export default function StreamMVP() {
               <FiCopy />
               Copy complete event
             </button>
-            <p className="mvp-contract-note">
+            <p className="st-contract-note">
               Device and session IDs are optional sender supplied context. They are
               not registered or generated by Stream. Properties remain arbitrary.
             </p>
@@ -954,7 +954,7 @@ export default function StreamMVP() {
           onClose={close}
         >
           <form
-            className="sw-detail-body mvp-create-form"
+            className="sw-detail-body st-create-form"
             onSubmit={(e) => {
               e.preventDefault();
               const id = `project-${Date.now()}`;
@@ -1033,7 +1033,7 @@ export default function StreamMVP() {
   const selectedDashboard = projectDashboards.find((item) => item.id === dashboardId);
   const title = view === "dashboards" ? selectedDashboard?.name || "Dashboards" : navigation.find(([id]) => id === view)[1];
   return (
-    <div className="sw-app mvp-app">
+    <div className="sw-app st-app">
       <Helmet>
         <title>{project.name} · Plotune Stream</title>
         <meta name="robots" content="noindex,nofollow" />
@@ -1048,16 +1048,16 @@ export default function StreamMVP() {
           <FiMenu />
         </button>
         <a className="sw-brand" href="/" aria-label="Plotune home">
-          <img className="mvp-brand-logo" src={plotuneLogo} alt="" />
+          <img className="st-brand-logo" src={plotuneLogo} alt="" />
           <strong>
             Plotune <span>Stream</span>
           </strong>
         </a>
         <span className="sw-top-divider" />
-        <span className="mvp-top-project">{project.name}</span>
+        <span className="st-top-project">{project.name}</span>
         <div className="sw-top-end">
           <button
-            className="sw-avatar mvp-account"
+            className="sw-avatar st-account"
             aria-label="Demo account"
             aria-expanded={accountOpen}
             onClick={() => setAccountOpen((v) => !v)}
@@ -1066,7 +1066,7 @@ export default function StreamMVP() {
           </button>
         </div>
         {accountOpen && (
-          <div className="mvp-account-menu">
+          <div className="st-account-menu">
             <strong>Demo engineer</strong>
             <span>engineer@example.test</span>
             <p>Usage · {monthlyAccepted.toLocaleString("en-US")} / 100,000 events this month</p>
@@ -1099,7 +1099,7 @@ export default function StreamMVP() {
             ))}
           </select>
           <button
-            className="sw-link mvp-create-link"
+            className="sw-link st-create-link"
             onClick={() => {
               setCreatingName("");
               setDialog({ kind: "create" });

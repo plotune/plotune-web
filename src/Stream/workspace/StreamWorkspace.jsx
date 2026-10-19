@@ -40,7 +40,7 @@ import WorkspaceEntry from "./WorkspaceEntry";
 import { pollWhileVisible } from "./visiblePolling";
 import logo from "../../assets/logo.png";
 import "../../StreamWorkspace/workspace.css";
-import "../mvp.css";
+import "../stream.css";
 import "./live.css";
 
 const NAV = [
@@ -276,7 +276,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
       ? dashboard.name
       : NAV.find(([id]) => id === view)[1];
   return (
-    <div className="sw-app mvp-app live-workspace ph-no-capture rr-block">
+    <div className="sw-app st-app live-workspace ph-no-capture rr-block">
       <header className="sw-topbar">
         <button
           ref={menuRef}
@@ -288,13 +288,13 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           <FiMenu />
         </button>
         <a className="sw-brand" href="/" aria-label="Plotune home">
-          <img className="mvp-brand-logo" src={logo} alt="" />
+          <img className="st-brand-logo" src={logo} alt="" />
           <strong>
             Plotune <span>Stream</span>
           </strong>
         </a>
         <span className="sw-top-divider" />
-        <span className="mvp-top-project">{project?.name || "Workspace"}</span>
+        <span className="st-top-project">{project?.name || "Workspace"}</span>
         <div className="sw-top-end">
           <button
             className="sw-avatar"
@@ -309,7 +309,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           </button>
         </div>
         {accountOpen && (
-          <div ref={accountMenu} className="mvp-account-menu" aria-label="Your Plotune account">
+          <div ref={accountMenu} className="st-account-menu" aria-label="Your Plotune account">
             <strong>
               {user?.full_name || user?.username || "Your Plotune account"}
             </strong>
@@ -377,7 +377,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
             ))}
           </select>
           <button
-            className="sw-link mvp-create-link"
+            className="sw-link st-create-link"
             onClick={() => {
               setName("");
               setCreateError(null);
@@ -674,7 +674,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           onClose={() => setCreateOpen(false)}
         >
           <form
-            className="sw-detail-body mvp-create-form"
+            className="sw-detail-body st-create-form"
             onSubmit={async (e) => {
               e.preventDefault();
               setCreateError(null);

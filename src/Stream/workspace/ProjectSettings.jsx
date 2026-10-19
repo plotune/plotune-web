@@ -55,7 +55,7 @@ export default function ProjectSettings({ client, metadata }) {
       {message && <p role="status">{message}</p>}
       <Panel title="Project" meta={role}>
         <form
-          className="mvp-settings-form"
+          className="st-settings-form"
           onSubmit={(e) => {
             e.preventDefault();
             perform(
@@ -103,7 +103,7 @@ export default function ProjectSettings({ client, metadata }) {
           {admin ? (
             <>
               <form
-                className="mvp-invite-form"
+                className="st-invite-form"
                 onSubmit={(e) => {
                   e.preventDefault();
                   perform(
@@ -146,11 +146,11 @@ export default function ProjectSettings({ client, metadata }) {
                   Add colleague
                 </button>
               </form>
-              <p className="mvp-muted">
+              <p className="st-muted">
                 Use your colleague's verified Plotune account email. This adds
                 access; it does not send an invitation.
               </p>
-              <div className="mvp-member-list">
+              <div className="st-member-list">
                 {members.map((m) => (
                   <div key={m.email}>
                     <strong>{m.email}</strong>

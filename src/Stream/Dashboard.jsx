@@ -53,27 +53,27 @@ export default function Dashboard({
   };
 
   if (!dashboard) {
-    return <section className="mvp-dashboard-collection" aria-label="Project dashboards">
+    return <section className="st-dashboard-collection" aria-label="Project dashboards">
       {error && <p role="alert">{error}</p>}
-      <div className="mvp-dashboard-collection-head">
+      <div className="st-dashboard-collection-head">
         <span>{dashboards.length} project dashboard{dashboards.length === 1 ? "" : "s"}</span>
         <button className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(true)}><FiPlus /> New dashboard</button>
       </div>
-      {dashboards.length ? <div className="mvp-dashboard-list">
-        {ordered.map((item) => <Panel key={item.id} title={item.name} meta={`${item.widgets?.length || 0} widgets · Updated ${stamp(item.updatedAt)}`} className="mvp-dashboard-list-item" action={(
-          <details className="mvp-dashboard-menu"><summary aria-label={`Options for ${item.name}`}><FiMoreHorizontal /></summary><div>
+      {dashboards.length ? <div className="st-dashboard-list">
+        {ordered.map((item) => <Panel key={item.id} title={item.name} meta={`${item.widgets?.length || 0} widgets · Updated ${stamp(item.updatedAt)}`} className="st-dashboard-list-item" action={(
+          <details className="st-dashboard-menu"><summary aria-label={`Options for ${item.name}`}><FiMoreHorizontal /></summary><div>
             <button type="button" onClick={() => onOpen(item.id)}>Open dashboard</button>
             <button type="button" onClick={() => { const next = window.prompt("Rename dashboard", item.name); if (next?.trim()) action(() => onRename(item.id, next.trim(), item.description)); }}>Rename</button>
             <button type="button" className="danger" onClick={() => { if (window.confirm(`Delete “${item.name}” and its widgets?`)) action(() => onDelete(item.id)); }}>Delete</button>
           </div></details>
         )}>
-          <button className="mvp-dashboard-open" type="button" onClick={() => onOpen(item.id)}>
+          <button className="st-dashboard-open" type="button" onClick={() => onOpen(item.id)}>
             {item.description && <span>{item.description}</span>}<strong>Open dashboard <span aria-hidden="true">→</span></strong>
           </button>
         </Panel>)}
-      </div> : <div className="mvp-dashboard-empty mvp-dashboard-collection-empty"><h2>No dashboards yet</h2><p>Create a project dashboard to keep useful event views together.</p></div>}
+      </div> : <div className="st-dashboard-empty st-dashboard-collection-empty"><h2>No dashboards yet</h2><p>Create a project dashboard to keep useful event views together.</p></div>}
       {createOpen && <Dialog title="New dashboard" subtitle="Create a shared dashboard for this project." onClose={() => { creationId.current = null; setCreateOpen(false); }}>
-        <form className="sw-detail-body mvp-dashboard-create" onSubmit={create}>
+        <form className="sw-detail-body st-dashboard-create" onSubmit={create}>
           {error && <p role="alert">{error}</p>}
           <label>Name<input autoFocus required maxLength={64} value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Robot validation" /></label>
           <label>Description <span>Optional</span><textarea maxLength={180} rows={3} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="What should this dashboard help you observe?" /></label>
@@ -83,20 +83,20 @@ export default function Dashboard({
     </section>;
   }
 
-  return <section className="mvp-dashboard-detail" aria-label={dashboard.name}>
+  return <section className="st-dashboard-detail" aria-label={dashboard.name}>
     {error && <p role="alert">{error}</p>}
-    <div className="mvp-dashboard-detail-head">
+    <div className="st-dashboard-detail-head">
       <button className="sw-link" type="button" onClick={onBack}><FiArrowLeft /> Dashboards</button>
-      <div className="mvp-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) action(() => onRename(dashboard.id, next.trim(), dashboard.description)); }}>Edit dashboard</button><button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button></div>
+      <div className="st-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) action(() => onRename(dashboard.id, next.trim(), dashboard.description)); }}>Edit dashboard</button><button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button></div>
     </div>
-    {dashboard.description && <p className="mvp-dashboard-description">{dashboard.description}</p>}
-    {dashboard.widgets?.length ? <div className="mvp-dashboard-grid">
+    {dashboard.description && <p className="st-dashboard-description">{dashboard.description}</p>}
+    {dashboard.widgets?.length ? <div className="st-dashboard-grid">
       {dashboard.widgets.map((widget) => {
         const edit = (current) => editWidget(current?.id ? current : widget);
         const remove = () => { if (window.confirm(`Remove “${widget.title || widget.eventName}” from this dashboard?`)) action(() => onRemoveWidget(dashboard.id, widget.id)); };
         return renderGraph ? renderGraph(widget, edit, remove) : <DashboardGraph key={widget.id} widget={widget} events={events} filters={filters} now={now} onEdit={edit} onRemove={remove} />;
       })}
-    </div> : <div className="mvp-dashboard-empty"><h2>Your dashboard is empty.</h2><p>Add a chart to monitor selected engineering events.</p></div>}
+    </div> : <div className="st-dashboard-empty"><h2>Your dashboard is empty.</h2><p>Add a chart to monitor selected engineering events.</p></div>}
     {widgetOpen && <WidgetEditor widget={editingWidget} discovery={discovery} loadPreview={loadPreview} onReload={onRefresh} events={events} filters={filters} now={now} onSave={saveWidget} onClose={() => setWidgetOpen(false)} />}
   </section>;
 }

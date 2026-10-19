@@ -1,6 +1,6 @@
 # Stream demo early access
 
-`/stream` remains the public product landing page. `/stream/demo` composes the unchanged `StreamMVP` inside `StreamDemoWrapper`. `/stream/workspace` is reserved for the eventual real workspace: its temporary React `Navigate replace` compatibility route forwards existing query parameters and hashes to `/stream/demo`. There is no permanent HTTP redirect. Replace this one route when the real workspace ships.
+`/stream` remains the public product landing page. `/stream/demo` composes the unchanged `DemoWorkspace` (`src/Stream`) inside `StreamDemoWrapper`. `/stream/workspace` is reserved for the eventual real workspace: its temporary React `Navigate replace` compatibility route forwards existing query parameters and hashes to `/stream/demo`. There is no permanent HTTP redirect. Replace this one route when the real workspace ships.
 
 ## Invitation and frozen UX
 
@@ -49,7 +49,7 @@ Run `CI=true npm test -- --watchAll=false --runInBand`, `npm run build`, then `n
 
 Tests cover initial/direct-query loads, selected Events and destination navigation, ignored onboarding/filtering, all dismissal actions, later feature access, reopening, persistence, Contact payload and retry ID, validation/unconfigured transport, failure input preservation, confirmed success, event privacy/deduplication, overlapping submissions, separate Google Ads configuration and legacy query/hash preservation. Routing checks also verify public CTA and static deep-link shim updates.
 
-Desktop (1440×900) and mobile (390×844) QA includes landing CTA, initial view, project creation, Events/Dashboards invitations, dismissed floating opener, reopening, failure, success, refresh, Escape, keyboard focus and continued access to all six demo sections. Final results and inspected screenshots are recorded in the PR. `src/StreamMVP` and `src/StreamWorkspace` must remain byte-identical to the base branch.
+Desktop (1440×900) and mobile (390×844) QA includes landing CTA, initial view, project creation, Events/Dashboards invitations, dismissed floating opener, reopening, failure, success, refresh, Escape, keyboard focus and continued access to all six demo sections. Final results and inspected screenshots are recorded in the PR. `src/Stream` and `src/StreamWorkspace` must remain byte-identical to the base branch.
 
 ### Completed local QA
 

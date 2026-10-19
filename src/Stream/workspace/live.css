@@ -89,23 +89,23 @@
   max-height: 480px;
   overflow: auto;
 }
-.live-workspace .mvp-account-menu {
+.live-workspace .st-account-menu {
   overflow-wrap: anywhere;
 }
 .live-workspace .sw-content {
   min-width: 0;
 }
-.live-workspace .mvp-filter-control {
+.live-workspace .st-filter-control {
   min-width: 0;
 }
-.live-workspace .mvp-filter-chips {
+.live-workspace .st-filter-chips {
   flex-wrap: wrap;
 }
-.live-workspace .mvp-filter-chip {
+.live-workspace .st-filter-chip {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
-.live-workspace .mvp-filter-chip > button:first-child {
+.live-workspace .st-filter-chip > button:first-child {
   white-space: normal;
   text-align: left;
 }
@@ -136,7 +136,7 @@
   .live-workspace .live-toolbar input {
     width: 100%;
   }
-  .live-workspace .mvp-member-list > div {
+  .live-workspace .st-member-list > div {
     flex-wrap: wrap;
     gap: 10px;
   }
@@ -200,9 +200,9 @@
   gap: 10px;
   margin: 0;
 }
-.live-explorer-toolbar .mvp-filter-control { flex: 1 1 auto; }
-.live-workspace .mvp-event-context { flex-basis: 100%; }
-.live-workspace .mvp-event-context-unspecified {
+.live-explorer-toolbar .st-filter-control { flex: 1 1 auto; }
+.live-workspace .st-event-context { flex-basis: 100%; }
+.live-workspace .st-event-context-unspecified {
   flex-basis: 100%;
   max-width: none;
   border: 0;
@@ -217,7 +217,7 @@
   .live-explorer-toolbar > .live-time-select,
   .live-explorer-toolbar > .live-context-select { width: calc(50% - 5px); }
   .live-explorer-toolbar .live-filter-bar { flex-basis: 100%; }
-  .live-workspace .mvp-property-preview > span { max-width: 100%; }
+  .live-workspace .st-property-preview > span { max-width: 100%; }
   .live-workspace .sw-icon-button { min-width: 40px; min-height: 40px; }
 }
 
@@ -240,32 +240,32 @@
 .live-mcp-config > .sw-button { align-self: flex-start; }
 .live-empty-actions { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
 .live-key-reminder { padding: 12px; background: #f2f7f4; border-left: 2px solid #00796b; }
-.live-workspace .mvp-first-event .live-key-reminder { color: #405e56; max-width: none; }
-.live-workspace .mvp-contract-note { color: #526963; font-size: 11px; line-height: 1.7; margin: 12px 0; }
-.live-workspace .mvp-example-heading span { color: #526963; font-size: 11px; }
-.live-workspace .mvp-property-preview em { color: #526963; }
-.live-workspace .mvp-property-preview b { color: #354d46; }
-.live-workspace .mvp-event-context,
-.live-workspace .mvp-event-context-unspecified,
-.live-workspace .mvp-time-button small { color: #526963; }
+.live-workspace .st-first-event .live-key-reminder { color: #405e56; max-width: none; }
+.live-workspace .st-contract-note { color: #526963; font-size: 11px; line-height: 1.7; margin: 12px 0; }
+.live-workspace .st-example-heading span { color: #526963; font-size: 11px; }
+.live-workspace .st-property-preview em { color: #526963; }
+.live-workspace .st-property-preview b { color: #354d46; }
+.live-workspace .st-event-context,
+.live-workspace .st-event-context-unspecified,
+.live-workspace .st-time-button small { color: #526963; }
 .live-workspace .sw-tabs button { color: #526963; }
 .live-workspace .sw-tabs button.active { color: #00695c; }
-.live-workspace .mvp-muted { color: #526963; font-size: 11px; line-height: 1.7; }
+.live-workspace .st-muted { color: #526963; font-size: 11px; line-height: 1.7; }
 @media (max-width: 640px) {
   .live-key-rotation { flex-direction: column; align-items: flex-start; }
 }
 
-.live-workspace .mvp-property-preview > span { font-size: 11px; }
-.live-workspace .mvp-property-preview em,
-.live-workspace .mvp-property-preview b { font-size: 11px; }
-.live-workspace .mvp-event-context,
-.live-workspace .mvp-event-context-unspecified,
-.live-workspace .mvp-time-button small { font-size: 10px; }
+.live-workspace .st-property-preview > span { font-size: 11px; }
+.live-workspace .st-property-preview em,
+.live-workspace .st-property-preview b { font-size: 11px; }
+.live-workspace .st-event-context,
+.live-workspace .st-event-context-unspecified,
+.live-workspace .st-time-button small { font-size: 10px; }
 .live-workspace .sw-tabs button { font-size: 11px; }
 @media (max-width: 640px) {
   .live-workspace .sw-button,
   .live-workspace .sw-icon-button,
-  .live-workspace .mvp-more-properties,
+  .live-workspace .st-more-properties,
   .live-workspace .sw-sidebar nav button { min-height: 44px; }
 }
 

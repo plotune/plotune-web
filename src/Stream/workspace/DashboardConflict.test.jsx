@@ -119,7 +119,7 @@ test("opening a remotely refreshed chart edits its authoritative definition rath
     onSaveWidget={save}
     renderGraph={(widget, edit) => <button key={widget.id} onClick={() => edit(current)}>Edit refreshed chart</button>}
   />));
-  await act(async () => container.querySelector(".mvp-dashboard-grid button").click());
+  await act(async () => container.querySelector(".st-dashboard-grid button").click());
   expect(container.querySelector('dialog input[maxlength="64"]').value).toBe("Current title");
   await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "Save widget").click());
   expect(save.mock.calls[0][1]).toMatchObject(current);

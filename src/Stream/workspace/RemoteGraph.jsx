@@ -87,9 +87,9 @@ export default function RemoteGraph({
     );
   return (
     <div aria-busy={state.loading}>
-      {state.error && <><Failure error={state.error} retry={() => setRetry((r) => r + 1)} /><p className="mvp-muted">Showing the last successfully loaded chart.</p></>}
+      {state.error && <><Failure error={state.error} retry={() => setRetry((r) => r + 1)} /><p className="st-muted">Showing the last successfully loaded chart.</p></>}
       {state.loading && (
-        <span className="mvp-muted" role="status">
+        <span className="st-muted" role="status">
           Refreshing chart…
         </span>
       )}

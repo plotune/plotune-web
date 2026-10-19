@@ -22,25 +22,25 @@ export default function EventRow({ event, onInspect }) {
   return (
     <tr>
       <td>
-        <button className="mvp-time-button" onClick={onInspect} title={event.timestamp}>
+        <button className="st-time-button" onClick={onInspect} title={event.timestamp}>
           <time dateTime={event.timestamp}>{eventTime(event.timestamp)}</time>
           <small>{Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", timeZone: "UTC" })}</small>
         </button>
       </td>
       <td><button className="sw-link sw-mono" onClick={onInspect}>{event.event}</button></td>
       <td>
-        <div className="mvp-property-preview">
+        <div className="st-property-preview">
           {event.device_id || event.session_id ? (
-            <div className="mvp-event-context">
+            <div className="st-event-context">
               <span>Device <b>{event.device_id || "Unspecified"}</b></span>
               <span>Session <b>{event.session_id || "Unspecified"}</b></span>
             </div>
-          ) : <span className="mvp-event-context-unspecified">Context unspecified</span>}
+          ) : <span className="st-event-context-unspecified">Context unspecified</span>}
           {properties.slice(0, 3).map(([name, value]) => (
             <span key={name} title={`${name}: ${preview(value)}`}><em>{name}</em><b>{preview(value)}</b></span>
           ))}
-          {properties.length > 3 && <button className="mvp-more-properties" aria-label={`Show all properties for ${event.event} at ${eventTime(event.timestamp)}`} onClick={onInspect}>+{properties.length - 3}</button>}
-          {!properties.length && <span className="mvp-no-properties">No properties</span>}
+          {properties.length > 3 && <button className="st-more-properties" aria-label={`Show all properties for ${event.event} at ${eventTime(event.timestamp)}`} onClick={onInspect}>+{properties.length - 3}</button>}
+          {!properties.length && <span className="st-no-properties">No properties</span>}
         </div>
       </td>
       <td><button className="sw-icon-button" aria-label={`Inspect ${event.event} at ${eventTime(event.timestamp)}`} onClick={onInspect}><FiChevronRight /></button></td>

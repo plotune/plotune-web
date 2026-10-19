@@ -7,7 +7,7 @@ Source snapshot before implementation. Static source inventory supplements the b
 | src/App.js | 75 | return <Navigate to={/solutions/agentic-test-development${location.search}} replace />; |
 | src/App.js | 91 | to="/" |
 | src/App.js | 97 | to="/docs" |
-| src/StreamMVP/StreamMVP.jsx | 1050 | <a className="sw-brand" href="/stream/workspace/"> |
+| src/Stream/DemoWorkspace.jsx | 1050 | <a className="sw-brand" href="/stream/workspace/"> |
 | src/StreamWorkspace/StreamWorkspace.jsx | 379 | <button className="sw-link" onClick={() => navigate("Runs")}> |
 | src/StreamWorkspace/StreamWorkspace.jsx | 394 | <button className="sw-link" onClick={() => navigate("Alarms")}> |
 | src/StreamWorkspace/StreamWorkspace.jsx | 421 | onClick={() => navigate("Measurements")} |

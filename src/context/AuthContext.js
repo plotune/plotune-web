@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect, useCallback, useRef } from '
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import api from '../services/api';
-import { clearStreamMetadataCaches } from '../StreamMVP/live/metadataCache';
+import { clearStreamMetadataCaches } from '../Stream/workspace/metadataCache';
 
 export const AuthContext = createContext();
 

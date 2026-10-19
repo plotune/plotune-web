@@ -66,19 +66,19 @@ export default function ExportMenu({ events, query, projectName, createExport })
   };
 
   return (
-    <div className="mvp-export-menu" onKeyDown={onMenuKeyDown}>
+    <div className="st-export-menu" onKeyDown={onMenuKeyDown}>
       <button ref={trigger} className="sw-button" type="button" aria-haspopup="menu" aria-expanded={open} onKeyDown={(event) => { if (["ArrowDown", "ArrowUp"].includes(event.key)) { event.preventDefault(); setOpen(true); } }} onClick={() => setOpen((value) => !value)} disabled={!!progress}>
         <FiDownload /> Export <FiChevronDown />
       </button>
       {open && <>
-        <button className="mvp-popover-dismiss" aria-label="Close export menu" tabIndex={-1} onClick={closeMenu} />
-        <div ref={menu} style={position} className="mvp-export-options" role="menu" aria-label="Export matching events">
+        <button className="st-popover-dismiss" aria-label="Close export menu" tabIndex={-1} onClick={closeMenu} />
+        <div ref={menu} style={position} className="st-export-options" role="menu" aria-label="Export matching events">
           {["json", "csv", "tsv"].map((format) => <button role="menuitem" tabIndex={-1} key={format} type="button" onClick={() => run(format)}>{format.toUpperCase()}</button>)}
         </div>
       </>}
-      {progress && <span className="mvp-export-status" role="status">{progress.complete ? `Exported ${progress.done} matching events` : progress.total === null ? `Retrieved ${progress.done} matching events…` : `Preparing ${progress.done} / ${progress.total} events…`}</span>}
+      {progress && <span className="st-export-status" role="status">{progress.complete ? `Exported ${progress.done} matching events` : progress.total === null ? `Retrieved ${progress.done} matching events…` : `Preparing ${progress.done} / ${progress.total} events…`}</span>}
       {progress && active.current && <button className="sw-link" onClick={() => { active.current?.abort(); active.current = null; setProgress(null); }}>Cancel</button>}
-      {error && <span className="mvp-export-status error" role="alert">{error}</span>}
+      {error && <span className="st-export-status error" role="alert">{error}</span>}
     </div>
   );
 }
