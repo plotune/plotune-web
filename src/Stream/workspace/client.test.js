@@ -387,3 +387,15 @@ test("device and health reads keep issue and device ids out of the path", async 
   ]);
   expect(fetcher.mock.calls.every(([, init]) => init.method === "GET")).toBe(true);
 });
+
+test("credits are account routes under /v1/projects; redeem posts only the code", async () => {
+  const fetcher = jest.fn(async () => response({}));
+  const client = createStreamClient("Bearer account-jwt", { fetcher });
+  await client.credits();
+  await client.redeem("LAUNCH50");
+  expect(fetcher.mock.calls.map(([url, init]) => [url.replace("https://stream.plotune.net", ""), init.method])).toEqual([
+    ["/v1/projects/credits", "GET"],
+    ["/v1/projects/credits/redeem", "POST"],
+  ]);
+  expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({ code: "LAUNCH50" });
+});
