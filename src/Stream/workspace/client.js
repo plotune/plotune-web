@@ -129,6 +129,12 @@ export function createStreamClient(
     `/v1/projects/${encoded(projectId)}${suffix}`;
   const data = (projectId, suffix) =>
     `/v1/data/projects/${encoded(projectId)}${suffix}`;
+  const query = (values) => {
+    const params = new URLSearchParams();
+    for (const [name, value] of Object.entries(values)) if (value !== undefined && value !== null && value !== "") params.set(name, String(value));
+    const text = params.toString();
+    return text ? `?${text}` : "";
+  };
   async function request(path, { method = "GET", body, signal, key } = {}) {
     const controller = new AbortController();
     const abort = () => controller.abort();
@@ -344,6 +350,14 @@ export function createStreamClient(
       }),
     deliveries: (id, signal) =>
       request(data(id, "/webhook-deliveries"), { signal }),
+    // Device and health reads (C01). Query values travel as parameters; an issue id
+    // may contain "/" from a device id, so it is never part of the path.
+    health: (id, { issueId, silentAfterMinutes } = {}, signal) =>
+      request(data(id, `/health${query({ id: issueId, silentAfterMinutes })}`), { signal }),
+    devices: (id, { limit, after } = {}, signal) =>
+      request(data(id, `/devices${query({ limit, after })}`), { signal }),
+    diagnose: (id, deviceId, signal) =>
+      request(data(id, `/diagnose${query({ deviceId })}`), { signal }),
     mcp: (key, signal) =>
       request("/mcp", {
         method: "POST",

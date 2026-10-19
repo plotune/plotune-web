@@ -371,3 +371,19 @@ test("browser collection limits retain confirmed widget metadata without returni
   async function* pages() { yield { ...page([event("a"), event("b")]), widget }; }
   await expect(collectEvents(pages(), { maxEvents: 1 })).rejects.toMatchObject({ code: "browser_limit", widget });
 });
+
+test("device and health reads keep issue and device ids out of the path", async () => {
+  const fetcher = jest.fn(async () => response({}));
+  const client = createStreamClient("Bearer account-jwt", { fetcher });
+  await client.health("p 1", { issueId: "device_silent:line/7", silentAfterMinutes: 30 });
+  await client.health("p 1");
+  await client.devices("p 1", { limit: 50, after: "abc_-" });
+  await client.diagnose("p 1", "bench/2 & co");
+  expect(fetcher.mock.calls.map(([url]) => url.replace("https://stream.plotune.net", ""))).toEqual([
+    "/v1/data/projects/p%201/health?id=device_silent%3Aline%2F7&silentAfterMinutes=30",
+    "/v1/data/projects/p%201/health",
+    "/v1/data/projects/p%201/devices?limit=50&after=abc_-",
+    "/v1/data/projects/p%201/diagnose?deviceId=bench%2F2+%26+co",
+  ]);
+  expect(fetcher.mock.calls.every(([, init]) => init.method === "GET")).toBe(true);
+});
