@@ -72,6 +72,7 @@ let dashboards = [
     "dashboard",
   ),
 ];
+let failWebhookRefresh = false;
 let webhooks = [],
   members = [{ email: "owner@example.test", role: "Owner" }],
   key = "plt_synthetic-key",
@@ -339,6 +340,7 @@ async function main() {
         project.revision++;
         return respond({ project });
       }
+      if (parts.length === 3 && req.method() === "GET" && failWebhookRefresh) { failWebhookRefresh = false; return respond({ error: { code: "service_unavailable", message: "Synthetic verification outage" } }, 503); }
       if (parts.length === 3)
         return respond({
           project,
@@ -397,6 +399,10 @@ async function main() {
           },
           409,
         );
+      if (kind === "webhooks" && parts[5] === "signing-key") {
+        assert(existing); existing.revision++; project.revision++; existing.data.signingConfigured = true; failWebhookRefresh = true;
+        return respond({ ...existing, signingSecret: "d0".repeat(32), previousExpiresAt: new Date(Date.now() + 86400000).toISOString() });
+      }
       if (req.method() === "DELETE") {
         if (
           kind === "filters" &&
@@ -434,7 +440,8 @@ async function main() {
       if (existing) collection.splice(collection.indexOf(existing), 1, result);
       else collection.push(result);
       project.revision++;
-      return respond(result);
+      if (kind === "webhooks") result.data.signingConfigured = true;
+      return respond({ ...result, ...(kind === "webhooks" && !existing ? { signingSecret: "c0".repeat(32) } : {}) });
     } catch (error) {
       if (["missing_filter", "snapshot_expired"].includes(error.message))
         return respond(
@@ -723,7 +730,7 @@ async function main() {
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("button", { name: "MCP setup", exact: true }).click();
-  await page.getByRole("heading", { name: "Your event history, available through MCP." }).waitFor();
+  await page.getByRole("heading", { name: "Connect your AI client" }).waitFor();
   await page.screenshot({ path: path.join(output, "mcp-desktop.png"), fullPage: true });
   await page.getByRole("button", { name: "API setup", exact: true }).click();
   page.once("dialog", (d) => d.accept());
@@ -861,6 +868,23 @@ async function main() {
     .last()
     .click();
   await page.locator(".st-webhook-row").waitFor();
+  assert.equal(await page.getByLabel("Webhook signing secret", { exact: true }).inputValue(), "c0".repeat(32));
+  assert(!(await page.evaluate(() => JSON.stringify({ local: localStorage, session: sessionStorage }))).includes("c0".repeat(32)));
+  await page.getByRole("button", { name: "I saved the secret", exact: true }).click();
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Rotate signing secret", exact: true }).click();
+  assert.equal(await page.getByLabel("Webhook signing secret", { exact: true }).inputValue(), "d0".repeat(32));
+  await page.getByText("Synthetic verification outage", { exact: false }).waitFor();
+  await page.getByRole("button", { name: "Refresh shared settings", exact: true }).click();
+  await page.waitForFunction(() => ![...document.querySelectorAll("button")].find(button => button.textContent === "Refresh shared settings")?.disabled);
+  assert.equal(await page.getByLabel("Webhook signing secret", { exact: true }).inputValue(), "d0".repeat(32));
+  await page.screenshot({ path: path.join(output, "webhook-signing-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(350);
+  await page.screenshot({ path: path.join(output, "webhook-signing-mobile.png"), fullPage: true });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.getByRole("button", { name: "I saved the secret", exact: true }).click();
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page
     .getByRole("checkbox", { name: "Enable webhook for motor.sample" })
     .click();

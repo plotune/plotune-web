@@ -136,6 +136,7 @@ export default function Webhooks({
   onCreate,
   onToggle,
   onDelete,
+  onRotateSigning,
 }) {
   const [adding, setAdding] = useState(false);
   const action = (
@@ -166,7 +167,7 @@ export default function Webhooks({
                   <code title={webhook.url}>{endpointHost(webhook.url)}</code>
                   <span>{webhook.url}</span>
                 </div>
-                <span className="st-webhook-auth">{webhookAuthSummary(webhook)}</span>
+                <div className="st-webhook-auth">{webhookAuthSummary(webhook)}{onRotateSigning && <><br />{webhook.signingConfigured ? "Signed deliveries" : "Signing setup required"}<br /><button className="sw-button" style={{ marginTop: 8 }} disabled={busy} onClick={() => onRotateSigning(webhook)}>{webhook.signingConfigured ? "Rotate signing secret" : "Set up signing"}</button></>}</div>
                 <label className="st-webhook-enabled">
                   <input
                     type="checkbox"

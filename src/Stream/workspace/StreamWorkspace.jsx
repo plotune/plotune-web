@@ -25,6 +25,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Dialog, Empty, Panel } from "../../StreamWorkspace/WorkspaceUI";
 import Dashboard from "../Dashboard";
 import Webhooks from "../Webhooks";
+import WebhookSigningSecret from "./WebhookSigningSecret";
 import { buildWidgetSeries } from "../widgetModel";
 import {
   createStreamClient,
@@ -185,6 +186,21 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [deliveryError, setDeliveryError] = useState(null);
   const [deliveryLoading, setDeliveryLoading] = useState(false);
   const [deliveryRefresh, setDeliveryRefresh] = useState(0);
+  const [webhookSecret, setWebhookSecret] = useState(null);
+  const signingScope = useRef(null);
+  signingScope.current = { projectId: project?.id, token, role: metadata.role };
+  useEffect(() => { setWebhookSecret(null); }, [project?.id, token]);
+  useEffect(() => { if (metadata.role === "Member" || [401, 403].includes(metadata.error?.status)) setWebhookSecret(null); }, [metadata.role, metadata.error]);
+  const signingWrite = (operation) => {
+    const scope = signingScope.current;
+    return metadata.mutate(async () => {
+      const result = await operation();
+      // Retain a one-time response even if subsequent metadata verification fails.
+      const current = signingScope.current;
+      if (scope.projectId === current.projectId && scope.token === current.token && current.role !== "Member" && result?.signingSecret) setWebhookSecret({ projectId: scope.projectId, value: result.signingSecret, previousExpiresAt: result.previousExpiresAt });
+      return result;
+    });
+  };
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
   const [usageRefresh, setUsageRefresh] = useState(0);
   const needsDiscovery = view === "events" || view === "dashboards";
@@ -612,7 +628,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                       events={[]}
                       discoveredEventNames={discoveryState.data?.eventNames}
                       webhooks={metadata.webhooks}
-                      onCreate={(record) => save("webhooks", record)}
+                      onCreate={(record) => signingWrite(() => client.saveResource(project.id, "webhooks", cleanResource(record)))}
+                      onRotateSigning={(record) => { if (window.confirm("Rotate this webhook’s signing secret? Save the new secret at your receiver. The previous secret works for 24 hours; rotating again replaces that previous secret.")) safeAction(() => signingWrite(() => client.rotateWebhookSigning(project.id, record))); }}
                       onToggle={(id) =>
                         safeAction(() => {
                           const base = metadata.webhooks.find(
@@ -635,6 +652,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                           );
                       }}
                     />
+                    {webhookSecret?.projectId === project.id && <WebhookSigningSecret key={webhookSecret.value} secret={webhookSecret} onDismiss={() => setWebhookSecret(null)} />}
                     <Panel title="Delivery status">
                       <Failure error={deliveryError} retry={() => setDeliveryRefresh((value) => value + 1)} />
                       {deliveryLoading && <p className="live-pad" role="status">Loading delivery status…</p>}
@@ -646,6 +664,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                                 <th>Event</th>
                                 <th>Status</th>
                                 <th>Attempts</th>
+                                <th>Receiver</th>
                                 <th>Next attempt · UTC</th>
                               </tr>
                             </thead>
@@ -653,8 +672,9 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                               {deliveries.map((d) => (
                                 <tr key={d.id}>
                                   <td>{d.eventId}</td>
-                                  <td>{d.status}</td>
+                                  <td>{d.status}{d.reason === "relay_daily_budget" ? " · Daily relay budget reached" : d.reason === "relay_unavailable" ? " · Relay unavailable" : ""}{d.egress === "direct" ? " · Direct egress" : ""}</td>
                                   <td>{d.attempts}</td>
+                                  <td>{d.statusCode || "—"}</td>
                                   <td>{d.nextAt ? <time dateTime={d.nextAt}>{new Date(d.nextAt).toLocaleString("en-GB", { timeZone: "UTC" })}</time> : "—"}</td>
                                 </tr>
                               ))}

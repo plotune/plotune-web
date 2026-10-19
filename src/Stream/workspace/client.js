@@ -330,6 +330,7 @@ export function createStreamClient(
           },
         },
       ),
+    rotateWebhookSigning: (id, record) => request(metadata(id, `/webhooks/${encoded(record.id)}/signing-key`), { method: "POST", body: { revision: record.revision } }),
     deleteResource: (id, kind, record, confirmReferenced = false) =>
       request(metadata(id, `/${kind}/${encoded(record.id)}`), {
         method: "DELETE",
