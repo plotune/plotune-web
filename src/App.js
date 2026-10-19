@@ -65,7 +65,7 @@ const Dashboard = routePage(() => import('./pages/Dashboard'));
 const Stream = routePage(() => import('./pages/Stream'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
 const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
-const LiveStreamWorkspace = routePage(() => import('./StreamMVP/live/StreamWorkspace'));
+const LiveStreamWorkspace = routePage(() => import('./Stream/workspace/StreamWorkspace'));
 const DnsPage = routePage(() => import('./pages/DnsPage'));
 const Partnership = routePage(() => import('./pages/Partnership'));
 const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));

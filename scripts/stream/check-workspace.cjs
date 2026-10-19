@@ -541,7 +541,7 @@ async function main() {
     await page.getByLabel("Value", { exact: true }).fill(String(value));
     await page.getByRole("button", { name: "Apply", exact: true }).click();
     await page.getByRole("button", { name: "Filter", exact: true }).click();
-    await page.locator(".mvp-filter-manage summary").click();
+    await page.locator(".st-filter-manage summary").click();
     await page
       .getByRole("button", { name: "Update conditions", exact: true })
       .click();
@@ -550,7 +550,7 @@ async function main() {
       .waitFor();
     assert.equal(filters.at(-1).data.conditions[0].value, value);
     await page
-      .locator('.mvp-filter-popover-head [aria-label="Close filter menu"]')
+      .locator('.st-filter-popover-head [aria-label="Close filter menu"]')
       .click();
   }
   assert.deepEqual(
@@ -617,7 +617,7 @@ async function main() {
   await page
     .getByRole("combobox", { name: "Property", exact: true })
     .fill("motor.rpm");
-  await page.locator(".mvp-widget-more summary").click();
+  await page.locator(".st-widget-more summary").click();
   await page
     .getByLabel("Saved Filter", { exact: false })
     .selectOption("simulation");
@@ -676,7 +676,7 @@ async function main() {
     .getByRole("heading", { name: "Drone failure events", exact: true })
     .waitFor({ timeout: 25000 });
   const authoritativePanel = page
-    .locator(".mvp-dashboard-graph")
+    .locator(".st-dashboard-graph")
     .filter({
       has: page.getByRole("heading", {
         name: "Drone failure events",
@@ -860,7 +860,7 @@ async function main() {
     .getByRole("button", { name: "Add webhook", exact: true })
     .last()
     .click();
-  await page.locator(".mvp-webhook-row").waitFor();
+  await page.locator(".st-webhook-row").waitFor();
   await page
     .getByRole("checkbox", { name: "Enable webhook for motor.sample" })
     .click();

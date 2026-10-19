@@ -57,15 +57,15 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
     }); } catch (cause) { setError(cause.message); setConflict(cause.status === 409); } finally { setBusy(false); }
   };
 
-  return <Dialog title={widget ? "Edit widget" : "Add widget"} subtitle="Choose an event and what to observe." onClose={onClose} className="mvp-widget-editor-dialog">
-    <form className="mvp-widget-editor" onSubmit={submit}>
-      <div ref={fields} className="sw-detail-body mvp-widget-fields" onFocusCapture={(event) => event.target.scrollIntoView({ block: "nearest" })}>
+  return <Dialog title={widget ? "Edit widget" : "Add widget"} subtitle="Choose an event and what to observe." onClose={onClose} className="st-widget-editor-dialog">
+    <form className="st-widget-editor" onSubmit={submit}>
+      <div ref={fields} className="sw-detail-body st-widget-fields" onFocusCapture={(event) => event.target.scrollIntoView({ block: "nearest" })}>
       <label>Event
         {liveControls ? <><input aria-label="Event" required list="live-event-names" value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })} placeholder="Choose or enter event name" /><datalist id="live-event-names">{choices.eventNames.map((item) => <option key={item} value={item} />)}</datalist></> : <select required value={draft.eventName} onChange={(event) => update({ eventName: event.target.value, measureProperty: "", breakdownProperty: "" })}>
           <option value="">Choose an event</option>{choices.eventNames.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>}
       </label>
-      {choices.status === "empty" && <p className="mvp-widget-help">No events match the current settings. Choose a different filter or time range.</p>}
+      {choices.status === "empty" && <p className="st-widget-help">No events match the current settings. Choose a different filter or time range.</p>}
       {draft.eventName && <>
         <label>Measure
           <select value={draft.visualization} onChange={(event) => update({ visualization: event.target.value })}>
@@ -84,7 +84,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
           </select>
         </label>
       </>}
-      <details className="mvp-widget-more" open={more} onToggle={(event) => setMore(event.currentTarget.open)}>
+      <details className="st-widget-more" open={more} onToggle={(event) => setMore(event.currentTarget.open)}>
         <summary>More options</summary>
         <div>
           <label>Saved Filter <span>Optional</span>
@@ -93,7 +93,7 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
               {draft.filterId && !filters.some((filter) => filter.id === draft.filterId) && <option value={draft.filterId}>Deleted Saved Filter</option>}
               {filters.map((filter) => <option key={filter.id} value={filter.id}>{filter.name}</option>)}
             </select>
-            {choices.status === "missing-filter" && <small className="mvp-widget-warning">This Saved Filter was deleted. Select another filter.</small>}
+            {choices.status === "missing-filter" && <small className="st-widget-warning">This Saved Filter was deleted. Select another filter.</small>}
           </label>
           {draft.eventName && <label>Breakdown by <span>Optional</span>
             <>{liveControls ? <><input aria-label="Breakdown by" list="live-breakdown-properties" value={draft.breakdownProperty} onChange={(event) => update({ breakdownProperty: event.target.value })} placeholder="Any custom property path" /><datalist id="live-breakdown-properties">{choices.breakdownProperties.map((item) => <option key={item} value={item} />)}</datalist></> : <select value={draft.breakdownProperty} onChange={(event) => update({ breakdownProperty: event.target.value })}>
@@ -104,16 +104,16 @@ export default function WidgetEditor({ widget, events, filters, now, onSave, onC
           <label>Widget title <span>Optional</span><input maxLength={64} value={draft.title} onChange={(event) => update({ title: event.target.value })} placeholder="Use the event and property name" /></label>
         </div>
       </details>
-      <section className="mvp-widget-preview" aria-label="Widget preview">
+      <section className="st-widget-preview" aria-label="Widget preview">
         {remote?.loading && <p role="status">Loading matching events…</p>}{remote?.error && <p role="alert">{remote.error}</p>}
         <div><strong>Preview</strong><span>{preview.eventCount ?? preview.events.length} matching events</span></div>
         {preview.series.some((series) => series.points.some((point) => Number.isFinite(point.value)))
           ? <WidgetChart series={preview.series} visualization={draft.chartType || "line"} label={draft.title || draft.eventName || "Widget preview"} />
           : <p>{preview.status === "missing-filter" ? "Choose a replacement Saved Filter." : "No values to preview yet."}</p>}
-        {preview.series.length > 0 && <div className="mvp-widget-preview-legend">{preview.series.map((item) => <span key={item.key}>{item.label}</span>)}</div>}
+        {preview.series.length > 0 && <div className="st-widget-preview-legend">{preview.series.map((item) => <span key={item.key}>{item.label}</span>)}</div>}
       </section>
       {error && <p role="alert">{error}</p>}
-      {conflict && onReload && <div className="mvp-widget-help"><p>Your draft is kept. Refresh the shared dashboard before retrying.</p><button className="sw-button" type="button" disabled={busy} onClick={async () => { setBusy(true); try { await onReload(); } catch (cause) { setError(cause.message); } finally { setBusy(false); } }}>Refresh shared dashboard</button></div>}
+      {conflict && onReload && <div className="st-widget-help"><p>Your draft is kept. Refresh the shared dashboard before retrying.</p><button className="sw-button" type="button" disabled={busy} onClick={async () => { setBusy(true); try { await onReload(); } catch (cause) { setError(cause.message); } finally { setBusy(false); } }}>Refresh shared dashboard</button></div>}
       </div>
       <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={onClose}>Cancel</button><button className="sw-button sw-primary" type="submit" disabled={!canSave || busy}>{widget ? "Save widget" : "Add widget"}</button></div>
     </form>

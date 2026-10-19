@@ -5,8 +5,8 @@ Reviewed 2026-10-16 against local web commit `3e75019`.
 ## Reference and evidence
 
 The product reference is `/stream/demo`, implemented in
-`src/StreamMVP/StreamMVP.jsx`. The authenticated route is
-`/stream/workspace`, implemented in `src/StreamMVP/live/StreamWorkspace.jsx`.
+`src/Stream/DemoWorkspace.jsx`. The authenticated route is
+`/stream/workspace`, implemented in `src/Stream/workspace/StreamWorkspace.jsx`.
 The integration brief explicitly requires preserving the frozen experience.
 Sharing CSS alone has not preserved that experience.
 

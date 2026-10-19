@@ -263,7 +263,7 @@ const compareEventsNewestFirst = (a, b) => {
 };
 
 // A cursor is the last event rendered on the current page. The local fixture
-// array stands in for a bounded backend response during this frontend-only MVP.
+// array stands in for a bounded backend response in the frontend-only demo.
 export function cursorPage(events, cursor = null, limit = EVENTS_PER_PAGE) {
   const ordered = [...events].sort(compareEventsNewestFirst);
   const remaining = cursor

@@ -41,7 +41,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
       subtitle="Send one event type to an HTTPS endpoint."
       onClose={onClose}
     >
-      <form className="sw-detail-body mvp-webhook-form" onSubmit={submit}>
+      <form className="sw-detail-body st-webhook-form" onSubmit={submit}>
         <label>
           Event
           <select
@@ -60,7 +60,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
               onChange={(e) => setCustomEvent(e.target.value)}
             />
           )}
-          {errors.eventName && <span className="mvp-webhook-error">{errors.eventName}</span>}
+          {errors.eventName && <span className="st-webhook-error">{errors.eventName}</span>}
         </label>
 
         <label>
@@ -71,7 +71,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
-          {errors.url && <span className="mvp-webhook-error">{errors.url}</span>}
+          {errors.url && <span className="st-webhook-error">{errors.url}</span>}
         </label>
 
         <label>
@@ -83,7 +83,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
         </label>
 
         {authType === "header" && (
-          <div className="mvp-webhook-auth-fields">
+          <div className="st-webhook-auth-fields">
             <label>
               Header name
               <input
@@ -91,7 +91,7 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
                 value={headerName}
                 onChange={(e) => setHeaderName(e.target.value)}
               />
-              {errors.headerName && <span className="mvp-webhook-error">{errors.headerName}</span>}
+              {errors.headerName && <span className="st-webhook-error">{errors.headerName}</span>}
             </label>
             <label>
               Header value
@@ -102,12 +102,12 @@ export function AddWebhookDialog({ events, onClose, onCreate, discoveredEventNam
                 value={headerValue}
                 onChange={(e) => setHeaderValue(e.target.value)}
               />
-              {errors.headerValue && <span className="mvp-webhook-error">{errors.headerValue}</span>}
+              {errors.headerValue && <span className="st-webhook-error">{errors.headerValue}</span>}
             </label>
           </div>
         )}
 
-        <p className="mvp-webhook-note">
+        <p className="st-webhook-note">
           The complete Stream event is sent as JSON. Header credentials are kept separate from the event payload.
         </p>
         {errors.submit && <p role="alert">{errors.submit}</p>}
@@ -139,7 +139,7 @@ export default function Webhooks({
 }) {
   const [adding, setAdding] = useState(false);
   const action = (
-    <button className="sw-button sw-primary mvp-webhook-add" onClick={() => setAdding(true)}>
+    <button className="sw-button sw-primary st-webhook-add" onClick={() => setAdding(true)}>
       <FiPlus /> Add webhook
     </button>
   );
@@ -158,16 +158,16 @@ export default function Webhooks({
             action={<button className="sw-button sw-primary" onClick={() => setAdding(true)}>Add webhook</button>}
           />
         ) : (
-          <div className="mvp-webhook-list" aria-label={`Webhooks for project ${projectId}`}>
+          <div className="st-webhook-list" aria-label={`Webhooks for project ${projectId}`}>
             {webhooks.map((webhook) => (
-              <article className="mvp-webhook-row" key={webhook.id}>
-                <div className="mvp-webhook-main">
+              <article className="st-webhook-row" key={webhook.id}>
+                <div className="st-webhook-main">
                   <strong>{webhook.eventName}</strong>
                   <code title={webhook.url}>{endpointHost(webhook.url)}</code>
                   <span>{webhook.url}</span>
                 </div>
-                <span className="mvp-webhook-auth">{webhookAuthSummary(webhook)}</span>
-                <label className="mvp-webhook-enabled">
+                <span className="st-webhook-auth">{webhookAuthSummary(webhook)}</span>
+                <label className="st-webhook-enabled">
                   <input
                     type="checkbox"
                     disabled={busy}

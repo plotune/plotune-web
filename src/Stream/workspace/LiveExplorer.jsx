@@ -212,8 +212,8 @@ export default function LiveExplorer({
     <Failure error={discoveryError} retry={retryDiscovery} />
     <Failure error={realtime.error} retry={refresh} />
     {(realtime.ids.length > 0 || realtime.reset) && <div className="live-notice" role="status">New project events are available.<button className="sw-button" onClick={refresh}>Load latest events</button></div>}
-    <section className="mvp-first-event live-first-event">
-                <span className="mvp-first-icon"><FiTerminal /></span>
+    <section className="st-first-event live-first-event">
+                <span className="st-first-icon"><FiTerminal /></span>
                 <p className="sw-eyebrow">CONNECT YOUR SYSTEM</p>
                 <h2>Send an event from your system</h2>
                 <p>Run an example below, then load the new events when they arrive.</p>
@@ -225,7 +225,7 @@ export default function LiveExplorer({
   </>;
   return (
     <>
-      <div className="sw-toolbar mvp-filters live-explorer-toolbar live-toolbar">
+      <div className="sw-toolbar st-filters live-explorer-toolbar live-toolbar">
         <label className="sw-search">
           <FiSearch aria-hidden="true" />
           <input
@@ -393,7 +393,7 @@ export default function LiveExplorer({
       </div>
       </div>
       {activeFilterId && (
-        <p className="mvp-muted">
+        <p className="st-muted">
           {temporary ? "Temporary changes to " : "Shared Saved Filter: "}
           {selected?.name ||
             "Deleted filter — choose a replacement or clear filters"}
@@ -407,7 +407,7 @@ export default function LiveExplorer({
       )}
       <Failure error={discoveryError} retry={retryDiscovery} />
       {discovery?.truncated && (
-        <p className="mvp-muted">
+        <p className="st-muted">
           Property suggestions are sampled. You can always enter another
           property path.
         </p>
@@ -424,7 +424,7 @@ export default function LiveExplorer({
           </button>
         </div>
       )}
-      <div className="sw-panel mvp-events-panel" aria-busy={explorer.loading}>
+      <div className="sw-panel st-events-panel" aria-busy={explorer.loading}>
         {explorer.loading && (
           <p className="live-pad" role="status">
             Loading events…
@@ -441,7 +441,7 @@ export default function LiveExplorer({
           )}
         {explorer.page.items.length > 0 && (
           <div className="sw-table-wrap">
-            <table className="sw-table mvp-table">
+            <table className="sw-table st-table">
               <thead>
                 <tr>
                   <th>Timestamp · UTC</th>
@@ -488,13 +488,13 @@ export default function LiveExplorer({
           subtitle="Event detail"
           onClose={() => setDetail(null)}
         >
-          <div className="sw-detail-body mvp-event-detail">
+          <div className="sw-detail-body st-event-detail">
             <Failure error={detailError} />
             {fullDetail ? <>
-              <div className="mvp-detail-field"><span>Exact timestamp · UTC</span><code>{fullDetail.timestamp}</code></div>
-              <div className="mvp-detail-field"><span>Event name</span><code>{fullDetail.event}</code></div>
+              <div className="st-detail-field"><span>Exact timestamp · UTC</span><code>{fullDetail.timestamp}</code></div>
+              <div className="st-detail-field"><span>Event name</span><code>{fullDetail.event}</code></div>
               {[['Device ID', 'device_id', 'deviceId', 'device'], ['Session ID', 'session_id', 'sessionId', 'session']].map(([label, field, queryField, kind]) => (
-                <div className="mvp-detail-field mvp-context-detail" key={field}>
+                <div className="st-detail-field st-context-detail" key={field}>
                   <span>{label}</span>
                   <div><code>{fullDetail[field] || "Unspecified"}</code>
                     {fullDetail[field] && <button className="sw-button" onClick={() => {

@@ -89,7 +89,7 @@ const click = (page, name) => page.getByRole('button', { name, exact: true }).cl
   record('contact valid submission reaches mocked response', true, 'No real endpoint is called; script.google* requests are fixture-mocked.');
   await save(page, 'contact-submitted');
 
-  // Stream MVP local demo: search/filter, detail dialog, project creation, dashboard, webhook and setup views.
+  // Stream local demo: search/filter, detail dialog, project creation, dashboard, webhook and setup views.
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto(`${BASE}/stream/demo?project=battery`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('heading', { name: /Events/ }).first().waitFor({ timeout: 10000 }).catch(() => {});
@@ -97,15 +97,15 @@ const click = (page, name) => page.getByRole('button', { name, exact: true }).cl
   const search = page.getByRole('textbox', { name: 'Search events and properties' });
   await search.fill('motor');
   const filtered = await page.locator('tbody tr').count();
-  record('MVP event search filters rows', filtered >= 0, `${filtered} matching rows displayed`);
+  record('Demo event search filters rows', filtered >= 0, `${filtered} matching rows displayed`);
   await search.fill('');
   const inspect = page.getByRole('button', { name: /^Inspect / }).first();
   if (await inspect.count()) {
     await inspect.click();
-    record('MVP event detail opens', await page.getByRole('dialog').count() > 0);
+    record('Demo event detail opens', await page.getByRole('dialog').count() > 0);
     await save(page, 'stream-event-detail');
     await page.keyboard.press('Escape');
-  } else record('MVP event detail opens', false, 'No Inspect event action found');
+  } else record('Demo event detail opens', false, 'No Inspect event action found');
   const newProject = page.getByRole('button', { name: 'Create project', exact: false }).first();
   if (await newProject.count()) {
     await newProject.click();
@@ -118,13 +118,13 @@ const click = (page, name) => page.getByRole('button', { name, exact: true }).cl
   }
   const projectSelect = page.getByLabel('Project');
   if (await projectSelect.count()) await projectSelect.selectOption({ label: 'Local QA project' }).catch(() => {});
-  record('MVP project creation or selector exercised', await page.locator('body').innerText().then(t => t.includes('Local QA project') || t.includes('battery')));
+  record('Demo project creation or selector exercised', await page.locator('body').innerText().then(t => t.includes('Local QA project') || t.includes('battery')));
   await page.getByRole('button', { name: 'Dashboards', exact: true }).click();
   await page.getByRole('button', { name: 'New dashboard', exact: true }).click();
   await save(page, 'stream-create-dashboard-dialog');
   await page.getByPlaceholder('e.g. Robot validation').fill('Local QA dashboard');
   await page.getByRole('button', { name: 'Create dashboard', exact: true }).click();
-  record('MVP dashboard creates and appears', await page.getByText('Local QA dashboard').count() > 0);
+  record('Demo dashboard creates and appears', await page.getByText('Local QA dashboard').count() > 0);
   await save(page, 'stream-dashboard-created');
   await page.getByRole('button', { name: 'Webhooks', exact: true }).click();
   await save(page, 'stream-webhooks');
@@ -140,7 +140,7 @@ const click = (page, name) => page.getByRole('button', { name, exact: true }).cl
   await page.getByRole('button', { name: 'MCP setup', exact: true }).click();
   await save(page, 'stream-mcp-setup');
 
-  // Future-product prototype views and controls, kept distinct from the MVP.
+  // Future-product prototype views and controls, kept distinct from the demo.
   await page.goto(`${BASE}/stream/prototypes/vision?view=overview`, { waitUntil: 'domcontentloaded' });
   await save(page, 'stream-prototype-overview');
   for (const view of ['runs', 'measurements', 'sources', 'processors']) {

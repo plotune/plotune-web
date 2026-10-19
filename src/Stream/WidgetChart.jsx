@@ -14,7 +14,7 @@ export function WidgetBars({ series, label }) {
   const group = 420 / count;
   const width = Math.max(1, group * 0.74 / Math.max(1, series.length));
   const zero = y(0);
-  return <svg className="mvp-widget-bars" viewBox="0 0 480 154" role="img" aria-label={`${label} bar chart`}>
+  return <svg className="st-widget-bars" viewBox="0 0 480 154" role="img" aria-label={`${label} bar chart`}>
     {[28, 77, 126].map((line) => <line key={line} x1="40" x2="460" y1={line} y2={line} stroke="#e5e9eb" />)}
     {series.flatMap((item, seriesIndex) => item.points.map((point, pointIndex) => {
       if (!Number.isFinite(point.value)) return null;

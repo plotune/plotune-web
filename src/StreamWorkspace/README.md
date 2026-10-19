@@ -53,5 +53,5 @@ Before publishing, inspect desktop/tablet/mobile, try the interactions above, en
 no horizontal document overflow or runtime errors, and verify `/streams` opens the live workspace. `/stream` itself was not an existing route and
 is intentionally not added or redirected by this feature.
 
-The shipped-MVP exploration is separate in `src/StreamMVP` at `/stream/workspace`.
-This richer reference is intentionally absent from MVP navigation.
+The shipped workspace is separate: `src/Stream/workspace` at `/stream/workspace`, and the demo at `/stream/demo`.
+This richer reference is intentionally absent from the shipped workspace navigation.

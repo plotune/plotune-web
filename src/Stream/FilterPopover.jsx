@@ -98,32 +98,32 @@ export default function FilterPopover({
   };
 
   return (
-    <div className="mvp-filter-control">
-      <button ref={triggerRef} className={`sw-button mvp-filter-trigger ${conditions.length ? "has-filter" : ""}`} type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+    <div className="st-filter-control">
+      <button ref={triggerRef} className={`sw-button st-filter-trigger ${conditions.length ? "has-filter" : ""}`} type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
         <FiPlus /> Filter <FiChevronDown />
       </button>
       {conditions.length > 0 && (
-        <div className="mvp-filter-chips" aria-label="Active property filters">
+        <div className="st-filter-chips" aria-label="Active property filters">
           {conditions.map((condition) => (
-            <span className="mvp-filter-chip" key={condition.id}>
+            <span className="st-filter-chip" key={condition.id}>
               <button type="button" onClick={() => edit(condition)} aria-label={`Edit ${describe(condition)}`}>{describe(condition)}</button>
               <button type="button" aria-label={`Remove ${condition.path} filter`} onClick={() => onApply(conditions.filter((item) => item.id !== condition.id), activeFilterId)}><FiX /></button>
             </span>
           ))}
-          <button className="sw-link mvp-filter-clear" type="button" onClick={() => onApply([], null)}>Clear</button>
+          <button className="sw-link st-filter-clear" type="button" onClick={() => onApply([], null)}>Clear</button>
         </div>
       )}
       {open && (
         <>
-          <button className="mvp-popover-dismiss" tabIndex={-1} aria-label="Close filter menu" onClick={close} />
-          <section className="mvp-filter-popover" role="dialog" aria-label="Filter events" onKeyDown={(event) => { if (event.key === "Escape") close(); }}>
+          <button className="st-popover-dismiss" tabIndex={-1} aria-label="Close filter menu" onClick={close} />
+          <section className="st-filter-popover" role="dialog" aria-label="Filter events" onKeyDown={(event) => { if (event.key === "Escape") close(); }}>
             {failure && <p role="alert">{failure}</p>}
-            <div className="mvp-filter-popover-head">
+            <div className="st-filter-popover-head">
               <strong>Filter events</strong>
               <button className="sw-icon-button" type="button" aria-label="Close filter menu" onClick={close}><FiX /></button>
             </div>
             {filters.length > 0 && (
-              <label className="mvp-saved-filter-select">Saved filter
+              <label className="st-saved-filter-select">Saved filter
                 <select value={activeFilterId || "temporary"} onChange={(event) => {
                   const filter = filters.find((item) => item.id === event.target.value);
                   onApply(filter?.conditions || [], filter?.id || null);
@@ -134,7 +134,7 @@ export default function FilterPopover({
               </label>
             )}
             {selectedFilter && (
-              <details className="mvp-filter-manage">
+              <details className="st-filter-manage">
                 <summary>Saved filter options</summary>
                 <div>
                   {changed && <button type="button" disabled={busy} onClick={() => perform(() => onSave(selectedFilter.name, conditions, selectedFilter.id))}>Update conditions</button>}
@@ -150,13 +150,13 @@ export default function FilterPopover({
                 </div>
               </details>
             )}
-            <label className="mvp-property-search">Property
+            <label className="st-property-search">Property
               <input type="search" autoFocus={!path} placeholder="Search properties…" value={path || search} onChange={(event) => {
                 setPath(""); setSearch(event.target.value);
               }} />
             </label>
             {!path ? (
-              <div className="mvp-property-options" role="listbox" aria-label="Discovered properties">
+              <div className="st-property-options" role="listbox" aria-label="Discovered properties">
                 {matches.map((item) => (
                   <button type="button" role="option" aria-selected={false} key={item.path} onClick={() => choosePath(item.path)}>
                     <code>{item.path}</code><small>{item.type}</small>
@@ -168,18 +168,18 @@ export default function FilterPopover({
                 {!matches.length && !search.trim() && <p>Type to search or enter a custom property path.</p>}
               </div>
             ) : (
-              <form className="mvp-condition-form" onSubmit={submit}>
-                <div className="mvp-selected-property"><button type="button" onClick={() => { setPath(""); setValue(""); }}>{path} <small>{discovered?.type || "custom"} · change</small></button></div>
+              <form className="st-condition-form" onSubmit={submit}>
+                <div className="st-selected-property"><button type="button" onClick={() => { setPath(""); setValue(""); }}>{path} <small>{discovered?.type || "custom"} · change</small></button></div>
                 {(!discovered || ["mixed", "null", "object"].includes(discovered.type)) && (
                   <label>Value type<select aria-label="Value type" value={kind} onChange={(event) => { setKind(event.target.value); setOperator(PROPERTY_OPERATORS[event.target.value][0]); }}><option value="string">String</option><option value="number">Number</option><option value="boolean">Boolean</option></select></label>
                 )}
                 <label>Operator<select aria-label="Operator" value={operator} onChange={(event) => setOperator(event.target.value)}>{operators.map((item) => <option key={item} value={item}>{LABELS[item]}</option>)}</select></label>
                 {!NO_VALUE.includes(operator) && type === "number" && <label>Value<input autoFocus type="number" step="any" required value={value} onChange={(event) => setValue(event.target.value)} /></label>}
-                {!NO_VALUE.includes(operator) && type === "string" && <label>Value<input autoFocus list="mvp-filter-values" value={value} onChange={(event) => setValue(event.target.value)} /><datalist id="mvp-filter-values">{suggestions.map((item) => <option key={item} value={item} />)}</datalist></label>}
-                <div className="mvp-condition-actions"><button type="button" className="sw-link" onClick={() => { setPath(""); setEditingId(null); }}>Back</button><button className="sw-button sw-primary" type="submit">Apply</button></div>
+                {!NO_VALUE.includes(operator) && type === "string" && <label>Value<input autoFocus list="st-filter-values" value={value} onChange={(event) => setValue(event.target.value)} /><datalist id="st-filter-values">{suggestions.map((item) => <option key={item} value={item} />)}</datalist></label>}
+                <div className="st-condition-actions"><button type="button" className="sw-link" onClick={() => { setPath(""); setEditingId(null); }}>Back</button><button className="sw-button sw-primary" type="submit">Apply</button></div>
               </form>
             )}
-            <div className="mvp-filter-popover-foot">
+            <div className="st-filter-popover-foot">
               {conditions.length > 0 && <span>{conditions.length} condition{conditions.length === 1 ? "" : "s"} · AND</span>}
               {!showSave ? <button type="button" className="sw-link" disabled={!conditions.length} onClick={() => setShowSave(true)}>{activeFilterId ? "Save as new" : "Save filter"}</button> : (
                 <form onSubmit={saveCurrent}><input aria-label="Saved filter name" autoFocus placeholder="Filter name" value={saveName} onChange={(event) => setSaveName(event.target.value)} required /><button type="submit" disabled={busy}>Save</button><button type="button" onClick={() => { creationId.current = null; setShowSave(false); }}>Cancel</button></form>
