@@ -394,3 +394,48 @@
   .live-workspace .dh-issues .sw-button { order: 3; }
   .live-workspace .dh-detail dl { grid-template-columns: 1fr; }
 }
+
+/* Webhook delivery: one-time setup first, rare replacement disclosed in context. */
+.live-workspace .live-hook-body { padding: 20px 22px; color: #334c47; font-size: 14px; line-height: 1.6; }
+.live-workspace .live-hook-body > p { margin: 0 0 14px; max-width: 68ch; }
+.live-workspace .live-hook-context { display: grid; gap: 4px; margin-bottom: 14px; overflow-wrap: anywhere; }
+.live-workspace .live-hook-context strong { color: #243b35; }
+.live-workspace .live-hook-context code { font-size: 12px; color: #435b57; overflow-wrap: anywhere; }
+.live-workspace .live-hook-overlap { color: #435b57; font-size: 13px; }
+.live-workspace .live-webhook-secret h2 > span { scroll-margin-top: 84px; }
+.live-workspace .live-webhook-secret h2 > span:focus { outline: none; }
+.live-workspace .live-hook-secret-label { display: block; margin-bottom: 6px; font-weight: 600; }
+.live-workspace .live-hook-secret-field { display: grid; grid-template-columns: minmax(0, 1fr) 44px; align-items: center; gap: 8px; }
+.live-workspace .live-hook-secret-field input { width: 100%; box-sizing: border-box; min-width: 0; font-family: ui-monospace, monospace; }
+.live-workspace .live-hook-secret-field .sw-icon-button { width: 44px; height: 44px; }
+.live-workspace .live-hook-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.live-workspace .live-hook-actions .sw-button { min-height: 44px; justify-content: center; }
+.live-workspace .live-hook-save-actions { margin-top: 14px; }
+.live-workspace .live-hook-body > .live-hook-feedback { margin: 10px 0 0; font-size: 13px; color: #435b57; }
+.live-workspace .live-hook-body > [role="alert"], .live-workspace .live-hook-error { color: #993f30; }
+.live-workspace .live-hook-verification { margin-top: 14px; border-top: 1px solid #d8e2dc; }
+.live-workspace .live-hook-verification summary, .live-workspace .live-hook-signing summary, .live-workspace .live-hook-destination summary { cursor: pointer; min-height: 44px; box-sizing: border-box; padding: 11px 0; font-size: 13px; line-height: 1.6; color: #00695c; }
+.live-workspace .live-hook-verification p { margin: 0 0 8px; max-width: 68ch; font-size: 13px; }
+.live-workspace .live-hook-signing { margin-top: 6px; font-size: 13px; line-height: 1.6; }
+.live-workspace .live-hook-state { display: block; font-weight: 600; color: #334c47; }
+.live-workspace .live-hook-required { color: #89501b; }
+.live-workspace .live-hook-signing p { margin: 0 0 10px; overflow-wrap: anywhere; }
+.live-workspace .live-hook-confirm { padding: 0 0 8px; }
+.live-workspace .st-webhook-auth { color: #435b57; font-size: 13px; }
+.live-workspace .st-webhook-row { grid-template-columns: minmax(0, 1fr) minmax(180px, 250px) auto 44px; }
+.live-workspace .st-webhook-enabled { min-height: 44px; cursor: pointer; font-size: 13px; color: #435b57; }
+.live-workspace .st-webhook-row > .sw-icon-button { width: 44px; height: 44px; }
+.live-workspace .live-hook-report-meta { padding: 14px 22px; font-size: 13px; line-height: 1.6; color: #435b57; }
+.live-workspace .live-hook-report-meta p { margin: 0; }
+.live-workspace .live-hook-deliveries .sw-table td { vertical-align: top; }
+.live-workspace .live-hook-deliveries .sw-table strong { font-weight: 500; }
+.live-workspace .live-hook-deliveries .sw-table small { display: block; margin-top: 4px; color: #435b57; font-size: 12px; }
+.live-workspace .live-hook-deliveries .sw-table-wrap:focus-visible { outline-offset: -3px; }
+@media (max-width: 700px) {
+  .live-workspace .st-webhook-row { grid-template-columns: minmax(0, 1fr) 44px; }
+  .live-workspace .live-hook-body { padding: 16px; }
+  .live-workspace .live-hook-save-actions .sw-button { flex: 1 1 140px; }
+  .live-workspace .live-hook-report-meta { padding: 14px 16px; }
+}
+.live-workspace .st-webhook-main strong { font-size: 14px; color: #334c47; }
+.live-workspace .st-webhook-main code, .live-workspace .st-webhook-main span { font-size: 12px; color: #435b57; }

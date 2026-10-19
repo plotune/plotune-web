@@ -273,6 +273,9 @@ async function main() {
             acceptedToday: 110,
             dailyAllowance: 2000,
             scope: "project-owner-account",
+            monthly: { allowance: 30000, used: 110 },
+            daily: { limit: 2000, used: 110 },
+            added: { balance: 0 },
           });
         if (endpoint === "discovery")
           return respond({
@@ -846,17 +849,17 @@ async function main() {
   assert(members.some((m) => m.email === "member@example.test"));
   await page.screenshot({ path: path.join(output, "settings-desktop.png"), fullPage: true });
   await page.getByRole("button", { name: "Webhooks", exact: true }).click();
-  await page.getByText("No queued deliveries reported.", { exact: true }).waitFor();
+  await page.getByText("No deliveries reported yet.", { exact: true }).waitFor();
   await page.screenshot({ path: path.join(output, "webhooks-empty-desktop.png"), fullPage: true });
   deliveryUnavailable = true;
   await page.getByRole("button", { name: "Events", exact: true }).click();
   await page.getByRole("button", { name: "Webhooks", exact: true }).click();
   await page.getByText("Delivery status unavailable", { exact: true }).waitFor();
-  assert.equal(await page.getByText("No queued deliveries reported.", { exact: true }).count(), 0);
+  assert.equal(await page.getByText("No deliveries reported yet.", { exact: true }).count(), 0);
   await page.screenshot({ path: path.join(output, "webhooks-error-desktop.png"), fullPage: true });
   deliveryUnavailable = false;
   await page.getByRole("button", { name: "Retry / refresh", exact: true }).click();
-  await page.getByText("No queued deliveries reported.", { exact: true }).waitFor();
+  await page.getByText("No deliveries reported yet.", { exact: true }).waitFor();
   await page.getByRole("button", { name: "Add webhook", exact: true }).click();
   // Management screens no longer fetch event discovery just to populate suggestions.
   await page.getByRole("textbox", { name: "Custom event name", exact: true }).fill("motor.sample");
@@ -871,8 +874,8 @@ async function main() {
   assert.equal(await page.getByLabel("Webhook signing secret", { exact: true }).inputValue(), "c0".repeat(32));
   assert(!(await page.evaluate(() => JSON.stringify({ local: localStorage, session: sessionStorage }))).includes("c0".repeat(32)));
   await page.getByRole("button", { name: "I saved the secret", exact: true }).click();
-  page.once("dialog", (dialog) => dialog.accept());
-  await page.getByRole("button", { name: "Rotate signing secret", exact: true }).click();
+  await page.locator(".live-hook-signing summary").first().click();
+  await page.getByRole("button", { name: "Create new secret", exact: true }).click();
   assert.equal(await page.getByLabel("Webhook signing secret", { exact: true }).inputValue(), "d0".repeat(32));
   await page.getByText("Synthetic verification outage", { exact: false }).waitFor();
   await page.getByRole("button", { name: "Refresh shared settings", exact: true }).click();
@@ -902,7 +905,7 @@ async function main() {
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
   }
   await page.getByRole("button", { name: "Account", exact: true }).click();
-  await page.getByText("Project owner's account allowance", { exact: true }).waitFor();
+  await page.getByText("Shared by every project of the project owner's account.", { exact: true }).waitFor();
   await page.screenshot({ path: path.join(output, "usage-mobile.png"), fullPage: false });
   await page.getByRole("button", { name: "Close", exact: true }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });

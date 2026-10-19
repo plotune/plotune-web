@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { Dialog, Empty, Panel } from "../StreamWorkspace/WorkspaceUI";
 import {
@@ -136,11 +136,14 @@ export default function Webhooks({
   onCreate,
   onToggle,
   onDelete,
-  onRotateSigning,
+  renderSigning,
+  onEditorClose,
 }) {
   const [adding, setAdding] = useState(false);
+  const addTrigger = useRef(null);
+  const closeEditor = () => { setAdding(false); onEditorClose?.(() => addTrigger.current); };
   const action = (
-    <button className="sw-button sw-primary st-webhook-add" onClick={() => setAdding(true)}>
+    <button ref={addTrigger} data-webhook-add disabled={busy} className="sw-button sw-primary st-webhook-add" onClick={() => setAdding(true)}>
       <FiPlus /> Add webhook
     </button>
   );
@@ -156,18 +159,18 @@ export default function Webhooks({
           <Empty
             title="Send events to any HTTP endpoint"
             description="Choose an event and forward its complete payload to an automation system, CI/CD bridge, agent, or your own service."
-            action={<button className="sw-button sw-primary" onClick={() => setAdding(true)}>Add webhook</button>}
+            action={<button ref={addTrigger} data-webhook-add disabled={busy} className="sw-button sw-primary" onClick={() => setAdding(true)}>Add webhook</button>}
           />
         ) : (
           <div className="st-webhook-list" aria-label={`Webhooks for project ${projectId}`}>
             {webhooks.map((webhook) => (
-              <article className="st-webhook-row" key={webhook.id}>
+              <article className="st-webhook-row" key={webhook.id} aria-label={`${webhook.eventName} webhook at ${endpointHost(webhook.url)}`}>
                 <div className="st-webhook-main">
                   <strong>{webhook.eventName}</strong>
                   <code title={webhook.url}>{endpointHost(webhook.url)}</code>
                   <span>{webhook.url}</span>
                 </div>
-                <div className="st-webhook-auth">{webhookAuthSummary(webhook)}{onRotateSigning && <><br />{webhook.signingConfigured ? "Signed deliveries" : "Signing setup required"}<br /><button className="sw-button" style={{ marginTop: 8 }} disabled={busy} onClick={() => onRotateSigning(webhook)}>{webhook.signingConfigured ? "Rotate signing secret" : "Set up signing"}</button></>}</div>
+                <div className="st-webhook-auth">{renderSigning ? <>Header authentication: {webhook.auth?.type === "header" ? webhook.auth.name : "None"}</> : webhookAuthSummary(webhook)}{renderSigning?.(webhook)}</div>
                 <label className="st-webhook-enabled">
                   <input
                     type="checkbox"
@@ -196,7 +199,7 @@ export default function Webhooks({
           key={projectId}
           events={events}
           discoveredEventNames={discoveredEventNames}
-          onClose={() => setAdding(false)}
+          onClose={closeEditor}
           onCreate={onCreate}
         />
       )}

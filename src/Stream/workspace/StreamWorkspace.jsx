@@ -27,6 +27,8 @@ import { AddCreditsDialog, CreditsSummary } from "./Credits";
 import Dashboard from "../Dashboard";
 import Webhooks from "../Webhooks";
 import WebhookSigningSecret from "./WebhookSigningSecret";
+import WebhookSigningControls from "./WebhookSigningControls";
+import WebhookDeliveries from "./WebhookDeliveries";
 import { buildWidgetSeries } from "../widgetModel";
 import {
   createStreamClient,
@@ -188,18 +190,30 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [deliveryLoading, setDeliveryLoading] = useState(false);
   const [deliveryRefresh, setDeliveryRefresh] = useState(0);
   const [webhookSecret, setWebhookSecret] = useState(null);
+  const [secretFocusVersion, setSecretFocusVersion] = useState(0);
+  const signingTrigger = useRef(null);
   const signingScope = useRef(null);
-  signingScope.current = { projectId: project?.id, token, role: metadata.role };
-  useEffect(() => { setWebhookSecret(null); }, [project?.id, token]);
+  signingScope.current = { projectId: requestedProject || project?.id, token, role: metadata.role };
+  useEffect(() => { setWebhookSecret(null); }, [requestedProject, token]);
   useEffect(() => { if (metadata.role === "Member" || [401, 403].includes(metadata.error?.status)) setWebhookSecret(null); }, [metadata.role, metadata.error]);
-  const signingWrite = (operation) => {
+  const signingWrite = (operation, trigger) => {
+    if (trigger) signingTrigger.current = trigger;
     const scope = signingScope.current;
+    let secretReceived = false;
     return metadata.mutate(async () => {
       const result = await operation();
       // Retain a one-time response even if subsequent metadata verification fails.
       const current = signingScope.current;
-      if (scope.projectId === current.projectId && scope.token === current.token && current.role !== "Member" && result?.signingSecret) setWebhookSecret({ projectId: scope.projectId, value: result.signingSecret, previousExpiresAt: result.previousExpiresAt });
+      if (scope.projectId === current.projectId && scope.token === current.token && current.role !== "Member" && result?.signingSecret) {
+        secretReceived = true;
+        setWebhookSecret({ projectId: scope.projectId, id: result.id, eventName: result.data?.eventName, url: result.data?.url, value: result.signingSecret, previousExpiresAt: result.previousExpiresAt });
+      }
       return result;
+    }).catch(cause => {
+      cause.signingSecretReceived = secretReceived;
+      // A pre-write refusal belongs beside its form; permission failures remain global.
+      if (!secretReceived && ![401, 403, 404].includes(cause.status)) metadata.setError(null);
+      throw cause;
     });
   };
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
@@ -626,14 +640,16 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                   />
                 ) : (
                   <>
+                    {webhookSecret?.projectId === project.id && <WebhookSigningSecret key={webhookSecret.value} secret={webhookSecret} busy={metadata.busy} focusVersion={secretFocusVersion} onDismiss={() => { setWebhookSecret(null); requestAnimationFrame(() => { const trigger = typeof signingTrigger.current === "function" ? signingTrigger.current() : signingTrigger.current; const target = trigger?.isConnected ? trigger : document.querySelector("main [data-webhook-add]"); target?.focus(); }); }} />}
                     <Webhooks
-                      busy={metadata.busy}
+                      busy={metadata.busy || !!webhookSecret}
                       projectId={project.id}
                       events={[]}
                       discoveredEventNames={discoveryState.data?.eventNames}
                       webhooks={metadata.webhooks}
-                      onCreate={(record) => signingWrite(() => client.saveResource(project.id, "webhooks", cleanResource(record)))}
-                      onRotateSigning={(record) => { if (window.confirm("Rotate this webhook’s signing secret? Save the new secret at your receiver. The previous secret works for 24 hours; rotating again replaces that previous secret.")) safeAction(() => signingWrite(() => client.rotateWebhookSigning(project.id, record))); }}
+                      onCreate={(record) => signingWrite(() => client.saveResource(project.id, "webhooks", cleanResource(record))).catch(cause => { if (!cause.signingSecretReceived) throw cause; })}
+                      onEditorClose={(trigger) => { signingTrigger.current = trigger; setSecretFocusVersion(value => value + 1); }}
+                      renderSigning={(record) => <WebhookSigningControls webhook={record} busy={metadata.busy || !!webhookSecret} pendingSecret={webhookSecret?.id === record.id} onRotate={(hook, trigger) => signingWrite(() => client.rotateWebhookSigning(project.id, hook), trigger)} />}
                       onToggle={(id) =>
                         safeAction(() => {
                           const base = metadata.webhooks.find(
@@ -656,41 +672,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                           );
                       }}
                     />
-                    {webhookSecret?.projectId === project.id && <WebhookSigningSecret key={webhookSecret.value} secret={webhookSecret} onDismiss={() => setWebhookSecret(null)} />}
-                    <Panel title="Delivery status">
-                      <Failure error={deliveryError} retry={() => setDeliveryRefresh((value) => value + 1)} />
-                      {deliveryLoading && <p className="live-pad" role="status">Loading delivery status…</p>}
-                      {deliveries.length ? (
-                        <div className="sw-table-wrap">
-                          <table className="sw-table">
-                            <thead>
-                              <tr>
-                                <th>Event</th>
-                                <th>Status</th>
-                                <th>Attempts</th>
-                                <th>Receiver</th>
-                                <th>Next attempt · UTC</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {deliveries.map((d) => (
-                                <tr key={d.id}>
-                                  <td>{d.eventId}</td>
-                                  <td>{d.status}{d.reason === "relay_daily_budget" ? " · Daily relay budget reached" : d.reason === "relay_unavailable" ? " · Relay unavailable" : ""}{d.egress === "direct" ? " · Direct egress" : ""}</td>
-                                  <td>{d.attempts}</td>
-                                  <td>{d.statusCode || "—"}</td>
-                                  <td>{d.nextAt ? <time dateTime={d.nextAt}>{new Date(d.nextAt).toLocaleString("en-GB", { timeZone: "UTC" })}</time> : "—"}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : !deliveryLoading && !deliveryError && (
-                        <p className="live-pad">
-                          No queued deliveries reported.
-                        </p>
-                      )}
-                    </Panel>
+                    <WebhookDeliveries deliveries={deliveries} loading={deliveryLoading} error={deliveryError} onRetry={() => setDeliveryRefresh(value => value + 1)} />
                   </>
                 ))}
             </React.Fragment>
