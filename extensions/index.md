@@ -54,11 +54,7 @@ Linux · Windows
 
 Release
 
-v1.0.0
-
-Updated
-
-Dec 22, 2025
+—
 
 - 03 
 
@@ -106,11 +102,7 @@ Linux · Windows
 
 Release
 
-v1.0.2
-
-Updated
-
-Jan 3, 2026
+—
 
 - 05 
 
