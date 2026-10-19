@@ -32,7 +32,7 @@ v1.0.0
 
 Updated
 
-Dec 1, 2025
+1 Dec 2025
 
 - 02 
 
@@ -54,7 +54,11 @@ Linux · Windows
 
 Release
 
-—
+v1.0.0
+
+Updated
+
+22 Dec 2025
 
 - 03 
 
@@ -80,7 +84,7 @@ v0.1.0
 
 Updated
 
-Dec 19, 2025
+19 Dec 2025
 
 - 04 
 
@@ -102,7 +106,11 @@ Linux · Windows
 
 Release
 
-—
+v1.0.2
+
+Updated
+
+3 Jan 2026
 
 - 05 
 
@@ -130,7 +138,7 @@ v1.0.0
 
 Updated
 
-Dec 23, 2025
+23 Dec 2025
 
 - 06 
 
@@ -156,7 +164,7 @@ v1.0.0
 
 Updated
 
-Dec 31, 2025
+31 Dec 2025
 
 - 07 
 
