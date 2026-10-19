@@ -76,7 +76,8 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
         const [filters, dashboards, webhooks, members] = await Promise.all([
           client.resources(projectId, "filters", signal, { useCache: !force }),
           client.resources(projectId, "dashboards", signal, { useCache: !force }),
-          admin && privilegedView === "webhooks"
+          // Every member reads webhooks; only the members list stays Owner/Admin.
+          privilegedView === "webhooks"
             ? client.resources(projectId, "webhooks", signal)
             : { items: [] },
           admin && privilegedView === "settings" ? client.members(projectId, signal) : { items: [] },
