@@ -35,8 +35,8 @@
     "tailwindcss": "^3.3.3"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs && node scripts/prerender.cjs && node scripts/check-agent-content.cjs",
+    "start": "npm run changelog:build && craco start",
+    "build": "npm run changelog:build && node scripts/generate-research-rss.cjs && craco build && node scripts/generate-static-routes.cjs && node scripts/prerender.cjs && node scripts/check-agent-content.cjs",
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build && cp CNAME build/CNAME",
@@ -44,7 +44,15 @@
     "generate:research-rss": "node scripts/generate-research-rss.cjs",
     "webvitals": "node scripts/check-web-vitals.cjs",
     "check:agent-content": "node scripts/check-agent-content.cjs",
-    "check:webmcp": "node scripts/check-webmcp.cjs"
+    "check:webmcp": "node scripts/check-webmcp.cjs",
+    "changelog:build": "node scripts/changelog/build.cjs",
+    "changelog:collect": "node scripts/changelog/collect.cjs",
+    "changelog:media": "node scripts/changelog/media.cjs",
+    "changelog:check": "node scripts/changelog/check.cjs",
+    "changelog:test": "node --test scripts/changelog/*.test.cjs",
+    "changelog:draft": "node scripts/changelog/draft.cjs",
+    "changelog:publish": "node scripts/changelog/publish.cjs",
+    "pretest": "npm run changelog:build"
   },
   "browserslist": {
     "production": [

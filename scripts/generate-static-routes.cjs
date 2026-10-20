@@ -22,7 +22,9 @@ if (!fs.existsSync(indexHtmlPath)) {
 }
 const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
 
+const changelogEditions = require('./changelog/policy.cjs').entries();
 const routes = [
+  '/changelog', ...changelogEditions.map(e=>`/changelog/${e.slug}`),
   '/faq', '/extensions', '/download', '/about', '/careers', '/legal', '/docs', '/privacy', '/contact',
   '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing',
   '/solutions/agentic-test-development', '/agentic-test-development',

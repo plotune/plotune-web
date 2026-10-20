@@ -25,3 +25,8 @@ yarn-error.log*
 .codex
 # Redesign QA screenshots (regenerate with scripts/redesign/browser.cjs)
 docs/redesign/evidence/
+
+# Private changelog candidates and raw recordings must never be committed.
+/.changelog-work/
+/src/changelog/catalog.js
+/public/changelog/rss.xml

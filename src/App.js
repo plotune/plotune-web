@@ -74,6 +74,7 @@ const Embeddings = routePage(() => import('./pages/Embeddings'));
 const SolutionPage = routePage(() => import('./pages/SolutionPage'));
 const AgenticTestDevelopmentPage = routePage(() => import('./pages/AgenticTestDevelopmentPage'));
 const ResearchOverview = routePage(() => import('./research/ResearchOverview'));
+const Changelog = routePage(() => import('./changelog/Changelog'));
 const ResearchArticle = routePage(() => import('./research/ResearchArticle'));
 const ResearchResults = routePage(() => import('./research/ResearchResults'));
 const ResearchReports = routePage(() => import('./research/ResearchReports'));
@@ -225,6 +226,8 @@ function App() {
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />
               <Route path="/nexus/pricing" element={<NexusPricing />} />
+              <Route path="/changelog" element={<Changelog />} />
+              <Route path="/changelog/:slug" element={<Changelog />} />
               <Route path="/research" element={<ResearchOverview />} />
               <Route path="/research/results" element={<ResearchResults />} />
               <Route path="/research/reports" element={<ResearchReports />} />
@@ -250,6 +253,7 @@ export default App;
 
 
 const initialRoutes = [
+  [/^\/changelog(?:\/[^/]+)?\/?$/, Changelog],
   [/^\/faq\/?$/, Faq],
   [/^\/extensions\/?$/, Extensions],
   [/^\/download\/?$/, Download],

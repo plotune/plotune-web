@@ -80,6 +80,7 @@ const Header = () => {
     ] },
     { to: '/about', label: 'Company', children: [
       { to: '/about', label: 'About Plotune' },
+      { to: '/changelog', label: 'What’s new' },
       { to: '/careers', label: 'Careers' },
       { to: '/partners', label: 'Partnerships' },
       { to: '/contact', label: 'Contact' },

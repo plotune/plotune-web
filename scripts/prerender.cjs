@@ -52,7 +52,9 @@ const forceInView = () => {
 };
 
 const articlesDir = path.join(root, 'src/research/articles');
+const changelogEditions = require('./changelog/policy.cjs').entries();
 const routes = [
+  '/changelog', ...changelogEditions.map(e=>`/changelog/${e.slug}`),
   '/', '/research', '/research/reports', '/research/methodology', '/faq',
   '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing',
   '/solutions/agentic-test-development', '/contact',

@@ -54,6 +54,7 @@ const Footer = () => {
           <div>
             <h3 id="footer-company" className="text-xl font-semibold text-light-text mb-5">Company</h3>
             <nav aria-labelledby="footer-company"><ul className="space-y-3">
+              <li><Link to="/changelog" aria-current={location.pathname.startsWith('/changelog') ? 'page' : undefined} className={linkClass('/changelog')}>What’s new</Link></li>
               <li><Link to="/about" aria-current={location.pathname === '/about' ? 'page' : undefined} className={linkClass('/about')}>About Us</Link></li>
               <li><Link to="/partners" aria-current={location.pathname === '/partners' ? 'page' : undefined} className={linkClass('/partners')}>Partnership</Link></li>
               <li><Link to="/contact" aria-current={location.pathname === '/contact' ? 'page' : undefined} className={linkClass('/contact')}>Contact</Link></li>
