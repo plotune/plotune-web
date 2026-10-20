@@ -21,7 +21,7 @@ test('reduced motion keeps a poster until explicit playback; equivalent text rem
  act(()=>container.querySelector('button').click());expect(container.querySelector('video').play).toHaveBeenCalled();expect(container.querySelector('details').textContent).toContain(media.transcript);
 });
 test('failed video has a readable fallback and no broken repeated playback control',()=>{
- act(()=>root.render(<ChangelogMedia media={media}/>));act(()=>container.querySelector('video').dispatchEvent(new Event('error')));expect(container.querySelector('[role="status"]').textContent).toContain('Video unavailable');expect(container.querySelector('img').alt).toBe(media.caption);
+ act(()=>root.render(<ChangelogMedia media={media}/>));const observer=window.IntersectionObserver.mock.results[0].value;act(()=>container.querySelector('video').dispatchEvent(new Event('error')));expect(container.querySelector('[role="status"]').textContent).toContain('Video unavailable');expect(container.querySelector('img').alt).toBe(media.caption);expect(observer.disconnect).toHaveBeenCalled();
 });
 test('Save-Data prevents automatic loading',()=>{
  Object.defineProperty(navigator,'connection',{configurable:true,value:{saveData:true}});

@@ -9,7 +9,7 @@ export default function ChangelogMedia({media}) {
   const base = `/changelog/media/${media.id}`;
   useEffect(()=>{
     const el = video.current;
-    if (!el) return undefined;
+    if (!el || failed) return undefined;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const connection = navigator.connection;
     const pause = ()=>{ if(!el.paused) {managedPause.current=true;el.pause();} };
@@ -33,7 +33,7 @@ export default function ChangelogMedia({media}) {
     const onPause=()=>{if(managedPause.current)managedPause.current=false;else userPaused.current=true;};
     el.addEventListener('play',onPlay);el.addEventListener('pause',onPause);
     return ()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);reduce.removeEventListener('change',update);connection?.removeEventListener?.('change',update);el.removeEventListener('play',onPlay);el.removeEventListener('pause',onPause);pause();players.delete(el);};
-  },[base]);
+  },[base,failed]);
   const play = ()=>{video.current.src = `${base}.mp4`;setLoaded(true);video.current.play()?.catch(()=>{});};
   return <figure className="changelog-media" ref={holder}>
     <div className="changelog-video-frame">
