@@ -53,6 +53,8 @@ async function run(browser, device, width, height, role) {
     }
     if (parts[3] === 'webhooks' && parts[5] === 'signing') {
       const at = hooks.findIndex((h) => h.id === parts[4]);
+      // Another admin changed this webhook since the page loaded: the revision is stale.
+      if (JSON.parse(req.postData()).revision !== hooks[at].revision) return respond({ error: { code: 'revision_conflict', message: 'Resource changed; reload before saving' } }, 409);
       const configured = hooks[at].data.signing.configured;
       hooks[at] = stored({ ...hooks[at].data, signing: { configured: true, previousUntil: configured ? new Date(nowMs + 24 * 3600000).toISOString() : null } }, hooks[at].revision + 1);
       return respond({ ...hooks[at], signingSecret: `whsec_${'9b27e0'.repeat(10)}${String(++secrets).padStart(4, '0')}` });
@@ -84,12 +86,19 @@ async function run(browser, device, width, height, role) {
     result.secretAfterFailedRefresh = (await page.getByRole('textbox', { name: 'Signing secret' }).inputValue()).startsWith('whsec_');
     await shot('created-secret');
     await page.getByRole('button', { name: 'Done' }).click();
-    // Rotate with confirmation; the previous secret's deadline is shown.
+    // Rotate with confirmation. Another admin changed the webhook meanwhile: the first try
+    // conflicts, the webhook is refreshed, and trying again succeeds.
+    hooks = hooks.map((h) => (h.id === 'ci' ? { ...h, revision: h.revision + 1 } : h));
     await page.getByRole('button', { name: /Signing for motor.alarm/ }).click();
     await page.getByRole('button', { name: 'Rotate secret…' }).click();
     await shot('rotate-confirm');
     await page.getByRole('button', { name: 'Rotate secret', exact: true }).click();
+    await page.getByText('Someone else changed this webhook').waitFor();
+    await shot('rotate-conflict');
+    await page.waitForTimeout(500);
+    await page.getByRole('button', { name: 'Rotate secret', exact: true }).click();
     await page.getByText('The previous secret also signs until').waitFor();
+    result.rotationRecoveredFromConflict = true;
     await shot('rotated-secret');
     await page.getByRole('button', { name: 'Done' }).click();
     // A webhook switched off for failures explains why and who changed what.

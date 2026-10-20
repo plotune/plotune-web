@@ -80,7 +80,7 @@ test("rotation asks for confirmation; setting up a first secret does not", async
   expect(onRotate).toHaveBeenCalledTimes(2);
 
   await render(<WebhookSigningDialog webhook={legacy} canManage error={{ code: "revision_conflict", message: "x" }} onRotate={onRotate} onClose={() => {}} />);
-  expect(container.querySelector('[role="alert"]').textContent).toBe("This webhook changed. Close this window and try again.");
+  expect(container.querySelector('[role="alert"]').textContent).toBe("Someone else changed this webhook. It has been refreshed; rotate again to continue.");
 });
 
 test("members read the signing state and how to verify, without actions", async () => {

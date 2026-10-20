@@ -266,15 +266,20 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     );
   // The secret is kept as soon as the write succeeds, so a failed refresh afterwards
   // cannot lose it; the refresh failure still shows on the workspace.
+  // A response that arrives after the user moved to another project or view is not shown
+  // there; the secret can be rotated again from its own project.
+  const place = useRef("");
+  place.current = `${project?.id}|${view}`;
   const withSecret = async (write, rotated) => {
     let shown = false;
+    const origin = place.current;
     try {
       await metadata.mutate(async () => {
         const result = await write();
-        if (result?.signingSecret) {
+        if (result?.signingSecret && place.current === origin) {
           shown = true;
           // Keep the written webhook too: a failed refresh leaves it out of the list.
-          setSigning({ id: result.id, secret: result.signingSecret, rotated, error: null, webhook: resourceData(result) });
+          setSigning({ id: result.id, project: origin, secret: result.signingSecret, rotated, error: null, webhook: resourceData(result) });
         }
         return result;
       });
@@ -666,7 +671,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                         );
                     }}
                   />
-                  {signing && (metadata.webhooks.some((w) => w.id === signing.id) || signing.webhook) && (
+                  {signing && (metadata.webhooks.some((w) => w.id === signing.id) || (signing.webhook && signing.project === place.current)) && (
                     <WebhookSigningDialog
                       webhook={signing.webhook ?? metadata.webhooks.find((w) => w.id === signing.id)}
                       secret={signing.secret}
@@ -679,7 +684,11 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                         withSecret(
                           () => client.rotateWebhookSigning(project.id, metadata.webhooks.find((w) => w.id === signing.id)),
                           true,
-                        ).catch((error) => setSigning((current) => current && { ...current, error }))
+                        ).catch((error) => {
+                          setSigning((current) => current && { ...current, error });
+                          // Someone else changed the webhook: load its current revision so a retry can succeed.
+                          if (error.code === "revision_conflict") metadata.reload(undefined, false).catch(() => {});
+                        })
                       }
                     />
                   )}

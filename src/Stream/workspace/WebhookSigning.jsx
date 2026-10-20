@@ -139,7 +139,7 @@ export function WebhookSigningDialog({ webhook, secret = null, rotated = false, 
             {configured && <VerifyHelp />}
             {error && (
               <p className="wh-error" role="alert">
-                {error.code === "revision_conflict" ? "This webhook changed. Close this window and try again." : error.message}
+                {error.code === "revision_conflict" ? "Someone else changed this webhook. It has been refreshed; rotate again to continue." : error.message}
               </p>
             )}
             {canManage &&
