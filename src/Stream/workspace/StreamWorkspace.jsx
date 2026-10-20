@@ -770,7 +770,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 Your {planName(metadata.plan.plan)} plan includes {metadata.plan.projectLimit} project{metadata.plan.projectLimit === 1 ? "" : "s"}, and you own{" "}
                 {metadata.plan.ownedProjects}. Projects other people share with you don't count.
               </p>
-              <button className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(false)}>
+              <button autoFocus className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(false)}>
                 Close
               </button>
             </div>
