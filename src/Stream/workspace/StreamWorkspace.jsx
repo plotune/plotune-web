@@ -26,11 +26,13 @@ import { Dialog, Empty, Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { AddCreditsDialog, CreditsSummary } from "./Credits";
 import Dashboard from "../Dashboard";
 import Webhooks from "../Webhooks";
+import { WebhookSigningDialog } from "./WebhookSigning";
 import { buildWidgetSeries } from "../widgetModel";
 import {
   createStreamClient,
   collectEvents,
   WORKSPACE_ENABLED,
+  resourceData,
   wireConditions,
 } from "./client";
 import { useWorkspaceMetadata } from "./hooks";
@@ -56,7 +58,13 @@ const NAV = [
   ["settings", "Project Settings", FiSettings],
 ];
 const newId = () => crypto.randomUUID();
-const cleanResource = ({ revision, updatedAt, createdAt, ...record }) => ({
+const DELIVERY_STATUS = { pending: "Retrying", delivered: "Delivered", failed: "Failed", cancelled: "Cancelled", expired: "Expired" };
+const deliveryStatus = (status) => DELIVERY_STATUS[status] ?? status;
+// The receiver's last answer: its HTTP status, "No answer" for a timeout or refused
+// connection, or a dash before the first attempt.
+const responseLabel = (d) => (!d.attemptedAt ? "—" : d.responseStatus ? `HTTP ${d.responseStatus}` : "No answer");
+// signing is shown, never sent: the server keeps the secret on edits.
+const cleanResource = ({ revision, updatedAt, createdAt, signing, ...record }) => ({
   ...record,
   ...(record.conditions
     ? { conditions: wireConditions(record.conditions) }
@@ -186,6 +194,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [deliveryError, setDeliveryError] = useState(null);
   const [deliveryLoading, setDeliveryLoading] = useState(false);
   const [deliveryRefresh, setDeliveryRefresh] = useState(0);
+  // Signing dialog: which webhook, and a secret that is shown once after create or rotation.
+  const [signing, setSigning] = useState(null);
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
   const [usageRefresh, setUsageRefresh] = useState(0);
   // A shared promo link (?redeem=CODE) opens Add credits once, prefilled.
@@ -199,7 +209,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     next.delete("redeem");
     setParams(next, { replace: true });
   }, [params, setParams]);
-  const needsDiscovery = view === "events" || view === "dashboards";
+  // Webhooks use discovered event names so Add webhook offers a choice, not a blank field.
+  const needsDiscovery = view === "events" || view === "dashboards" || view === "webhooks";
   useEffect(() => {
     setDiscoveryState({});
     if (!project?.id || !needsDiscovery) return undefined;
@@ -225,8 +236,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   }, [client, project?.id, accountOpen, usageRefresh]);
   useEffect(() => {
     setDeliveries([]); setDeliveryError(null); setDeliveryLoading(false);
-    if (!project?.id || view !== "webhooks" || metadata.role === "Member")
-      return undefined;
+    if (!project?.id || view !== "webhooks") return undefined;
     const controller = new AbortController();
     const load = () => {
       setDeliveryLoading(true);
@@ -247,12 +257,36 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
       controller.abort();
       stop();
     };
-  }, [client, project?.id, view, metadata.role, deliveryRefresh]);
+  }, [client, project?.id, view, deliveryRefresh]);
+  useEffect(() => setSigning(null), [project?.id, view]);
   const retryDiscovery = () => setDiscoveryRefresh((r) => r + 1);
   const save = (kind, record, base) =>
     metadata.mutate(() =>
       client.saveResource(project.id, kind, cleanResource(record), base),
     );
+  // The secret is kept as soon as the write succeeds, so a failed refresh afterwards
+  // cannot lose it; the refresh failure still shows on the workspace.
+  // A response that arrives after the user moved to another project or view is not shown
+  // there; the secret can be rotated again from its own project.
+  const place = useRef("");
+  place.current = `${project?.id}|${view}`;
+  const withSecret = async (write, rotated) => {
+    let shown = false;
+    const origin = place.current;
+    try {
+      await metadata.mutate(async () => {
+        const result = await write();
+        if (result?.signingSecret && place.current === origin) {
+          shown = true;
+          // Keep the written webhook too: a failed refresh leaves it out of the list.
+          setSigning({ id: result.id, project: origin, secret: result.signingSecret, rotated, error: null, webhook: resourceData(result) });
+        }
+        return result;
+      });
+    } catch (error) {
+      if (!shown) throw error;
+    }
+  };
   const remove = (kind, record, confirmReferenced) =>
     metadata.mutate(() =>
       client.deleteResource(project.id, kind, record, confirmReferenced),
@@ -602,77 +636,101 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               {view === "settings" && (
                 <ProjectSettings client={client} metadata={metadata} />
               )}
-              {view === "webhooks" &&
-                (metadata.role === "Member" ? (
-                  <Empty
-                    title="Owner or admin access required"
-                    description="Project owners and admins configure webhooks and inspect delivery status."
-                  />
-                ) : (
-                  <>
-                    <Webhooks
-                      busy={metadata.busy}
-                      projectId={project.id}
-                      events={[]}
-                      discoveredEventNames={discoveryState.data?.eventNames}
-                      webhooks={metadata.webhooks}
-                      onCreate={(record) => save("webhooks", record)}
-                      onToggle={(id) =>
-                        safeAction(() => {
-                          const base = metadata.webhooks.find(
-                            (w) => w.id === id,
-                          );
-                          return save(
+              {view === "webhooks" && (
+                <>
+                  <Webhooks
+                    busy={metadata.busy}
+                    projectId={project.id}
+                    events={[]}
+                    discoveredEventNames={discoveryState.data?.eventNames}
+                    webhooks={metadata.webhooks}
+                    readOnly={metadata.role === "Member"}
+                    onSigning={(id) => setSigning({ id, secret: null, rotated: false, error: null, webhook: null })}
+                    onCreate={(record) =>
+                      withSecret(() => client.saveResource(project.id, "webhooks", cleanResource(record)), false)
+                    }
+                    onToggle={(id) =>
+                      safeAction(() => {
+                        const base = metadata.webhooks.find(
+                          (w) => w.id === id,
+                        );
+                        return save(
+                          "webhooks",
+                          { ...base, enabled: !base.enabled },
+                          base,
+                        );
+                      })
+                    }
+                    onDelete={(id) => {
+                      if (window.confirm("Delete this webhook?"))
+                        safeAction(() =>
+                          remove(
                             "webhooks",
-                            { ...base, enabled: !base.enabled },
-                            base,
-                          );
+                            metadata.webhooks.find((w) => w.id === id),
+                          ),
+                        );
+                    }}
+                  />
+                  {signing && (metadata.webhooks.some((w) => w.id === signing.id) || (signing.webhook && signing.project === place.current)) && (
+                    <WebhookSigningDialog
+                      webhook={signing.webhook ?? metadata.webhooks.find((w) => w.id === signing.id)}
+                      secret={signing.secret}
+                      rotated={signing.rotated}
+                      canManage={metadata.role !== "Member"}
+                      busy={metadata.busy}
+                      error={signing.error}
+                      onClose={() => setSigning(null)}
+                      onRotate={() =>
+                        withSecret(
+                          () => client.rotateWebhookSigning(project.id, metadata.webhooks.find((w) => w.id === signing.id)),
+                          true,
+                        ).catch((error) => {
+                          setSigning((current) => current && { ...current, error });
+                          // Someone else changed the webhook: load its current revision so a retry can succeed.
+                          if (error.code === "revision_conflict") metadata.reload(undefined, false).catch(() => {});
                         })
                       }
-                      onDelete={(id) => {
-                        if (window.confirm("Delete this webhook?"))
-                          safeAction(() =>
-                            remove(
-                              "webhooks",
-                              metadata.webhooks.find((w) => w.id === id),
-                            ),
-                          );
-                      }}
                     />
-                    <Panel title="Delivery status">
-                      <Failure error={deliveryError} retry={() => setDeliveryRefresh((value) => value + 1)} />
-                      {deliveryLoading && <p className="live-pad" role="status">Loading delivery status…</p>}
-                      {deliveries.length ? (
-                        <div className="sw-table-wrap">
-                          <table className="sw-table">
-                            <thead>
-                              <tr>
-                                <th>Event</th>
-                                <th>Status</th>
-                                <th>Attempts</th>
-                                <th>Next attempt · UTC</th>
+                  )}
+                  <Panel title="Delivery status" meta="Last 100 deliveries">
+                    <Failure error={deliveryError} retry={() => setDeliveryRefresh((value) => value + 1)} />
+                    {deliveryLoading && !deliveries.length && <p className="live-pad" role="status">Loading delivery status…</p>}
+                    {deliveries.length ? (
+                      <div className="sw-table-wrap" tabIndex={0} role="region" aria-label="Webhook deliveries">
+                        <table className="sw-table">
+                          <thead>
+                            <tr>
+                              <th>Webhook</th>
+                              <th>Status</th>
+                              <th>Attempts</th>
+                              <th>Last response</th>
+                              <th>Next attempt · UTC</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {deliveries.map((d) => (
+                              <tr key={d.id}>
+                                <td>
+                                  {metadata.webhooks.find((w) => w.id === d.webhookId)?.eventName ?? d.webhookId}
+                                  <small className="wh-event-id">{d.eventId}</small>
+                                </td>
+                                <td><span className={`wh-status wh-${d.status}`}>{deliveryStatus(d.status)}</span></td>
+                                <td>{d.attempts}</td>
+                                <td>{responseLabel(d)}</td>
+                                <td>{d.status === "pending" && d.nextAt ? <time dateTime={d.nextAt}>{new Date(d.nextAt).toLocaleString("en-GB", { timeZone: "UTC" })}</time> : "—"}</td>
                               </tr>
-                            </thead>
-                            <tbody>
-                              {deliveries.map((d) => (
-                                <tr key={d.id}>
-                                  <td>{d.eventId}</td>
-                                  <td>{d.status}</td>
-                                  <td>{d.attempts}</td>
-                                  <td>{d.nextAt ? <time dateTime={d.nextAt}>{new Date(d.nextAt).toLocaleString("en-GB", { timeZone: "UTC" })}</time> : "—"}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : !deliveryLoading && !deliveryError && (
-                        <p className="live-pad">
-                          No queued deliveries reported.
-                        </p>
-                      )}
-                    </Panel>
-                  </>
-                ))}
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : !deliveryLoading && !deliveryError && (
+                      <p className="live-pad">
+                        No deliveries yet. They appear here when a matching event is captured.
+                      </p>
+                    )}
+                  </Panel>
+                </>
+              )}
             </React.Fragment>
           )}
         </div>

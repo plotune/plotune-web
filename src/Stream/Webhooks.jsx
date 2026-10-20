@@ -6,6 +6,7 @@ import {
   validateWebhookDraft,
   webhookAuthSummary,
 } from "./webhookModel";
+import { signingLabel } from "./workspace/WebhookSigning";
 
 const CUSTOM_EVENT = "__custom_event__";
 
@@ -136,9 +137,11 @@ export default function Webhooks({
   onCreate,
   onToggle,
   onDelete,
+  onSigning,
+  readOnly = false,
 }) {
   const [adding, setAdding] = useState(false);
-  const action = (
+  const action = readOnly ? null : (
     <button className="sw-button sw-primary st-webhook-add" onClick={() => setAdding(true)}>
       <FiPlus /> Add webhook
     </button>
@@ -153,44 +156,66 @@ export default function Webhooks({
       >
         {webhooks.length === 0 ? (
           <Empty
-            title="Send events to any HTTP endpoint"
-            description="Choose an event and forward its complete payload to an automation system, CI/CD bridge, agent, or your own service."
-            action={<button className="sw-button sw-primary" onClick={() => setAdding(true)}>Add webhook</button>}
+            title={readOnly ? "No webhooks yet" : "Send events to any HTTP endpoint"}
+            description={readOnly
+              ? "Project owners and admins add webhooks. They will be listed here with their delivery status."
+              : "Choose an event and forward its complete payload to an automation system, CI/CD bridge, agent, or your own service."}
+            action={readOnly ? null : <button className="sw-button sw-primary" onClick={() => setAdding(true)}>Add webhook</button>}
           />
         ) : (
           <div className="st-webhook-list" aria-label={`Webhooks for project ${projectId}`}>
             {webhooks.map((webhook) => (
-              <article className="st-webhook-row" key={webhook.id}>
+              <article className={`st-webhook-row${readOnly ? " is-read-only" : ""}`} key={webhook.id}>
                 <div className="st-webhook-main">
                   <strong>{webhook.eventName}</strong>
                   <code title={webhook.url}>{endpointHost(webhook.url)}</code>
                   <span>{webhook.url}</span>
                 </div>
-                <span className="st-webhook-auth">{webhookAuthSummary(webhook)}</span>
-                <label className="st-webhook-enabled">
-                  <input
-                    type="checkbox"
-                    disabled={busy}
-                    checked={webhook.enabled}
-                    aria-label={`Enable webhook for ${webhook.eventName}`}
-                    onChange={() => onToggle(webhook.id)}
-                  />
-                  {webhook.enabled ? "Enabled" : "Disabled"}
-                </label>
-                <button
-                  className="sw-icon-button"
-                  disabled={busy}
-                  aria-label={`Delete webhook for ${webhook.eventName}`}
-                  onClick={() => onDelete(webhook.id)}
-                >
-                  <FiTrash2 />
-                </button>
+                <span className="st-webhook-auth">
+                  {webhookAuthSummary(webhook)}
+                  {onSigning && (
+                    <button
+                      type="button"
+                      className={`st-webhook-signing${webhook.signing?.configured ? "" : " is-unsigned"}`}
+                      aria-label={`Signing for ${webhook.eventName}: ${signingLabel(webhook)}`}
+                      onClick={() => onSigning(webhook.id)}
+                    >
+                      {signingLabel(webhook)}
+                    </button>
+                  )}
+                </span>
+                {readOnly ? (
+                  <span className={`st-webhook-enabled${webhook.autoDisabled ? " is-auto-off" : ""}`}>
+                    {webhook.enabled ? "Enabled" : webhook.autoDisabled ? "Switched off · failing" : "Disabled"}
+                  </span>
+                ) : (
+                  <>
+                    <label className={`st-webhook-enabled${webhook.autoDisabled ? " is-auto-off" : ""}`}>
+                      <input
+                        type="checkbox"
+                        disabled={busy}
+                        checked={webhook.enabled}
+                        aria-label={`Enable webhook for ${webhook.eventName}`}
+                        onChange={() => onToggle(webhook.id)}
+                      />
+                      {webhook.enabled ? "Enabled" : webhook.autoDisabled ? "Switched off · failing" : "Disabled"}
+                    </label>
+                    <button
+                      className="sw-icon-button"
+                      disabled={busy}
+                      aria-label={`Delete webhook for ${webhook.eventName}`}
+                      onClick={() => onDelete(webhook.id)}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </>
+                )}
               </article>
             ))}
           </div>
         )}
       </Panel>
-      {adding && (
+      {adding && !readOnly && (
         <AddWebhookDialog
           key={projectId}
           events={events}

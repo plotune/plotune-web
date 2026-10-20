@@ -65,3 +65,19 @@
   .stream-authorize__panel { padding: 16px; }
   .stream-authorize__header { flex-direction: column; }
 }
+
+.stream-authorize__write {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #ecd7a6;
+  border-radius: 6px;
+  background: #fdf9ef;
+  cursor: pointer;
+}
+.stream-authorize__write input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; accent-color: #1f8a70; }
+.stream-authorize__write > span { display: grid; gap: 4px; }
+.stream-authorize__write strong { font-size: 14px; color: #3d2f0c; }
+.stream-authorize__write span span { font-size: 13px; line-height: 1.5; color: #5c4a1c; }

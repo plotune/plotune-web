@@ -73,6 +73,54 @@ test('each requested permission is described in plain language, including aggreg
   render('/stream/authorize?request=blob.signature');
   await act(async () => { await Promise.resolve(); await Promise.resolve(); });
   expect(container.textContent).toContain("Summarize this project's event history");
-  expect(container.textContent).toContain("See the event usage and allowance this project counts against");
+  expect(container.textContent).toContain("See the credits this project's owner account has left");
   expect(container.textContent).not.toMatch(/aggregate:run|usage:read/);
+});
+
+const consentContext = (scope, projects) => ({ status: 200, ok: true,
+  json: async () => ({ request: { clientId: 'mcp_x', name: 'Agent', redirect: 'https://client.example/callback', scope }, projects }) });
+const settle = () => act(async () => { await Promise.resolve(); await Promise.resolve(); });
+
+test('changing webhooks is an explicit opt-in, offered only where the account is Owner or Admin', async () => {
+  Cookies.set('auth_token', 'Bearer session-token', { path: '/' });
+  const assign = jest.fn();
+  const location = window.location;
+  delete window.location; window.location = { ...location, assign };
+  try {
+    fetchMock.mockResolvedValueOnce(consentContext(['events:read', 'webhooks:read'], [{ id: 'p1', name: 'Bench rig', role: 'Owner' }, { id: 'p2', name: 'Shared', role: 'Member' }]));
+    render('/stream/authorize?request=blob.signature');
+    await settle();
+    expect(container.textContent).toContain("See this project's webhooks and their recent deliveries");
+    const box = () => container.querySelector('.stream-authorize__write input');
+    expect(box().checked).toBe(false);
+    expect(container.textContent).toContain('Read-only.');
+    // A Member project offers nothing to tick.
+    await act(async () => {
+      const select = container.querySelector('#project');
+      Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, 'p2');
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    expect(box()).toBeNull();
+    await act(async () => {
+      const select = container.querySelector('#project');
+      Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, 'p1');
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await act(async () => box().click());
+    expect(container.textContent).toContain('Read access, plus changing webhooks.');
+    expect(container.querySelector('.stream-authorize__badge').textContent).toBe('Can change webhooks');
+    fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => ({ redirectTo: 'https://client.example/callback?code=c' }) });
+    await act(async () => [...container.querySelectorAll('button')].find((b) => b.textContent === 'Approve and continue').click());
+    await settle();
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ request: 'blob.signature', decision: 'approve', projectId: 'p1', allowWebhookWrites: true });
+  } finally { window.location = location; }
+});
+
+test('an application that asks to change webhooks gets the box pre-ticked, never hidden in the read list', async () => {
+  Cookies.set('auth_token', 'Bearer session-token', { path: '/' });
+  fetchMock.mockResolvedValueOnce(consentContext(['events:read', 'webhooks:write'], [{ id: 'p1', name: 'Bench rig', role: 'Admin' }]));
+  render('/stream/authorize?request=blob.signature');
+  await settle();
+  expect(container.querySelector('.stream-authorize__write input').checked).toBe(true);
+  expect(container.textContent).not.toContain('webhooks:write');
 });

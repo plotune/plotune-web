@@ -1411,3 +1411,43 @@
 .cr-ledger li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; font-size: 12px; color: #52666c; }
 .cr-ledger li b { color: #1d7a5f; font-variant-numeric: tabular-nums; }
 .cr-input-row input::placeholder { text-transform: none; letter-spacing: 0; font-weight: 400; font-family: inherit; color: #9aaba8; }
+
+/* Webhook signing and delivery status */
+.st-webhook-auth { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.st-webhook-row.is-read-only { grid-template-columns:minmax(180px,1fr) minmax(130px,auto) auto; }
+.st-webhook-signing { min-height:28px; padding:4px 10px; border:1px solid #cfe2da; border-radius:14px; background:#f1f8f5; color:#2f6f5d; font:inherit; font-size:10px; font-weight:600; cursor:pointer; }
+.st-webhook-signing:hover { border-color:#9cc8b6; }
+.st-webhook-signing:focus-visible { outline:2px solid #1f8a70; outline-offset:2px; }
+.st-webhook-signing.is-unsigned { border-color:#ecd7a6; background:#fdf7e8; color:#8a5a00; }
+.wh-signing { display:grid; gap:14px; }
+.st-app .wh-signing .wh-lead { margin:0; color:#24373d; font-size:13px; line-height:1.6; }
+.st-app .wh-signing .wh-note { margin:0; color:#5f7479; font-size:12px; line-height:1.6; }
+.st-app .wh-signing .wh-error { margin:0; color:#b03a28; font-size:12px; font-weight:600; }
+.wh-secret { display:flex; flex-wrap:wrap; gap:8px; }
+.wh-secret input { flex:1 1 240px; min-width:0; min-height:44px; box-sizing:border-box; padding:10px 12px; border:1px solid #cfdcd9; border-radius:4px; background:#f7faf9; color:#1f3338; font:500 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.wh-secret .sw-button { min-height:44px; display:inline-flex; align-items:center; gap:6px; }
+.wh-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.wh-actions .sw-button { min-height:44px; }
+.wh-confirm { display:grid; gap:10px; padding:12px; border:1px solid #ecd7a6; border-radius:4px; background:#fdf9ef; }
+.st-app .wh-confirm p { margin:0; color:#5c4a1c; font-size:12px; line-height:1.6; }
+.wh-help { border-top:1px solid #e8eeec; padding-top:10px; color:#4f6469; font-size:12px; line-height:1.6; }
+.wh-help summary { cursor:pointer; color:#2f6f5d; font-weight:600; min-height:32px; display:flex; align-items:center; }
+.wh-help ol { margin:6px 0; padding-left:18px; display:grid; gap:4px; }
+.wh-help code, .wh-help pre { font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11px; }
+.wh-help pre { margin:6px 0 0; padding:10px; overflow-x:auto; background:#f4f8f7; border-radius:4px; color:#24373d; }
+.wh-event-id { display:block; color:#8a9b9f; font-size:10px; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+.wh-status { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; background:#eef3f2; color:#4f6469; }
+.wh-status.wh-delivered { background:#e6f4ee; color:#1d6f55; }
+.wh-status.wh-pending { background:#fdf3dd; color:#8a5a00; }
+.wh-status.wh-failed { background:#fbe9e5; color:#a0352a; }
+@media (max-width:700px) {
+  .st-webhook-row.is-read-only { grid-template-columns:minmax(0,1fr); }
+  .st-webhook-row.is-read-only .st-webhook-enabled { grid-column:1; grid-row:auto; }
+}
+.st-webhook-enabled.is-auto-off { color:#a0352a; font-weight:600; }
+.st-app .wh-signing .wh-off { margin:0; padding:10px 12px; border:1px solid #f0c9c1; border-radius:4px; background:#fdf1ee; color:#8a2c22; font-size:12px; line-height:1.6; }
+.wh-history { border-top:1px solid #e8eeec; padding-top:10px; }
+.st-app .wh-history h3 { margin:0 0 6px; color:#24373d; font-size:12px; font-weight:600; }
+.wh-history ol { list-style:none; margin:0; padding:0; display:grid; gap:8px; }
+.wh-history li { display:grid; gap:2px; font-size:12px; color:#24373d; }
+.wh-history small { color:#6d8288; font-size:11px; }

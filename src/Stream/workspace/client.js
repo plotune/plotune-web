@@ -330,6 +330,12 @@ export function createStreamClient(
           },
         },
       ),
+    // A new receiver signing secret for one webhook, returned once (Owner, Admin).
+    rotateWebhookSigning: (id, record) =>
+      request(metadata(id, `/webhooks/${encoded(record.id)}/signing`), {
+        method: "POST",
+        body: { revision: record.revision },
+      }),
     deleteResource: (id, kind, record, confirmReferenced = false) =>
       request(metadata(id, `/${kind}/${encoded(record.id)}`), {
         method: "DELETE",
