@@ -4,6 +4,14 @@ const {execFileSync}=require('node:child_process');
 const {root,readEntry,assert}=require('./policy.cjs');
 const {check,staged}=require('./check.cjs');
 function run(cmd,args){return execFileSync(cmd,args,{cwd:root,encoding:'utf8',maxBuffer:8*1024*1024});}
+function publicationText(entry) {
+  const {content,file,slug,sections,...meta}=entry;
+  return matter.stringify(content,{...meta,status:'published'});
+}
+function verifyUiCapture(media,receipt,proof) {
+  if(media.kind!=='ui')return;
+  assert(receipt.capturePath && !receipt.capturePath.includes('/demo') && receipt.localCommand==='npm start' && receipt.syntheticAuth===true && proof.mediaSources?.some(m=>m.id===media.id && m.kind==='ui' && m.revisions.includes(receipt.sourceRevision)), 'UI capture must use the real local app at a selected merged revision');
+}
 function prepare(draftFile,mediaDir,send=false) {
   const entry=check(draftFile,mediaDir),branch=`changelog/${entry.slug}`;
   const proof=JSON.parse(fs.readFileSync(draftFile+'.verification.json','utf8'));
@@ -11,6 +19,7 @@ function prepare(draftFile,mediaDir,send=false) {
   assert(proof.weekStart===entry.weekStart && proof.editionHash===hash(draftFile),'Draft changed after source verification; regenerate it');
   for(const media of entry.media) {
     const receipt=JSON.parse(fs.readFileSync(path.join(mediaDir,`${media.id}.review.json`),'utf8'));
+    verifyUiCapture(media,receipt,proof);
     assert(require('./scenarios.cjs')[receipt.scenario] && receipt.kind===media.kind && receipt.movie===hash(path.join(mediaDir,`${media.id}.mp4`)) && receipt.poster===hash(path.join(mediaDir,`${media.id}.webp`)), 'Media does not match an approved recording receipt');
   }
   assert(run('git',['branch','--show-current']).trim()===branch,'Use the dedicated weekly branch from current origin/master');
@@ -21,8 +30,7 @@ function prepare(draftFile,mediaDir,send=false) {
   assert(!run('git',['ls-tree','--name-only','origin/master',`src/changelog/entries/${entry.slug}.mdx`]).trim(),'This edition is already published; do not silently rewrite it');
   // A dry prepare leaves a reviewable diff. All validation precedes any commit/push.
   const out=path.join(root,'src/changelog/entries',`${entry.slug}.mdx`);
-  const {content,...meta}=entry;delete meta.file;delete meta.slug;meta.status='published';
-  fs.writeFileSync(out,matter.stringify(content,meta));
+  fs.writeFileSync(out,publicationText(entry));
   fs.mkdirSync(path.join(root,'public/changelog/media'),{recursive:true});
   for(const m of entry.media)for(const ext of ['mp4','webp']) {
     const source=path.join(mediaDir,`${m.id}.${ext}`),target=path.join(root,'public/changelog/media',`${m.id}.${ext}`);
@@ -42,4 +50,4 @@ function prepare(draftFile,mediaDir,send=false) {
   else console.log(run('gh',['pr','create','--repo','plotune/plotune-web','--base','master','--head',branch,'--draft','--title',`What’s new: week of ${entry.slug}`,'--body','Automatically prepared product digest. Review every availability claim, preview, link, poster and complete clip. Pre-publication checks passed; they do not guarantee confidentiality or factual accuracy. Merge only after editorial and visual approval. No deployment performed by the generator.']).trim());
 }
 if(require.main===module){try{prepare(process.argv[2],path.resolve(process.argv[3]||'.changelog-work/media'),process.argv.includes('--send'));}catch{console.error('Publication blocked. No unchecked content should be pushed; inspect the local draft and Git state.');process.exitCode=1;}}
-module.exports={prepare};
+module.exports={prepare,publicationText,verifyUiCapture};

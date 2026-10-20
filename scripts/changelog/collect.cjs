@@ -40,6 +40,7 @@ function collect(out, period=week()) {
   }
   fs.mkdirSync(out,{recursive:true,mode:0o700});fs.chmodSync(out,0o700);
   fs.writeFileSync(path.join(out,'sources.json'),JSON.stringify(result,null,2),{mode:0o600});
+  fs.writeFileSync(path.join(out,'review.json'),JSON.stringify(require('./review.cjs').inventory(result),null,2),{mode:0o600});
   // Never print source text or private repository URLs to shared logs.
   console.log(`Collected ${result.repositories.reduce((n,r)=>n+r.prs.length+r.releases.length,0)} candidates into private scratch storage. Merges do not establish availability.`);
   return result;

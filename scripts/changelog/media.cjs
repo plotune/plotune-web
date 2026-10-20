@@ -33,10 +33,19 @@ function validateMedia(dir,id) {
   } finally {fs.rmSync(frames,{recursive:true,force:true});}
   return {movie:sha(movie),poster:sha(poster),bytes:fs.statSync(movie).size,duration:Number(info.format.duration)};
 }
-async function render(scenarioId, id, out) {
+async function render(scenarioId, id, out, options={}) {
   const scenario=scenarios[scenarioId];assert(scenario,'Scenario is not approved');assert(/^[a-z0-9-]+$/.test(id),'Invalid asset id');
   fs.mkdirSync(out,{recursive:true,mode:0o700});
-  const fingerprint=sha(__filename)+sha(path.join(__dirname,'scenarios.cjs'))+sha(path.join(__dirname,'policy.cjs'))+sha(path.join(root,'build/asset-manifest.json'));
+  const sourceRoot=path.resolve(options.sourceRoot||root);
+  const sourceRevision=execFileSync('git',['rev-parse','HEAD'],{cwd:sourceRoot,encoding:'utf8'}).trim();
+  if(scenario.kind==='ui') {
+    assert(options.origin,'UI recording requires a running local npm start workspace');
+    const local=new URL(options.origin);
+    assert(local.protocol==='http:' && ['127.0.0.1','localhost'].includes(local.hostname) && local.pathname==='/' && !local.username && !local.password && !local.search && !local.hash,'Only a loopback development server is allowed');
+    assert(!execFileSync('git',['status','--porcelain','--untracked-files=no'],{cwd:sourceRoot,encoding:'utf8'}).trim(),'Use a clean merged source checkout');
+    execFileSync('git',['merge-base','--is-ancestor',sourceRevision,'origin/master'],{cwd:root,stdio:'pipe'});
+  }
+  const fingerprint=sha(__filename)+sha(path.join(__dirname,'scenarios.cjs'))+sha(path.join(__dirname,'workspace-fixture.cjs'))+sha(path.join(__dirname,'policy.cjs'))+sourceRevision;
   const receipt=path.join(out,`${id}.review.json`);
   if(fs.existsSync(receipt)) {
     const previous=JSON.parse(fs.readFileSync(receipt,'utf8'));
@@ -55,20 +64,21 @@ async function render(scenarioId, id, out) {
     fs.createReadStream(file).pipe(res);
   });
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
-  const origin=`http://127.0.0.1:${server.address().port}`;
+  const origin=options.origin || `http://127.0.0.1:${server.address().port}`;
   const browser=await chromium.launch({env:Object.fromEntries(Object.entries(process.env).filter(([key])=>['PATH','HOME','LANG','LC_ALL','TMPDIR'].includes(key)))});
   let unexpected=false;
   const context=await browser.newContext({viewport:{width:1280,height:720},recordVideo:{dir:scratch,size:{width:1280,height:720}},serviceWorkers:'block'});
   // No auth cookies/storage, geolocation, microphone, production API or credentials.
   await context.route('**/*',route=>{
     const u=new URL(route.request().url());
-    if(u.origin===origin)return route.continue();
+    if(u.origin===origin && !u.pathname.startsWith('/stream/demo'))return route.continue();
     if(['api.plotune.net','stream.plotune.net','t.plotune.net','www.googletagmanager.com','snap.licdn.com','px.ads.linkedin.com'].includes(u.hostname)) {
       const script=route.request().resourceType()==='script';
       return route.fulfill({status:200,contentType:script?'application/javascript':'application/json',body:script?'':'{}'});
     }
     unexpected=true;return route.abort();
   });
+  const fixture=await scenario.setup?.(context,origin);
   const page=await context.newPage(), errors=[];
   const recordingStarted=Date.now();let clipStart=null;
   page.on('pageerror',()=>errors.push('page error'));
@@ -86,7 +96,7 @@ async function render(scenarioId, id, out) {
     await page.waitForTimeout(2800);
   };
   try {
-    await scenario.run(page,origin,checkpoint);
+    await scenario.run(page,origin,checkpoint,fixture);
     assert(!unexpected && !errors.length,'Capture failed: unexpected network or browser error');
     const raw=await page.video().path();
     await context.close();
@@ -94,11 +104,11 @@ async function render(scenarioId, id, out) {
     command('ffmpeg',['-v','error','-y','-ss',String(clipStart||0),'-i',raw,'-t','20','-an','-vf','fps=12','-c:v','libx264','-crf','26','-pix_fmt','yuv420p','-movflags','+faststart','-map_metadata','-1',movie]);
     command('ffmpeg',['-v','error','-y','-ss','0.3','-i',movie,'-frames:v','1','-q:v','65','-map_metadata','-1',poster]);
     const report=validateMedia(out,id);
-    const manifest={scenario:scenarioId,id,kind:scenario.kind,caption:scenario.caption,transcript:scenario.transcript,fingerprint,sourceRevision:command('git',['rev-parse','HEAD']).trim(),...report};
+    const manifest={scenario:scenarioId,id,kind:scenario.kind,caption:scenario.caption,transcript:scenario.transcript,fingerprint,sourceRevision,capturePath:scenario.path,localCommand:'npm start',syntheticAuth:true,...report};
     fs.writeFileSync(path.join(out,`${id}.review.json`),JSON.stringify(manifest,null,2));
     console.log(`Validated ${scenarioId}: ${Math.round(report.bytes/1024)} KB, ${report.duration.toFixed(1)} seconds.`);
     return manifest;
   } finally {await browser.close();server.close();fs.rmSync(scratch,{recursive:true,force:true});}
 }
-if(require.main===module) render(process.argv[2],process.argv[3]||process.argv[2],path.resolve(process.argv[4]||'.changelog-work/media')).catch(()=>{console.error('Media rejected; inspect the isolated trial locally. No assets published.');process.exitCode=1;});
+if(require.main===module) render(process.argv[2],process.argv[3]||process.argv[2],path.resolve(process.argv[4]||'.changelog-work/media'),{origin:process.argv[5],sourceRoot:process.argv[6]}).catch(()=>{console.error('Media rejected; inspect the isolated trial locally. No assets published.');process.exitCode=1;});
 module.exports={render,validateMedia};

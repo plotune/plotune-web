@@ -27,7 +27,7 @@ export default function Changelog() {
   };
   const title = edition?.title || (slug ? 'Edition not found' : 'Changelog');
   return <main className="changelog-page design-container">
-    <Seo title={`${title} | Plotune`} description={edition?.summary || 'Technical release notes for Plotune Nexus and Stream.'} path={slug && edition ? `/changelog/${slug}` : '/changelog'} />
+    <Seo title={`${title} | Plotune`} description={edition?.summary || 'Technical release notes for Plotune Nexus, Cloud and Stream.'} path={slug && edition ? `/changelog/${slug}` : '/changelog'} />
     <Helmet><link rel="alternate" type="application/rss+xml" title="Plotune product updates" href="https://www.plotune.net/changelog/rss.xml" />{slug && !edition && <meta name="robots" content="noindex" />}</Helmet>
     <div className="changelog-layout">
       <aside className="changelog-sidebar"><Link className="changelog-brand" to="/changelog">Changelog</Link><nav aria-label="Weekly editions">{editions.map(e=><Link key={e.slug} to={`/changelog/${e.slug}`} aria-current={e===edition?'page':undefined}>Week of {weekLabel(e.weekStart)}<span>{e.products.join(' / ')}</span></Link>)}</nav><a href="/changelog/rss.xml">RSS feed ↗</a></aside>

@@ -40,7 +40,7 @@ function readEntry(file) {
   for (const key of ['weekStart', 'publishedAt']) assert(/^\d{4}-\d{2}-\d{2}$/.test(data[key]) && new Date(data[key]).toISOString().slice(0,10) === data[key], 'Invalid date');
   assert(new Date(data.weekStart).getUTCDay() === 1, 'Edition week starts on Monday');
   assert(data.publishedAt >= data.weekStart, 'Publication precedes edition');
-  assert(Array.isArray(data.products) && data.products.length && data.products.every(p => ['Nexus','Stream'].includes(p)), 'Invalid products');
+  assert(Array.isArray(data.products) && data.products.length && data.products.every(p => ['Nexus','Cloud','Stream'].includes(p)), 'Invalid products');
   const prose = content.replace(/^```(?:json|text|bash)?\n[\s\S]*?^```[ \t]*$/gm, '');
   assert(!/^```/m.test(prose), 'Code fences must be closed and use json, text or bash');
   assert(!/[<>{}]|^\s*(?:import|export)\b/m.test(prose), 'Only plain Markdown is allowed; executable MDX/HTML is blocked');
@@ -48,7 +48,7 @@ function readEntry(file) {
   assert(!/^\s*\[[^\]]+\]:/m.test(content),'Use explicit validated links, not reference definitions');
   assert(content.trim().length >= 80, 'Edition needs substantive content');
   for(const product of data.products)assert(content.includes(`## ${product}\n`),'Each product needs a clearly grouped section');
-  assert(/^### (?:Available now|Preview — not yet released)$/m.test(content),'Availability must be explicit');
+  assert(/^### (?:Merged this week|Available now|Preview — not yet released)$/m.test(content),'Availability must be explicit');
   for (const match of content.matchAll(/\]\(([^)]+)\)/g)) publicLink(match[1]);
   assert(!/https?:\/\//.test(content.replace(/\]\(([^)]+)\)/g, '')), 'Use validated Markdown links, not bare URLs');
   const media = data.media || [];

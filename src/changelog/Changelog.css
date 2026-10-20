@@ -28,3 +28,5 @@
 .changelog-media details p { font-size:14px; }
 @media(max-width:1100px) { .changelog-layout { grid-template-columns:145px minmax(0,1fr); gap:28px; } .changelog-contents { grid-column:2; grid-row:1; position:static; border-bottom:1px solid var(--line); padding-bottom:14px; } .changelog-contents a { display:inline-block; margin-right:18px; } .changelog-contents strong { display:block; } .changelog-main { grid-column:2; } .changelog-sidebar { grid-row:1 / span 2; } }
 @media(max-width:700px) { .changelog-page { padding-top:100px; } .changelog-layout { display:flex; flex-direction:column; gap:24px; } .changelog-sidebar { position:static; width:100%; } .changelog-sidebar nav { margin:0; padding:0; } .changelog-sidebar nav a { min-height:44px; } .changelog-sidebar span { display:inline; margin-left:12px; } .changelog-sidebar .changelog-brand { margin:0; } .changelog-contents { order:0; width:100%; font-size:12px; } .changelog-main { order:1; min-width:0; width:100%; } .changelog-head h1 { font-size:28px; } }
+
+.changelog-article h4 { font-size:18px; line-height:1.45; margin:26px 0 12px; font-weight:600; }

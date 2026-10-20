@@ -5,9 +5,10 @@ async function draft(inputFile, sourceFile, destination) {
   const sources=JSON.parse(fs.readFileSync(sourceFile,'utf8'));
   assert(input.weekStart===sources.weekStart,'Wrong source interval');
   assert(Array.isArray(input.changes) && input.changes.length>0 && input.changes.length<=12,'Use 1–12 meaningful changes');
+  require('./review.cjs').validateReview(sources,input);
   const changes=[];
   for(const change of input.changes) {
-    assert(['Nexus','Stream'].includes(change.product),'Unknown product');
+    assert(['Nexus','Cloud','Stream'].includes(change.product),'Unknown product');
     assert(['feature','fix','performance','compatibility','security','deprecation'].includes(change.type),'Technical change type required');
     assert(typeof change.usage==='string' && change.usage.trim().length>=30 && !/[\n\r<>\[\]{}]/.test(change.usage),'Explain how to use or verify the change');
     assert(!/\b(?:pricing|rental|discount|checkout|purchase|sales|promotion)\b/i.test([change.title,change.description,change.usage,...(change.links||[]).map(l=>l.url)].join(' ')), 'Sales updates do not belong in technical release notes');
@@ -17,7 +18,13 @@ async function draft(inputFile, sourceFile, destination) {
     assert(source,'Source repository was not collected');
     const pr=source.prs.find(p=>p.number===evidence.pr);
     assert(pr,'Change must reference an eligible collected PR');
-    if(change.availability==='preview') assert(pr.preview,'Preview requires an open PR explicitly labelled changelog:preview');
+    for(const ref of require('./review.cjs').references(change)) {
+      const candidate=sources.repositories.find(r=>r.repo===ref.repository)?.prs.find(p=>p.number===ref.pr);
+      assert(candidate && (change.availability==='preview' ? candidate.preview : candidate.mergedAt), 'Every source must have the stated merge status');
+      if(candidate.mergedAt)assert(candidate.mergedAt>=sources.weekStart && candidate.mergedAt<(sources.untilExclusive || new Date(Date.parse(sources.weekStart)+7*86400000).toISOString().slice(0,10)), 'Source merge is outside this edition');
+    }
+    if(change.availability==='merged') assert(pr.mergedAt,'Merged update requires a merged PR');
+    else if(change.availability==='preview') assert(pr.preview,'Preview requires an open PR explicitly labelled changelog:preview');
     else {
       assert(change.availability==='available' && pr.mergedAt,'Available change must have merged');
       if(evidence.deploymentSha) assert(evidence.deploymentSha===pr.mergeCommit && source.deployments?.some(d=>d.sha===pr.mergeCommit && d.environment==='production' && d.verifiedAt>=pr.mergedAt),'Successful production deployment must match the merged commit');
@@ -34,20 +41,20 @@ async function draft(inputFile, sourceFile, destination) {
     (change.links||[]).forEach(l=>{publicLink(l.url);assert(/^[\w ’'—–-]{1,80}$/u.test(l.label),'Invalid link label');});
     changes.push(change);
   }
-  let content='';
-  for(const product of ['Nexus','Stream']) {
+  let content='\nThis edition covers technical changes merged during the week. Availability depends on the installed or deployed release.\n';
+  for(const product of ['Nexus','Cloud','Stream']) {
     const group=changes.filter(c=>c.product===product);if(!group.length)continue;
     content+=`\n## ${product}\n`;
-    for(const [availability,label] of [['available','Available now'],['preview','Preview — not yet released']]) {
+    for(const [availability,label] of [['merged','Merged this week'],['available','Available now'],['preview','Preview — not yet released']]) {
       const selected=group.filter(c=>c.availability===availability);if(!selected.length)continue;
       content+=`\n### ${label}\n`;
       for(const c of selected)content+=`\n#### ${c.title}\n\n${c.description}\n\n${c.usage}\n\n${(c.links||[]).map(l=>`[${l.label}](${l.url})`).join(' · ')}\n${c.mediaId ? `\n:::media ${c.mediaId}\n` : ''}`;
     }
   }
   const data={title:input.title,summary:input.summary,weekStart:input.weekStart,publishedAt:input.publishedAt,status:'draft',products:[...new Set(changes.map(c=>c.product))],media:input.media||[]};
-  const text=matter.stringify(content,data);scan(text);
+  const text=matter.stringify(content.replace(/\n{3,}/g,'\n\n'),data).trimEnd()+'\n';scan(text);
   fs.mkdirSync(path.dirname(destination),{recursive:true});fs.writeFileSync(destination,text);readEntry(destination);
-  fs.writeFileSync(destination+'.verification.json',JSON.stringify({weekStart:input.weekStart,editionHash:require('node:crypto').createHash('sha256').update(text).digest('hex'),verifiedAt:new Date().toISOString(),changes:changes.length}),{mode:0o600});
+  fs.writeFileSync(destination+'.verification.json',JSON.stringify({weekStart:input.weekStart,editionHash:require('node:crypto').createHash('sha256').update(text).digest('hex'),verifiedAt:new Date().toISOString(),changes:changes.length,mediaSources:changes.filter(c=>c.mediaId).map(c=>({id:c.mediaId,kind:c.mediaDecision.kind,revisions:require('./review.cjs').references(c).map(ref=>sources.repositories.find(r=>r.repo===ref.repository).prs.find(p=>p.number===ref.pr).mergeCommit)}))}),{mode:0o600});
   console.log('Draft prepared. No source material or private provenance copied into the edition.');
 }
 if(require.main===module)draft(process.argv[2],process.argv[3]||path.join(root,'.changelog-work/sources.json'),process.argv[4]||path.join(root,'.changelog-work/edition.mdx')).catch(()=>{console.error('Draft generation blocked; verify eligibility and prose locally.');process.exitCode=1;});
