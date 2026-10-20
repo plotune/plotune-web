@@ -1,7 +1,7 @@
 # Weekly product updates
 
-The public `/changelog` archive and dated editions cover Nexus and Stream. Editions
-explain user benefits, relevant compatibility changes and useful next steps. Preview
+The public `/changelog` latest edition and dated editions cover Nexus and Stream. Editions
+explain technical behavior, relevant compatibility changes and concrete usage steps. Preview
 items are explicitly unreleased. The website PR is public, including its history
 and media: review is not a confidentiality boundary. Never push first and scan later.
 
@@ -18,7 +18,7 @@ and media: review is not a confidentiality boundary. Never push first and scan l
    No patches, comments, logs, customer records or secrets endpoints are fetched.
 4. As the scheduled Codex agent, select meaningful product changes and write a
    small selection JSON in scratch storage. Translate technical work into practical,
-   factual benefits. Exclude rejected/closed-unmerged work, drafts, chores, internal
+   factual behavior and actionable usage. Exclude sales, pricing, rentals, promotions and checkout updates, as well as rejected/closed-unmerged work, drafts, chores, internal
    infrastructure details and speculative claims. Open previews require the exact
    `changelog:preview` label; absence means omit, not infer permission.
 5. Available items require a merged candidate plus a non-prerelease collected
@@ -42,7 +42,7 @@ and media: review is not a confidentiality boundary. Never push first and scan l
    captions, consistent Plotune styling and absence of loading/failure artifacts.
    Keep the matching private recording receipt beside the assets, add the descriptor
    to selection JSON and rerun drafting. Do not illustrate a
-   backend change with invented product UI; a diagram must say Illustration.
+   backend change with invented product UI. Put a useful diagram beside the technical explanation; describe its scope in prose, without decorative badges or burned-in labels.
 9. Run `npm run changelog:check -- <draft.mdx> <scratch-media-dir>`. Keep drafts and unchecked assets outside
    `public/`. No personal data, signed URLs, secrets, internal hosts, raw recordings,
    source manifests or verification/capture receipts may be committed.
@@ -68,17 +68,19 @@ means no edition and no PR. Delete raw source collections after completing the r
 {
   "weekStart": "2026-10-12",
   "publishedAt": "2026-10-20",
-  "title": "A clearer way to choose Nexus",
-  "summary": "Choose the option that fits your project.",
+  "title": "Stream event filtering",
+  "summary": "Inspect events with nested-property conditions.",
   "changes": [{
-    "product": "Nexus",
+    "product": "Stream",
+    "type": "feature",
+    "usage": "Open Event Explorer, add a numeric property condition and apply it to inspect matching events.",
     "availability": "available",
-    "title": "A clearer selection flow",
+    "title": "Nested-property filtering",
     "description": "A concise, evidence-backed description of the user benefit.",
-    "links": [{"label": "Explore Nexus", "url": "/nexus"}],
+    "links": [{"label": "Try the workspace", "url": "/stream/demo?project=robot"}],
     "evidence": {"repository": "plotune/plotune-web", "pr": 7,
-      "publicUrl": "https://www.plotune.net/nexus/pricing/",
-      "visibleText": "Plotune Nexus Pricing: Rent or Buy"}
+      "publicUrl": "https://www.plotune.net/stream/demo/",
+      "visibleText": "REPLACE with verified, feature-specific public evidence"}
   }],
   "media": []
 }
@@ -97,8 +99,7 @@ expressions or remote images are permitted in edition Markdown.
 
 ## Recording and performance
 
-Approved scenarios: Nexus rental selection, Stream demo event search, and an
-illustrative event delivery diagram. These examples do not imply new releases.
+Approved scenarios: Stream numeric-property filtering and a shared-filter selection diagram. These examples do not imply new releases.
 Browser contexts have no authentication or production storage. External scripts
 and API calls are fulfilled locally for a narrow list of known hosts; all other
 external requests abort and invalidate the capture. Browser subprocesses receive
@@ -115,7 +116,7 @@ At most two clips, 3 MiB each; each poster is at most 100 KiB. Media generation 
 unchanged fingerprinted results, while publication rescans final bytes. Videos have
 no source until half visible, are muted/inline, pause offscreen or in a hidden tab,
 and play one at a time. Reduced-motion and Save-Data users receive posters and an
-explicit play control. Archive pages request no clips. Autoplay denial retains
+explicit play control. The latest edition opens directly; videos below the viewport request no clips. Autoplay denial retains
 native playback controls. No heavy media player or animation dependency is added.
 
 ## Schedule and checks
@@ -137,3 +138,17 @@ blocker and stop. This task performs generation, not a separate paid model API c
 No CMS, email subscription, automatic merge, production access or deployment is part
 of this feature. Automatic scanning cannot certify confidentiality, brand quality or
 feature availability. The initial edition and generated assets need owner review.
+
+## Release-note presentation
+
+Use compact, VS Code-inspired technical release notes: edition navigation, linked
+contents, feature sections, exact behavior, instructions and compatibility limits.
+Avoid sales copy and vague one-paragraph teasers. Include JSON examples when useful
+using closed `json`, `text` or `bash` fences; executable MDX remains forbidden.
+Put each medium directly after its explanation with `:::media <id>`. Every descriptor
+must be placed exactly once. Never substitute an unrelated screenshot for evidence.
+Media captions describe the action; do not add Demo Walkthrough, Demo data or
+Illustration badges. Explain sample-data and availability scope in ordinary prose.
+Technical selection types are feature, fix, performance, compatibility, security and
+deprecation. Every selected change must provide actionable `usage` text; pricing
+and sales content are rejected. Optional `mediaId` links a change to reviewed media.

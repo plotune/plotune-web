@@ -35,9 +35,11 @@ test('weekly interval is UTC and year-safe; rejected, draft and unlabelled previ
 test('draft generator needs release evidence and does not propagate private provenance',async()=>{
  const dir=temp();try{
   const sources={weekStart:'2026-10-12',repositories:[{repo:'plotune/plotune-nexus',prs:[{number:1,mergedAt:'2026-10-15'}],releases:[{tag:'v1',body:'Includes #1'}]}]};
-  const change={product:'Nexus',availability:'available',title:'A clearer flow',description:'Choose the configuration for your project before continuing.',links:[{label:'Explore Nexus',url:'/nexus'}],evidence:{repository:'plotune/plotune-nexus',pr:1,releaseTag:'v1'}};
+  const change={product:'Nexus',type:'feature',usage:'Open Event Explorer and choose the new property condition to inspect matching events.',availability:'available',title:'A clearer flow',description:'Choose the configuration for your project before continuing.',links:[{label:'Explore Nexus',url:'/nexus'}],evidence:{repository:'plotune/plotune-nexus',pr:1,releaseTag:'v1'}};
   const input={...metadata,changes:[change]};const a=path.join(dir,'input.json'),b=path.join(dir,'sources.json'),out=path.join(dir,'edition.mdx');fs.writeFileSync(a,JSON.stringify(input));fs.writeFileSync(b,JSON.stringify(sources));
-  await draft(a,b,out);assert(!fs.readFileSync(out,'utf8').includes('plotune-nexus'));assert.equal(readEntry(out).status,'draft');
+  await draft(a,b,out);assert(!fs.readFileSync(out,'utf8').includes('plotune-nexus'));
+  for(const override of [{type:'sales'},{title:'Discount pricing update'},{usage:'Too vague'}]){fs.writeFileSync(a,JSON.stringify({...input,changes:[{...change,...override}]}));await assert.rejects(()=>draft(a,b,out));}
+  fs.writeFileSync(a,JSON.stringify(input));assert.equal(readEntry(out).status,'draft');
   delete input.changes[0].evidence.releaseTag;fs.writeFileSync(a,JSON.stringify(input));await assert.rejects(()=>draft(a,b,out));
   sources.repositories[0].prs[0].mergeCommit='b'.repeat(40);
   sources.repositories[0].deployments=[{sha:'b'.repeat(40),environment:'production',verifiedAt:'2026-10-16'}];
@@ -47,10 +49,20 @@ test('draft generator needs release evidence and does not propagate private prov
 });
 test('eligible previews are explicitly unreleased and cannot be promoted without availability evidence',async()=>{
  const dir=temp();try{
-  const input={...metadata,products:['Stream'],changes:[{product:'Stream',availability:'preview',title:'A preview to explore',description:'An upcoming interaction can be explored as a preview and is not generally available.',evidence:{repository:'plotune/plotune-cloud',pr:2}}]};
+  const input={...metadata,products:['Stream'],changes:[{product:'Stream',type:'fix',usage:'Open the workspace and compare the event result with the selected property condition.',availability:'preview',title:'A preview to explore',description:'An upcoming interaction can be explored as a preview and is not generally available.',evidence:{repository:'plotune/plotune-cloud',pr:2}}]};
   const sources={weekStart:metadata.weekStart,repositories:[{repo:'plotune/plotune-cloud',prs:[{number:2,preview:true}],releases:[]}]};
   const a=path.join(dir,'input.json'),b=path.join(dir,'sources.json'),out=path.join(dir,'edition.mdx');fs.writeFileSync(a,JSON.stringify(input));fs.writeFileSync(b,JSON.stringify(sources));await draft(a,b,out);
   const content=readEntry(out).content;assert(content.includes('Preview — not yet released'));assert(!content.includes('Available now'));assert(!content.includes('plotune-cloud'));
   input.changes[0].availability='available';fs.writeFileSync(a,JSON.stringify(input));await assert.rejects(()=>draft(a,b,out));
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('JSON examples are inert, media must be inline and executable prose remains blocked',()=>{
+ const dir=temp(),file=path.join(dir,'entry.mdx');try{
+  const medium={id:'filter',kind:'diagram',caption:'Selection flow',transcript:'A saved selection is reused across Explorer, widgets and export.'};
+  fs.writeFileSync(file,matter.stringify(body+'\n```json\n{"event":"sample","properties":{"value":81}}\n```\n\n:::media filter\n',{...metadata,media:[medium]}));
+  assert.equal(readEntry(file).sections[0].id,'nexus');
+  fs.writeFileSync(file,matter.stringify(body,{...metadata,media:[medium]}));assert.throws(()=>readEntry(file),/exactly once/);
+  fs.writeFileSync(file,matter.stringify(body+'\n```json\n{}\n```\n{execute()}\n',metadata));assert.throws(()=>readEntry(file),/executable/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

@@ -41,7 +41,9 @@ function readEntry(file) {
   assert(new Date(data.weekStart).getUTCDay() === 1, 'Edition week starts on Monday');
   assert(data.publishedAt >= data.weekStart, 'Publication precedes edition');
   assert(Array.isArray(data.products) && data.products.length && data.products.every(p => ['Nexus','Stream'].includes(p)), 'Invalid products');
-  assert(!/[<>{}]|^\s*(?:import|export)\b/m.test(content), 'Only plain Markdown is allowed; executable MDX/HTML is blocked');
+  const prose = content.replace(/^```(?:json|text|bash)?\n[\s\S]*?^```[ \t]*$/gm, '');
+  assert(!/^```/m.test(prose), 'Code fences must be closed and use json, text or bash');
+  assert(!/[<>{}]|^\s*(?:import|export)\b/m.test(prose), 'Only plain Markdown is allowed; executable MDX/HTML is blocked');
   assert(!/!\[/.test(content), 'Images must use reviewed media descriptors');
   assert(!/^\s*\[[^\]]+\]:/m.test(content),'Use explicit validated links, not reference definitions');
   assert(content.trim().length >= 80, 'Edition needs substantive content');
@@ -57,7 +59,11 @@ function readEntry(file) {
     assert(typeof m.caption === 'string' && typeof m.transcript === 'string' && m.transcript.length >= 20, 'Media requires caption and equivalent text');
   });
   assert(new Set(media.map(m=>m.id)).size === media.length, 'Duplicate media');
-  return {...data, media, content, slug: data.weekStart, file: path.basename(file)};
+  const placements = [...content.matchAll(/^:::media ([a-z0-9-]+)$/gm)].map(m=>m[1]);
+  assert(placements.length === media.length && new Set(placements).size === placements.length && placements.every(id=>media.some(m=>m.id===id)), 'Place every reviewed medium exactly once in its relevant section');
+  const sections = [...prose.matchAll(/^## (.+)$/gm)].map(m=>({title:m[1],id:m[1].toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}));
+  assert(new Set(sections.map(s=>s.id)).size === sections.length, 'Section headings must be unique');
+  return {...data, sections, media, content, slug: data.weekStart, file: path.basename(file)};
 }
 function entries(dir = path.join(root, 'src/changelog/entries')) {
   const all = fs.readdirSync(dir).filter(f=>f.endsWith('.mdx')).map(f=>readEntry(path.join(dir,f)));

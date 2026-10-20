@@ -38,9 +38,9 @@ export default function ChangelogMedia({media}) {
   return <figure className="changelog-media" ref={holder}>
     <div className="changelog-video-frame">
       {failed ? <img src={`${base}.webp`} alt={media.caption} width="1280" height="720" /> : <video ref={video} muted playsInline loop controls preload="none" poster={`${base}.webp`} width="1280" height="720" aria-label={media.caption} aria-describedby={id} onError={()=>setFailed(true)} />}
-      {!loaded && !failed && <button className="changelog-play" onClick={play} aria-label={`Play: ${media.caption}`}>Play walkthrough</button>}
+      {!loaded && !failed && <button className="changelog-play" onClick={play} aria-label={`Play: ${media.caption}`}>Play video</button>}
     </div>
-    <figcaption id={id}>{media.caption} <span>{media.kind === 'diagram' ? 'Illustration' : 'Demo data'}</span></figcaption>
+    <figcaption id={id}>{media.caption}</figcaption>
     <details><summary>Read the walkthrough</summary><p>{media.transcript}</p></details>
     {failed && <p role="status">Video unavailable. The written walkthrough is still available.</p>}
   </figure>;

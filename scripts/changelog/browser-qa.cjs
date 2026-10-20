@@ -7,28 +7,35 @@ const origin=process.env.CHANGELOG_ORIGIN||'http://127.0.0.1:4189';const output=
   for(const [name,width,height] of [['desktop',1440,1000],['tablet',768,1024],['mobile',390,844],['narrow',320,740]]) {
    const c=await browser.newContext();await c.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.fulfill({status:200,contentType:r.request().resourceType()==='script'?'application/javascript':'application/json',body:r.request().resourceType()==='script'?'':'{}'}));
    const p=await c.newPage();await p.setViewportSize({width,height});const errors=[],requests=[];p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>requests.push(r.url()));
-   await p.goto(origin+'/changelog');await p.getByRole('heading',{name:'What’s new',exact:true}).waitFor();await p.getByRole('link',{name:'Read this week’s update →',exact:true}).waitFor();
-   assert.equal(requests.filter(u=>u.endsWith('.mp4')).length,0,'Archive must not load videos');
-   await p.screenshot({path:path.join(output,`${name}-archive.png`),fullPage:true});
-   await p.getByRole('link',{name:'Read this week’s update →',exact:true}).click();
-   await p.getByRole('heading',{name:'A clearer way to choose Nexus',exact:true}).waitFor();
-   const video=p.locator('video');await video.waitFor();
-   if(name==='desktop')assert.equal(await video.getAttribute('src'),null,'Below-fold clip has no source');
+   await p.goto(origin+'/changelog');
+   await p.getByRole('heading',{name:'Stream workspace — filters, exports and dashboards',exact:true}).waitFor();
+   await p.locator('video').first().waitFor();
+   assert.equal(await p.locator('video').count(),2,'Recording and diagram must be inline');
+   assert.equal(requests.filter(u=>u.endsWith('.mp4')).length,0,'Below-fold media must not load');
+   assert((await p.locator('pre').innerText()).includes('"temperature": 81'));
+   assert(!/Demo walkthrough|Demo data|Illustration/.test(await p.locator('main').innerText()));
+   assert.equal(await p.locator('figure').first().evaluate(e=>e.previousElementSibling.tagName),'P');
+   const video=p.locator('video').first();
    await video.scrollIntoViewIfNeeded();await p.waitForFunction(()=>{const v=document.querySelector('video');return v && !v.paused && v.currentTime>0;});
    assert(await video.evaluate(v=>v.muted && v.playsInline && v.controls));
    await p.screenshot({path:path.join(output,`${name}-playback.png`)});
-   await p.evaluate(()=>window.scrollTo(0,0));await p.waitForFunction(()=>document.querySelector('video').paused);
+   const diagram=p.locator('video').nth(1);await diagram.scrollIntoViewIfNeeded();
+   await p.waitForFunction(()=>{const v=document.querySelectorAll('video');return v[0].paused && !v[1].paused && v[1].currentTime>0;});
+   await p.screenshot({path:path.join(output,`${name}-diagram.png`)});
+   await p.getByRole('navigation',{name:'On this page'}).getByRole('link',{name:'Export the matching result set',exact:true}).click();
+   assert.equal(new URL(p.url()).hash,'#export-the-matching-result-set');
+   await p.evaluate(()=>window.scrollTo(0,0));await p.waitForFunction(()=>Array.from(document.querySelectorAll('video')).every(v=>v.paused));
    await p.screenshot({path:path.join(output,`${name}-edition.png`),fullPage:true});
    assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No page overflow');
    await p.goto(origin+'/changelog/not-an-edition');await p.getByRole('heading',{name:'We couldn’t find that edition.',exact:true}).waitFor();
    assert.deepEqual(errors,[]);await c.close();
   }
   const c=await browser.newContext({reducedMotion:'reduce'});await c.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());const p=await c.newPage();
-  await p.goto(origin+'/changelog/2026-10-12');await p.locator('video').waitFor();await p.locator('video').scrollIntoViewIfNeeded();await p.waitForTimeout(350);
-  assert.equal(await p.locator('video').getAttribute('src'),null,'Reduced motion: no automatic MP4 request');
-  await p.getByRole('button',{name:/Play: Choose a Nexus rental/}).focus();await p.keyboard.press('Enter');await p.waitForFunction(()=>!document.querySelector('video').paused);
-  await p.locator('summary').focus();await p.keyboard.press('Enter');assert(await p.locator('details').evaluate(e=>e.open));
+  await p.goto(origin+'/changelog/2026-10-12');await p.locator('video').first().waitFor();await p.locator('video').first().scrollIntoViewIfNeeded();await p.waitForTimeout(350);
+  assert.equal(await p.locator('video').first().getAttribute('src'),null,'Reduced motion: no automatic MP4 request');
+  await p.getByRole('button',{name:/Play: Filter robot events/}).focus();await p.keyboard.press('Enter');await p.waitForFunction(()=>!document.querySelector('video').paused);
+  await p.locator('summary').first().focus();await p.keyboard.press('Enter');assert(await p.locator('details').first().evaluate(e=>e.open));
   await p.screenshot({path:path.join(output,'reduced-motion-transcript.png'),fullPage:true});await c.close();
  } finally {await browser.close();}
- console.log('PASS: changelog archive/detail/unknown routes, four widths, autoplay and offscreen pause, reduced motion, keyboard transcript, no archive MP4s or horizontal overflow.');
+ console.log('PASS: changelog archive/detail/unknown routes, four widths, autoplay and offscreen pause, reduced motion, keyboard transcript, inline diagram, technical examples and no below-fold MP4s or horizontal overflow.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

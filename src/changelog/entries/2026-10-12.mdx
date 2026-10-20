@@ -1,29 +1,76 @@
 ---
-title: A clearer way to choose Nexus
-summary: >-
-  Compare rental and purchase options, then work through the details before
-  making a request.
+title: Stream workspace — filters, exports and dashboards
+summary: Filter nested event properties, export the complete result set and reuse the same selection in dashboard widgets. This edition explains the sample workspace workflows and their limits.
 weekStart: '2026-10-12'
 publishedAt: '2026-10-20'
 status: published
-products:
-  - Nexus
+products: [Stream]
 media:
-  - id: nexus-rental-selection-2026-10-12
+  - id: stream-property-filter-2026-10-12
     kind: ui
-    caption: Choose a Nexus rental and adjust its length
-    transcript: >-
-      Open Nexus pricing, choose Rent Nexus, then increase the rental length.
-      The displayed rental summary updates as the selection changes. No order or
-      contact form is submitted.
+    caption: Filter robot events where motor.temperature is greater than 70.
+    transcript: Open the robot project in the interactive workspace and set the time range to All time. Open Filter, search for motor.temperature and choose that property. Select the number value type, choose greater than, enter 70 and apply. The active condition appears above the matching events. Missing, null and string values do not satisfy the numeric condition.
+  - id: shared-filter-flow-2026-10-12
+    kind: diagram
+    caption: One Saved Filter supplies event-selection conditions to Explorer, widgets and export.
+    transcript: A Saved Filter stores a name, identifier and event-selection conditions. Explorer applies those conditions to investigate events. A dashboard widget stores the filter identifier separately from its chart settings. Export retrieves all matching events before browser conversion. Editing a shared filter changes the selection for widgets that reference its identifier.
 ---
 
-## Nexus
+## Stream
 
 ### Available now
 
-**Explore rental and purchase options step by step**
+The [interactive workspace](/stream/demo?project=robot) lets you try these workflows with sample events. This is a technical walkthrough of that workspace, not an announcement that authenticated project ingestion has been activated. Sample filters and dashboards persist in this browser; they are not server-backed team resources.
 
-The Nexus pricing page walks you through choosing a rental or purchase, configuring the relevant options and reviewing what is included before submitting a request. Rental selections update the cost summary as you adjust the length.
+## Filter nested properties
 
-[Explore Nexus pricing](/nexus/pricing)
+Event properties come from the JSON you send. You do not need to register a device, run or environment before investigating an event. For example:
+
+```json
+{
+  "event": "motor.sample",
+  "properties": {
+    "motor": { "temperature": 81 },
+    "rpm": 1680,
+    "environment": "real"
+  }
+}
+```
+
+In **Event Explorer**, choose **All time**, then **Filter**. Search for `motor.temperature`, select the numeric value type, choose **greater than**, enter `70` and apply. Paths are relative to `properties`; the condition is `motor.temperature`, not `properties.motor.temperature`.
+
+:::media stream-property-filter-2026-10-12
+
+Multiple conditions use AND. Add `environment equals real` to isolate that context. Event-name, search and time-range controls still narrow the result. Remove a condition using its chip; clear the selection to start again.
+
+Numeric comparisons use JSON numbers. The string `"81"` is not treated as the number `81`. Missing properties and explicit `null` do not match a numeric comparison. Use **exists**, **does not exist** or **is null** when those distinctions matter. You can also enter a property path that has not yet appeared in the sample data.
+
+## Reuse a Saved Filter
+
+Save a useful selection instead of rebuilding it for each investigation. A Filter contains event-selection conditions; chart type, measurement and breakdown belong to the widget configuration.
+
+:::media shared-filter-flow-2026-10-12
+
+A widget references a Saved Filter by identifier. Editing that filter changes the widget's effective selection. Review the affected widgets before changing a shared definition; deleting a referenced filter requires resolving those references rather than silently widening a chart to all events.
+
+In the public sample workspace, saved configuration is local to this browser. Shared project ownership requires the authenticated workspace and its metadata service.
+
+## Export the matching result set
+
+Apply the selection, then choose **Export → JSON**, **CSV** or **TSV**. Export includes all matching sample events within the active query and time scope, including results beyond the visible page.
+
+- **JSON** retains the event structure and original property types.
+- **CSV and TSV** flatten nested properties into explicit column paths, such as `properties.motor.temperature`. Missing values produce empty cells; explicit null is written as `null`. Objects and arrays that remain as cell values are encoded as JSON.
+- Delimiters, quotation marks and line breaks are escaped for the selected format. Flat files are convenient for spreadsheets; use JSON when you need to preserve the distinction between missing, null and empty values.
+
+Conversion happens in the browser after retrieval. The sample workspace exports its finite mock dataset; it has a 10,000-event limit and a 32 MB converted-output limit. Larger project exports require bounded, paginated retrieval and visible progress and cancellation.
+
+## Configure dashboard widgets
+
+Choose **Add Widget**, select a visualization, then assign a Saved Filter. For a numeric chart, choose a numeric property such as `rpm`. Use **Breakdown by** to compare values of an observed property such as `environment`; these are event properties, not mandatory product dimensions.
+
+Preview the chart before saving. Each widget can use a different Saved Filter, so a real-system view and a simulation view can coexist without repeatedly changing an investigation filter. Save the dashboard and return to the same browser to reopen the sample configuration.
+
+## Compatibility and availability
+
+This edition documents the public sample workspace. Its events are synthetic, its persistence is browser-local and it does not send events to a production project. Live ingestion, team-visible metadata and production activation are separate from this preview. No installation or migration is needed to [try the workspace](/stream/demo?project=robot).

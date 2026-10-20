@@ -82,11 +82,6 @@ async function render(scenarioId, id, out) {
   const checkpoint=async caption=>{
     scan(await page.locator('body').innerText());scan(caption);
     assert(await page.getByRole('alert').count()===0,'Recording contains an alert');
-    await page.evaluate(({text,kind})=>{
-      let note=document.getElementById('public-walkthrough-caption');
-      if(!note){note=document.createElement('div');note.id='public-walkthrough-caption';note.style.cssText='position:fixed;bottom:16px;left:24px;right:24px;z-index:2147483647;padding:12px 18px;background:#1c242b;color:white;font:18px system-ui;border-radius:2px;pointer-events:none';document.body.appendChild(note);}
-      note.textContent=text+' · '+(kind==='ui'?'Demo walkthrough':'Illustration');
-    },{text:caption,kind:scenario.kind});
     if(clipStart===null)clipStart=Math.max(0,(Date.now()-recordingStarted)/1000);
     await page.waitForTimeout(2800);
   };

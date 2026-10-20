@@ -8,6 +8,9 @@ async function draft(inputFile, sourceFile, destination) {
   const changes=[];
   for(const change of input.changes) {
     assert(['Nexus','Stream'].includes(change.product),'Unknown product');
+    assert(['feature','fix','performance','compatibility','security','deprecation'].includes(change.type),'Technical change type required');
+    assert(typeof change.usage==='string' && change.usage.trim().length>=30 && !/[\n\r<>\[\]{}]/.test(change.usage),'Explain how to use or verify the change');
+    assert(!/\b(?:pricing|rental|discount|checkout|purchase|sales|promotion)\b/i.test([change.title,change.description,change.usage,...(change.links||[]).map(l=>l.url)].join(' ')), 'Sales updates do not belong in technical release notes');
     const evidence=change.evidence;
     assert(evidence && repos.includes(evidence.repository),'Evidence must use an allowlisted repository');
     const source=sources.repositories.find(r=>r.repo===evidence.repository);
@@ -38,7 +41,7 @@ async function draft(inputFile, sourceFile, destination) {
     for(const [availability,label] of [['available','Available now'],['preview','Preview — not yet released']]) {
       const selected=group.filter(c=>c.availability===availability);if(!selected.length)continue;
       content+=`\n### ${label}\n`;
-      for(const c of selected)content+=`\n**${c.title}**\n\n${c.description}\n\n${(c.links||[]).map(l=>`[${l.label}](${l.url})`).join(' · ')}\n`;
+      for(const c of selected)content+=`\n#### ${c.title}\n\n${c.description}\n\n${c.usage}\n\n${(c.links||[]).map(l=>`[${l.label}](${l.url})`).join(' · ')}\n${c.mediaId ? `\n:::media ${c.mediaId}\n` : ''}`;
     }
   }
   const data={title:input.title,summary:input.summary,weekStart:input.weekStart,publishedAt:input.publishedAt,status:'draft',products:[...new Set(changes.map(c=>c.product))],media:input.media||[]};
