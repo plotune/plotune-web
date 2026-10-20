@@ -39,16 +39,27 @@ async function draft(inputFile, sourceFile, destination) {
     }
     for(const value of [change.title,change.description])assert(typeof value==='string' && !/[\n\r<>\[\]{}]/.test(value),'Change prose must be plain text');
     (change.links||[]).forEach(l=>{publicLink(l.url);assert(/^[\w ’'—–-]{1,80}$/u.test(l.label),'Invalid link label');});
+    assert((change.description+' '+change.usage).trim().split(/\s+/).length<=65,'Keep each update to one compact paragraph (65 words maximum)');
     changes.push(change);
   }
-  let content='\nThis edition covers technical changes merged during the week. Availability depends on the installed or deployed release.\n';
+  let content='\n**Merged this week.** Availability depends on the installed or deployed release.\n';
+  if(input.highlights?.length) {
+    assert(input.highlights.length<=4,'Use at most four highlights');
+    content+='\n## Highlights\n\n';
+    for(const h of input.highlights) {
+      assert(typeof h.title==='string' && typeof h.description==='string' && !/[\n\r<>\[\]{}]/.test(h.title+h.description),'Highlights must be plain prose');
+      assert(changes.some(c=>c.title===h.title),'Highlight must link to a selected change');
+      const anchor=h.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      content+=`- [${h.title}](#${anchor}) — ${h.description}\n`;
+    }
+  }
   for(const product of ['Nexus','Cloud','Stream']) {
     const group=changes.filter(c=>c.product===product);if(!group.length)continue;
     content+=`\n## ${product}\n`;
     for(const [availability,label] of [['merged','Merged this week'],['available','Available now'],['preview','Preview — not yet released']]) {
       const selected=group.filter(c=>c.availability===availability);if(!selected.length)continue;
-      content+=`\n### ${label}\n`;
-      for(const c of selected)content+=`\n#### ${c.title}\n\n${c.description}\n\n${c.usage}\n\n${(c.links||[]).map(l=>`[${l.label}](${l.url})`).join(' · ')}\n${c.mediaId ? `\n:::media ${c.mediaId}\n` : ''}`;
+      if(availability!=='merged')content+=`\n**${label}**\n`;
+      for(const c of selected)content+=`\n### ${c.title}\n\n${c.description} ${c.usage}\n\n${(c.links||[]).map(l=>`[${l.label}](${l.url})`).join(' · ')}\n${c.diagramId ? `\n:::diagram ${c.diagramId}\n` : ''}${c.mediaId ? `\nLocal recording of the real workspace with synthetic authentication and API responses.\n\n:::media ${c.mediaId}\n` : ''}`;
     }
   }
   const data={title:input.title,summary:input.summary,weekStart:input.weekStart,publishedAt:input.publishedAt,status:'draft',products:[...new Set(changes.map(c=>c.product))],media:input.media||[]};

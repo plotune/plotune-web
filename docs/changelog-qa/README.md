@@ -9,14 +9,14 @@ per-PR include/omit ledger remain private, ignored scratch data during generatio
 | Product | Public selection | Media decision |
 | --- | --- | --- |
 | Nexus | Managed agents and runtime reliability; actionable connection errors; note/conversation formatting; OAuth renewal; complete updates and recovery | Text: describe changed behavior, trust and compatibility precisely. No unrelated footage. |
-| Cloud | Compatible complete-release negotiation for old and new Nexus updaters | Text: publishing order and transport compatibility are clearer without a staged UI. |
+| Cloud | Compatible complete-release negotiation for old and new Nexus updaters | Static diagram: the complete-release and compatibility-image paths, with the required publishing order in the entry. |
 | Stream | Authenticated workspace and shared resources; account MCP context; OAuth consent; bounded aggregation/jobs | One recording: actual shared selection and complete export in the real local workspace. Other changes stay text. |
 
 Omissions: rental/purchase flow, minor brand-translation polish, two planning-only
 changes and internal artifact-verification diagnostics. Companion PRs and runtime
 follow-up fixes are combined rather than presented as separate announcements.
 
-The title is **Plotune updates — 12–18 October 2026**. Each product section says
+The title is **Plotune updates — 12–18 October 2026**. One scope note says
 **Merged this week**: merged code is not evidence of deployment. No production
 activation, measured billing savings or shipped release version is invented.
 
@@ -44,3 +44,16 @@ autoplay and offscreen pause, reduced-motion manual playback, keyboard-accessibl
 written steps and horizontal overflow. Desktop/mobile screenshots, the poster
 and sampled action/result frames were inspected. Complete-clip editorial review
 remains an owner step before publication.
+
+## VS Code reference refinement
+
+Reference: https://code.visualstudio.com/updates/v1_142. The edition now starts
+with three linked highlights, uses product H2s and feature H3s, and keeps each
+update to one compact paragraph. The main Markdown body fell from 871 to 415
+words while retaining all ten selected updates and material limits. One merged
+scope note replaces repeated status headings. A reviewed HTML/CSS diagram explains
+Cloud/Nexus release compatibility; the real-workspace recording is retained.
+The static diagram reflows into a single column on mobile and adds no media
+download. Unknown diagram IDs are rejected, and future updates are capped at
+65 words per description/usage pair. This follows the reference’s reading pattern
+within Plotune’s visual language; no reference assets or copy were reused.

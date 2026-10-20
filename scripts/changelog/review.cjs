@@ -19,6 +19,7 @@ function validateReview(sources,input) {
     const m=c.mediaDecision;
     assert(m && ['none','ui','diagram'].includes(m.kind) && typeof m.reason==='string' && m.reason.trim().length>=20,'Decide whether media helps each selected change');
     if(m.kind==='none')assert(!c.mediaId,'Text-only changes cannot attach media');
+    else if(m.kind==='diagram' && c.diagramId)assert(!c.mediaId && Object.hasOwn(require('../../src/changelog/diagrams.json'),c.diagramId),'Use a reviewed static diagram');
     else assert(input.media?.some(d=>d.id===c.mediaId && d.kind===m.kind),'Media decision must match a reviewed descriptor');
   }
   for(const d of decisions) {

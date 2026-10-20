@@ -46,7 +46,7 @@ test('draft generator needs release evidence and does not propagate private prov
   const change={product:'Nexus',type:'feature',usage:'Open Event Explorer and choose the new property condition to inspect matching events.',availability:'available',title:'A clearer flow',description:'Choose the configuration for your project before continuing.',links:[{label:'Explore Nexus',url:'/nexus'}],evidence:{repository:'plotune/plotune-nexus',pr:1,releaseTag:'v1'}};
   const input={...metadata,changes:[change]};const a=path.join(dir,'input.json'),b=path.join(dir,'sources.json'),out=path.join(dir,'edition.mdx');completeReview(input,sources);fs.writeFileSync(a,JSON.stringify(input));fs.writeFileSync(b,JSON.stringify(sources));
   await draft(a,b,out);assert(!fs.readFileSync(out,'utf8').includes('plotune-nexus'));
-  for(const override of [{type:'sales'},{title:'Discount pricing update'},{usage:'Too vague'}]){fs.writeFileSync(a,JSON.stringify({...input,changes:[{...change,...override}]}));await assert.rejects(()=>draft(a,b,out));}
+  for(const override of [{type:'sales'},{title:'Discount pricing update'},{usage:'Too vague'},{description:'A technical change with relevant behavior. '.repeat(20)}]){fs.writeFileSync(a,JSON.stringify({...input,changes:[{...change,...override}]}));await assert.rejects(()=>draft(a,b,out));}
   fs.writeFileSync(a,JSON.stringify(input));assert.equal(readEntry(out).status,'draft');
   delete input.changes[0].evidence.releaseTag;fs.writeFileSync(a,JSON.stringify(input));await assert.rejects(()=>draft(a,b,out));
   sources.repositories[0].prs[0].mergeCommit='b'.repeat(40);
@@ -104,5 +104,15 @@ test('publication strips generated outline metadata and rejects demo or unrelate
   const m={id:'capture',kind:'ui'},r={capturePath:'/stream/workspace',localCommand:'npm start',syntheticAuth:true,sourceRevision:'merged-revision'},p={mediaSources:[{id:'capture',kind:'ui',revisions:['merged-revision']}]};
   verifyUiCapture(m,r,p);
   for(const override of [{capturePath:'/stream/demo'},{sourceRevision:'unrelated'},{syntheticAuth:false},{localCommand:'production'}])assert.throws(()=>verifyUiCapture(m,{...r,...override},p),/real local app/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('reviewed diagrams and local highlight links stay inert and reject unknown figures',()=>{
+ publicLink('#compatible-release-downloads');
+ const dir=temp(),file=path.join(dir,'edition.mdx');try{
+  fs.writeFileSync(file,matter.stringify(body+'\n:::diagram release-formats\n',metadata));readEntry(file);
+  for(const extra of ['\n:::diagram unknown-figure\n','\n:::diagram release-formats\n\n:::diagram release-formats\n']){
+   fs.writeFileSync(file,matter.stringify(body+extra,metadata));assert.throws(()=>readEntry(file),/reviewed static diagram/);
+  }
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

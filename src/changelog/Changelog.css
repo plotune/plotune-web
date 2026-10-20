@@ -30,3 +30,26 @@
 @media(max-width:700px) { .changelog-page { padding-top:100px; } .changelog-layout { display:flex; flex-direction:column; gap:24px; } .changelog-sidebar { position:static; width:100%; } .changelog-sidebar nav { margin:0; padding:0; } .changelog-sidebar nav a { min-height:44px; } .changelog-sidebar span { display:inline; margin-left:12px; } .changelog-sidebar .changelog-brand { margin:0; } .changelog-contents { order:0; width:100%; font-size:12px; } .changelog-main { order:1; min-width:0; width:100%; } .changelog-head h1 { font-size:28px; } }
 
 .changelog-article h4 { font-size:18px; line-height:1.45; margin:26px 0 12px; font-weight:600; }
+
+/* Release-note rhythm: short entries, scannable highlights and useful visuals. */
+.changelog-article { line-height:1.7; }
+.changelog-article h2 { border-top:1px solid var(--line); padding-top:26px; margin-top:34px; }
+.changelog-article h3 { font-size:19px; line-height:1.4; margin:26px 0 10px; font-weight:600; scroll-margin-top:110px; }
+.changelog-article > p:first-child { font-size:13px; color:#526067; }
+.changelog-article #highlights { border:0; margin-top:24px; padding-top:0; font-size:22px; }
+.changelog-article #highlights + ul { padding-left:20px; }
+.changelog-article #highlights + ul li { margin:10px 0; }
+.changelog-article #highlights + ul a { font-weight:600; }
+.changelog-diagram { border:1px solid var(--line); background:#eff2ec; padding:22px; margin:24px 0; }
+.changelog-diagram .changelog-diagram-title { margin:0 0 20px; font-size:15px; font-weight:600; }
+.changelog-diagram-flow { display:grid; grid-template-columns:120px 24px minmax(0,1fr); gap:14px; align-items:center; }
+.changelog-diagram-source { border:1px solid #8aa59a; border-top:3px solid var(--teal); padding:18px 12px; background:var(--paper); font-size:14px; text-align:center; }
+.changelog-diagram-arrow { text-align:center; color:#00695c; font-size:22px; }
+.changelog-diagram-flow ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+.changelog-diagram-flow li { background:var(--paper); border-left:2px solid #8aa59a; padding:12px 16px; line-height:1.5; }
+.changelog-diagram-flow strong,.changelog-diagram-flow span,.changelog-diagram-flow small { display:block; }
+.changelog-diagram-flow strong { font-size:13px; }
+.changelog-diagram-flow li span { color:#00695c; font-size:14px; margin:4px 0; }
+.changelog-diagram-flow small { color:#526067; font-size:12px; }
+.changelog-diagram figcaption { color:#526067; font-size:12px; line-height:1.6; margin-top:16px; }
+@media(max-width:700px) { .changelog-diagram { padding:16px; } .changelog-diagram-flow { grid-template-columns:1fr; gap:8px; } .changelog-diagram-source { padding:12px; } .changelog-diagram-arrow { transform:rotate(90deg); } .changelog-diagram-flow ul { gap:10px; } }

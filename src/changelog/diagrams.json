@@ -1,0 +1,11 @@
+{
+  "release-formats": {
+    "title": "One publication, compatible update paths",
+    "source": "Cloud release",
+    "branches": [
+      {"title": "Capable Nexus updater", "detail": "Complete signed release", "outcome": "Images + deployment configuration"},
+      {"title": "Older Nexus updater", "detail": "Compatibility images", "outcome": "Update + reboot → Finish Update"}
+    ],
+    "caption": "One release serves both updater generations."
+  }
+}

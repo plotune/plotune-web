@@ -25,6 +25,7 @@ function scan(text) {
 }
 function publicLink(value) {
   assert(typeof value === 'string', 'Link must be text');
+  if(/^#[a-z0-9][a-z0-9-]*$/.test(value))return;
   assert(/^\/(?!\/)[a-z0-9/#?=&._%-]*$/i.test(value) || /^https:\/\/(?:www\.plotune\.net|github\.com\/plotune\/plotune-(?:web|sdk))(?:\/[^\s<>]*)?$/.test(value), 'Unapproved public link');
   scan(value);
   const url=new URL(value,'https://www.plotune.net');
@@ -48,7 +49,7 @@ function readEntry(file) {
   assert(!/^\s*\[[^\]]+\]:/m.test(content),'Use explicit validated links, not reference definitions');
   assert(content.trim().length >= 80, 'Edition needs substantive content');
   for(const product of data.products)assert(content.includes(`## ${product}\n`),'Each product needs a clearly grouped section');
-  assert(/^### (?:Merged this week|Available now|Preview — not yet released)$/m.test(content),'Availability must be explicit');
+  assert(/^### (?:Merged this week|Available now|Preview — not yet released)$/m.test(content) || /^\*\*(?:Merged this week\.|Available now|Preview — not yet released)\*\*/m.test(content),'Availability must be explicit');
   for (const match of content.matchAll(/\]\(([^)]+)\)/g)) publicLink(match[1]);
   assert(!/https?:\/\//.test(content.replace(/\]\(([^)]+)\)/g, '')), 'Use validated Markdown links, not bare URLs');
   const media = data.media || [];
@@ -61,6 +62,8 @@ function readEntry(file) {
   assert(new Set(media.map(m=>m.id)).size === media.length, 'Duplicate media');
   const placements = [...content.matchAll(/^:::media ([a-z0-9-]+)$/gm)].map(m=>m[1]);
   assert(placements.length === media.length && new Set(placements).size === placements.length && placements.every(id=>media.some(m=>m.id===id)), 'Place every reviewed medium exactly once in its relevant section');
+  const diagrams=[...prose.matchAll(/^:::diagram ([a-z0-9-]+)$/gm)].map(m=>m[1]);
+  assert(diagrams.every(id=>Object.hasOwn(require('../../src/changelog/diagrams.json'),id)) && new Set(diagrams).size===diagrams.length,'Use each reviewed static diagram at most once');
   const sections = [...prose.matchAll(/^## (.+)$/gm)].map(m=>({title:m[1],id:m[1].toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}));
   assert(new Set(sections.map(s=>s.id)).size === sections.length, 'Section headings must be unique');
   return {...data, sections, media, content, slug: data.weekStart, file: path.basename(file)};

@@ -124,3 +124,21 @@ Checks: `npm run changelog:test`, `npm test -- --watchAll=false --runInBand`,
 `npm run build`, `node scripts/changelog/browser-qa.cjs` against a local production
 preview, and `changelog:check` for final media. The staged guard is specifically for
 weekly content-only PRs, not this initial feature implementation.
+
+## Reading structure
+
+Follow the linked-highlights and feature-heading pattern in the VS Code 1.142
+release notes (https://code.visualstudio.com/updates/v1_142), within Plotune’s style.
+Use three or four short highlights linked to actual feature anchors. Each update
+should be one compact paragraph, usually 30–50 words total for description and
+usage. Keep material trust, compatibility and activation constraints; remove
+repeated explanation and generic instructions. State merged scope once per edition.
+Use product H2s and linked feature H3s. `highlights` in the private selection is an
+optional array of `{title, description}`; titles must match selected changes.
+
+Reviewed static diagrams in `src/changelog/diagrams.json` may explain a selected
+technical change without another video. Set the change’s `diagramId` and a
+`mediaDecision` of diagram, then the generator emits `:::diagram <id>`. These are
+accessible HTML/CSS figures that reflow on mobile, with no download or autoplay.
+Unknown or duplicate diagram IDs are rejected. New diagram content requires code
+review and must show actual changed behavior, not invented product UI.

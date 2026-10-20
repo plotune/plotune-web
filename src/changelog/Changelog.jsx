@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {Helmet} from 'react-helmet-async';
 import Seo from '../components/Seo';
 import {editions} from './catalog';
 import ChangelogMedia from './ChangelogMedia';
+import ChangelogDiagram from './ChangelogDiagram';
 import './Changelog.css';
 
 export const weekLabel = date=>new Date(`${date}T12:00:00Z`).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
@@ -17,14 +18,18 @@ export default function Changelog() {
     if (edition) Promise.resolve().then(()=>edition.load()).then(m=>{if(active)setContent(()=>m.default);}).catch(()=>{if(active)setError(true);});
     return ()=>{active=false;};
   },[edition,attempt]);
-  const components = {
+  const components = useMemo(()=>({
     h2:({children,...props})=><h2 id={headingId(children)} {...props}>{children}</h2>,
+    h3:({children,...props})=><h3 id={headingId(children)} {...props}>{children}</h3>,
+    h4:({children,...props})=><h4 id={headingId(children)} {...props}>{children}</h4>,
     p:({children,...props})=>{
+      const diagram=typeof children==='string' && /^:::diagram ([a-z0-9-]+)$/.exec(children);
+      if(diagram)return <ChangelogDiagram id={diagram[1]}/>;
       const match=typeof children==='string' && /^:::media ([a-z0-9-]+)$/.exec(children);
       const media=match && edition?.media.find(m=>m.id===match[1]);
       return media ? <ChangelogMedia media={media}/> : <p {...props}>{children}</p>;
     },
-  };
+  }),[edition]);
   const title = edition?.title || (slug ? 'Edition not found' : 'Changelog');
   return <main className="changelog-page design-container">
     <Seo title={`${title} | Plotune`} description={edition?.summary || 'Technical release notes for Plotune Nexus, Cloud and Stream.'} path={slug && edition ? `/changelog/${slug}` : '/changelog'} />

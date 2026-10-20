@@ -1,9 +1,8 @@
 ---
 title: Plotune updates — 12–18 October 2026
 summary: >-
-  Nexus managed agents, renewable MCP sessions and complete appliance updates;
-  compatible Cloud release delivery; Stream’s authenticated workspace, OAuth and
-  bounded analysis jobs.
+  Persistent agents, compatible updates and shared event workflows across Nexus,
+  Cloud and Stream.
 weekStart: '2026-10-12'
 publishedAt: '2026-10-20'
 status: published
@@ -23,78 +22,62 @@ media:
       account authentication and intercepted API responses.
 ---
 
-This edition covers technical changes merged during the week. Availability depends on the installed or deployed release.
+**Merged this week.** Availability depends on the installed or deployed release.
+
+## Highlights
+
+- [Persistent managed agents](#persistent-managed-agents) — Keep conversations and working files between sessions.
+- [Compatible release downloads](#compatible-release-downloads) — Deliver the right update format to each Nexus installation.
+- [Shared workspace and export](#shared-workspace-and-export) — Reuse project context and download the full matching selection.
 
 ## Nexus
 
-### Merged this week
+### Persistent managed agents
 
-#### Managed agents with persistent sessions
+OpenCode agents now retain conversations and working files in shared runtimes. Pause, Stop and Delete affect the selected session. Runtime startup and crash-loop fixes are included. Agents sharing an endpoint/model connection share a trust boundary.
 
-Nexus can host OpenCode agents from its interface and connected MCP clients. Agents using the same endpoint and resolved model connection share a runtime, with a persistent conversation and working files per agent. Pause, Stop and Delete target the selected session. Follow-up fixes address runtime startup, crash loops and startup commands that incorrectly reported failure.
+### Clearer connection errors
 
-Create a managed agent using a saved model connection. Agents sharing a runtime share a trust boundary; separate sessions are not isolated sandboxes.
+Test and Save now show field-level validation, focus the invalid input and suggest valid connection names. For runtime failures, Show details reveals a bounded, redacted explanation.
 
-#### Actionable agent connection errors
+### Readable notes and conversations
 
-Test connection and Save connection now use the same validation. Invalid fields receive inline explanations and focus, and invalid names offer a one-click normalized suggestion. API validation errors are readable instead of raw error objects. Runtime failures expose bounded, redacted details behind Show details.
+Notes and agent answers render Markdown, tables and code. Long conversations keep the composer and Send action visible. Open a note to read its full content in a scrollable view.
 
-Correct the highlighted field before retrying Test or Save. For a runtime that needs attention, open its details rather than repeatedly resuming without knowing the cause.
+### Silent MCP renewal
 
-#### Readable notes and agent conversations
+OAuth clients can renew access without repeating browser approval. Refresh tokens rotate on use; renewal rechecks device access and rejects replay. Clients must retain the replacement refresh token after each renewal.
 
-Notes and agent answers now render structured Markdown, including lists, tables and code. Note previews stay bounded, full notes open in a scrollable reading view, and long conversations keep the composer and Send action visible. Settings spacing and alignment are also corrected.
+### Complete appliance updates
 
-Open a note to read the complete content. Long agent answers scroll within the conversation while the message controls stay accessible on desktop and mobile.
-
-#### MCP sessions can renew without another browser approval
-
-OAuth authorization-code exchanges now return a refresh token, and the token endpoint supports the refresh_token grant. Successful renewal rotates the refresh token and rechecks the account’s device access. Reused refresh tokens are rejected, including after an API restart.
-
-Use an MCP client that supports OAuth refresh. Clients must store the replacement refresh token after every successful renewal; removing the client or its access stops renewal.
-
-#### Complete appliance updates with recovery
-
-The updater now prepares and activates one signed release containing service images and deployment configuration. Update jobs survive API replacement, the interface reconnects to show progress, and activation includes health checks, failure recovery and boot recovery. ISO preparation also reports named stages and useful local access addresses.
-
-Existing image-only installations transition through the normal update and reboot, then Finish Update for that same release. Publishing complete releases requires the compatible Cloud service update described below.
+One signed release now covers images and deployment configuration, with progress tracking, health checks and recovery after interrupted activation. Older installations use update, reboot, then Finish Update for the same release.
 
 ## Cloud
 
-### Merged this week
+### Compatible release downloads
 
-#### Release downloads match the installed Nexus updater
+Cloud selects complete archives for capable Nexus updaters and compatibility images for older clients. Existing image-only publications keep working. Deploy the compatible Cloud service before publishing complete releases.
 
-Cloud now negotiates release format per Nexus client. A publication can contain a complete signed deployment archive and its compatibility images: capable clients receive the complete archive, while older updaters receive only the image transport they understand. A capability check lets the publisher verify support before uploading or changing a channel.
-
-Deploy the compatible Cloud service before publishing complete Nexus releases. Existing image-only publications retain their behavior; an older updater is not handed a deployment archive as though it were an image.
+:::diagram release-formats
 
 ## Stream
 
-### Merged this week
+### Shared workspace and export
 
-#### Authenticated workspace and shared project resources
+The authenticated workspace now uses project-shared Filters and dashboards, typed discovery and full-result JSON/CSV/TSV export. Widgets reference Filter IDs; conflicting edits preserve drafts. Exports cover all matching pages, capped at 10,000 events and 32 MiB.
 
-The authenticated workspace is connected to project membership, revisioned Saved Filters and dashboards, typed property discovery and event history. Widgets reference Filter identifiers, concurrent edits preserve drafts, and missing Filters produce an explicit state. JSON, CSV and TSV exports retrieve all matching pages before browser conversion. Shared metadata caching reduces idle requests while retaining fresh permission checks.
-
-Use the real workspace with an activated backend and a project account. Apply a Saved Filter before Export; the download covers the full matching selection, not just the visible page. Retrieval is bounded to 10,000 events and converted output to 32 MiB. The local recording below uses synthetic authentication and API fixtures, not a production session.
+Local recording of the real workspace with synthetic authentication and API responses.
 
 :::media stream-project-export-2026-10-12
 
-#### Account-scoped MCP project context
+### Project context over MCP
 
-Account sessions can now use MCP to read project context, observed health, shared dashboard definitions and operator documentation. Five account-only read tools are added, while project keys retain their original tool set. Each account request checks current project membership.
+Account sessions gain five read tools for project context, health, dashboards and documentation, with membership checks on each request. Account clients select their project using X-Plotune-Project-Id.
 
-Account clients must select a project explicitly with X-Plotune-Project-Id. Dashboard reads retain Saved Filter references and report missing definitions rather than silently widening the event selection.
+### MCP OAuth consent
 
-#### OAuth consent for MCP connections
+OAuth-capable clients can request project access through a consent screen showing the application, destination and permissions. Activate the authorization service and consent page together before use.
 
-Stream adds OAuth discovery, public-client registration, PKCE and rotating refresh tokens alongside existing authentication methods. The website consent screen shows the application, redirect destination, requested permissions and project selection before approval. Grants remain bound to one project and current membership.
+### Bounded analysis jobs
 
-Start the connection from an OAuth-capable MCP client and review the project and permissions in the consent screen. Activation requires the authorization service and consent page to be configured together; merging the code does not enable it automatically.
-
-#### Bounded aggregation and persisted analysis jobs
-
-MCP gains events_aggregate, analysis_jobs_get and analysis_jobs_cancel. Analysis uses bounded event snapshots, strict numeric metrics, typed groups and UTC buckets. Results are persisted and paged, with explicit coverage, cancellation, expiry and authorization tied to the original actor.
-
-Submit a bounded aggregation, then retrieve its result pages or cancel the job. Check the returned coverage before interpreting a result; this change does not add a new dashboard analysis editor. Production use remains subject to activation and capacity checks.
+MCP adds bounded aggregation and persisted, paged results with coverage reporting, cancellation and expiry. Numeric metrics remain type-strict. Use events_aggregate, analysis_jobs_get and analysis_jobs_cancel; check coverage before interpreting results.

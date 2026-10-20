@@ -19,3 +19,19 @@ test('technical sections have contents anchors and reviewed media render in cont
  expect(figure.nextElementSibling.textContent).toBe('Describe the next step.');
  expect(container.textContent).not.toContain(':::media');
 });
+
+test('feature anchors and a reviewed static diagram remain readable without video',async()=>{
+ mockLoad.mockResolvedValue({default:({components})=>{const H=components.h3,P=components.p;return <><H>Compatible release downloads</H><P>{':::diagram release-formats'}</P></>;}});
+ await render();expect(container.querySelector('h3').id).toBe('compatible-release-downloads');
+ const diagram=container.querySelector('.changelog-diagram');expect(diagram).toBeTruthy();
+ expect(diagram.querySelectorAll('li')).toHaveLength(2);
+ expect(diagram.textContent).toContain('Compatibility images');
+ expect(document.getElementById(diagram.getAttribute('aria-labelledby'))).toBeTruthy();
+ expect(diagram.querySelector('video')).toBeNull();
+});
+
+test('rerendering navigation preserves inline media nodes',async()=>{
+ mockLoad.mockResolvedValue({default:({components})=>{const P=components.p;return <P>{':::media selection'}</P>;}});
+ await render();const figure=container.querySelector('figure');
+ await render();expect(container.querySelector('figure')).toBe(figure);
+});

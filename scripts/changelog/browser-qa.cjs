@@ -14,10 +14,15 @@ const origin=process.env.CHANGELOG_ORIGIN||'http://127.0.0.1:4189';const output=
    for(const name of ['Nexus','Cloud','Stream'])await p.getByRole('heading',{name,exact:true,level:2}).waitFor();
    assert((await p.locator('article').innerText()).includes('Merged this week'));
    assert(!(await p.locator('article').innerText()).includes('/stream/demo'));
-   assert.equal(await p.locator('article h4').count(),10,'Grouped weekly technical changes are present');
+   assert.equal(await p.locator('article h3').count(),10,'Grouped weekly technical changes are present');
+   await p.getByRole('link',{name:'Persistent managed agents',exact:true}).click();
+   assert.equal(new URL(p.url()).hash,'#persistent-managed-agents');
+   await p.locator('.changelog-diagram').waitFor();
+   assert.equal(await p.locator('.changelog-diagram-flow li').count(),2);
    assert.equal(requests.filter(u=>u.endsWith('.mp4')).length,0,'Below-fold media must not load');
    assert(!/Demo walkthrough|Demo data|Illustration/.test(await p.locator('main').innerText()));
-   assert.equal(await p.locator('figure').first().evaluate(e=>e.previousElementSibling.tagName),'P');
+   assert(await p.locator('.changelog-diagram').evaluate(el=>Boolean(document.querySelector('#cloud').compareDocumentPosition(el)&Node.DOCUMENT_POSITION_FOLLOWING)));
+   assert(await p.locator('.changelog-diagram').evaluate(el=>Boolean(el.compareDocumentPosition(document.querySelector('#stream'))&Node.DOCUMENT_POSITION_FOLLOWING)));
    const video=p.locator('video').first();
    await video.scrollIntoViewIfNeeded();await p.waitForFunction(()=>{const v=document.querySelector('video');return v && !v.paused && v.currentTime>0;});
    assert(await video.evaluate(v=>v.muted && v.playsInline && v.controls));
