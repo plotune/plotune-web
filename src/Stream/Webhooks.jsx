@@ -185,10 +185,12 @@ export default function Webhooks({
                   )}
                 </span>
                 {readOnly ? (
-                  <span className="st-webhook-enabled">{webhook.enabled ? "Enabled" : "Disabled"}</span>
+                  <span className={`st-webhook-enabled${webhook.autoDisabled ? " is-auto-off" : ""}`}>
+                    {webhook.enabled ? "Enabled" : webhook.autoDisabled ? "Switched off · failing" : "Disabled"}
+                  </span>
                 ) : (
                   <>
-                    <label className="st-webhook-enabled">
+                    <label className={`st-webhook-enabled${webhook.autoDisabled ? " is-auto-off" : ""}`}>
                       <input
                         type="checkbox"
                         disabled={busy}
@@ -196,7 +198,7 @@ export default function Webhooks({
                         aria-label={`Enable webhook for ${webhook.eventName}`}
                         onChange={() => onToggle(webhook.id)}
                       />
-                      {webhook.enabled ? "Enabled" : "Disabled"}
+                      {webhook.enabled ? "Enabled" : webhook.autoDisabled ? "Switched off · failing" : "Disabled"}
                     </label>
                     <button
                       className="sw-icon-button"

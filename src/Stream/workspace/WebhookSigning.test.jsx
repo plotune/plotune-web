@@ -89,3 +89,23 @@ test("members read the signing state and how to verify, without actions", async 
   expect(container.querySelector("details summary").textContent).toBe("How your receiver checks the signature");
   expect(buttons().filter((b) => b !== "")).toEqual([]);
 });
+
+test("Owners and Admins see who changed the webhook; a switched-off webhook says why", async () => {
+  const audit = [
+    { at: "2026-10-20T09:00:00.000Z", by: "Plotune", via: "auto", action: "auto_disabled" },
+    { at: "2026-10-19T10:00:00.000Z", by: "carol@example.test", via: "mcp", client: "Claude", action: "updated" },
+    { at: "2026-10-18T10:00:00.000Z", by: "alice@example.test", via: "workspace", action: "created" },
+  ];
+  const off = { ...signed, enabled: false, autoDisabled: true, audit };
+  await render(<WebhookSigningDialog webhook={off} canManage onRotate={() => {}} onClose={() => {}} />);
+  expect(container.querySelector("#sw-dialog-title").textContent).toBe("Webhook");
+  expect(container.querySelector(".wh-off").textContent).toContain("Switched off after 20 failed deliveries in a row");
+  const items = [...container.querySelectorAll(".wh-history li")].map((li) => li.textContent);
+  expect(items[0]).toContain("Switched off after 20 failed deliveries in a row");
+  expect(items[0]).toContain("Plotune automatically");
+  expect(items[1]).toContain("Changedcarol@example.test via Claude");
+  expect(items[2]).toContain("alice@example.test in the workspace");
+  // Members receive no history and see only the switch-off.
+  await render(<Webhooks projectId="p" events={[]} webhooks={[{ ...off, audit: undefined }]} readOnly onSigning={() => {}} />);
+  expect(container.textContent).toContain("Switched off · failing");
+});

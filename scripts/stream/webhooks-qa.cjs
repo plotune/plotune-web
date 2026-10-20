@@ -14,13 +14,19 @@ const deliveries = [
   { id: 'e4:ci', eventId: '0199f3a1-11aa-7c22-8b33-4d5e6f708192', webhookId: 'ci', attempts: 1, status: 'delivered', nextAt: iso(20), createdAt: iso(20), attemptedAt: iso(20), responseStatus: 204 },
   { id: 'e3:legacy', eventId: '0199f39f-2b3c-7d4e-9f50-61728394a5b6', webhookId: 'legacy', attempts: 5, status: 'failed', nextAt: iso(90), createdAt: iso(400), attemptedAt: iso(95), responseStatus: 0 },
 ];
+const audits = {
+  ci: [{ at: iso(30), by: 'carol@example.test', via: 'mcp', client: 'Claude', action: 'updated' }, { at: iso(2000), by: 'user@example.test', via: 'workspace', action: 'created' }],
+  legacy: [{ at: iso(90000), by: 'user@example.test', via: 'workspace', action: 'disabled' }],
+  flaky: [{ at: iso(45), by: 'Plotune', via: 'auto', action: 'auto_disabled' }, { at: iso(5000), by: 'user@example.test', via: 'workspace', action: 'created' }],
+};
 async function run(browser, device, width, height, role) {
   const context = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce' });
   await context.addCookies([{ name: 'auth_token', value: 'Bearer synthetic-account-token', url: origin }]);
   let hooks = [
     stored({ id: 'ci', eventName: 'motor.alarm', url: 'https://ci.example.com/hooks/plotune?team=robotics', enabled: true, auth: { type: 'header', name: 'X-Api-Key', value: '' }, signing: { configured: true, previousUntil: null } }),
     stored({ id: 'legacy', eventName: 'drone.error', url: 'https://ops.example.org/in', enabled: false, auth: { type: 'none' }, signing: { configured: false, previousUntil: null } }),
-  ];
+    stored({ id: 'flaky', eventName: 'battery.low', url: 'https://alerts.example.io/plotune', enabled: false, autoDisabled: true, auth: { type: 'none' }, signing: { configured: true, previousUntil: null } }),
+  ].map((hook) => role === 'Member' ? hook : { ...hook, data: { ...hook.data, audit: audits[hook.id] } });
   let failNextRead = false, secrets = 0;
   await context.route('**/*', async (route) => {
     const req = route.request(), u = new URL(req.url());
@@ -86,6 +92,11 @@ async function run(browser, device, width, height, role) {
     await page.getByText('The previous secret also signs until').waitFor();
     await shot('rotated-secret');
     await page.getByRole('button', { name: 'Done' }).click();
+    // A webhook switched off for failures explains why and who changed what.
+    await page.getByRole('button', { name: /Signing for battery.low/ }).click();
+    await page.getByText('Recent changes').waitFor();
+    await shot('auto-off');
+    await page.keyboard.press('Escape');
     // A webhook created before signing offers set-up directly.
     await page.getByRole('button', { name: /Signing for drone.error: Not signed/ }).click();
     await shot('legacy');
@@ -94,6 +105,15 @@ async function run(browser, device, width, height, role) {
     await page.getByRole('button', { name: 'Done' }).click();
   }
   result.overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
+  // Consent: changing webhooks is an opt-in shown only for Owner/Admin projects.
+  await context.route('**/oauth/authorize/context**', (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Headers': '*' },
+    body: JSON.stringify({ request: { clientId: 'mcp_demo', name: 'Claude', redirect: 'https://claude.ai/api/mcp/auth_callback', scope: ['events:read', 'dashboards:read', 'context:read', 'aggregate:run', 'usage:read', 'webhooks:read'] },
+      projects: [{ id: project.id, name: project.name, role }], expiresAt: iso(-10) }) }));
+  const consent = await context.newPage();
+  await consent.goto(`${origin}/stream/authorize?request=signed.blob`);
+  await consent.getByText('Requested access').waitFor({ timeout: 60000 });
+  result.writeOptIn = await consent.locator('.stream-authorize__write').count();
+  await consent.screenshot({ path: path.join(out, `${device}-${role.toLowerCase()}-consent.png`), fullPage: true });
   await context.close();
   return result;
 }

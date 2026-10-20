@@ -18,6 +18,34 @@ export function signingLabel(webhook) {
   return webhook.signing.previousUntil ? "Signed · rotating" : "Signed";
 }
 
+const ACTIONS = {
+  created: "Created", updated: "Changed", enabled: "Turned on", disabled: "Turned off",
+  signing_rotated: "Rotated the signing secret", signing_set_up: "Set up signing",
+  auto_disabled: "Switched off after 20 failed deliveries in a row",
+};
+const via = (change) =>
+  change.via === "mcp" ? `via ${change.client || "MCP"}` : change.via === "auto" ? "automatically" : "in the workspace";
+
+/** Who changed the webhook, newest first. Only Owners and Admins receive it. */
+function ChangeHistory({ audit }) {
+  if (!audit?.length) return null;
+  return (
+    <section className="wh-history" aria-labelledby="wh-history-title">
+      <h3 id="wh-history-title">Recent changes</h3>
+      <ol>
+        {audit.map((change, index) => (
+          <li key={`${change.at}-${index}`}>
+            <span>{ACTIONS[change.action] || change.action}</span>
+            <small>
+              {change.via === "auto" ? "Plotune" : change.by} {via(change)} · <time dateTime={change.at}>{utc(change.at)}</time>
+            </small>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
 function VerifyHelp() {
   return (
     <details className="wh-help">
@@ -68,7 +96,7 @@ export function WebhookSigningDialog({ webhook, secret = null, rotated = false, 
   const configured = !!webhook.signing?.configured;
 
   return (
-    <Dialog title="Signing secret" subtitle={`${webhook.eventName} → ${host(webhook.url)}`} onClose={onClose}>
+    <Dialog title={secret ? "Signing secret" : "Webhook"} subtitle={`${webhook.eventName} → ${host(webhook.url)}`} onClose={onClose}>
       <div className="sw-detail-body wh-signing">
         {secret ? (
           <>
@@ -95,6 +123,11 @@ export function WebhookSigningDialog({ webhook, secret = null, rotated = false, 
           </>
         ) : (
           <>
+            {webhook.autoDisabled && (
+              <p className="wh-off" role="status">
+                Switched off after 20 failed deliveries in a row. Fix the receiver so it answers 2xx, then turn the webhook back on.
+              </p>
+            )}
             <p className="wh-lead">
               {configured
                 ? "Deliveries carry an X-Plotune-Signature header your receiver can check."
@@ -137,6 +170,7 @@ export function WebhookSigningDialog({ webhook, secret = null, rotated = false, 
                   </button>
                 </div>
               ))}
+            <ChangeHistory audit={webhook.audit} />
           </>
         )}
       </div>
