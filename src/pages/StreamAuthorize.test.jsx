@@ -91,16 +91,18 @@ test('changing webhooks is an explicit opt-in, offered only where the account is
     render('/stream/authorize?request=blob.signature');
     await settle();
     expect(container.textContent).toContain("See this project's webhooks and their recent deliveries");
-    const box = () => container.querySelector('.stream-authorize__write input');
+    const box = (scope = 'webhooks:write') => container.querySelector(`[aria-describedby="stream-write-hint-${scope}"]`);
     expect(box().checked).toBe(false);
+    expect(box('projects:write').checked).toBe(false);
     expect(container.textContent).toContain('Read-only.');
-    // A Member project offers nothing to tick.
+    // A Member project offers only creating projects, never webhook changes.
     await act(async () => {
       const select = container.querySelector('#project');
       Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, 'p2');
       select.dispatchEvent(new Event('change', { bubbles: true }));
     });
     expect(box()).toBeNull();
+    expect(box('projects:write')).not.toBeNull();
     await act(async () => {
       const select = container.querySelector('#project');
       Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, 'p1');
@@ -112,7 +114,7 @@ test('changing webhooks is an explicit opt-in, offered only where the account is
     fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => ({ redirectTo: 'https://client.example/callback?code=c' }) });
     await act(async () => [...container.querySelectorAll('button')].find((b) => b.textContent === 'Approve and continue').click());
     await settle();
-    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ request: 'blob.signature', decision: 'approve', projectId: 'p1', allowWebhookWrites: true });
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ request: 'blob.signature', decision: 'approve', projectId: 'p1', allowWrites: ['webhooks:write'], allowWebhookWrites: true });
   } finally { window.location = location; }
 });
 
@@ -123,4 +125,25 @@ test('an application that asks to change webhooks gets the box pre-ticked, never
   await settle();
   expect(container.querySelector('.stream-authorize__write input').checked).toBe(true);
   expect(container.textContent).not.toContain('webhooks:write');
+});
+
+test('creating projects is its own opt-in, offered to Members too, and sent as allowWrites', async () => {
+  Cookies.set('auth_token', 'Bearer session-token', { path: '/' });
+  const assign = jest.fn();
+  const location = window.location;
+  delete window.location; window.location = { ...location, assign };
+  try {
+    fetchMock.mockResolvedValueOnce(consentContext(['events:read', 'projects:write'], [{ id: 'p2', name: 'Shared', role: 'Member' }]));
+    render('/stream/authorize?request=blob.signature');
+    await settle();
+    expect(container.textContent).not.toContain('projects:write');
+    expect(container.querySelectorAll('.stream-authorize__write input')).toHaveLength(1);
+    expect(container.querySelector('.stream-authorize__write input').checked).toBe(true);
+    expect(container.querySelector('.stream-authorize__badge').textContent).toBe('Can create projects');
+    expect(container.textContent).toContain('Read access, plus creating and renaming projects.');
+    fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => ({ redirectTo: 'https://client.example/callback?code=c' }) });
+    await act(async () => [...container.querySelectorAll('button')].find((b) => b.textContent === 'Approve and continue').click());
+    await settle();
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ request: 'blob.signature', decision: 'approve', projectId: 'p2', allowWrites: ['projects:write'] });
+  } finally { window.location = location; }
 });

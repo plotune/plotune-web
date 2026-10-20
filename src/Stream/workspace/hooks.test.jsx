@@ -111,3 +111,24 @@ test("one hour idle and window focus generate no recurring metadata reads; privi
     expect(client.members).toHaveBeenCalledTimes(1); expect(state.project.id).toBe("p");
   } finally { act(() => root.unmount()); jest.useRealTimers(); }
 });
+
+test("the project list carries the plan, and a created project counts toward it", async () => {
+  const client = {
+    projects: jest.fn().mockResolvedValue({ items: [{ id: "p" }], plan: { plan: "free", projectLimit: 2, ownedProjects: 1 } }),
+    project: jest.fn().mockResolvedValue({ project: { id: "p", revision: 0 }, membership: { role: "Owner" } }),
+    resources: jest.fn().mockResolvedValue({ items: [] }),
+    createProject: jest.fn().mockResolvedValue({ project: { id: "q", name: "Q" }, api_key: "plt_x" }),
+  };
+  let state;
+  function Probe() { state = useWorkspaceMetadata(client, "p"); return null; }
+  const container = document.createElement("div"), root = createRoot(container);
+  await act(async () => root.render(<Probe />));
+  expect(state.plan).toEqual({ plan: "free", projectLimit: 2, ownedProjects: 1 });
+  await act(async () => state.create("Q"));
+  expect(state.plan.ownedProjects).toBe(2);
+  // A Worker that predates plans sends no plan: nothing is limited in the UI.
+  client.projects.mockResolvedValueOnce({ items: [{ id: "p" }] });
+  await act(async () => state.loadProjects());
+  expect(state.plan).toBeNull();
+  act(() => root.unmount());
+});

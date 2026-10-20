@@ -18,6 +18,8 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
   const [keys, setKeys] = useState({});
+  // The account's plan and project limit; null from a Worker that predates plans.
+  const [plan, setPlan] = useState(null);
   const selected = useRef(projectId);
   selected.current = projectId;
   const generation = useRef(0),
@@ -48,7 +50,7 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
       const request = ++projectListGeneration.current;
       try {
         const result = await client.projects(signal, { useCache: !force });
-        if (!signal?.aborted && mounted.current && request === projectListGeneration.current) setProjects(result.items);
+        if (!signal?.aborted && mounted.current && request === projectListGeneration.current) { setProjects(result.items); setPlan(result.plan || null); }
       } catch (cause) {
         if (cause.name !== "AbortError" && mounted.current && request === projectListGeneration.current) setError(cause);
       } finally {
@@ -165,6 +167,7 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
       const result = await client.createProject(name);
       if (mounted.current) {
         setProjects((current) => [...current, result.project]);
+        setPlan((current) => (current ? { ...current, ownedProjects: current.ownedProjects + 1 } : current));
         setKeys((current) => ({
           ...current,
           [result.project.id]: result.api_key,
@@ -190,6 +193,7 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
   return {
     ...detail,
     projects,
+    plan,
     projectsLoading,
     loading,
     error,

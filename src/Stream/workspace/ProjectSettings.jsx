@@ -150,6 +150,7 @@ export default function ProjectSettings({ client, metadata }) {
                 Use your colleague's verified Plotune account email. This adds
                 access; it does not send an invitation.
               </p>
+              <RoleGuide />
               <div className="st-member-list">
                 {members.map((m) => (
                   <div key={m.email}>
@@ -205,13 +206,38 @@ export default function ProjectSettings({ client, metadata }) {
               </div>
             </>
           ) : (
-            <p>
-              Owners and admins manage membership and project settings. Members
-              can investigate events and save shared filters and dashboards.
-            </p>
+            <>
+              <p>
+                Owners and admins manage membership and project settings. Members
+                can investigate events and save shared filters and dashboards.
+              </p>
+              <RoleGuide />
+            </>
           )}
         </div>
       </Panel>
     </>
+  );
+}
+
+// The three fixed roles, as the Stream API enforces them (roles_list over MCP).
+const ROLE_GUIDE = [
+  ["Owner", "Everything an Admin can do, plus reading usage. Credits come from this account, and this role can't be changed."],
+  ["Admin", "Everything a Member can do, plus adding and removing people, renaming the project, rotating its key, and changing webhooks and path rules."],
+  ["Member", "Reading events, dashboards, the catalog and webhooks, and saving filters, dashboards and catalog descriptions."],
+];
+function RoleGuide() {
+  return (
+    <details className="st-role-guide">
+      <summary>What can each role do?</summary>
+      <dl>
+        {ROLE_GUIDE.map(([name, text]) => (
+          <React.Fragment key={name}>
+            <dt>{name}</dt>
+            <dd>{text}</dd>
+          </React.Fragment>
+        ))}
+      </dl>
+    </details>
   );
 }
