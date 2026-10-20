@@ -19,6 +19,7 @@ import {
   FiPlus,
   FiChevronRight,
   FiCpu,
+  FiBookOpen,
 } from "react-icons/fi";
 import { streamWorkspaceLogin } from "../../utils/streamWorkspaceNavigation";
 import { AuthContext } from "../../context/AuthContext";
@@ -27,6 +28,7 @@ import { AddCreditsDialog, CreditsSummary } from "./Credits";
 import Dashboard from "../Dashboard";
 import Webhooks from "../Webhooks";
 import { WebhookSigningDialog } from "./WebhookSigning";
+import Catalog from "./Catalog";
 import { buildWidgetSeries } from "../widgetModel";
 import {
   createStreamClient,
@@ -52,6 +54,7 @@ const NAV = [
   ["events", "Events", FiActivity],
   ["dashboards", "Dashboards", FiBarChart2],
   ["devices", "Devices", FiCpu],
+  ["catalog", "Catalog", FiBookOpen],
   ["api", "API setup", FiCode],
   ["mcp", "MCP setup", FiTerminal],
   ["webhooks", "Webhooks", FiSend],
@@ -210,18 +213,19 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     setParams(next, { replace: true });
   }, [params, setParams]);
   // Webhooks use discovered event names so Add webhook offers a choice, not a blank field.
-  const needsDiscovery = view === "events" || view === "dashboards" || view === "webhooks";
+  const needsDiscovery = view === "events" || view === "dashboards" || view === "webhooks" || view === "catalog";
+  // A refresh keeps the current project's discovery on screen until the new one arrives.
   useEffect(() => {
-    setDiscoveryState({});
+    setDiscoveryState((current) => (current.projectId === project?.id ? current : {}));
     if (!project?.id || !needsDiscovery) return undefined;
     const controller = new AbortController();
     client
       .discovery(project.id, controller.signal)
       .then((result) => {
-        if (!controller.signal.aborted) setDiscoveryState({ data: result });
+        if (!controller.signal.aborted) setDiscoveryState({ projectId: project.id, data: result });
       })
       .catch((error) => {
-        if (!controller.signal.aborted) setDiscoveryState({ error });
+        if (!controller.signal.aborted) setDiscoveryState({ projectId: project.id, error });
       });
     return () => controller.abort();
   }, [client, project?.id, needsDiscovery, discoveryRefresh]);
@@ -431,7 +435,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           </button>
         </div>
         <nav aria-label="Workspace navigation">
-          {[NAV.slice(0, 3), NAV.slice(3, 6)].map((items, index) => (
+          {/* Data views, then setup; Project Settings is its own link below. */}
+          {[NAV.slice(0, 4), NAV.slice(4, -1)].map((items, index) => (
             <div className="sw-nav-group" key={index}>
               {index === 1 && <p>SETUP</p>}
               {items.map(([id, label, Icon]) => (
@@ -468,6 +473,8 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                   ? "Project dashboards for recurring event views."
                   : view === "devices"
                   ? "Which devices are sending, and anything that needs attention."
+                  : view === "catalog"
+                  ? "What your events and properties mean, named actions and path rules."
                   : view === "api"
                     ? "Send an event from your device, test bench, or simulation."
                     : view === "mcp"
@@ -625,6 +632,10 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 />
               )}
               {view === "devices" && <DevicesHealth client={client} project={project} />}
+              {view === "catalog" && (
+                <Catalog key={project.id} client={client} project={project} role={metadata.role} discovery={discoveryState.data}
+                  discoveryError={discoveryState.error} retryDiscovery={retryDiscovery} filters={metadata.filters} />
+              )}
               {(view === "api" || view === "mcp") && (
                 <ConnectionSetup
                   key={view}
