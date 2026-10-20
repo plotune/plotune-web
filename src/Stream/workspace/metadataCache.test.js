@@ -98,3 +98,11 @@ test("successful metadata writes invalidate cached shared definitions", async ()
   await client.resources("p", "filters", undefined, { useCache: true });
   expect(fetcher).toHaveBeenCalledTimes(3);
 });
+
+test("the cached project list keeps the plan, and only its three fields", async () => {
+  const load = jest.fn().mockResolvedValue({ items: [{ ...project, secret: "x" }], plan: { plan: "premium", projectLimit: 10, ownedProjects: 3, billingId: "b" } });
+  await make().read("/v1/projects", load, { useCache: true });
+  const cached = await make().read("/v1/projects", load, { useCache: true });
+  expect(load).toHaveBeenCalledTimes(1);
+  expect(cached).toEqual({ items: [project], plan: { plan: "premium", projectLimit: 10, ownedProjects: 3 } });
+});

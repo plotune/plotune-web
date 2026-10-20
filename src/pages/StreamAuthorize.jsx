@@ -20,9 +20,15 @@ const SCOPE_DESCRIPTIONS = {
   "webhooks:read": "See this project's webhooks and their recent deliveries",
   "catalog:write": "Describe events and properties (meaning, units, owners) and define named actions",
 };
-// Changing webhooks is never requested silently: it is an explicit opt-in, offered only
-// for projects where you are an Owner or Admin.
-const WRITE_SCOPE = "webhooks:write";
+// Changes are never requested silently: each is an explicit opt-in. Webhook changes are
+// offered only for projects where you are an Owner or Admin; creating projects to anyone.
+const WRITE_OPTIONS = [
+  { scope: "webhooks:write", managers: true, label: "Also let it change webhooks", badge: "change webhooks", doing: "changing webhooks",
+    hint: "Create, change, test and delete this project's webhooks. Each change is recorded with this application's name." },
+  { scope: "projects:write", managers: false, label: "Also let it create and rename projects", badge: "create projects", doing: "creating and renaming projects",
+    hint: "Create projects under your plan's limit and rename projects you manage. It never sees a project's capture key." },
+];
+const WRITE_SCOPES = WRITE_OPTIONS.map((option) => option.scope);
 const describeScope = (scope) => SCOPE_DESCRIPTIONS[scope] || scope;
 
 // The auth_token cookie stores the credential including its "Bearer " prefix
@@ -46,7 +52,7 @@ export function StreamAuthorize() {
   const [context, setContext] = useState(null);
   const [projectId, setProjectId] = useState("");
   const [pending, setPending] = useState(""); // approve | deny
-  const [allowWrites, setAllowWrites] = useState(false);
+  const [allowWrites, setAllowWrites] = useState([]);
 
   useEffect(() => {
     if (!request) {
@@ -80,8 +86,8 @@ export function StreamAuthorize() {
         }
         setContext(body);
         setProjectId(body.projects?.[0]?.id || "");
-        // Pre-ticked only when the application itself asked to change webhooks.
-        setAllowWrites((body.request?.scope || []).includes(WRITE_SCOPE));
+        // Pre-ticked only when the application itself asked for that change.
+        setAllowWrites((body.request?.scope || []).filter((scope) => WRITE_SCOPES.includes(scope)));
         if (body.projects?.length) {
           setStatus("consent");
         } else {
@@ -101,7 +107,11 @@ export function StreamAuthorize() {
   }, [request, navigate]);
 
   const selectedRole = context?.projects.find((project) => project.id === projectId)?.role;
-  const canWrite = Boolean(selectedRole) && selectedRole !== "Member";
+  const manages = Boolean(selectedRole) && selectedRole !== "Member";
+  const offered = WRITE_OPTIONS.filter((option) => selectedRole && (manages || !option.managers));
+  const granted = offered.filter((option) => allowWrites.includes(option.scope));
+  const toggleWrite = (scope, on) => setAllowWrites((current) => (on ? [...current, scope] : current.filter((s) => s !== scope)));
+  const accessBadge = granted.length ? `Can ${granted.map((option) => option.badge).join(" and ")}` : "Read-only access";
   const decide = async (decision) => {
     if (!context || (decision === "approve" && !projectId)) return;
     setPending(decision);
@@ -109,7 +119,9 @@ export function StreamAuthorize() {
       const response = await fetch(`${STREAM_ORIGIN}/oauth/authorize/consent`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: authorizationHeader() },
-        body: JSON.stringify({ request, decision, ...(decision === "approve" ? { projectId, ...(canWrite && allowWrites ? { allowWebhookWrites: true } : {}) } : {}) }),
+        // allowWebhookWrites keeps the webhook opt-in working with a Worker that predates allowWrites.
+        body: JSON.stringify({ request, decision, ...(decision === "approve" ? { projectId, allowWrites: granted.map((option) => option.scope),
+          ...(granted.some((option) => option.scope === "webhooks:write") ? { allowWebhookWrites: true } : {}) } : {}) }),
       });
       const body = await response.json();
       if (!response.ok || !body.redirectTo) {
@@ -148,7 +160,7 @@ export function StreamAuthorize() {
           </span>
           <div>
             <h1 id="stream-authorize-title">Approve access request</h1>
-            <p>An application is asking for {canWrite && allowWrites ? "access" : "read-only access"} to one of your Stream projects.</p>
+            <p>An application is asking for {granted.length ? "access" : "read-only access"} to one of your Stream projects.</p>
           </div>
         </header>
 
@@ -190,7 +202,7 @@ export function StreamAuthorize() {
                     <h2 id="stream-application-title" className="technical-label">Application</h2>
                     <p className="stream-authorize__application-name">{context.request.name || context.request.clientId}</p>
                   </div>
-                  <span className="stream-authorize__badge">{canWrite && allowWrites ? "Can change webhooks" : "Read-only access"}</span>
+                  <span className="stream-authorize__badge">{accessBadge}</span>
                 </div>
                 <p className="stream-authorize__destination">
                   Authorization results will be sent to <strong>{redirectHost(context.request.redirect)}</strong>
@@ -208,7 +220,7 @@ export function StreamAuthorize() {
                 <section aria-labelledby="stream-permissions-title">
                   <h2 id="stream-permissions-title" className="stream-authorize__section-title">Requested access</h2>
                   <ul className="stream-authorize__permissions">
-                    {context.request.scope.filter((scope) => scope !== WRITE_SCOPE).map((scope) => (
+                    {context.request.scope.filter((scope) => !WRITE_SCOPES.includes(scope)).map((scope) => (
                       <li key={scope}>
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
@@ -218,7 +230,7 @@ export function StreamAuthorize() {
                     ))}
                   </ul>
                   <p className="stream-authorize__hint">
-                    {canWrite && allowWrites ? "Read access, plus changing webhooks." : "Read-only."} Role changes or removal in Stream apply to this access immediately.
+                    {granted.length ? `Read access, plus ${granted.map((option) => option.doing).join(" and ")}.` : "Read-only."} Role changes or removal in Stream apply to this access immediately.
                   </p>
                 </section>
 
@@ -240,23 +252,21 @@ export function StreamAuthorize() {
                   <p id="stream-project-hint" className="stream-authorize__hint">
                     Only this one project is shared. Applications that need another project must ask separately.
                   </p>
-                  {canWrite && (
-                    <label className="stream-authorize__write">
+                  {offered.map((option) => (
+                    <label className="stream-authorize__write" key={option.scope}>
                       <input
                         type="checkbox"
-                        checked={allowWrites}
-                        onChange={(event) => setAllowWrites(event.target.checked)}
+                        checked={allowWrites.includes(option.scope)}
+                        onChange={(event) => toggleWrite(option.scope, event.target.checked)}
                         disabled={Boolean(pending)}
-                        aria-describedby="stream-write-hint"
+                        aria-describedby={`stream-write-hint-${option.scope}`}
                       />
                       <span>
-                        <strong>Also let it change webhooks</strong>
-                        <span id="stream-write-hint">
-                          Create, change, test and delete this project's webhooks. Each change is recorded with this application's name.
-                        </span>
+                        <strong>{option.label}</strong>
+                        <span id={`stream-write-hint-${option.scope}`}>{option.hint}</span>
                       </span>
                     </label>
-                  )}
+                  ))}
                 </section>
               </div>
 

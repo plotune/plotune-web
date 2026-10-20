@@ -12,7 +12,8 @@ const clone = (value) => JSON.parse(JSON.stringify(value));
 const pick = (value, fields) => Object.fromEntries(fields.filter((field) => value[field] !== undefined).map((field) => [field, value[field]]));
 const allowed = (path) => path === "/v1/projects" || /^\/v1\/projects\/[^/]+\/(filters|dashboards)$/.test(path);
 function snapshot(path, value) {
-  if (path === "/v1/projects") return { items: value.items.map((item) => pick(item, ["id", "name", "revision", "ownerId", "keyPrefix", "createdAt", "updatedAt"])) };
+  if (path === "/v1/projects") return { items: value.items.map((item) => pick(item, ["id", "name", "revision", "ownerId", "keyPrefix", "createdAt", "updatedAt"])),
+    ...(value.plan ? { plan: pick(value.plan, ["plan", "projectLimit", "ownedProjects"]) } : {}) };
   return { items: value.items.map((item) => ({
     ...pick(item, ["id", "kind", "revision", "generation", "createdAt", "updatedAt"]),
     data: path.endsWith("/filters")

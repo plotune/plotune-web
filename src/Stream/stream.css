@@ -1494,3 +1494,35 @@
   .ct-rule { grid-template-columns:minmax(0,1fr) 36px; }
   .ct-rule > span { display:none; }
 }
+/* C02: the plan line is quiet; the limit reached message is the dialog's content. */
+.st-create-form .st-plan-note {
+  margin: 0;
+}
+.st-create-form[role="status"] p {
+  font-size: 12px;
+  color: inherit;
+  max-width: 380px;
+}
+.st-role-guide {
+  font-size: 11px;
+  color: #8ba096;
+  max-width: 520px;
+}
+.st-role-guide summary {
+  cursor: pointer;
+  color: #738e83;
+}
+.st-role-guide dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 14px;
+  margin: 10px 0 0;
+}
+.st-role-guide dt {
+  font-weight: 600;
+  color: inherit;
+}
+.st-role-guide dd {
+  margin: 0;
+  line-height: 1.6;
+}

@@ -74,6 +74,9 @@ const cleanResource = ({ revision, updatedAt, createdAt, signing, ...record }) =
     : {}),
 });
 
+const PLAN_NAMES = { free: "Free", premium: "Premium", business: "Business" };
+const planName = (plan) => PLAN_NAMES[plan] || plan;
+
 export default function StreamWorkspace() {
   const auth = useContext(AuthContext);
   const loginLocation = useLocation();
@@ -159,6 +162,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     ? params.get("view")
     : "events";
   const metadata = useWorkspaceMetadata(client, requestedProject, ["settings", "webhooks"].includes(view) ? view : null);
+  const atProjectLimit = Boolean(metadata.plan) && metadata.plan.ownedProjects >= metadata.plan.projectLimit;
   const [refreshingShared, setRefreshingShared] = useState(false);
   const refreshShared = async () => {
     setRefreshingShared(true);
@@ -760,6 +764,17 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           subtitle="A shared home for your events, filters and dashboards."
           onClose={() => setCreateOpen(false)}
         >
+          {atProjectLimit ? (
+            <div className="sw-detail-body st-create-form" role="status">
+              <p>
+                Your {planName(metadata.plan.plan)} plan includes {metadata.plan.projectLimit} project{metadata.plan.projectLimit === 1 ? "" : "s"}, and you own{" "}
+                {metadata.plan.ownedProjects}. Projects other people share with you don't count.
+              </p>
+              <button autoFocus className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(false)}>
+                Close
+              </button>
+            </div>
+          ) : (
           <form
             className="sw-detail-body st-create-form"
             onSubmit={async (e) => {
@@ -793,6 +808,11 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               Your new API key will be shown once. Save it before leaving this
               session.
             </p>
+            {metadata.plan && (
+              <p className="st-plan-note">
+                This will be project {metadata.plan.ownedProjects + 1} of {metadata.plan.projectLimit} on your {planName(metadata.plan.plan)} plan.
+              </p>
+            )}
             <Failure error={createError} />
             <button
               className="sw-button sw-primary"
@@ -801,6 +821,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               Create project
             </button>
           </form>
+          )}
         </Dialog>
       )}
     </div>
