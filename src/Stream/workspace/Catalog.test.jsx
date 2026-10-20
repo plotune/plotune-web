@@ -40,8 +40,8 @@ function client(state) {
   };
 }
 const empty = () => ({ catalog: { events: [], properties: [], actions: [], pathRules: { rules: [], revision: null } } });
-const render = async (api, role = "Member", initialTab = "events") => {
-  await act(async () => root.render(<Catalog client={api} project={{ id: "p" }} role={role} discovery={discovery} filters={[{ id: "hot", name: "Hot" }]} initialTab={initialTab} />));
+const render = async (api, role = "Member", initialTab = "events", retryDiscovery = () => {}) => {
+  await act(async () => root.render(<Catalog client={api} project={{ id: "p" }} role={role} discovery={discovery} filters={[{ id: "hot", name: "Hot" }]} initialTab={initialTab} retryDiscovery={retryDiscovery} />));
   await flush();
 };
 
@@ -109,4 +109,23 @@ test("path rules: Members read and preview, Owners and Admins edit", async () =>
   await render(api, "Admin", "paths");
   await click("Save rules"); await flush();
   expect(api.savePathRules).toHaveBeenCalledWith("p", { rules: [{ pattern: "/robot/[0-9]+/", replacement: "/robot/:id/" }], revision: 0 });
+});
+
+test("a saved action refreshes discovery for Explorer; after a conflict the retry sends the current revision", async () => {
+  const state = empty(), api = client(state), retryDiscovery = jest.fn();
+  state.catalog.actions = [{ id: "action-1", name: "Overheat", description: "", steps: [{ name: "motor.sample", filterId: null, conditions: [] }], revision: 0 }];
+  let conflict = true;
+  api.updateAction = jest.fn(async (_id, actionId, body) => {
+    if (conflict) { conflict = false; state.catalog.actions[0].revision = 1; throw new StreamFailure(409, "revision_conflict", "Definition changed"); }
+    state.catalog.actions = [{ ...state.catalog.actions[0], ...body, revision: body.revision + 1 }];
+    return state.catalog.actions[0];
+  });
+  await render(api, "Member", "actions", retryDiscovery);
+  await click("Overheat");
+  await submit(); await flush();
+  expect(api.updateAction.mock.calls[0][2].revision).toBe(0);
+  expect(retryDiscovery).not.toHaveBeenCalled();
+  await submit(); await flush();
+  expect(api.updateAction.mock.calls[1][2].revision).toBe(1);
+  expect(retryDiscovery).toHaveBeenCalledTimes(1);
 });

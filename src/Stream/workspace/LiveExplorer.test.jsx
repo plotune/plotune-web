@@ -600,3 +600,24 @@ test("changing a live widget's event clears metrics from the previous event", as
   expect(container.querySelector('input[aria-label="Breakdown by"]').value).toBe("");
   expect(button("Save widget").disabled).toBe(true);
 });
+
+test("Clear all also drops the selected action", async () => {
+  const client = {
+    query: jest.fn().mockResolvedValue(page()),
+    realtime: jest.fn().mockResolvedValue({ ids: [], cursor: "1", reset: false }),
+  };
+  const discovery = { properties: [], eventNames: ["motor.sample"], catalog: { actions: [{ id: "action-1", name: "Overheat", eventNames: ["motor.sample"] }], properties: [] } };
+  act(() => mountRoot(fixture(client, { discovery })));
+  await flush();
+  act(() => {
+    const select = container.querySelector(".live-action-select select");
+    select.value = "action-1";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  await flush();
+  expect(client.query.mock.calls.at(-1)[1].actionId).toBe("action-1");
+  await click(button("Clear all"));
+  await flush();
+  expect(client.query.mock.calls.at(-1)[1].actionId).toBeUndefined();
+  expect(container.querySelector(".live-action-select select").value).toBe("");
+});

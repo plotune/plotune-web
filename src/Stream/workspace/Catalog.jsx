@@ -279,10 +279,12 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
     load(controller.signal);
     return () => controller.abort();
   }, [load]);
-  // A refused save reloads, so a retry uses the current revision.
+  // A refused save reloads, so a retry uses the current revision. A saved one also refreshes
+  // discovery, which Explorer reads actions and units from.
   const write = async (operation) => {
     try { await operation(); } catch (cause) { await load(); throw cause; }
     await load();
+    retryDiscovery?.();
   };
   const canManage = role === "Owner" || role === "Admin";
   const byName = useMemo(() => new Map((catalog?.events || []).map((e) => [e.name, e])), [catalog]);
@@ -392,7 +394,7 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
           onSave={(body) => write(() => client.savePropertyDefinition(project.id, editing.property.path, body))} />
       )}
       {editing?.kind === "action" && (
-        <ActionDialog action={editing.action} eventNames={eventNames} filters={filters} onClose={() => setEditing(null)}
+        <ActionDialog action={editing.action && ((catalog?.actions || []).find((a) => a.id === editing.action.id) || editing.action)} eventNames={eventNames} filters={filters} onClose={() => setEditing(null)}
           onSave={(body) => write(() => (editing.action ? client.updateAction(project.id, editing.action.id, body) : client.createAction(project.id, body)))}
           onDelete={async (a) => {
             if (!window.confirm(`Delete the action "${a.name}"? Explorer selections and agents using it will stop matching.`)) return;

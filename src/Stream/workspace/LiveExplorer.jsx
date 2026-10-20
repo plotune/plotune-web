@@ -168,6 +168,7 @@ export default function LiveExplorer({
   const clear = () => {
     setSearch("");
     setName("All events");
+    setActionId("");
     setRange("24h");
     setStartAt("");
     setEndAt("");

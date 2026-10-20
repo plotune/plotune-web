@@ -214,17 +214,18 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   }, [params, setParams]);
   // Webhooks use discovered event names so Add webhook offers a choice, not a blank field.
   const needsDiscovery = view === "events" || view === "dashboards" || view === "webhooks" || view === "catalog";
+  // A refresh keeps the current project's discovery on screen until the new one arrives.
   useEffect(() => {
-    setDiscoveryState({});
+    setDiscoveryState((current) => (current.projectId === project?.id ? current : {}));
     if (!project?.id || !needsDiscovery) return undefined;
     const controller = new AbortController();
     client
       .discovery(project.id, controller.signal)
       .then((result) => {
-        if (!controller.signal.aborted) setDiscoveryState({ data: result });
+        if (!controller.signal.aborted) setDiscoveryState({ projectId: project.id, data: result });
       })
       .catch((error) => {
-        if (!controller.signal.aborted) setDiscoveryState({ error });
+        if (!controller.signal.aborted) setDiscoveryState({ projectId: project.id, error });
       });
     return () => controller.abort();
   }, [client, project?.id, needsDiscovery, discoveryRefresh]);
