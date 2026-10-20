@@ -65,6 +65,10 @@ export default function LiveExplorer({
 }) {
   const [search, setSearch] = useState("");
   const [name, setName] = useState("All events");
+  // A catalog action replaces the event name: it matches any of its steps.
+  const [actionId, setActionId] = useState("");
+  const actions = discovery?.catalog?.actions || [];
+  const definitions = useMemo(() => new Map((discovery?.catalog?.properties || []).map((p) => [p.path, p])), [discovery]);
   const [range, setRange] = useState("24h");
   const [deviceId, setDeviceId] = useState("all");
   const [sessionId, setSessionId] = useState("all");
@@ -120,7 +124,7 @@ export default function LiveExplorer({
   const query = useMemo(
     () => ({
       search,
-      name,
+      ...(actionId ? { actionId } : { name }),
       deviceId,
       sessionId,
       range: range === "custom" ? "all" : range,
@@ -137,6 +141,7 @@ export default function LiveExplorer({
     [
       search,
       name,
+      actionId,
       deviceId,
       sessionId,
       range,
@@ -209,7 +214,7 @@ export default function LiveExplorer({
     );
     return createEventExport(result.events, format, { signal, onProgress });
   };
-  const showSetup = projectKey && !explorer.loading && !explorer.error && !explorer.page.items.length && !search && name === "All events" && !activeFilterId && !conditions.length && deviceId === "all" && sessionId === "all" && range === "24h" && !explorer.page.nextCursor && !explorer.index;
+  const showSetup = projectKey && !explorer.loading && !explorer.error && !explorer.page.items.length && !search && name === "All events" && !actionId && !activeFilterId && !conditions.length && deviceId === "all" && sessionId === "all" && range === "24h" && !explorer.page.nextCursor && !explorer.index;
   if (showSetup) return <>
     <Failure error={discoveryError} retry={retryDiscovery} />
     <Failure error={realtime.error} retry={refresh} />
@@ -243,7 +248,8 @@ export default function LiveExplorer({
           <input
             list="live-event-names-explorer"
             value={name === "All events" ? "" : name}
-            placeholder="All events"
+            placeholder={actionId ? "Set by the action" : "All events"}
+            disabled={!!actionId}
             onChange={(e) => setName(e.target.value || "All events")}
           />
           <datalist id="live-event-names-explorer">
@@ -252,6 +258,15 @@ export default function LiveExplorer({
             ))}
           </datalist>
         </label>
+        {(actions.length > 0 || actionId) && (
+          <label className="live-action-select">
+            <span className="live-sr-only">Action</span>
+            <select value={actionId} onChange={(e) => { setActionId(e.target.value); if (e.target.value) setName("All events"); }}>
+              <option value="">No action</option>
+              {actions.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </select>
+          </label>
+        )}
         <label className="live-time-select">
           <span className="live-sr-only">Time range</span>
           <select value={range} onChange={(e) => setRange(e.target.value)}>
@@ -454,7 +469,7 @@ export default function LiveExplorer({
               </thead>
               <tbody>
                 {explorer.page.items.map((event) => (
-                  <EventRow key={event.id} event={event} onInspect={() => {
+                  <EventRow key={event.id} event={event} definitions={definitions} onInspect={() => {
                     setCopied(false);
                     setFullDetail(null);
                     setDetail(event);

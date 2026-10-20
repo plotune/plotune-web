@@ -330,6 +330,20 @@ export function createStreamClient(
           },
         },
       ),
+    // C03 catalog: definitions beside the events (never a rewrite of them).
+    catalog: (id, signal) => request(metadata(id, "/catalog"), { signal }),
+    saveEventDefinition: (id, name, body) =>
+      request(metadata(id, `/catalog/events/${encoded(name)}`), { method: "PUT", body }),
+    savePropertyDefinition: (id, path, body) =>
+      request(metadata(id, `/catalog/properties/${encoded(path)}`), { method: "PUT", body }),
+    createAction: (id, body) => request(metadata(id, "/catalog/actions"), { method: "POST", body }),
+    updateAction: (id, actionId, body) =>
+      request(metadata(id, `/catalog/actions/${encoded(actionId)}`), { method: "PUT", body }),
+    deleteAction: (id, actionId, revision) =>
+      request(metadata(id, `/catalog/actions/${encoded(actionId)}`), { method: "DELETE", body: { revision } }),
+    savePathRules: (id, body) => request(metadata(id, "/catalog/paths"), { method: "PUT", body }),
+    pathPreview: (id, rules, signal) =>
+      request(data(id, "/path-preview"), { method: "POST", body: { rules }, signal }),
     // A new receiver signing secret for one webhook, returned once (Owner, Admin).
     rotateWebhookSigning: (id, record) =>
       request(metadata(id, `/webhooks/${encoded(record.id)}/signing`), {

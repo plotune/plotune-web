@@ -18,6 +18,7 @@ const SCOPE_DESCRIPTIONS = {
   "aggregate:run": "Summarize this project's event history (counts, totals, averages); results are visible only to you",
   "usage:read": "See the credits this project's owner account has left",
   "webhooks:read": "See this project's webhooks and their recent deliveries",
+  "catalog:write": "Describe events and properties (meaning, units, owners) and define named actions",
 };
 // Changing webhooks is never requested silently: it is an explicit opt-in, offered only
 // for projects where you are an Owner or Admin.

@@ -16,7 +16,10 @@ function preview(value) {
   return String(value);
 }
 
-export default function EventRow({ event, onInspect }) {
+// A catalog unit is a label next to the stored value; the value itself is never converted.
+const withUnit = (value, definition) => (definition?.unit && typeof value === "number" ? `${preview(value)} ${definition.unit}` : preview(value));
+
+export default function EventRow({ event, onInspect, definitions }) {
   const date = new Date(event.timestamp);
   const properties = Object.entries(event.properties || {});
   return (
@@ -37,7 +40,7 @@ export default function EventRow({ event, onInspect }) {
             </div>
           ) : <span className="st-event-context-unspecified">Context unspecified</span>}
           {properties.slice(0, 3).map(([name, value]) => (
-            <span key={name} title={`${name}: ${preview(value)}`}><em>{name}</em><b>{preview(value)}</b></span>
+            <span key={name} title={`${name}: ${preview(value)}${definitions?.get(name)?.description ? ` — ${definitions.get(name).description}` : ""}`}><em>{name}</em><b>{withUnit(value, definitions?.get(name))}</b></span>
           ))}
           {properties.length > 3 && <button className="st-more-properties" aria-label={`Show all properties for ${event.event} at ${eventTime(event.timestamp)}`} onClick={onInspect}>+{properties.length - 3}</button>}
           {!properties.length && <span className="st-no-properties">No properties</span>}
