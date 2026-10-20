@@ -129,3 +129,18 @@ test("a saved action refreshes discovery for Explorer; after a conflict the retr
   expect(api.updateAction.mock.calls[1][2].revision).toBe(1);
   expect(retryDiscovery).toHaveBeenCalledTimes(1);
 });
+
+test("a refused action delete stays in the dialog and says why", async () => {
+  const state = empty(), api = client(state);
+  state.catalog.actions = [{ id: "action-1", name: "Overheat", description: "", steps: [{ name: "motor.sample", filterId: null, conditions: [] }], revision: 0 }];
+  api.deleteAction = jest.fn(async () => { throw new StreamFailure(409, "revision_conflict", "Definition changed"); });
+  const confirm = window.confirm;
+  window.confirm = () => true;
+  try {
+    await render(api, "Member", "actions");
+    await click("Overheat");
+    await click("Delete"); await flush();
+  } finally { window.confirm = confirm; }
+  expect(container.querySelector("dialog[open]")).not.toBeNull();
+  expect(container.querySelector("dialog [role=alert]").textContent).toContain("Someone else changed this");
+});

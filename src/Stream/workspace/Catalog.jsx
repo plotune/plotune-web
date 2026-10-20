@@ -137,6 +137,11 @@ function ActionDialog({ action, eventNames, filters, onSave, onDelete, onClose }
   });
   const [state, setState] = useState({ busy: false, error: null });
   const step = (index, change) => setDraft({ ...draft, steps: draft.steps.map((s, i) => (i === index ? { ...s, ...change } : s)) });
+  // A refused delete stays in the dialog with its reason, like a refused save.
+  const remove = async () => {
+    setState({ busy: true, error: null });
+    try { await onDelete(action); setState({ busy: false, error: null }); } catch (error) { setState({ busy: false, error }); }
+  };
   const save = async (e) => {
     e.preventDefault();
     setState({ busy: true, error: null });
@@ -181,7 +186,7 @@ function ActionDialog({ action, eventNames, filters, onSave, onDelete, onClose }
         {state.error && <p className="ct-error" role="alert">{conflict(state.error)}</p>}
         <Changed entry={action} />
         <div className="ct-actions">
-          {action && <button type="button" className="sw-button ct-delete" onClick={() => onDelete(action)}>Delete</button>}
+          {action && <button type="button" className="sw-button ct-delete" onClick={remove} disabled={state.busy}>Delete</button>}
           <button type="button" className="sw-button" onClick={onClose}>Cancel</button>
           <button type="submit" className="sw-button sw-primary" disabled={state.busy}>{state.busy ? "Saving…" : action ? "Save" : "Create action"}</button>
         </div>

@@ -518,6 +518,7 @@ export default function LiveExplorer({
                     {fullDetail[field] && <button className="sw-button" onClick={() => {
                       setSearch("");
                       setName("All events");
+                      setActionId("");
                       setConditions([]);
                       setTemporary(false);
                       onSelectFilter(null);
