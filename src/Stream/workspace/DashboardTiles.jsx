@@ -67,7 +67,8 @@ export function InsightTile({ client, projectId, tile, insight, moves, onRemove 
         await new Promise((resolve) => setTimeout(resolve, 1500));
         if (!alive.current) return;
         ({ job } = await client.analysisJob(projectId, job.id));
-        if (alive.current) setState((old) => ({ ...old, status: "running", progress: job.progress }));
+        const progress = job.progress;
+        if (alive.current) setState((old) => ({ ...old, status: "running", progress }));
       }
       if (!alive.current) return;
       if (job.state === "failed" || job.state === "cancelled") { setState((old) => ({ ...(old.previous || {}), status: "error", message: jobError(job.error) })); return; }
