@@ -14,6 +14,7 @@ export default function RemoteGraph({
   filters,
   onEdit,
   onRemove,
+  moves,
 }) {
   const [state, setState] = useState({ loading: true });
   const [retry, setRetry] = useState(0);
@@ -101,6 +102,7 @@ export default function RemoteGraph({
         data={state.result}
         onEdit={() => onEdit(state.widget)}
         onRemove={onRemove}
+        moves={moves}
       />
     </div>
   );

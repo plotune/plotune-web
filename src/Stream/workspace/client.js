@@ -330,6 +330,14 @@ export function createStreamClient(
           },
         },
       ),
+    // C05 saved insights: list, save, change, delete, run and read the job it starts.
+    insights: (id, signal) => request(metadata(id, "/insights"), { signal }),
+    createInsight: (id, body) => request(metadata(id, "/insights"), { method: "POST", body }),
+    updateInsight: (id, insightId, body) => request(metadata(id, `/insights/${encoded(insightId)}`), { method: "PUT", body }),
+    deleteInsight: (id, insightId, revision, confirmReferenced = false) =>
+      request(metadata(id, `/insights/${encoded(insightId)}`), { method: "DELETE", body: { revision, ...(confirmReferenced ? { confirmReferenced: true } : {}) } }),
+    runInsight: (id, insightId, requestId) => request(metadata(id, `/insights/${encoded(insightId)}/run`), { method: "POST", body: { requestId } }),
+    analysisJob: (id, jobId, signal) => request(metadata(id, `/jobs/${encoded(jobId)}`), { signal }),
     // C03 catalog: definitions beside the events (never a rewrite of them).
     catalog: (id, signal) => request(metadata(id, "/catalog"), { signal }),
     saveEventDefinition: (id, name, body) =>

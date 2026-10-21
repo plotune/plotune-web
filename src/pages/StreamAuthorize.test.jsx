@@ -72,7 +72,7 @@ test('each requested permission is described in plain language, including aggreg
   });
   render('/stream/authorize?request=blob.signature');
   await act(async () => { await Promise.resolve(); await Promise.resolve(); });
-  expect(container.textContent).toContain("Summarize this project's event history");
+  expect(container.textContent).toContain("Analyze this project's event history");
   expect(container.textContent).toContain("See the credits this project's owner account has left");
   expect(container.textContent).not.toMatch(/aggregate:run|usage:read/);
 });
