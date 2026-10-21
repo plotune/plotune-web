@@ -5,7 +5,7 @@ import { DASHBOARD_RANGES } from "./dashboardModel";
 import { buildWidgetSeries } from "./widgetModel";
 import WidgetChart from "./WidgetChart";
 
-export default function DashboardGraph({ widget, events, filters, now, onEdit, onRemove, data }) {
+export default function DashboardGraph({ widget, events, filters, now, onEdit, onRemove, data, moves }) {
   const [inspectionIndex, setInspectionIndex] = useState(null);
   const localResult = useMemo(() => buildWidgetSeries(events, widget, filters, now), [events, widget, filters, now]);
   const result = data || localResult;
@@ -19,7 +19,7 @@ export default function DashboardGraph({ widget, events, filters, now, onEdit, o
     : "";
 
   return <Panel title={title} meta={`${filter?.name || (widget.filterId ? "Saved Filter" : "No Saved Filter")} · ${range.label}`} className="st-dashboard-graph" action={(
-    <details className="st-dashboard-menu"><summary aria-label={`Options for ${title}`}><FiMoreHorizontal /></summary><div><button type="button" onClick={onEdit}>Edit widget</button><button type="button" className="danger" onClick={onRemove}>Remove widget</button></div></details>
+    <details className="st-dashboard-menu"><summary aria-label={`Options for ${title}`}><FiMoreHorizontal /></summary><div><button type="button" onClick={onEdit}>Edit widget</button>{moves?.up && <button type="button" onClick={moves.up}>Move earlier</button>}{moves?.down && <button type="button" onClick={moves.down}>Move later</button>}<button type="button" className="danger" onClick={onRemove}>Remove widget</button></div></details>
   )}>
     {result.status === "missing-filter" ? <div className="st-widget-no-data"><p>The Saved Filter used here was deleted.</p><button className="sw-link" type="button" onClick={onEdit}>Choose a replacement</button></div>
       : ready ? <><div className="st-graph-chart"><div className="st-graph-stage"><WidgetChart series={result.series} visualization={widget.chartType || "line"} label={title} activeIndex={inspectionIndex} onInspectPoint={setInspectionIndex} />{inspectedPoint && <div className="st-chart-inspection" role="status" aria-live="polite"><time dateTime={inspectedPoint.timestamp}>{inspectedTime} UTC</time><div>{result.series.map((item, index) => { const point = item.points[inspectionIndex]; return point && Number.isFinite(point.value) ? <span key={item.key}><i className={`st-graph-color color-${index % 6}`} /><b>{item.label}</b><strong>{String(point.value)}</strong></span> : null; })}</div></div>}</div></div><div className="st-graph-legend" aria-label="Chart series">{result.series.map((item, index) => <span key={item.key}><i className={`st-graph-color color-${index % 6}`} />{item.label}</span>)}</div></>

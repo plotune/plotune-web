@@ -15,10 +15,11 @@ const SCOPE_DESCRIPTIONS = {
   "events:read": "Read this project's event history, discovery catalog and Saved Filters",
   "dashboards:read": "Read this project's shared Dashboards and their widgets",
   "context:read": "Read this project's context, health observations and operator documentation",
-  "aggregate:run": "Summarize this project's event history (counts, totals, averages); results are visible only to you",
+  "aggregate:run": "Analyze this project's event history (counts, funnels, retention, paths); results are visible only to you",
   "usage:read": "See the credits this project's owner account has left",
   "webhooks:read": "See this project's webhooks and their recent deliveries",
   "catalog:write": "Describe events and properties (meaning, units, owners) and define named actions",
+  "dashboards:write": "Save insights and change this project's shared Dashboards (tiles, notes, order)",
 };
 // Changes are never requested silently: each is an explicit opt-in. Webhook changes are
 // offered only for projects where you are an Owner or Admin; creating projects to anyone.

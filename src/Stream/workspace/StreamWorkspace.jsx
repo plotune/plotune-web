@@ -40,6 +40,7 @@ import {
 import { useWorkspaceMetadata } from "./hooks";
 import LiveExplorer, { Failure } from "./LiveExplorer";
 import RemoteGraph from "./RemoteGraph";
+import { InsightTile } from "./DashboardTiles";
 import ProjectSettings from "./ProjectSettings";
 import ConnectionSetup from "./ConnectionSetup";
 import DevicesHealth from "./DevicesHealth";
@@ -201,6 +202,9 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const [deliveryError, setDeliveryError] = useState(null);
   const [deliveryLoading, setDeliveryLoading] = useState(false);
   const [deliveryRefresh, setDeliveryRefresh] = useState(0);
+  // C05 saved insights, shown on dashboard tiles.
+  const [insights, setInsights] = useState({ projectId: null, items: [] });
+  const [insightsRefresh, setInsightsRefresh] = useState(0);
   // Signing dialog: which webhook, and a secret that is shown once after create or rotation.
   const [signing, setSigning] = useState(null);
   const [discoveryRefresh, setDiscoveryRefresh] = useState(0);
@@ -216,6 +220,15 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     next.delete("redeem");
     setParams(next, { replace: true });
   }, [params, setParams]);
+  useEffect(() => {
+    if (!project?.id || view !== "dashboards") return undefined;
+    const controller = new AbortController();
+    client.insights(project.id, controller.signal)
+      .then((r) => { if (!controller.signal.aborted) setInsights({ projectId: project.id, items: r.items || [] }); })
+      // Without the list, insight tiles show as unavailable rather than blocking the dashboard.
+      .catch(() => { if (!controller.signal.aborted) setInsights({ projectId: project.id, items: [] }); });
+    return () => controller.abort();
+  }, [client, project?.id, view, insightsRefresh]);
   // Webhooks use discovered event names so Add webhook offers a choice, not a blank field.
   const needsDiscovery = view === "events" || view === "dashboards" || view === "webhooks" || view === "catalog";
   // A refresh keeps the current project's discovery on screen until the new one arrives.
@@ -621,8 +634,20 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                       base,
                     );
                   }}
-                  renderGraph={(widget, edit, removeWidget) => (
+                  insights={insights.projectId === project.id ? insights.items : []}
+                  onSaveTiles={(id, next, base) => save("dashboards", next, base)}
+                  onCreateInsight={async (body) => {
+                    const made = await client.createInsight(project.id, body);
+                    setInsights((current) => ({ ...current, items: [...current.items, made] }));
+                    setInsightsRefresh((r) => r + 1);
+                    return made;
+                  }}
+                  renderInsight={(tile, insight, moves, removeTile) => (
+                    <InsightTile client={client} projectId={project.id} tile={tile} insight={insight} moves={moves} onRemove={removeTile} />
+                  )}
+                  renderGraph={(widget, edit, removeWidget, moves) => (
                     <RemoteGraph
+                      moves={moves}
                       key={widget.id}
                       client={client}
                       projectId={project.id}
