@@ -1,4 +1,4 @@
-import { buildQuery, missingField, runCost, dashboardTiles, moveTile, withoutTile, withTile, coverageNote, duration, percent } from "./insightModel";
+import { buildQuery, missingField, estimateText, PRICE_NOTE, dashboardTiles, moveTile, withoutTile, withTile, coverageNote, duration, percent } from "./insightModel";
 
 test("builds each insight kind's stored query from editor choices", () => {
   expect(buildQuery({ kind: "trends", range: "24h", event: "sample" })).toEqual({ kind: "trends", query: { range: "24h", name: "sample" }, metrics: [{ id: "count", operation: "count" }], bucketSeconds: 3600 });
@@ -8,13 +8,15 @@ test("builds each insight kind's stored query from editor choices", () => {
   expect(buildQuery({ kind: "paths", range: "7d", event: "", depth: 3 })).toEqual({ kind: "paths", actor: "device", query: { range: "7d" }, depth: 3 });
 });
 
-test("save waits for a complete query and shows its cost", () => {
+test("save waits for a complete query; the estimate reads as events and credits", () => {
   expect(missingField({ kind: "funnel", steps: ["a", ""] })).toBe("Choose at least two steps");
   expect(missingField({ kind: "stickiness", event: "" })).toBe("Choose an event");
   expect(missingField({ kind: "paths", event: "" })).toBeNull();
-  expect(runCost("trends", "7d")).toBe(140);
-  expect(runCost("funnel", "7d")).toBe(280);
-  expect(runCost("retention", "24h")).toBe(40);
+  expect(estimateText({ events: 3200, eventLimit: 50000, limited: false, credits: 129.2 })).toBe("about 3,200 events · ≈ 130 credits");
+  expect(estimateText({ events: 120000, eventLimit: 50000, limited: true, credits: 2000 })).toBe("50,000+ events (the most one run reads) · ≈ 2,000 credits");
+  expect(estimateText({ events: 3, eventLimit: 50000, limited: false, credits: 1 })).toBe("about 3 events · ≈ 1 credit");
+  expect(PRICE_NOTE("funnel")).toMatch(/40 per 1,000 events/);
+  expect(PRICE_NOTE("trends")).toMatch(/20 per 1,000 events/);
 });
 
 test("tiles: legacy widgets become tiles; move, add and remove keep widgets consistent", () => {

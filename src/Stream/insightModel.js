@@ -16,10 +16,16 @@ export const RANGES = [
   { id: "7d", label: "Last 7 days", days: 7, interval: "day" },
 ];
 
-// Credits for one run: per started day of range, doubled for per-actor queries.
-export function runCost(kind, range) {
-  const days = RANGES.find((r) => r.id === range)?.days ?? 7;
-  return days * (kind === "trends" ? 20 : 40);
+// Credits: 1 per run, then per 1,000 events read; per-actor queries cost twice as much.
+export const perThousand = (kind) => (kind === "trends" ? 20 : 40);
+export const PRICE_NOTE = (kind) => `Each run costs 1 credit plus ${perThousand(kind)} per 1,000 events it reads. You see an estimate before each run.`;
+
+const whole = (n) => Math.round(n).toLocaleString("en-GB");
+// "About 3,200 events · ≈ 128 credits" from the free estimate.
+export function estimateText(estimate) {
+  if (!estimate) return "";
+  const events = estimate.limited ? `${whole(estimate.eventLimit)}+ events (the most one run reads)` : `about ${whole(estimate.events)} events`;
+  return `${events} · ≈ ${whole(Math.ceil(estimate.credits))} credit${Math.ceil(estimate.credits) === 1 ? "" : "s"}`;
 }
 
 export function queryRange(query) {

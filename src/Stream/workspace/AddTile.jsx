@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiBarChart2, FiFileText, FiTrendingUp } from "react-icons/fi";
 import { Dialog } from "../../StreamWorkspace/WorkspaceUI";
-import { buildQuery, INSIGHT_KINDS, kindLabel, missingField, RANGES, runCost } from "../insightModel";
+import { buildQuery, INSIGHT_KINDS, kindLabel, missingField, PRICE_NOTE, RANGES } from "../insightModel";
 
 // Three choices, one step each (Hick's law): a chart, an insight or a note.
 export function TileChooser({ onChoose, onClose }) {
@@ -86,7 +86,7 @@ export function InsightPicker({ insights, discovery, onPick, onCreate, onClose }
           {form.kind !== "trends" && <label>Count<select value={form.actor} onChange={(e) => set({ actor: e.target.value })}><option value="device">Devices</option><option value="session">Sessions</option></select></label>}
         </div>
         <label>Name <span>Optional</span><input maxLength={64} value={form.name} onChange={(e) => set({ name: e.target.value })} placeholder="e.g. Boot to ready" /></label>
-        <p className="st-muted">Each run costs {runCost(form.kind, form.range)} credits from the project owner's account.</p>
+        <p className="st-muted">{PRICE_NOTE(form.kind)} Credits come from the project owner's account.</p>
       </>}
       <div className="sw-dialog-actions"><button className="sw-button" type="button" onClick={onClose}>Cancel</button>
         <button className="sw-button sw-primary" type="submit" disabled={busy || (mode === "new" && Boolean(missing)) || (mode === "saved" && !picked)} title={mode === "new" ? missing || undefined : undefined}>Add insight</button></div>

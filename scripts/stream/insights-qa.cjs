@@ -11,7 +11,7 @@ const dayStart = (n) => { const d = new Date(nowMs); d.setUTCHours(0, 0, 0, 0); 
 const project = { id: 'robot-validation', name: 'Robot validation', ownerId: 'o', revision: 4, keyPrefix: 'plt_demo', createdAt: iso(0), updatedAt: iso(0) };
 const discovery = { eventNames: ['robot.boot', 'robot.ready', 'run.start', 'run.done', 'run.fail', 'motor.sample'], properties: [], deviceIds: ['m-3', 'm-7'], sessionIds: [], truncated: false };
 const range = { query: { range: '7d' } };
-const insight = (id, name, kind, extra) => ({ id, name, kind, description: '', revision: 0, updatedAt: iso(30), usedBy: [], query: { kind, actor: 'device', ...range, ...extra } });
+const insight = (id, name, kind, extra) => ({ id, name, kind, description: '', revision: 0, updatedAt: iso(30), usedBy: [], lastRun: id === 'i-paths' ? null : { ranAt: iso(95), ranBy: 'carol@example.test', stale: id === 'i-lifecycle' }, query: { kind, actor: 'device', ...range, ...extra } });
 const insights = [
   insight('i-funnel', 'Boot to finished run', 'funnel', { steps: [{ name: 'robot.boot' }, { name: 'run.start' }, { name: 'run.done' }] }),
   insight('i-retention', 'Robots coming back', 'retention', { startEvent: { name: 'run.start' }, interval: 'day' }),
@@ -64,9 +64,11 @@ async function run(browser, device, width, height) {
     if (p === '/v1/projects') return respond({ items: [project], plan: { plan: 'free', projectLimit: 2, ownedProjects: 1 } });
     if (parts.length === 3) return respond({ project, membership: { email: 'user@example.test', role: 'Owner' } });
     if (parts[3] === 'dashboards') return respond({ items: [{ id: dashboard.id, kind: 'dashboard', data: dashboard, revision: 3, createdAt: iso(900), updatedAt: iso(20) }] });
+    if (parts[3] === 'insights' && parts[5] === 'result') return respond({ lastResult: { result: results[parts[4]], ranAt: iso(95), ranBy: 'carol@example.test', stale: parts[4] === 'i-lifecycle' } });
+    if (parts[3] === 'insights' && parts[5] === 'estimate') return respond({ estimate: { events: parts[4] === 'i-trends' ? 1840 : 4120, eventLimit: 50000, limited: false, credits: parts[4] === 'i-trends' ? 37.8 : 165.8 } });
     if (parts[3] === 'insights' && parts[5] === 'run') { const id = `job-${parts[4]}`; jobs[id] = parts[4]; return respond({ insight: { id: parts[4] }, tool: 'x', job: { id, state: 'queued' } }); }
     if (parts[3] === 'insights') return respond({ items: insights, nextAfter: null });
-    if (parts[3] === 'jobs') return respond({ job: { id: parts[4], state: 'complete', progress: { candidates: 1800 }, result: results[jobs[parts[4]]] } });
+    if (parts[3] === 'jobs') return respond({ job: { id: parts[4], state: 'complete', progress: { candidates: 1800 }, result: results[jobs[parts[4]]], createdAt: iso(0) } });
     if (parts[3] === 'members') return respond({ items: [{ email: 'user@example.test', role: 'Owner' }] });
     return respond({ items: [] });
   });
@@ -77,9 +79,11 @@ async function run(browser, device, width, height) {
   await page.goto(`${origin}/stream/workspace?project=${project.id}&view=dashboards&dashboard=fleet`);
   await page.getByText('Fleet health').first().waitFor({ timeout: 60000 });
   await page.getByText('Boot to finished run').first().waitFor();
-  await shot('dashboard-before-run');
+  // A reload shows the saved results for free; only the never-run paths tile needs Run.
+  await page.waitForFunction(() => document.querySelectorAll('.st-insight-result').length >= 5, null, { timeout: 20000 });
+  await page.getByText(/Next run: about/).first().waitFor();
+  await shot('dashboard-reload');
   for (const b of await page.getByRole('button', { name: /^Run$/ }).all()) await b.click();
-  await page.getByText('Run again').first().waitFor({ timeout: 20000 });
   await page.waitForFunction(() => document.querySelectorAll('.st-insight-result').length >= 6, null, { timeout: 20000 });
   await shot('dashboard-results');
   await page.getByRole('button', { name: /Add tile/ }).click();

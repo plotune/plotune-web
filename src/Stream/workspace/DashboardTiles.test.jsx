@@ -31,26 +31,48 @@ const funnelResult = {
 };
 const tile = (id, insightId = insight.id) => ({ id, type: "insight", insightId, title: "" });
 
-test("an insight runs only when asked, shows its cost and renders the funnel", async () => {
+const estimate = { events: 3200, eventLimit: 50000, limited: false, credits: 129.2 };
+
+test("an insight runs only when asked, shows the free estimate first and renders the funnel", async () => {
   const client = {
+    insightResult: jest.fn(),
+    estimateInsight: jest.fn(async () => ({ estimate })),
     runInsight: jest.fn(async () => ({ job: { id: "j1", state: "queued" } })),
-    analysisJob: jest.fn(async () => ({ job: { id: "j1", state: "complete", result: funnelResult } })),
+    analysisJob: jest.fn(async () => ({ job: { id: "j1", state: "complete", createdAt: new Date().toISOString(), progress: { candidates: 3200, credits: 129 }, result: funnelResult } })),
   };
   await act(async () => root.render(<InsightTile client={client} projectId="p" tile={tile("t1")} insight={insight} onRemove={() => {}} />));
+  await flush();
   expect(client.runInsight).not.toHaveBeenCalled();
-  expect(container.textContent).toContain("280 credits");
+  expect(client.insightResult).not.toHaveBeenCalled(); // never run: nothing saved to load
+  expect(container.textContent).toContain("Next run: about 3,200 events · ≈ 130 credits");
   expect(container.textContent).toContain("Funnel · Devices · Last 7 days");
   await click(/^Run$/);
   await flush(1700);
   expect(client.analysisJob).toHaveBeenCalledWith("p", "j1");
   expect(container.textContent).toContain("75% of previous · 1.5 h median");
+  expect(container.textContent).toMatch(/Last run \d\d:\d\d · 129 credits/);
+  expect(button(/Run again/)).toBeTruthy();
+});
+
+test("a reload shows the saved result for free; a changed insight is marked stale", async () => {
+  const client = {
+    insightResult: jest.fn(async () => ({ lastResult: { result: funnelResult, ranAt: "2026-10-20T09:15:00.000Z", ranBy: "carol@example.test", stale: true } })),
+    estimateInsight: jest.fn(async () => { throw new Error("offline"); }),
+    runInsight: jest.fn(),
+  };
+  await act(async () => root.render(<InsightTile client={client} projectId="p" tile={tile("t1")} insight={{ ...insight, lastRun: { ranAt: "2026-10-20T09:15:00.000Z" } }} onRemove={() => {}} />));
+  await flush();
+  expect(client.runInsight).not.toHaveBeenCalled();
+  expect(container.textContent).toContain("75% of previous");
+  expect(container.textContent).toContain("Last run 20 Oct by carol");
+  expect(container.textContent).toContain("The insight changed after this run.");
   expect(button(/Run again/)).toBeTruthy();
 });
 
 test("a deleted insight offers removal; a failed run explains itself", async () => {
   await act(async () => root.render(<InsightTile client={{}} projectId="p" tile={tile("t", "gone")} insight={null} onRemove={() => {}} />));
   expect(container.textContent).toContain("This insight was deleted.");
-  const client = { runInsight: jest.fn(async () => { throw Object.assign(new Error("x"), { code: "credits_exhausted" }); }) };
+  const client = { estimateInsight: jest.fn(async () => ({ estimate })), runInsight: jest.fn(async () => { throw Object.assign(new Error("x"), { code: "credits_exhausted" }); }) };
   await act(async () => root.render(<InsightTile client={client} projectId="p" tile={tile("t2")} insight={{ ...insight, revision: 9 }} onRemove={() => {}} />));
   await click(/^Run$/);
   await flush();
