@@ -175,7 +175,10 @@ export const AuthProvider = ({ children }) => {
     Object.keys(sessionStorage).filter(key => key.startsWith('user_profile_')).forEach(key => sessionStorage.removeItem(key));
   }, []);
 
-  const logout = () => {
+  // Optional redirectTo lets a caller (the Bridge hand-off) return through login; anything that is
+  // not a /login path, including the event object passed by onClick={logout}, falls back to /login.
+  const logout = (redirectTo) => {
+    const target = typeof redirectTo === 'string' && /^\/login(\?|$)/.test(redirectTo) ? redirectTo : '/login';
     clearStreamMetadataCaches();
     tokenRef.current = null; setToken(null);
     setUser(null);
@@ -190,7 +193,7 @@ export const AuthProvider = ({ children }) => {
     
     Cookies.remove('auth_token');
     toast.success('Signed out');
-    window.location.href = '/login';
+    window.location.href = target;
   };
 
   const getAuthHeader = () => {

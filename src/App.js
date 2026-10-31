@@ -60,6 +60,7 @@ const ContactPage = routePage(() => import('./pages/Contact'));
 const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
 const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
 const StreamAuthorize = routePage(() => import('./pages/StreamAuthorize'));
+const BridgeAuthorize = routePage(() => import('./pages/BridgeAuthorize'));
 const Profile = routePage(() => import('./pages/Profile'));
 const Dashboard = routePage(() => import('./pages/Dashboard'));
 const Stream = routePage(() => import('./pages/Stream'));
@@ -203,6 +204,7 @@ function App() {
               <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/reset-password" element={<ForgotPassword />} />
               <Route path="/stream/authorize" element={<StreamAuthorize />} />
+              <Route path="/bridge/authorize" element={<BridgeAuthorize />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/stream" element={<Stream />} />

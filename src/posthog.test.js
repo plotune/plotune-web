@@ -119,3 +119,28 @@ describe('beforeSend: noise filter + visit attribution', () => {
     expect(beforeSend(ev).properties).toEqual({ a: 1 });
   });
 });
+
+describe('Bridge sign-in hand-off is never sent', () => {
+  const { beforeSend } = initializePostHog;
+  const at = (path) => window.history.pushState({}, '', path);
+  const event = (name) => ({ event: name, properties: {} });
+
+  test('the authorize page sends nothing: pageviews, pageleaves, autocapture and replay snapshots', () => {
+    at('/bridge/authorize?code_challenge=abc&state=def');
+    ['$pageview', '$pageleave', '$autocapture', '$snapshot'].forEach((name) => {
+      expect(beforeSend(event(name))).toBeNull();
+    });
+  });
+
+  test('the login page reached with a Bridge next is silent too', () => {
+    at('/login?next=%2Fbridge%2Fauthorize%3Fcode_challenge%3Dabc%26state%3Ddef');
+    expect(beforeSend(event('$pageview'))).toBeNull();
+  });
+
+  test('other login pages and look-alike paths are unaffected', () => {
+    ['/login', '/login?next=%2Fstream%2Fworkspace', '/bridge', '/bridge/authorize-old'].forEach((path) => {
+      at(path);
+      expect(beforeSend(event('$pageview'))).not.toBeNull();
+    });
+  });
+});

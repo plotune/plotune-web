@@ -47,7 +47,19 @@ function addAttribution(captureResult) {
   return captureResult;
 }
 
+// The Bridge sign-in hand-off carries a request state (and, on success, a one-time code, which only
+// ever goes to Bridge's fragment). Nothing from that page, or from the login page reached with a
+// Bridge `next`, is sent: pageviews, pageleaves, autocapture and session-replay snapshots all carry
+// the URL, so they are dropped by the page the browser is on when they are sent.
+const isBridgeHandoffPage = () => {
+  if (typeof window === 'undefined') return false;
+  const { pathname, search } = window.location;
+  if (/^\/bridge\/authorize(\/|$)/.test(pathname)) return true;
+  return /^\/login\/?$/.test(pathname) && /^\/bridge\/authorize/.test(new URLSearchParams(search).get('next') || '');
+};
+
 function beforeSend(captureResult) {
+  if (captureResult && isBridgeHandoffPage()) return null;
   return addAttribution(filterAssessmentNoise(captureResult));
 }
 
