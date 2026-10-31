@@ -25,7 +25,8 @@ const Login = () => {
   const bridgeNext = safeBridgeNext(new URLSearchParams(location.search).get('next'));
   const afterLogin = () => {
     const storedBridgeNext = takeBridgeLoginReturn();
-    const target = workspaceReturn || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || bridgeNext || storedBridgeNext || '/dashboard';
+    // An explicit Bridge hand-off wins over a Stream return that may be left over from an abandoned attempt.
+    const target = workspaceReturn || bridgeNext || storedBridgeNext || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/dashboard';
     sessionStorage.removeItem('stream_login_return');
     navigate(target);
   };

@@ -109,10 +109,10 @@ describe('signed out', () => {
     expect(api.post).not.toHaveBeenCalled();
   });
 
-  test('prompt=login is kept on the way to login, so the chooser shows after sign-in', async () => {
+  test('prompt=login is dropped on the way to login: the user just signed in, so no second chooser follows', async () => {
     renderAt(authorize('&prompt=login'));
     await settle();
-    expect(new URLSearchParams(loginSearch()).get('next')).toBe(`/bridge/authorize?code_challenge=${CHALLENGE}&state=${STATE}&prompt=login`);
+    expect(new URLSearchParams(loginSearch()).get('next')).toBe(`/bridge/authorize?code_challenge=${CHALLENGE}&state=${STATE}`);
   });
 
   test('waits for the session check before deciding, so a stored session is not mistaken for signed out', async () => {

@@ -144,3 +144,28 @@ describe('Bridge sign-in hand-off is never sent', () => {
     });
   });
 });
+
+describe('secrets in URLs never leave the browser', () => {
+  const { beforeSend, scrubUrl } = initializePostHog;
+  const SECRET = 'SYNTHETIC-ACCOUNT-TOKEN-1234567890';
+
+  test('a GitHub return URL loses its token, whatever else the event carries', () => {
+    const result = beforeSend({ event: '$pageview', properties: {
+      $current_url: `https://www.plotune.net/login?token=${SECRET}&utm_source=x`,
+      $referrer: `https://www.plotune.net/login?access_token=${SECRET}`,
+      $set_once: { $initial_current_url: `https://www.plotune.net/login?token=${SECRET}` },
+      $set: { $current_url: `https://www.plotune.net/bridge/authorize?code=${SECRET}&state=abc` },
+    } });
+    expect(JSON.stringify(result)).not.toContain(SECRET);
+    expect(result.properties.$current_url).toContain('utm_source=x');
+    expect(result.properties.$current_url).toContain('token=redacted');
+  });
+
+  test('fragments are scrubbed too, and ordinary URLs are left alone', () => {
+    expect(scrubUrl(`https://bridge.plotune.net/#code=${SECRET}&state=abcdefghijklmnop`)).not.toContain(SECRET);
+    expect(scrubUrl('https://www.plotune.net/docs?topic=login')).toBe('https://www.plotune.net/docs?topic=login');
+    expect(scrubUrl('https://www.plotune.net/')).toBe('https://www.plotune.net/');
+    expect(scrubUrl('not a url?token=1')).toBe('not a url?token=1');
+    expect(scrubUrl(undefined)).toBeUndefined();
+  });
+});

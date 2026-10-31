@@ -74,7 +74,8 @@ export function BridgeAuthorize() {
       finish({ error: "login_required", state: request.state });
       return;
     }
-    navigate(loginUrl(authorizeUrl(request)), { replace: true });
+    // prompt=login (Switch account) asked for a login, and this is it: the chooser is not shown again afterwards.
+    navigate(loginUrl(authorizeUrl({ ...request, prompt: null })), { replace: true });
   };
 
   const mintAndReturn = async () => {
