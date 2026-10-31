@@ -66,6 +66,26 @@ test('header exposes named controls for account and navigation disclosure', () =
   act(() => root.unmount());
 });
 
+test('header links Bridge externally next to an unchanged Stream link for guests and users', () => {
+  const guest = renderHeader();
+  // Mobile menu items are always in the DOM (shown via CSS), so this covers desktop and mobile.
+  const guestBridge = guest.container.querySelector('a[href="https://bridge.plotune.net"]');
+
+  expect(guestBridge).not.toBeNull();
+  expect(guestBridge.textContent).toBe('Bridge');
+  expect(guestBridge.getAttribute('rel')).toContain('noopener');
+  expect(guest.container.querySelector('a[href="/stream"] [translate="no"]').textContent).toBe('Stream');
+
+  act(() => guest.root.unmount());
+  document.body.innerHTML = '';
+
+  const user = renderHeader({ user: { username: 'Ada' } });
+  expect(user.container.querySelector('a[href="https://bridge.plotune.net"]')).not.toBeNull();
+  expect(user.container.querySelector('a[href="/stream/workspace"]').textContent).toBe('Stream workspace');
+
+  act(() => user.root.unmount());
+});
+
 test('authenticated logout delegates to AuthContext without throwing', () => {
   const logout = jest.fn();
   const { container, root } = renderHeader({ user: { username: 'Ada' }, logout });
@@ -105,6 +125,7 @@ test('footer preserves labelled navigation groups and its Features destination',
   expect(container.querySelector('nav[aria-labelledby="footer-product"]')).not.toBeNull();
   expect(container.querySelector('a[href="/#features"]')).not.toBeNull();
   expect(container.querySelector('a[href="/nexus"][aria-current="page"]')).not.toBeNull();
+  expect(container.querySelector('a[href="https://bridge.plotune.net"]')).not.toBeNull();
 
   act(() => root.unmount());
 });
