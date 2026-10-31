@@ -47,8 +47,46 @@ function addAttribution(captureResult) {
   return captureResult;
 }
 
+// The Bridge sign-in hand-off carries a request state (and, on success, a one-time code, which only
+// ever goes to Bridge's fragment). Nothing from that page, or from the login page reached with a
+// Bridge `next`, is sent: pageviews, pageleaves, autocapture and session-replay snapshots all carry
+// the URL, so they are dropped by the page the browser is on when they are sent.
+const isBridgeHandoffPage = () => {
+  if (typeof window === 'undefined') return false;
+  const { pathname, search } = window.location;
+  if (/^\/bridge\/authorize(\/|$)/.test(pathname)) return true;
+  return /^\/login\/?$/.test(pathname) && /^\/bridge\/authorize/.test(new URLSearchParams(search).get('next') || '');
+};
+
+// A GitHub login returns to /login?token=<account token> and the Bridge hand-off uses code/state; the page
+// removes or consumes them only after it mounts, but PostHog reads location.href when it starts. Every URL-like
+// property is therefore scrubbed before an event leaves the browser.
+const SENSITIVE_PARAMS = ['token', 'access_token', 'id_token', 'code', 'state', 'code_challenge', 'code_verifier'];
+const URL_PROPERTIES = ['$current_url', '$referrer', '$initial_current_url', '$initial_referrer', '$session_entry_url', '$session_entry_referrer'];
+function scrubUrl(value) {
+  if (typeof value !== 'string' || !/[?#]/.test(value)) return value;
+  let url;
+  try { url = new URL(value); } catch (e) { return value; }
+  let changed = false;
+  SENSITIVE_PARAMS.forEach((name) => { if (url.searchParams.has(name)) { url.searchParams.set(name, 'redacted'); changed = true; } });
+  if (url.hash.length > 1) {
+    const hashParams = new URLSearchParams(url.hash.slice(1));
+    SENSITIVE_PARAMS.forEach((name) => { if (hashParams.has(name)) { hashParams.set(name, 'redacted'); changed = true; } });
+    if (changed) url.hash = hashParams.toString();
+  }
+  return changed ? url.toString() : value;
+}
+function scrubUrls(captureResult) {
+  if (!captureResult || !captureResult.properties) return captureResult;
+  [captureResult.properties, captureResult.properties.$set, captureResult.properties.$set_once].forEach((bag) => {
+    if (bag && typeof bag === 'object') URL_PROPERTIES.forEach((key) => { if (key in bag) bag[key] = scrubUrl(bag[key]); });
+  });
+  return captureResult;
+}
+
 function beforeSend(captureResult) {
-  return addAttribution(filterAssessmentNoise(captureResult));
+  if (captureResult && isBridgeHandoffPage()) return null;
+  return scrubUrls(addAttribution(filterAssessmentNoise(captureResult)));
 }
 
 function initializePostHog() {
@@ -68,4 +106,5 @@ module.exports = initializePostHog;
 module.exports.posthog = posthog;
 module.exports.filterAssessmentNoise = filterAssessmentNoise;
 module.exports.beforeSend = beforeSend;
+module.exports.scrubUrl = scrubUrl;
 module.exports.resetAssessmentNoiseFilter = resetAssessmentNoiseFilter;

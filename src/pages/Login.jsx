@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { streamWorkspaceReturn } from '../utils/streamWorkspaceNavigation';
+import { safeBridgeNext, rememberBridgeLoginReturn, takeBridgeLoginReturn } from '../utils/bridgeAuthorize';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -18,8 +19,14 @@ const Login = () => {
 
   const workspaceReturn = streamWorkspaceReturn(new URLSearchParams(location.search).get('next'));
   useEffect(() => { if (workspaceReturn) sessionStorage.setItem('stream_login_return', workspaceReturn); }, [workspaceReturn]);
+  // Bridge sign-in hand-off: `next` is validated (see utils/bridgeAuthorize). A value from the URL
+  // serves password login directly; GitHub leaves the site, so its value is kept in sessionStorage
+  // and consumed here once, after login completes.
+  const bridgeNext = safeBridgeNext(new URLSearchParams(location.search).get('next'));
   const afterLogin = () => {
-    const target = workspaceReturn || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/dashboard';
+    const storedBridgeNext = takeBridgeLoginReturn();
+    // An explicit Bridge hand-off wins over a Stream return that may be left over from an abandoned attempt.
+    const target = workspaceReturn || bridgeNext || storedBridgeNext || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/dashboard';
     sessionStorage.removeItem('stream_login_return');
     navigate(target);
   };
@@ -173,6 +180,7 @@ const Login = () => {
   const startGitHubLogin = async () => {
     try {
       const res = await api.get('/login/github');
+      rememberBridgeLoginReturn(bridgeNext);
       window.location.href = res.data.auth_url;
     } catch (err) {
       toast.error('GitHub login failed');

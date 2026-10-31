@@ -46,6 +46,9 @@ api.interceptors.response.use(
       '/auth/forgot-password',
       '/auth/verify-reset-code',
       '/auth/reset-password',
+      // The Bridge hand-off handles its own 401 (signed-out rules, login with next); a global
+      // redirect here would drop the authorize request.
+      '/auth/bridge-code',
     ];
     const isAuthRequest = UNAUTHENTICATED_ENDPOINTS.some((endpoint) => url.includes(endpoint));
     if (status === 401 && !isAuthRequest) {
