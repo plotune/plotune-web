@@ -71,6 +71,7 @@ const Header = () => {
       { to: '/ai-readiness', label: 'AI Readiness' },
     ] },
     { to: '/stream', label: 'Stream', keepBrandName: true },
+    { to: 'https://bridge.plotune.net', label: 'Bridge', keepBrandName: true, isExternal: true },
     { to: '/research', label: 'Research', keepBrandName: true },
     { to: '/docs', label: 'Docs', children: [
       { to: '/docs/nexus', label: 'Nexus Documentation' },
@@ -91,6 +92,7 @@ const Header = () => {
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { to: '/profile', label: 'Profile', icon: 'person' },
     { to: '/stream/workspace', label: 'Stream workspace', icon: 'stream' },
+    { to: 'https://bridge.plotune.net', label: 'Bridge', keepBrandName: true, isExternal: true },
     // Mirror and Storage are unavailable; keep them out of navigation.
 
     { to: '/extensions', label: 'Extensions', icon: 'store' },

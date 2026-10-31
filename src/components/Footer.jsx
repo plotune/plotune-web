@@ -25,6 +25,18 @@ const Footer = () => {
               <li><Link to="/#features" className={linkClass('/')}>Features</Link></li>
               <li><Link to="/nexus" aria-current={location.pathname === '/nexus' ? 'page' : undefined} className={linkClass('/nexus')}>Nexus</Link></li>
               <li><Link to="/stream" className={linkClass('/stream')}>Stream</Link></li>
+              <li>
+                <a
+                  href="https://bridge.plotune.net"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex min-h-[44px] items-center gap-2 text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
+                >
+                  Bridge
+                  <span aria-hidden="true" className="text-xs">↗</span>
+                  <span className="sr-only">(opens Bridge in a new tab)</span>
+                </a>
+              </li>
               <li><Link to="/extensions" aria-current={location.pathname === '/extensions' ? 'page' : undefined} className={linkClass('/extensions')}>Extensions</Link></li>
               <li><Link to="/download" aria-current={location.pathname === '/download' ? 'page' : undefined} className={linkClass('/download')}>Download</Link></li>
             </ul>
