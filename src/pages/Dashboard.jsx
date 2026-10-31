@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { FiActivity, FiArrowUpRight, FiCpu, FiDownload, FiPackage } from 'react-icons/fi';
+import { FiActivity, FiArrowUpRight, FiCpu, FiDownload, FiLink } from 'react-icons/fi';
 import { AuthContext } from '../context/AuthContext';
 
 const destinations = [
@@ -20,18 +20,19 @@ const destinations = [
     Icon: FiActivity,
   },
   {
+    title: 'Plotune Bridge',
+    description: 'Pair a Bridge device and watch its CAN traffic from your browser.',
+    action: 'Open Bridge',
+    to: 'https://bridge.plotune.net',
+    external: true,
+    Icon: FiLink,
+  },
+  {
     title: 'Plotune Desktop',
     description: 'Get the desktop app for your engineering workflows.',
     action: 'Download app',
     to: '/download',
     Icon: FiDownload,
-  },
-  {
-    title: 'Extensions',
-    description: 'Find tools and integrations for Plotune.',
-    action: 'Browse extensions',
-    to: '/extensions',
-    Icon: FiPackage,
   },
 ];
 
@@ -59,14 +60,21 @@ export default function Dashboard() {
           <Link to="/profile" className="inline-flex min-h-[44px] items-center rounded-sm border border-ink/20 px-5 text-sm font-medium text-light-text hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">Manage account</Link>
         </header>
         <section aria-label="Products and tools" className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {destinations.map(({ title, description, action, to, Icon }) => (
-            <Link key={to} to={to} className="group flex min-w-0 flex-col rounded-sm border border-ink/20 bg-dark-card p-6 transition-colors hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-              <Icon aria-hidden="true" className="mb-5 h-6 w-6 text-primary" />
-              <h2 className="text-xl font-semibold text-light-text">{title}</h2>
-              <p className="mt-2 mb-6 text-sm leading-7 text-gray-text">{description}</p>
-              <span className="mt-auto inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-primary">{action}<FiArrowUpRight aria-hidden="true" /></span>
-            </Link>
-          ))}
+          {destinations.map(({ title, description, action, to, external, Icon }) => {
+            const className = 'group flex min-w-0 flex-col rounded-sm border border-ink/20 bg-dark-card p-6 transition-colors hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary';
+            const body = (
+              <>
+                <Icon aria-hidden="true" className="mb-5 h-6 w-6 text-primary" />
+                <h2 className="text-xl font-semibold text-light-text">{title}</h2>
+                <p className="mt-2 mb-6 text-sm leading-7 text-gray-text">{description}</p>
+                <span className="mt-auto inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-primary">{action}<FiArrowUpRight aria-hidden="true" />{external && <span className="sr-only">(opens in a new tab)</span>}</span>
+              </>
+            );
+            // Bridge is a separate site, so it is a plain link rather than a router link.
+            return external
+              ? <a key={to} href={to} target="_blank" rel="noopener noreferrer" className={className}>{body}</a>
+              : <Link key={to} to={to} className={className}>{body}</Link>;
+          })}
         </section>
       </div>
     </main>

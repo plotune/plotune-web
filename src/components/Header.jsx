@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShoppingBag, FiBookOpen, FiChevronDown } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShoppingBag, FiBookOpen, FiChevronDown, FiLink } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
 
@@ -8,7 +8,7 @@ import { AuthContext } from '../context/AuthContext';
 // load, and when it fails (slow network, ad blocker, offline) the ligature falls back to its
 // literal name as visible text (e.g. a login link showing "account_circle").
 const navIconMap = {
-  person: FiUser, dashboard: FiGrid, stream: FiActivity, store: FiShoppingBag, science: FiBookOpen,
+  person: FiUser, dashboard: FiGrid, stream: FiActivity, bridge: FiLink, store: FiShoppingBag, science: FiBookOpen,
 };
 const NavIcon = ({ name, className }) => {
   const Icon = navIconMap[name];
@@ -92,7 +92,7 @@ const Header = () => {
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { to: '/profile', label: 'Profile', icon: 'person' },
     { to: '/stream/workspace', label: 'Stream workspace', icon: 'stream' },
-    { to: 'https://bridge.plotune.net', label: 'Bridge', keepBrandName: true, isExternal: true },
+    { to: 'https://bridge.plotune.net', label: 'Bridge', icon: 'bridge', keepBrandName: true, isExternal: true },
     // Mirror and Storage are unavailable; keep them out of navigation.
 
     { to: '/extensions', label: 'Extensions', icon: 'store' },
