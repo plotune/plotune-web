@@ -80,7 +80,10 @@ test('header links Bridge externally next to an unchanged Stream link for guests
   document.body.innerHTML = '';
 
   const user = renderHeader({ user: { username: 'Ada' } });
-  expect(user.container.querySelector('a[href="https://bridge.plotune.net"]')).not.toBeNull();
+  const userBridge = user.container.querySelector('a[href="https://bridge.plotune.net"]');
+  expect(userBridge).not.toBeNull();
+  // The account menu shows an icon for every product entry, Bridge included.
+  expect(userBridge.querySelector('svg')).not.toBeNull();
   expect(user.container.querySelector('a[href="/stream/workspace"]').textContent).toBe('Stream workspace');
 
   act(() => user.root.unmount());
