@@ -944,6 +944,74 @@ Source: https://www.plotune.net/nexus/pricing
 
 ---
 
+# Connect your hardware.Access it anywhere.Automate with AI.
+
+Plotune Bridge  CAN · Serial · DAQ · I/O
+
+
+
+[Choose Your Bridge ↓](https://www.plotune.net/bridge#bridge-products)
+
+### Bridge CAN
+
+CAN · 2 channels
+
+[View Bridge CAN →](https://www.plotune.net/bridge/can?entry_source=direct)
+
+### Bridge Serial
+
+Serial · 2 channels
+
+[View Bridge Serial →](https://www.plotune.net/bridge/serial?entry_source=direct)
+
+### Bridge DAQ
+
+Analog · 7 inputs
+
+[View Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)
+
+### Bridge I/O
+
+Digital + analog · 12 I/O
+
+[View Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)
+
+01 / Choose your Bridge  Four interfaces
+
+[Bridge CANCAN · 2 channels$199View Bridge CAN →](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129View Bridge Serial →](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249View Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259View Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)
+
+02 / On every Bridge  One workflow
+
+## Every Bridge.One connected workflow.
+
+- Remote Hardware Access
+
+- Browser-Based Workflows
+
+- AI-Ready Test Automation
+
+- USB-C, DC IN and Wi-Fi
+
+- Compact, Bench-Ready
+
+- Entry-Level Pricing
+
+03 / How ordering works  No payment on this site
+
+- 01  Choose your Bridge
+
+- 02  Send a request
+
+- 03  We confirm and agree payment
+
+## Plotune Bridge connects your devices.Plotune Nexus makes them intelligent.
+
+[Choose Your Bridge ↑](https://www.plotune.net/bridge#bridge-products)[Not sure which one? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+
+Source: https://www.plotune.net/bridge
+
+---
+
 # What is agentic test & development?
 
 Agentic Test & Development
@@ -1290,7 +1358,7 @@ v1.0.0
 
 Updated
 
-1 Dec 2025
+Dec 1, 2025
 
 - 02 
 
@@ -1316,7 +1384,7 @@ v1.0.0
 
 Updated
 
-22 Dec 2025
+Dec 22, 2025
 
 - 03 
 
@@ -1342,7 +1410,7 @@ v0.1.0
 
 Updated
 
-19 Dec 2025
+Dec 19, 2025
 
 - 04 
 
@@ -1368,7 +1436,7 @@ v1.0.2
 
 Updated
 
-3 Jan 2026
+Jan 3, 2026
 
 - 05 
 
@@ -1396,7 +1464,7 @@ v1.0.0
 
 Updated
 
-23 Dec 2025
+Dec 23, 2025
 
 - 06 
 
@@ -1422,7 +1490,7 @@ v1.0.0
 
 Updated
 
-31 Dec 2025
+Dec 31, 2025
 
 - 07 
 
@@ -3697,6 +3765,390 @@ Plotune Nexus is one product, this is how it runs against AI Hardware-in-the-Loo
 [Discuss your setup](https://www.plotune.net/contact?segment=hil-testing&solution=hil-testing&entry_source=direct)
 
 Source: https://www.plotune.net/solutions/hil-testing
+
+---
+
+# Dual-Channel CAN Communication, Anywhere.
+
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge CAN  USB-C · Wi-Fi · Nexus-ready
+
+Plotune Bridge CAN
+
+
+
+Remote, isolated dual-channel CAN for ECU and BMS testing.
+
+$199  Per unit, excl. tax and shipping.
+
+No payment now · we reply within 1 business day
+
+[Compare all Bridge products →](https://www.plotune.net/bridge#bridge-products)
+
+Plotune Bridge CAN, black enclosure with the D-SUB9 connector labelled CAN 1 and 2, a status LED and the Plotune logo on top
+
+Plotune Bridge CAN from the side, with the D-SUB9 connector at the end
+
+Rear of Plotune Bridge CAN with the USB-C port and the DC IN power jack
+
+Remote
+
+CAN access, not tied to one workstation
+
+2 × isolated
+
+Classical CAN channels, up to 1 Mbit/s
+
+AI-ready
+
+Automated ECU and BMS testing with Nexus
+
+01 / How it connects  Bridge CAN
+
+02 / Why it's different  Bridge CAN
+
+- Remote access, not workstation-bound
+
+- Dual-channel isolated CAN, compact
+
+- Browser-based engineering workflows
+
+- Automated ECU and BMS testing
+
+03 / Built for  Applications
+
+- ECU validation
+
+- BMS testing
+
+- Automotive diagnostics
+
+- Robotics
+
+- Remote test benches
+
+Full specifications
+
+- 2 independent Classical CAN channels
+
+- CAN bitrate up to 1 Mbit/s
+
+- Galvanically isolated CAN channels
+
+- Single DB9 connector with dual-channel Y-cable
+
+- USB-C connectivity and integrated Wi-Fi
+
+- DC IN power jack
+
+- Remote CAN access
+
+- Browser-based CAN monitoring and frame transmission
+
+- CAN recording and ASC export
+
+- DBC signal decoding
+
+- Client-side ISO-TP, UDS and XCP-on-CAN workflows
+
+- Plotune Nexus integration and AI-agent-ready test automation
+
+04 / The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+
+[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249](https://www.plotune.net/bridge/daq?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259](https://www.plotune.net/bridge/io?entry_source=direct)
+
+## Get Bridge CANon your bench.
+
+[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+
+Bridge CAN  $199
+
+Source: https://www.plotune.net/bridge/can
+
+---
+
+# Industrial Serial Communication Made Accessible.
+
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge Serial  USB-C · Wi-Fi · Nexus-ready
+
+Plotune Bridge Serial
+
+
+
+Remote serial debugging with logging and automation.
+
+$129  Per unit, excl. tax and shipping.
+
+No payment now · we reply within 1 business day
+
+[Compare all Bridge products →](https://www.plotune.net/bridge#bridge-products)
+
+Plotune Bridge Serial with two RJ45 serial connectors labelled Serial 1 and Serial 2, a status LED and the Plotune logo on top
+
+Plotune Bridge Serial from the side, with the two RJ45 serial connectors at the end
+
+Rear of Plotune Bridge Serial with the USB-C port and the DC IN power jack
+
+Remote
+
+Serial debugging from anywhere
+
+2
+
+Independent serial channels
+
+AI-ready
+
+Automated serial testing with Nexus
+
+01 / How it connects  Bridge Serial
+
+02 / Why it's different  Bridge Serial
+
+- Remote serial debugging
+
+- Two independent channels
+
+- Monitoring, logging and commands in one place
+
+- Test automation, not basic serial conversion
+
+03 / Built for  Applications
+
+- Embedded firmware debugging
+
+- Industrial equipment diagnostics
+
+- Serial protocol validation
+
+- Remote maintenance
+
+Full specifications
+
+- 2 independent serial channels
+
+- RS-232, RS-422 and RS-485 support
+
+- 2 RJ45 serial connectors
+
+- USB-C connectivity and integrated Wi-Fi
+
+- DC IN power jack
+
+- Remote serial access
+
+- Browser-based serial monitoring
+
+- Bidirectional serial communication
+
+- Serial logging and command execution
+
+- Plotune Nexus integration and AI-agent-ready serial testing
+
+04 / The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+
+[Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249](https://www.plotune.net/bridge/daq?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259](https://www.plotune.net/bridge/io?entry_source=direct)
+
+## Get Bridge Serialon your bench.
+
+[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+
+Bridge Serial  $129
+
+Source: https://www.plotune.net/bridge/serial
+
+---
+
+# Capture Real-World Signals with Confidence.
+
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge DAQ  USB-C · Wi-Fi · Nexus-ready
+
+Plotune Bridge DAQ
+
+
+
+Remote analog measurement for automated validation.
+
+$249  Per unit, excl. tax and shipping.
+
+No payment now · we reply within 1 business day
+
+[Compare all Bridge products →](https://www.plotune.net/bridge#bridge-products)
+
+Plotune Bridge DAQ with seven green two-pole input terminals (AI 1 to AI 7) on top and the USB-C port and DC IN jack at the end
+
+Top view of Plotune Bridge DAQ showing the seven analog input terminals, AI 1 to AI 7, each marked plus and minus
+
+Plotune Bridge DAQ at an angle, with the analog input terminals on top and the USB-C port and DC IN jack at the end
+
+7
+
+Analog voltage channels in one compact device
+
+Remote
+
+Monitoring and measurement recording
+
+AI-ready
+
+Measurements inside automated test workflows
+
+01 / How it connects  Bridge DAQ
+
+02 / Why it's different  Bridge DAQ
+
+- Seven analog channels, compact
+
+- Remote monitoring and recording
+
+- Measurements inside automated tests
+
+- Browser access, no desktop DAQ application
+
+03 / Built for  Applications
+
+- Sensor monitoring
+
+- ECU signal validation
+
+- Voltage measurements
+
+- Laboratory experiments
+
+- Automated hardware testing
+
+Full specifications
+
+- 7 independent analog voltage input channels
+
+- 16-bit ADC resolution
+
+- ±10 V input range
+
+- 7 removable two-pole terminal connectors
+
+- USB-C connectivity and integrated Wi-Fi
+
+- DC IN power jack
+
+- Browser-based live measurements
+
+- Measurement recording and data export
+
+- Remote measurement access
+
+- Plotune Nexus integration and AI-agent-ready measurement automation
+
+Still to be determined.  Sampling rate, accuracy, noise performance and isolation are still to be determined. ADC resolution on its own does not establish measurement accuracy.
+
+04 / The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+
+[Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259](https://www.plotune.net/bridge/io?entry_source=direct)
+
+## Get Bridge DAQon your bench.
+
+[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+
+Bridge DAQ  $249
+
+Source: https://www.plotune.net/bridge/daq
+
+---
+
+# Control and Monitor the Physical World.
+
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge I/O  USB-C · Wi-Fi · Nexus-ready
+
+Plotune Bridge I/O
+
+
+
+Remote mixed-signal I/O for test fixtures and automation.
+
+$259  Per unit, excl. tax and shipping.
+
+No payment now · we reply within 1 business day
+
+[Compare all Bridge products →](https://www.plotune.net/bridge#bridge-products)
+
+Plotune Bridge I/O with the USB-C port, the DC IN jack, four digital output terminals (DO 1 to 4) and two analog output terminals (AO 1 and 2)
+
+Plotune Bridge I/O seen from the input side, with four digital input terminals (DI 1 to 4) and two analog input terminals (AI 1 and 2)
+
+12
+
+Digital and analog I/O points in one device
+
+2
+
+Analog outputs for signal generation and simulation
+
+Remote
+
+Control of test fixtures from anywhere
+
+01 / How it connects  Bridge I/O
+
+02 / Why it's different  Bridge I/O
+
+- Digital and analog I/O in one device
+
+- Two analog outputs
+
+- Remote control of test fixtures
+
+- Automated hardware interaction
+
+- Fewer separate modules
+
+03 / Built for  Applications
+
+- ECU test fixtures
+
+- Sensor simulation
+
+- Automated functional testing
+
+- Industrial prototyping
+
+- Hardware-in-the-loop support
+
+Full specifications
+
+- 4 digital inputs (24 V)
+
+- 4 digital outputs
+
+- 2 analog inputs (0–10 V and 4–20 mA)
+
+- 2 analog outputs (0–10 V)
+
+- 12 I/O points in total
+
+- Removable terminal connectors
+
+- USB-C connectivity and integrated Wi-Fi
+
+- DC IN power jack
+
+- Remote digital and analog I/O access
+
+- Browser-based signal monitoring and control
+
+- Plotune Nexus integration and AI-agent-ready test sequencing
+
+Still to be determined.  Digital output current capacity, analog output accuracy, isolation and protection ratings are still to be determined.
+
+04 / The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+
+[Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249](https://www.plotune.net/bridge/daq?entry_source=direct)
+
+## Get Bridge I/Oon your bench.
+
+[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+
+Bridge I/O  $259
+
+Source: https://www.plotune.net/bridge/io
 
 ---
 
