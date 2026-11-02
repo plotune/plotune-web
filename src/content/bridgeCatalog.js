@@ -33,12 +33,6 @@ export const CATALOG_VERSION = '2026-11-prices';
 // qualify prices or specs with "target" or "not final" wording, and do not add sampling rates, accuracy values,
 // output current ratings, certifications or availability dates until they are established.
 
-const imageSet = (name) => [
-  { src: null, alt: `Plotune ${name}, front view` },
-  { src: null, alt: `Plotune ${name} connected on a test bench` },
-  { src: null, alt: `Plotune ${name}, rear view with its connectors` },
-];
-
 export const PRODUCTS = [
   {
     id: 'can',
