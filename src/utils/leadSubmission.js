@@ -1,4 +1,5 @@
 import { ATTRIBUTION_KEYS, getAttribution } from './attribution';
+import { getProductById } from '../content/bridgeCatalog';
 
 // ---------------------------------------------------------------------------------------------
 // Lead submission transport, shared by the AI readiness assessment, the contact form and the Nexus
@@ -115,3 +116,77 @@ export const buildOrderPayload = ({
   submissionId,
   website,
 });
+
+// Cart request (/request, src/components/bridge/CartRequestForm.jsx): one or more catalog products
+// with quantities. No payment is taken: the request is saved and we confirm availability, tax and
+// shipping and agree the payment method by email. Only ids and quantities are trusted by the
+// server, which prices them from its own catalog; `quote.total` is what the visitor saw (null when
+// the order is to be quoted) and `catalogVersion` says which prices that was.
+export const buildCartPayload = ({
+  email, country = '', sector = '', items, quote = null,
+  catalogVersion = '', funnel = {}, website = '', submissionId = '',
+}) => ({
+  kind: 'cart',
+  email: email.trim(),
+  country: country.trim().slice(0, 80),
+  sector,
+  items: items.map(({ id, qty }) => ({ id, qty })),
+  quote,
+  catalogVersion,
+  page: window.location.pathname,
+  attribution: readAttribution(funnel),
+  submittedAt: new Date().toISOString(),
+  submissionId,
+  website,
+});
+
+// Which kinds of submission the DEPLOYED Apps Script understands. Its GET reply lists them
+// ({ "ok": true, "kinds": ["assessment", "contact", "order", "cart"] }), so the site can tell whether the
+// script has been updated to take cart requests yet, instead of assuming. Looked up once and cached;
+// [] when the answer is unknown (no endpoint, offline, slow), which callers treat as "use the safe path".
+let kindsPromise = null;
+export const getEndpointKinds = () => {
+  if (!ENDPOINT) return Promise.resolve([]);
+  if (!kindsPromise) {
+    kindsPromise = new Promise((resolve) => {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 15000);
+      fetch(ENDPOINT, { signal: controller.signal })
+        .then((response) => response.json())
+        .then((reply) => resolve(Array.isArray(reply && reply.kinds) ? reply.kinds : []))
+        .catch(() => { kindsPromise = null; resolve([]); }) // try again on the next call
+        .finally(() => window.clearTimeout(timer));
+    });
+  }
+  return kindsPromise;
+};
+
+// A cart request written as a contact message. The contact path exists in every version of the deployed script
+// (own sheet tab, owner notification with Reply-To, visitor confirmation), so a request is never lost or filed as
+// something else while the script predates 'cart'. The wording carries everything the structured row would.
+export const buildCartContactPayload = ({
+  email, country = '', sector = '', items, quote = null,
+  catalogVersion = '', funnel = {}, website = '', submissionId = '',
+}) => {
+  const lines = items.map(({ id, qty }) => `${qty} × ${(getProductById(id) || { name: id }).name}`).join('; ');
+  const total = quote && typeof quote.total === 'number' ? `$${quote.total.toLocaleString('en-US')} ${quote.currency || 'USD'} (excl. tax and shipping)` : 'to be quoted';
+  const message = [
+    'Bridge request from the website (/request)',
+    `Items: ${lines}`,
+    `Estimated total: ${total}`,
+    `Delivery country: ${country.trim().slice(0, 80)}`,
+    `Sector: ${sector || '-'}`,
+    `Catalog version: ${catalogVersion}`,
+  ].join('\n');
+  return {
+    kind: 'contact',
+    email: email.trim(),
+    message: message.slice(0, 3000),
+    topic: 'Bridge request',
+    page: window.location.pathname,
+    attribution: readAttribution(funnel),
+    submittedAt: new Date().toISOString(),
+    submissionId,
+    website,
+  };
+};

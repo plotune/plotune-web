@@ -10,6 +10,8 @@ import NexusConnectivity from './pages/NexusConnectivity';
 import NexusStream from './pages/NexusStream';
 import NexusUseCases from './pages/NexusUseCases';
 import NexusPricing from './pages/NexusPricing';
+import Bridge from './pages/Bridge';
+import BridgeProduct from './pages/BridgeProduct';
 // Eager like the Nexus pages: /ai-readiness is a paid-ad landing page and is prerendered, so a
 // lazy import would swap its prerendered markup for the blank Suspense fallback on load (see below).
 import AiReadinessPage from './aiReadiness/AiReadinessPage';
@@ -44,6 +46,7 @@ const routePage = (load) => {
   return Page;
 };
 
+const BridgeRequest = routePage(() => import('./pages/BridgeRequest'));
 const Faq = routePage(() => import('./pages/Faq'));
 const Extensions = routePage(() => import('./pages/Extensions'));
 const Download = routePage(() => import('./pages/Download'));
@@ -227,6 +230,9 @@ function App() {
               <Route path="/nexus/stream" element={<NexusStream />} />
               <Route path="/nexus/use-cases" element={<NexusUseCases />} />
               <Route path="/nexus/pricing" element={<NexusPricing />} />
+              <Route path="/bridge" element={<Bridge />} />
+              <Route path="/bridge/:slug" element={<BridgeProduct />} />
+              <Route path="/request" element={<BridgeRequest />} />
               <Route path="/research" element={<ResearchOverview />} />
               <Route path="/research/results" element={<ResearchResults />} />
               <Route path="/research/reports" element={<ResearchReports />} />

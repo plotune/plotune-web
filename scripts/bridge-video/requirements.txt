@@ -1,0 +1,4 @@
+pillow
+numpy
+scipy
+# ffmpeg: install it, or: imageio-ffmpeg
