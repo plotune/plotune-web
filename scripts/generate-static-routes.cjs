@@ -24,11 +24,11 @@ const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
 
 const routes = [
   '/faq', '/extensions', '/download', '/about', '/careers', '/legal', '/docs', '/privacy', '/contact',
-  '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing',
+  '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing', '/bridge',
   '/solutions/agentic-test-development', '/agentic-test-development',
   '/research', '/research/results', '/research/reports', '/research/methodology',
   '/dashboard', '/streams', '/streams/connect', '/mirror', '/storage',
-  '/ai-readiness', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision',
+  '/ai-readiness', '/request', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision',
 ];
 
 // One route per published research article, read straight from each .mdx file's own
@@ -47,6 +47,10 @@ fs.readdirSync(articlesDir)
 const solutionsSrc = fs.readFileSync(path.join(root, 'src/content/solutions.js'), 'utf8');
 [...solutionsSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/solutions/${slug}`));
 [...solutionsSrc.matchAll(/^\s*'([a-z0-9-]+)':\s*'[a-z0-9-]+',?$/gm)].forEach(([, aliasSlug]) => routes.push(`/solutions/${aliasSlug}`));
+
+// One route per Bridge product, extracted the same way from the catalog's own slug entries.
+const bridgeSrc = fs.readFileSync(path.join(root, 'src/content/bridgeCatalog.js'), 'utf8');
+[...bridgeSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/bridge/${slug}`));
 
 let created = 0;
 [...new Set(routes)].forEach((route) => {

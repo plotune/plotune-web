@@ -24,6 +24,7 @@ const Footer = () => {
             <nav aria-labelledby="footer-product"><ul className="space-y-3">
               <li><Link to="/#features" className={linkClass('/')}>Features</Link></li>
               <li><Link to="/nexus" aria-current={location.pathname === '/nexus' ? 'page' : undefined} className={linkClass('/nexus')}>Nexus</Link></li>
+              <li><Link to="/bridge" aria-current={location.pathname === '/bridge' ? 'page' : undefined} className={linkClass('/bridge')}>Bridge</Link></li>
               <li><Link to="/stream" className={linkClass('/stream')}>Stream</Link></li>
               <li><Link to="/extensions" aria-current={location.pathname === '/extensions' ? 'page' : undefined} className={linkClass('/extensions')}>Extensions</Link></li>
               <li><Link to="/download" aria-current={location.pathname === '/download' ? 'page' : undefined} className={linkClass('/download')}>Download</Link></li>

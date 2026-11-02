@@ -115,3 +115,26 @@ export const buildOrderPayload = ({
   submissionId,
   website,
 });
+
+// Cart request (/request, src/components/bridge/CartRequestForm.jsx): one or more catalog products
+// with quantities. No payment is taken: the request is saved and we confirm availability, tax and
+// shipping and agree the payment method by email. Only ids and quantities are trusted by the
+// server, which prices them from its own catalog; `quote.total` is what the visitor saw (null when
+// the order is to be quoted) and `catalogVersion` says which prices that was.
+export const buildCartPayload = ({
+  email, country = '', sector = '', items, quote = null,
+  catalogVersion = '', funnel = {}, website = '', submissionId = '',
+}) => ({
+  kind: 'cart',
+  email: email.trim(),
+  country: country.trim().slice(0, 80),
+  sector,
+  items: items.map(({ id, qty }) => ({ id, qty })),
+  quote,
+  catalogVersion,
+  page: window.location.pathname,
+  attribution: readAttribution(funnel),
+  submittedAt: new Date().toISOString(),
+  submissionId,
+  website,
+});

@@ -70,6 +70,12 @@ const Header = () => {
       { to: '/nexus/use-cases', label: 'Use Cases' },
       { to: '/ai-readiness', label: 'AI Readiness' },
     ] },
+    { to: '/bridge', label: 'Bridge', children: [
+      { to: '/bridge/can', label: 'Bridge CAN' },
+      { to: '/bridge/serial', label: 'Bridge Serial' },
+      { to: '/bridge/daq', label: 'Bridge DAQ' },
+      { to: '/bridge/io', label: 'Bridge I/O' },
+    ] },
     { to: '/stream', label: 'Stream', keepBrandName: true },
     { to: '/research', label: 'Research', keepBrandName: true },
     { to: '/docs', label: 'Docs', children: [

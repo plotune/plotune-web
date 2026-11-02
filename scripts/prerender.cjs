@@ -54,7 +54,7 @@ const forceInView = () => {
 const articlesDir = path.join(root, 'src/research/articles');
 const routes = [
   '/', '/research', '/research/reports', '/research/methodology', '/faq',
-  '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing',
+  '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing', '/bridge',
   '/solutions/agentic-test-development', '/contact',
   '/about', '/careers', '/download', '/extensions', '/legal', '/privacy', '/docs',
   '/research/results',
@@ -75,6 +75,10 @@ fs.readdirSync(articlesDir)
 const solutionsSrc = fs.readFileSync(path.join(root, 'src/content/solutions.js'), 'utf8');
 [...solutionsSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/solutions/${slug}`));
 [...solutionsSrc.matchAll(/^\s*'([a-z0-9-]+)':\s*'[a-z0-9-]+',?$/gm)].forEach(([, aliasSlug]) => routes.push(`/solutions/${aliasSlug}`));
+
+// One route per Bridge product, extracted the same way from the catalog's own slug entries.
+const bridgeSrc = fs.readFileSync(path.join(root, 'src/content/bridgeCatalog.js'), 'utf8');
+[...bridgeSrc.matchAll(/slug: '([^']+)'/g)].forEach(([, slug]) => routes.push(`/bridge/${slug}`));
 
 // One route per Nexus doc, extracted the same way from its own `slug: '...'` text.
 routes.push('/docs/nexus');

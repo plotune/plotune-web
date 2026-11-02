@@ -1,10 +1,11 @@
 /**
  * Plotune AI Readiness: lead collector (Google Apps Script web app)
  *
- * Three kinds of submissions, filed in separate tabs of the Google Sheet this script is attached to:
+ * Four kinds of submissions, filed in separate tabs of the Google Sheet this script is attached to:
  *   - AI readiness assessment leads (https://www.plotune.net/ai-readiness)  -> "Leads" tab
  *   - Contact-form messages (https://www.plotune.net/contact, kind: 'contact') -> "Contact" tab
  *   - Nexus rent / buy requests (https://www.plotune.net/nexus/pricing, kind: 'order') -> "Orders" tab
+ *   - Bridge / cart requests (https://www.plotune.net/request, kind: 'cart') -> "Cart Orders" tab
  * For each: 1. add one row to its tab, 2. email NOTIFY_EMAIL a summary (Reply goes straight to the
  * visitor), 3. optionally email the visitor a short confirmation (SEND_CONFIRMATION_TO_VISITOR).
  *
@@ -23,6 +24,7 @@ const SEND_CONFIRMATION_TO_VISITOR = true;        // false = only you are emaile
 const SHEET_NAME = 'Leads';                       // assessment leads tab (created automatically)
 const CONTACT_SHEET_NAME = 'Contact';             // contact-form messages tab (created automatically)
 const ORDER_SHEET_NAME = 'Orders';                // Nexus rent / buy requests tab (created automatically)
+const CART_SHEET_NAME = 'Cart Orders';            // Bridge / cart requests tab (created automatically)
 // -----------------------------------------------------------------------------------------
 
 const MAX_BODY_CHARS = 20000;
@@ -31,7 +33,7 @@ const MAX_CONFIRMATIONS_PER_HOUR = 20;  // global cap: the endpoint is public, s
 const DEDUPE_SECONDS = 21600;           // CacheService maximum (6 h)
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_MESSAGE_CHARS = 3000;
-const SCRIPT_VERSION = 4; // shown by doGet, so a deploy can be checked from a browser
+const SCRIPT_VERSION = 5; // shown by doGet, so a deploy can be checked from a browser
 
 const HEADERS = [
   'Received at', 'Email', 'Score %', 'Areas assessed', 'Confidence', 'Band',
@@ -61,6 +63,16 @@ const ORDER_HEADERS = [
   'Submission ID', 'Emails', 'Raw JSON',
 ];
 const ORDER_EMAILS_COLUMN = ORDER_HEADERS.indexOf('Emails') + 1;
+
+const CART_HEADERS = [
+  'Received at', 'Email', 'Items', 'Units', 'Total USD', 'Pricing', 'Country', 'Sector', 'Catalog version', 'Status',
+  'Platform', 'Entry source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term',
+  'Google click id', 'Google campaign id', 'LinkedIn click id', 'Ad landing page', 'Referrer',
+  'Submission ID', 'Emails', 'Raw JSON',
+];
+const CART_EMAILS_COLUMN = CART_HEADERS.indexOf('Emails') + 1;
+const CART_MAX_LINES = 10;
+const CART_MAX_QTY = 99;
 const ORDER_OFFERS = { rent: 'Rent', buy: 'Buy' };
 const ORDER_SECTORS = {
   automotive: 'Automotive', robotics: 'Robotics / AMR', aerospace_defense: 'Aerospace & defense',
@@ -82,10 +94,25 @@ const OFFER = {
   supportYearly: 350,
 };
 
+// The Bridge price list for cart requests (/request). Same rule as OFFER: browser-sent amounts are
+// never trusted, every amount comes from here. `price` is the unit price in USD (excl. tax and
+// shipping); null = "to be quoted". Keep in step with src/content/bridgeCatalog.js (same
+// CATALOG_VERSION and ids); a request made with any other version is still saved, priced from this
+// list, and its version column says so.
+const CATALOG = {
+  version: '2026-11-prices',
+  products: {
+    can: { name: 'Bridge CAN', price: 199 },
+    serial: { name: 'Bridge Serial', price: 129 },
+    daq: { name: 'Bridge DAQ', price: 249 },
+    io: { name: 'Bridge I/O', price: 259 },
+  },
+};
+
 
 /** Opening the web app URL in a browser lands here: a quick "is it deployed?" check. */
 function doGet() {
-  return json_({ ok: true, service: 'plotune-ai-readiness-leads', version: SCRIPT_VERSION, kinds: ['assessment', 'contact', 'order'] });
+  return json_({ ok: true, service: 'plotune-ai-readiness-leads', version: SCRIPT_VERSION, kinds: ['assessment', 'contact', 'order', 'cart'] });
 }
 
 /** The website posts here. */
@@ -104,6 +131,7 @@ function doPost(e) {
 
     if (data.kind === 'contact') return handleContact_(data, email, raw);
     if (data.kind === 'order') return handleOrder_(data, email, raw);
+    if (data.kind === 'cart') return handleCart_(data, email, raw);
 
     const lead = toLead_(data, email);
     const row = saveLead_(lead, raw);  // if this throws, the site shows an error (nothing was saved)
@@ -357,6 +385,157 @@ function confirmOrderVisitor_(o) {
     return 'sent';
   } catch (err) {
     console.error('confirmOrderVisitor_ failed: ' + err);
+    return 'failed';
+  }
+}
+
+// ---- Bridge / cart requests ----------------------------------------------------------------
+// The shared request step (/request). No payment is taken on the site: the request is saved and you
+// confirm availability, tax and shipping by email, then agree the payment method and send the
+// invoice. Only product ids and quantities are read from the browser; names and prices come from
+// CATALOG above. If any line has no price the request is "To be quoted" and no total is stored.
+
+function parseCartItems_(value) {
+  const merged = {};
+  const order = [];
+  (Array.isArray(value) ? value : []).forEach(function (line) {
+    const id = line && typeof line.id === 'string' ? line.id : '';
+    if (!CATALOG.products.hasOwnProperty(id)) return;
+    const qty = Math.min(CART_MAX_QTY, Math.max(1, toInt_(line.qty) || 1));
+    if (!merged.hasOwnProperty(id)) { merged[id] = 0; order.push(id); }
+    merged[id] = Math.min(CART_MAX_QTY, merged[id] + qty);
+  });
+  return order.slice(0, CART_MAX_LINES).map(function (id) {
+    const product = CATALOG.products[id];
+    return { id: id, name: product.name, qty: merged[id], price: product.price };
+  });
+}
+
+function handleCart_(data, email, raw) {
+  const items = parseCartItems_(data.items);
+  if (!items.length) return json_({ ok: false, error: 'bad_items' });
+  const country = clean_(data.country, 80);
+  if (!country) return json_({ ok: false, error: 'missing_country' });
+  const priced = items.every(function (item) { return typeof item.price === 'number'; });
+  const clientVersion = clean_(data.catalogVersion, 40);
+  const attr = data.attribution || {};
+  const c = {
+    receivedAt: new Date(),
+    email: email,
+    items: items,
+    units: items.reduce(function (sum, item) { return sum + item.qty; }, 0),
+    total: priced ? items.reduce(function (sum, item) { return sum + item.price * item.qty; }, 0) : '',
+    pricing: priced ? 'Priced' : 'To be quoted',
+    country: country,
+    sector: ORDER_SECTORS[data.sector] || '',
+    catalogVersion: clientVersion === CATALOG.version ? CATALOG.version : CATALOG.version + ' (page sent: ' + (clientVersion || 'none') + ')',
+    platform: clean_(attr.platform, 40),
+    entrySource: clean_(attr.entry_source, 80),
+    utmSource: clean_(attr.utm_source, 80),
+    utmMedium: clean_(attr.utm_medium, 80),
+    utmCampaign: clean_(attr.utm_campaign, 120),
+    utmContent: clean_(attr.utm_content, 120),
+    utmTerm: clean_(attr.utm_term, 120),
+    gclid: clean_(attr.gclid || attr.gbraid || attr.wbraid, 300),
+    gadCampaignId: clean_(attr.gad_campaignid, 40),
+    liFatId: clean_(attr.li_fat_id, 300),
+    adLandingPath: clean_(attr.ad_landing_path, 120),
+    referrer: clean_(attr.referrer, 300),
+    submissionId: clean_(data.submissionId, 64),
+  };
+  const row = saveRow_(CART_SHEET_NAME, CART_HEADERS, c.submissionId, [
+    c.receivedAt, c.email, cartSummary_(c), c.units, c.total, c.pricing, c.country, c.sector, c.catalogVersion, 'New',
+    c.platform, c.entrySource, c.utmSource, c.utmMedium, c.utmCampaign, c.utmContent, c.utmTerm,
+    c.gclid, c.gadCampaignId, c.liFatId, c.adLandingPath, c.referrer,
+    c.submissionId, 'sending…', raw.slice(0, 5000),
+  ]);
+  if (row === 0) return json_({ ok: true }); // retry of a request already saved
+
+  const owner = notifyOwnerCart_(c);
+  const visitor = confirmCartVisitor_(c);
+  setCell_(CART_SHEET_NAME, CART_HEADERS, row, CART_EMAILS_COLUMN, 'owner: ' + owner + ' / visitor: ' + visitor);
+  return json_({ ok: true });
+}
+
+function cartSummary_(c) {
+  return c.items.map(function (item) { return item.qty + ' × ' + item.name; }).join('; ');
+}
+
+function cartPricingLine_(c) {
+  return c.pricing === 'Priced'
+    ? 'Total: $' + c.total + ' (excl. tax and shipping)'
+    : 'Total: to be quoted (no price list for these products yet)';
+}
+
+/** Returns 'sent' or 'failed'. */
+function notifyOwnerCart_(c) {
+  try {
+    MailApp.sendEmail({
+      to: NOTIFY_EMAIL,
+      replyTo: c.email,
+      name: 'Plotune Bridge Requests',
+      subject: 'New Bridge request: ' + cartSummary_(c) + ' - ' + c.email + ' (' + c.country + ')',
+      body: [
+        'New request from plotune.net/request. No payment was taken: confirm availability, tax and',
+        'shipping, agree the payment method and send the invoice.',
+        '',
+        cartSummary_(c),
+        cartPricingLine_(c),
+        '(catalog ' + c.catalogVersion + ')',
+        '',
+        'Email:            ' + c.email,
+        'Country:          ' + c.country,
+        'Sector:           ' + (c.sector || '-'),
+        '',
+        '---',
+        'Came from:        ' + (c.platform || c.entrySource || 'unknown') + (c.gadCampaignId ? '  (Google campaign ' + c.gadCampaignId + ')' : ''),
+        'UTM:              ' + [c.utmSource, c.utmMedium, c.utmCampaign, c.utmContent].filter(String).join(' / '),
+        'First page:       ' + c.adLandingPath,
+        '',
+        'All requests: ' + SpreadsheetApp.getActiveSpreadsheet().getUrl(),
+        '',
+        'Hit Reply to answer the requester directly.',
+      ].join('\n'),
+    });
+    return 'sent';
+  } catch (err) {
+    console.error('notifyOwnerCart_ failed: ' + err);
+    return 'failed';
+  }
+}
+
+/** Returns 'sent', 'off', 'skipped (...)' or 'failed'. */
+function confirmCartVisitor_(c) {
+  if (!SEND_CONFIRMATION_TO_VISITOR) return 'off';
+  try {
+    const skip = confirmationLimit_('cart-confirmed:', c.email);
+    if (skip) return skip;
+    MailApp.sendEmail({
+      to: c.email,
+      replyTo: NOTIFY_EMAIL,
+      name: 'Plotune',
+      subject: 'Your Plotune request',
+      body: [
+        'Hi,',
+        '',
+        'Thanks for your interest in Plotune. We received your request:',
+        '',
+        cartSummary_(c),
+        'Delivery country: ' + c.country,
+        '',
+        'Nothing has been charged. Within 1 business day we will email you availability, the exact tax,',
+        'shipping and any import duties for ' + c.country + ', and the payment options. You approve',
+        'the invoice before anything is charged.',
+        '',
+        'Questions about your bench or setup? Just reply to this email.',
+        '',
+        'The Plotune team',
+        'https://www.plotune.net/bridge',
+      ].join('\n'),
+    });
+    return 'sent';
+  } catch (err) {
+    console.error('confirmCartVisitor_ failed: ' + err);
     return 'failed';
   }
 }
@@ -635,6 +814,23 @@ function runTestOrder() {
     offerVersion: 'TEST',
     attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/nexus/' },
     submissionId: 'test-order-' + new Date().getTime(),
+  };
+  const out = doPost({ postData: { contents: JSON.stringify(sample) } });
+  Logger.log(out.getContent());
+}
+
+/** Like runTest, for the Bridge / cart request: adds one TEST row to the "Cart Orders" tab (delete it after). */
+function runTestCart() {
+  const sample = {
+    kind: 'cart',
+    email: NOTIFY_EMAIL,
+    items: [{ id: 'can', qty: 2 }, { id: 'daq', qty: 1 }, { id: 'not-a-product', qty: 5 }],
+    quote: { currency: 'USD', total: null },
+    country: 'United Kingdom',
+    sector: 'automotive',
+    catalogVersion: 'TEST',
+    attribution: { platform: 'google_ads', entry_source: 'TEST', gad_campaignid: '0', ad_landing_path: '/bridge/' },
+    submissionId: 'test-cart-' + new Date().getTime(),
   };
   const out = doPost({ postData: { contents: JSON.stringify(sample) } });
   Logger.log(out.getContent());
