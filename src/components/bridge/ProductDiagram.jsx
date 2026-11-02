@@ -93,6 +93,7 @@ const TallDiagram = ({ product }) => {
       <rect x="8" y="104" width="344" height="76" rx="14" className="bd-device" />
       <text x="180" y="149" textAnchor="middle" className="bd-name">{product.name.toUpperCase()}</text>
       <circle cx="330" cy="122" r="5" className="bd-led" />
+      <text x="180" y="168" textAnchor="middle" className="bd-power-label-t">USB-C · DC IN</text>
       <TallSide config={d.left} range={both ? [20, 166] : [40, 320]} />
       <TallSide config={d.right} range={[194, 340]} />
       <text x="180" y="294" textAnchor="middle" className="bd-caption-t bd-caption-tc">{d.caption}</text>
@@ -108,7 +109,7 @@ const ProductDiagram = ({ product }) => {
     <figure className="bd bd-product">
       <svg className="bd-wide" viewBox="0 0 640 316" role="img" aria-labelledby={`pd-${product.id}-t pd-${product.id}-d`}>
         <title id={`pd-${product.id}-t`}>{product.name} connection diagram</title>
-        <desc id={`pd-${product.id}-d`}>{`${product.name} connects your hardware (${summary}) and reaches a browser, Plotune Nexus and AI agents over USB-C or Wi-Fi. ${d.caption}.`}</desc>
+        <desc id={`pd-${product.id}-d`}>{`${product.name} connects your hardware (${summary}) and reaches a browser, Plotune Nexus and AI agents over USB-C or Wi-Fi. Power comes in over USB-C or the DC IN jack. ${d.caption}.`}</desc>
         {TOP.map((label, i) => {
           const x = 100 + i * 160;
           return <g key={label}>
@@ -122,6 +123,11 @@ const ProductDiagram = ({ product }) => {
         <rect x="170" y="110" width="300" height="140" rx="14" className="bd-device" />
         <text x="320" y="184" textAnchor="middle" className="bd-name">{upper}</text>
         <circle cx="446" cy="128" r="4.5" className="bd-led" />
+        <rect x="278" y="250" width="22" height="9" rx="4.5" className="bd-power" />
+        <circle cx="352" cy="257" r="8" className="bd-power" />
+        <circle cx="352" cy="257" r="2.6" className="bd-power-hole" />
+        <text x="289" y="279" textAnchor="middle" className="bd-power-label">USB-C</text>
+        <text x="352" y="279" textAnchor="middle" className="bd-power-label">DC IN</text>
         <Side config={d.left} side="left" />
         <Side config={d.right} side="right" />
         <text x="320" y="302" textAnchor="middle" className="bd-caption bd-caption-c">{d.caption}</text>

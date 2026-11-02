@@ -793,6 +793,10 @@ img { max-width: 100%; }
 .bd-node-label { font: 500 12px 'Roboto Mono', ui-monospace, monospace; fill: var(--ink); }
 .bd-caption { font: 500 11px 'Roboto Mono', ui-monospace, monospace; letter-spacing: .05em; fill: #526057; }
 .bd-caption-c { font-size: 12px; fill: var(--ink); }
+.bd-power { fill: #eaece4; stroke: #1c242b; stroke-width: 1.2; }
+.bd-power-hole { fill: #1c242b; }
+.bd-power-label { font: 500 11px 'Roboto Mono', ui-monospace, monospace; letter-spacing: .05em; fill: #526057; }
+.bd-power-label-t { font: 500 11px 'Roboto Mono', ui-monospace, monospace; letter-spacing: .08em; fill: #9fb0a8; }
 .bd-node-label-t { font: 500 10.5px 'Roboto Mono', ui-monospace, monospace; fill: var(--ink); }
 .bd-caption-t { font: 500 12px 'Roboto Mono', ui-monospace, monospace; letter-spacing: .03em; fill: #526057; }
 .bd-caption-tc { font-size: 13px; fill: var(--ink); }

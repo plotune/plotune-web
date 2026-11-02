@@ -20,6 +20,11 @@ test('every product has a unique id and slug, copy, three images and highlights'
   expect(COMMON_FEATURES[0][0]).toBe('Remote Hardware Access'); // the lead differentiator
 });
 
+test('every Bridge has the DC IN power jack in its specifications', () => {
+  PRODUCTS.forEach((p) => expect(p.features).toContain('DC IN power jack'));
+  expect(COMMON_FEATURES.map((c) => c[0])).toContain('USB-C, DC IN and Wi-Fi');
+});
+
 test('the prices', () => {
   expect(Object.fromEntries(PRODUCTS.map((p) => [p.id, p.price]))).toEqual({ can: 199, serial: 129, daq: 249, io: 259 });
   expect(PRICE_NOTE).toBe('Per unit, excl. tax and shipping.');

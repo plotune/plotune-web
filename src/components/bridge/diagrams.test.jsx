@@ -14,6 +14,8 @@ test('each product schematic draws the connectors and signals the catalog descri
     const w = wide(renderToStaticMarkup(<ProductDiagram product={product} />));
     expect(count(w, 'bd-port')).toBe(expected[product.id].ports);
     expect(count(w, 'bd-node-label')).toBe(expected[product.id].labels);
+    expect(count(w, 'bd-power')).toBe(2); // USB-C and DC IN on every device
+    expect(w).toContain('DC IN');
     expect(w).toContain(product.name.toUpperCase());
     expect(w).toContain('Plotune Nexus');
   });
