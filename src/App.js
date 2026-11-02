@@ -20,6 +20,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ResearchLayout from './research/ResearchLayout';
 import ScrollDepthTracker from './components/ScrollDepthTracker';
+import ProductTracker from './components/ProductTracker';
 
 // Every other page is route-split: Home and the Nexus pages stay eager (all
 // direct landing destinations for nav/ad traffic, and the Nexus pages are
@@ -184,6 +185,7 @@ function App() {
         <SiteFrame>
           <ScrollToTop />
           <ScrollDepthTracker />
+          <ProductTracker />
           <NavigationWrapper>
             <Suspense fallback={<div className="route-loading" role="status"><span className="technical-label">Plotune</span><p>Loading this page…</p></div>}>
             <Routes>

@@ -10,7 +10,7 @@ import { PRICE_NOTE, PRODUCTS, getProduct, isPriced, priceLabel } from '../conte
 import { ensureItem } from '../utils/bridgeCart';
 import { trackBridge } from '../utils/bridgeFunnel';
 import { useCtaTracking } from '../utils/ctaTracking';
-import { withFunnelParams } from '../utils/funnel';
+import { contactHref, withFunnelParams } from '../utils/funnel';
 
 // /bridge/<slug>: one product, the third step of the funnel
 //   Plotune Home -> Bridge -> Bridge product -> request (/request) -> sent.
@@ -130,7 +130,7 @@ const BridgeProduct = () => {
       <h2>Get {product.name}<br />on your bench.</h2>
       <div className="design-actions">
         <button type="button" className="design-button" ref={bottomCta.ref} onClick={request('bottom')}>Request {product.name} ↗</button>
-        <Link className="text-link" to={withFunnelParams('/contact')}>Questions? Talk to us →</Link>
+        <Link className="text-link" to={contactHref('bridge')}>Questions? Talk to us →</Link>
         <Link className="text-link" to="/nexus">See Plotune Nexus →</Link>
       </div>
     </section>

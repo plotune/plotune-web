@@ -6,24 +6,15 @@ import { getFunnelContext, withFunnelParams } from '../utils/funnel';
 import { suggestEmailFix } from '../utils/emailTypos';
 import { trackGoogleAdsContactConversion } from '../utils/googleAds';
 import { buildContactPayload, isValidEmail, newSubmissionId, postLead } from '../utils/leadSubmission';
+import { CONTACT_CONTEXTS } from '../content/contactContexts';
 
 const CONTACT_EMAIL = 'contact@plotune.net';
 const MAX_MESSAGE = 3000;
 const REPLY_TIME = 'within 1 business day';
 
 // Starter chips (Tesler's law: we take on the "how do I start this message" work). Three at most
-// (Hick). Each fills an editable opening sentence; the visitor finishes it in their own words.
-const buildStarters = (topic) => [
-  {
-    id: 'evaluate',
-    label: 'Evaluate Nexus for our bench',
-    text: topic
-      ? `We'd like to evaluate Plotune Nexus for ${topic} on our bench. Our setup: `
-      : "We'd like to evaluate Plotune Nexus on our test bench. Our setup: ",
-  },
-  { id: 'demo', label: 'Book a demo', text: "We'd like a short demo of Plotune Nexus. Good times for us: " },
-  { id: 'pricing', label: 'Pricing', text: "We'd like to understand pricing for Plotune Nexus. Benches / team size: " },
-];
+// (Hick). Each fills an editable opening sentence; the visitor finishes it in their own words. The chips come
+// from the product context the page chose (src/content/contactContexts.js).
 
 // Analytics for the form. Never the email address or the message text (both can contain personal
 // data); only that the form was started / submitted, the outcome and the message length.
@@ -37,7 +28,10 @@ const track = (event, properties = {}) => {
 // 56px submit (Fitts), one solid button on the page (Von Restorff), starter chips (Tesler), the email
 // checked as soon as the field is left, with a typo fix offered (Postel), a stated reply time, and a
 // confirmation that ends on a next step (peak-end). A sent message is the Google Ads "Kişi" conversion.
-const ContactForm = ({ topic = null }) => {
+// `topic` is what the sheet records, `starters` the chips, `placeholder` the hint in the message box, `assessment` whether the AI-readiness card applies
+// (a Nexus idea), `next` the quiet link that ends the confirmation.
+const NEUTRAL = CONTACT_CONTEXTS.neutral;
+const ContactForm = ({ topic = null, starters = NEUTRAL.starters({}), placeholder = NEUTRAL.placeholder({}), assessment = NEUTRAL.assessment, next = NEUTRAL.next }) => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
@@ -45,7 +39,6 @@ const ContactForm = ({ topic = null }) => {
   const [sendError, setSendError] = useState(false);
   const [emailFix, setEmailFix] = useState(null);
   const [starter, setStarter] = useState(null);
-  const starters = buildStarters(topic);
   const startedRef = useRef(false);
   const honeypotRef = useRef(null);
   const emailRef = useRef(null);
@@ -156,22 +149,26 @@ const ContactForm = ({ topic = null }) => {
             </p>
             {/* Peak-end: finish on a useful next step, not a dead end. */}
             <div className="mt-6 border-t border-ink/15 pt-5">
-              <p className="text-sm font-semibold text-light-text">While you wait</p>
-              <p className="mt-1 text-sm leading-6 text-gray-text">See how AI-ready your test bench is: 4 questions, about 30 seconds.</p>
+              {assessment && (
+                <>
+                <p className="text-sm font-semibold text-light-text">While you wait</p>
+                <p className="mt-1 text-sm leading-6 text-gray-text">See how AI-ready your test bench is: 4 questions, about 30 seconds.</p>
+                <Link
+                  to={withFunnelParams('/ai-readiness')}
+                  onClick={() => track('contact_sent_next_clicked', { target: 'ai_readiness', topic })}
+                  className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-ink/15 px-5 text-sm font-semibold text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  Check your test bench
+                  <FiArrowRight aria-hidden="true" />
+                </Link>
+                </>
+              )}
               <Link
-                to={withFunnelParams('/ai-readiness')}
-                onClick={() => track('contact_sent_next_clicked', { target: 'ai_readiness', topic })}
-                className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-ink/15 px-5 text-sm font-semibold text-light-text transition-colors duration-100 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Check your test bench
-                <FiArrowRight aria-hidden="true" />
-              </Link>
-              <Link
-                to="/nexus"
-                onClick={() => track('contact_sent_next_clicked', { target: 'nexus', topic })}
+                to={next.to}
+                onClick={() => track('contact_sent_next_clicked', { target: next.target, topic })}
                 className="mt-2 inline-flex min-h-[44px] items-center text-sm font-medium text-gray-text underline-offset-4 hover:text-primary hover:underline"
               >
-                Or see how Plotune Nexus works
+                {next.label}
               </Link>
             </div>
           </>
@@ -260,7 +257,7 @@ const ContactForm = ({ topic = null }) => {
         ref={messageRef}
         rows={4}
         maxLength={MAX_MESSAGE}
-        placeholder={topic ? `e.g. We'd like to automate ${topic} on our bench…` : 'What do you test, and what would you like to automate?'}
+        placeholder={placeholder}
         value={message}
         onChange={(e) => { setMessage(e.target.value); if (errors.message) setErrors((x) => ({ ...x, message: undefined })); markStarted(); }}
         aria-invalid={errors.message ? 'true' : undefined}

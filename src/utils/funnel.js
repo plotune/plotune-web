@@ -63,3 +63,34 @@ export const withFunnelParams = (path, extra = {}) => {
   const query = params.toString();
   return query ? `${path}?${query}` : path;
 };
+
+// Which product a path belongs to, so /contact can speak about what the visitor was just looking at.
+// Pages that belong to no single product (home, about, research, docs index ...) return null and leave
+// whatever was recorded before untouched.
+export const productForPath = (pathname = '') => {
+  const path = pathname.toLowerCase().replace(/\/+$/, '') || '/';
+  const under = (base) => path === base || path.startsWith(`${base}/`);
+  if (under('/bridge') || path === '/request') return 'bridge';
+  if (under('/stream') || path === '/streams') return 'stream';
+  if (under('/nexus') || under('/solutions') || under('/docs/nexus') || path === '/ai-readiness' || path === '/agentic-test-development') return 'nexus';
+  return null;
+};
+
+// Records the product area the visitor is in (and, on a product page, which item: "Bridge DAQ"). An item
+// belongs to its product, so it is dropped when the visitor moves to another product. Session only.
+export const recordProductVisit = (product, item = '') => {
+  const next = readContext();
+  if (!next.entry_source) next.entry_source = inferEntrySource();
+  if (next.product !== product) delete next.item;
+  next.product = product;
+  if (item) next.item = item;
+  writeContext(next);
+  return next;
+};
+
+// A /contact link that names the product outright (more robust than the session memory: it also works
+// when storage is blocked and when a link is opened in a new tab).
+export const contactHref = (product) => {
+  const base = withFunnelParams('/contact');
+  return `${base}${base.includes('?') ? '&' : '?'}product=${encodeURIComponent(product)}`;
+};

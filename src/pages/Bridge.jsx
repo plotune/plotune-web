@@ -10,7 +10,7 @@ import SystemDiagram from '../components/bridge/SystemDiagram';
 import { COMMON_FEATURES, PRODUCTS, priceLabel } from '../content/bridgeCatalog';
 import { trackBridge } from '../utils/bridgeFunnel';
 import { useCtaTracking } from '../utils/ctaTracking';
-import { withFunnelParams } from '../utils/funnel';
+import { contactHref, withFunnelParams } from '../utils/funnel';
 
 // /bridge: the family landing page, the second step of the funnel
 //   Plotune Home -> Bridge -> Bridge product (/bridge/<slug>) -> request (/request) -> sent.
@@ -117,7 +117,7 @@ export default function Bridge() {
       <h2>Plotune Bridge connects your devices.<br /><span>Plotune Nexus makes them intelligent.</span></h2>
       <div className="design-actions">
         <a className="design-button" href="#bridge-products" ref={closingCta.ref} onClick={() => trackBridge('bridge_choose_clicked', { placement: 'closing' })}>Choose Your Bridge ↑</a>
-        <Link className="text-link" to={withFunnelParams('/contact')}>Not sure which one? Talk to us →</Link>
+        <Link className="text-link" to={contactHref('bridge')}>Not sure which one? Talk to us →</Link>
         <Link className="text-link" to="/nexus">See Plotune Nexus →</Link>
       </div>
     </section>
