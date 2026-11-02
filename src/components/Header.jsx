@@ -75,9 +75,9 @@ const Header = () => {
       { to: '/bridge/serial', label: 'Bridge Serial' },
       { to: '/bridge/daq', label: 'Bridge DAQ' },
       { to: '/bridge/io', label: 'Bridge I/O' },
+      { to: 'https://bridge.plotune.net', label: 'Bridge workspace', isExternal: true },
     ] },
     { to: '/stream', label: 'Stream', keepBrandName: true },
-    { to: 'https://bridge.plotune.net', label: 'Bridge', keepBrandName: true, isExternal: true },
     { to: '/research', label: 'Research', keepBrandName: true },
     { to: '/docs', label: 'Docs', children: [
       { to: '/docs/nexus', label: 'Nexus Documentation' },
@@ -158,18 +158,37 @@ const Header = () => {
           </div>
           <div id={dropdownId} className={`${isOpen ? 'block' : 'hidden'} mt-2 xl:absolute xl:left-0 xl:top-full xl:mt-3 xl:min-w-48`}>
             <div className="min-w-48 rounded-sm border border-ink/15 bg-dark-surface p-3 ">
-              {item.children.map((child) => (
-                <Link
-                  key={child.to}
-                  to={child.to}
-                  aria-current={location.pathname === child.to ? 'page' : undefined}
-                  className={`flex min-h-[44px] items-center rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                    location.pathname === child.to ? 'text-primary' : 'text-dark-text'
-                  }`}
-                >
-                  {child.label}
-                </Link>
-              ))}
+              {item.children.map((child) => {
+                const childClass = `flex min-h-[44px] items-center rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-300 hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  location.pathname === child.to ? 'text-primary' : 'text-dark-text'
+                }`;
+                if (child.isExternal) {
+                  return (
+                    <a
+                      key={child.to}
+                      href={child.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${childClass} whitespace-nowrap`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {child.label}
+                      <span aria-hidden="true" className="ml-2 text-xs">↗</span>
+                      <span className="sr-only">(opens in a new tab)</span>
+                    </a>
+                  );
+                }
+                return (
+                  <Link
+                    key={child.to}
+                    to={child.to}
+                    aria-current={location.pathname === child.to ? 'page' : undefined}
+                    className={childClass}
+                  >
+                    {child.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>
