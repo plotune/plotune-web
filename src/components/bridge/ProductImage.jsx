@@ -6,7 +6,7 @@ import React from 'react';
 const ProductImage = ({ product, index = 0, eager = false, className = '' }) => {
   const image = product.images[index] || product.images[0];
   if (image && image.src) {
-    return <img className={`bridge-img ${className}`} src={image.src} alt={image.alt} width="1200" height="900" loading={eager ? 'eager' : 'lazy'} decoding="async" />;
+    return <img className={`bridge-img ${className}`} src={image.src} alt={image.alt} width="1600" height="1200" loading={eager ? 'eager' : 'lazy'} decoding="async" />;
   }
   return (
     <div className={`bridge-ph ${className}`} role="img" aria-label={image ? image.alt : product.name}>

@@ -76,7 +76,11 @@ export const PRODUCTS = [
     ],
     applications: ['ECU validation', 'BMS testing', 'Automotive diagnostics', 'Robotics', 'Remote test benches'],
     boundary: null,
-    images: imageSet('Bridge CAN'),
+    images: [
+      { src: '/assets/bridge/can/1.webp', alt: 'Plotune Bridge CAN, black enclosure with the D-SUB9 connector labelled CAN 1 and 2, a status LED and the Plotune logo on top' },
+      { src: '/assets/bridge/can/2.webp', alt: 'Plotune Bridge CAN from the side, with the D-SUB9 connector at the end' },
+      { src: '/assets/bridge/can/3.webp', alt: 'Rear of Plotune Bridge CAN with the USB-C port and the DC IN power jack' },
+    ],
     price: 199,
   },
   {

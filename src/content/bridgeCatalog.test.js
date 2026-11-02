@@ -71,3 +71,10 @@ test('no unconfirmed claims in any product copy', () => {
   expect(text).not.toMatch(/\b(available (in|from|by)|ships? (in|from|by)|Q[1-4] 20\d\d|\b20(2[6-9]|3\d)\b)/i);
   expect(text).not.toMatch(/accurate to|±\s?0\.\d+\s?%/i);
 });
+
+// A product image listed in the catalog must exist in public/ (a typo would ship a broken picture).
+test('every image path in the catalog points at a file that exists', () => {
+  PRODUCTS.forEach((p) => p.images.forEach((image) => {
+    if (image.src) expect(fs.existsSync(path.join(__dirname, '../../public', image.src))).toBe(true);
+  }));
+});
