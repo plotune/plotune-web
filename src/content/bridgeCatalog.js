@@ -119,7 +119,11 @@ export const PRODUCTS = [
     ],
     applications: ['Embedded firmware debugging', 'Industrial equipment diagnostics', 'Serial protocol validation', 'Remote maintenance'],
     boundary: null,
-    images: imageSet('Bridge Serial'),
+    images: [
+      { src: '/assets/bridge/serial/1.webp', alt: 'Plotune Bridge Serial with two RJ45 serial connectors labelled Serial 1 and Serial 2, a status LED and the Plotune logo on top' },
+      { src: '/assets/bridge/serial/2.webp', alt: 'Plotune Bridge Serial from the side, with the two RJ45 serial connectors at the end' },
+      { src: '/assets/bridge/serial/3.webp', alt: 'Rear of Plotune Bridge Serial with the USB-C port and the DC IN power jack' },
+    ],
     price: 129,
   },
   {
