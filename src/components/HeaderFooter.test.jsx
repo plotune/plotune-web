@@ -69,10 +69,12 @@ test('header exposes named controls for account and navigation disclosure', () =
 test('header links Bridge externally next to an unchanged Stream link for guests and users', () => {
   const guest = renderHeader();
   // Mobile menu items are always in the DOM (shown via CSS), so this covers desktop and mobile.
+  // For guests the workspace sits inside the single Bridge menu (next to the product pages), not as a second "Bridge".
   const guestBridge = guest.container.querySelector('a[href="https://bridge.plotune.net"]');
 
   expect(guestBridge).not.toBeNull();
-  expect(guestBridge.textContent).toBe('Bridge');
+  expect(guestBridge.textContent).toContain('Bridge workspace');
+  expect(guestBridge.getAttribute('target')).toBe('_blank');
   expect(guestBridge.getAttribute('rel')).toContain('noopener');
   expect(guest.container.querySelector('a[href="/stream"] [translate="no"]').textContent).toBe('Stream');
 
@@ -130,5 +132,29 @@ test('footer preserves labelled navigation groups and its Features destination',
   expect(container.querySelector('a[href="/nexus"][aria-current="page"]')).not.toBeNull();
   expect(container.querySelector('a[href="https://bridge.plotune.net"]')).not.toBeNull();
 
+  act(() => root.unmount());
+});
+
+test('guests see exactly one "Bridge" in the header and one in the footer, each going to a different place', () => {
+  const { container, root } = renderHeader();
+  const named = (scope) => [...scope.querySelectorAll('a')].filter((a) => a.textContent.trim() === 'Bridge');
+  const headerBridge = named(container);
+  expect(headerBridge).toHaveLength(1);
+  expect(headerBridge[0].getAttribute('href')).toBe('/bridge');
+  // the product pages and the workspace are reachable from that one menu
+  ['/bridge/can', '/bridge/serial', '/bridge/daq', '/bridge/io'].forEach((href) => expect(container.querySelector(`a[href="${href}"]`)).not.toBeNull());
+  expect(container.querySelector('a[href="https://bridge.plotune.net"]')).not.toBeNull();
+  act(() => root.unmount());
+});
+
+test('the footer has one "Bridge" (the product pages) and the workspace link is labelled as the workspace', () => {
+  const { container, root } = renderFooter();
+  const bridge = [...container.querySelectorAll('a')].filter((a) => a.textContent.trim() === 'Bridge');
+  expect(bridge).toHaveLength(1);
+  expect(bridge[0].getAttribute('href')).toBe('/bridge');
+  const workspace = container.querySelector('a[href="https://bridge.plotune.net"]');
+  expect(workspace.textContent).toContain('Bridge workspace');
+  expect(workspace.getAttribute('target')).toBe('_blank');
+  expect(workspace.getAttribute('rel')).toContain('noopener');
   act(() => root.unmount());
 });

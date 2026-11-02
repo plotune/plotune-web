@@ -33,9 +33,9 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="flex min-h-[44px] items-center gap-2 text-gray-text hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-300"
                 >
-                  Bridge
+                  Bridge workspace
                   <span aria-hidden="true" className="text-xs">↗</span>
-                  <span className="sr-only">(opens Bridge in a new tab)</span>
+                  <span className="sr-only">(opens the Bridge workspace in a new tab)</span>
                 </a>
               </li>
               <li><Link to="/extensions" aria-current={location.pathname === '/extensions' ? 'page' : undefined} className={linkClass('/extensions')}>Extensions</Link></li>
