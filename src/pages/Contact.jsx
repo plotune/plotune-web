@@ -1,17 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiArrowRight, FiClock, FiMapPin } from 'react-icons/fi';
 import Seo from '../components/Seo';
 import ContactForm from '../components/ContactForm';
-import { getSolutionSegment } from '../content/solutions';
+import { PRODUCT_CHOICES } from '../content/contactContexts';
+import { resolveContactContext } from '../utils/contactContext';
 import { posthog } from '../posthog';
-import { getFunnelContext, withFunnelParams } from '../utils/funnel';
-
-const nextSteps = [
-  ['You tell us about your setup', 'What you’re testing, what’s already on your bench, and where the manual work is.'],
-  ['We map it to Plotune Nexus', 'Which interfaces apply, what a first bounded workflow looks like on your equipment.'],
-  ['You get a straight answer', 'Whether it fits, and what setting it up on your bench would actually take.'],
-];
+import { contactHref, getFunnelContext, withFunnelParams } from '../utils/funnel';
 
 // The embedded Zammad ticket widget (support.plotune.net) is down and its
 // script load hung this page on "Loading the support form..." indefinitely
@@ -22,27 +17,6 @@ const nextSteps = [
 // contact@ is the funnel-facing address for new inquiries; support@ is reserved
 // for existing customers' issues and isn't the right destination for this page.
 const CONTACT_EMAIL = 'contact@plotune.net';
-
-// Builds a pre-filled mailto so a visitor arriving from a research article or
-// solution page doesn't have to re-explain what they're reaching out about;
-// the subject/body already name the workflow they were just reading about.
-// Falls back to a plain, undirected inquiry when there's no funnel context.
-const useContactContext = () => {
-  const { search } = useLocation();
-  const params = new URLSearchParams(search);
-  const solutionSlug = params.get('solution') || params.get('segment');
-  const solution = solutionSlug && getSolutionSegment(solutionSlug);
-
-  const subject = solution ? `Inquiry: ${solution.label}` : 'Inquiry: Plotune Nexus';
-  const body = solution
-    ? `Hi Plotune team,\n\nI was reading about ${solution.label} and wanted to talk through how it would fit our setup.\n\n`
-    : `Hi Plotune team,\n\nI wanted to talk through how Plotune Nexus would fit our setup.\n\n`;
-
-  return {
-    topic: solution ? solution.label : null,
-    mailto: `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-  };
-};
 
 const otherChannels = [
   {
@@ -59,8 +33,20 @@ const otherChannels = [
   },
 ];
 
+// What the page says depends on what the visitor was looking at (see utils/contactContext.js): a link that
+// names the product, a Nexus solution page, else the product area they were last in this session. With
+// nothing known it stays neutral and asks about their setup. The "Asking about" line lets anyone correct
+// a wrong guess in one tap.
 const ContactPage = () => {
-  const { topic, mailto } = useContactContext();
+  const { search } = useLocation();
+  const { id, source, config, topic, starters, placeholder, mail } = resolveContactContext(search, getFunnelContext());
+  const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(mail.subject)}&body=${encodeURIComponent(mail.body)}`;
+  const reportedRef = useRef(false);
+  useEffect(() => {
+    if (reportedRef.current) return;
+    reportedRef.current = true;
+    posthog.capture('contact_context_shown', { ...getFunnelContext(), context: id, context_source: source });
+  }, [id, source]);
 
   // Layout (mobile first): short intro -> form -> "Not ready to talk yet?" card -> "what happens
   // next" -> a quiet email line. On large screens the form and the card sit in the right column;
@@ -73,7 +59,7 @@ const ContactPage = () => {
     <section className="relative overflow-hidden bg-dark-bg pb-16 pt-28 text-dark-text md:pb-28 md:pt-32">
       <Seo
         title="Contact Plotune"
-        description="Tell us about your test environment and we'll walk you through how Plotune Nexus fits, including integration details, timeline, and next steps."
+        description={config.seoDescription}
         path="/contact"
       />
       <div className="absolute inset-0 bg-dark-surface" />
@@ -83,37 +69,58 @@ const ContactPage = () => {
           <div className="max-w-xl lg:col-start-1 lg:row-start-1">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Contact</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight text-light-text md:text-5xl">
-              Tell us about your test environment.
+              {config.heading}
             </h1>
             <p className="mt-4 text-lg leading-8 text-gray-text">
-              We reply with integration details, a timeline, and clear next steps.
+              {config.intro}
             </p>
+            <nav aria-label="What are you asking about?" className="mt-6 flex flex-wrap items-center gap-2" data-contact-context={id}>
+              <span className="text-sm text-gray-text">Asking about</span>
+              {PRODUCT_CHOICES.map(([key, label]) => (
+                <Link
+                  key={key}
+                  replace
+                  to={contactHref(key)}
+                  aria-current={id === key ? 'true' : undefined}
+                  onClick={() => posthog.capture('contact_context_switched', { ...getFunnelContext(), from: id, to: key })}
+                  className={`inline-flex min-h-[44px] items-center rounded-full border px-4 text-sm font-medium transition-colors ${
+                    id === key ? 'border-primary bg-primary/10 text-primary' : 'border-ink/15 text-gray-text hover:border-primary hover:text-primary'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
           </div>
 
           <div className="lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:self-start">
-            <ContactForm topic={topic} />
+            <ContactForm topic={topic} starters={starters} placeholder={placeholder} assessment={config.assessment} next={config.next} />
 
-            {/* Second funnel: visitors not ready to talk take the assessment instead of leaving. */}
-            <div className="mt-5 rounded-sm border border-primary/30 bg-primary/[0.07] p-5 md:p-6">
-              <p className="text-base font-semibold text-light-text">Not ready to talk yet?</p>
-              <p className="mt-1 text-sm leading-6 text-gray-text">
-                See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
-              </p>
-              <Link
-                to={withFunnelParams('/ai-readiness')}
-                onClick={() => posthog.capture('contact_assessment_clicked', { ...getFunnelContext(), path: '/contact', topic })}
-                className="mt-4 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border-2 border-primary px-5 text-base font-semibold text-primary transition-colors duration-100 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg"
-              >
-                Check your test bench
-                <FiArrowRight aria-hidden="true" />
-              </Link>
-            </div>
+            {config.assessment && (
+              <>
+                {/* Second funnel: visitors not ready to talk take the assessment instead of leaving. */}
+                <div className="mt-5 rounded-sm border border-primary/30 bg-primary/[0.07] p-5 md:p-6">
+                  <p className="text-base font-semibold text-light-text">Not ready to talk yet?</p>
+                  <p className="mt-1 text-sm leading-6 text-gray-text">
+                    See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sign-up.
+                  </p>
+                  <Link
+                    to={withFunnelParams('/ai-readiness')}
+                    onClick={() => posthog.capture('contact_assessment_clicked', { ...getFunnelContext(), path: '/contact', topic })}
+                    className="mt-4 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border-2 border-primary px-5 text-base font-semibold text-primary transition-colors duration-100 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg"
+                  >
+                    Check your test bench
+                    <FiArrowRight aria-hidden="true" />
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="lg:col-start-1 lg:row-start-2">
             <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-text">What happens next</h2>
             <ol className="mt-5 space-y-5">
-              {nextSteps.map(([title, copy], index) => (
+              {config.steps.map(([title, copy], index) => (
                 <li key={title} className="flex gap-4">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
                     {index + 1}
