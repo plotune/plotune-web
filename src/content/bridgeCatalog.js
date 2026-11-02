@@ -161,7 +161,11 @@ export const PRODUCTS = [
     ],
     applications: ['Sensor monitoring', 'ECU signal validation', 'Voltage measurements', 'Laboratory experiments', 'Automated hardware testing'],
     boundary: 'Sampling rate, accuracy, noise performance and isolation are still to be determined. ADC resolution on its own does not establish measurement accuracy.',
-    images: imageSet('Bridge DAQ'),
+    images: [
+      { src: '/assets/bridge/daq/1.webp', alt: 'Plotune Bridge DAQ with seven green two-pole input terminals (AI 1 to AI 7) on top and the USB-C port and DC IN jack at the end' },
+      { src: '/assets/bridge/daq/2.webp', alt: 'Top view of Plotune Bridge DAQ showing the seven analog input terminals, AI 1 to AI 7, each marked plus and minus' },
+      { src: '/assets/bridge/daq/3.webp', alt: 'Plotune Bridge DAQ at an angle, with the analog input terminals on top and the USB-C port and DC IN jack at the end' },
+    ],
     price: 249,
   },
   {
