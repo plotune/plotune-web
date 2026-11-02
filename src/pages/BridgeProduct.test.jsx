@@ -10,6 +10,15 @@ jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 const Where = () => <p id="where">{useLocation().pathname}</p>;
+
+// A page for people who scan: count the words a visitor can see, leaving out the drawings' own
+// labels and the collapsed "Full specifications" fold.
+const visibleWords = (root) => {
+  const clone = root.cloneNode(true);
+  clone.querySelectorAll('svg, details').forEach((n) => n.remove());
+  return clone.textContent.split(/\s+/).filter(Boolean).length;
+};
+
 let container; let root;
 const render = (url) => act(() => root.render(
   <HelmetProvider><MemoryRouter initialEntries={[url]}>
@@ -63,4 +72,10 @@ test('a second request does not raise the quantity', () => {
 test('an unknown product goes back to the Bridge landing page', () => {
   render('/bridge/nope');
   expect(container.querySelector('#where').textContent).toBe('/bridge');
+});
+
+test('stays scannable: few visible words, the rest is pictures and diagrams', () => {
+  render('/bridge/io');
+  const words = visibleWords(container.querySelector('main'));
+  expect(words).toBeLessThan(230);
 });

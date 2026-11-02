@@ -45,6 +45,8 @@ export const PRODUCTS = [
     slug: 'can',
     name: 'Bridge CAN',
     short: 'Remote, isolated dual-channel CAN for ECU and BMS testing.',
+    tag: 'CAN · 2 channels',
+    diagram: { left: { nodes: ['CAN 1', 'CAN 2'], ports: 1, kind: 'db9', caption: 'Your CAN buses' }, right: null, caption: 'DB9 · Y-cable → CAN 1 + CAN 2' },
     tagline: 'Dual-Channel CAN Communication, Anywhere.',
     blurb: 'A connected CAN test interface that combines affordable hardware with remote access and test automation.',
     definition: 'A compact, dual-channel Classical CAN interface for connected automotive and embedded-system testing.',
@@ -54,10 +56,10 @@ export const PRODUCTS = [
       { value: 'AI-ready', label: 'Automated ECU and BMS testing with Nexus' },
     ],
     advantages: [
-      ['Remote access, not workstation-bound', 'Reach your CAN bus from anywhere, instead of from the one PC it is plugged into.'],
-      ['Dual-channel isolated CAN, compact', 'Two galvanically isolated Classical CAN channels in a single compact device.'],
-      ['Browser-based engineering workflows', 'Monitor and transmit frames, record, and decode signals in the browser.'],
-      ['Automated ECU and BMS testing', 'Plotune Nexus makes the interface a step in AI-agent-ready test automation.'],
+      ['Remote access, not workstation-bound', 'Reach your CAN bus from anywhere, instead of from the one PC it is plugged into.', 'remote'],
+      ['Dual-channel isolated CAN, compact', 'Two galvanically isolated Classical CAN channels in a single compact device.', 'channels'],
+      ['Browser-based engineering workflows', 'Monitor and transmit frames, record, and decode signals in the browser.', 'browser'],
+      ['Automated ECU and BMS testing', 'Plotune Nexus makes the interface a step in AI-agent-ready test automation.', 'ai'],
     ],
     features: [
       '2 independent Classical CAN channels',
@@ -82,6 +84,8 @@ export const PRODUCTS = [
     slug: 'serial',
     name: 'Bridge Serial',
     short: 'Remote serial debugging with logging and automation.',
+    tag: 'Serial · 2 channels',
+    diagram: { left: { nodes: ['Serial 1', 'Serial 2'], ports: 2, kind: 'rj45', caption: 'RS-232 · RS-422 · RS-485' }, right: null, caption: '2 × RJ45' },
     tagline: 'Industrial Serial Communication Made Accessible.',
     blurb: 'An accessible serial interface combining connectivity, remote debugging and automated testing.',
     definition: 'A compact, dual-channel serial communication interface for connected debugging, diagnostics and automation.',
@@ -91,10 +95,10 @@ export const PRODUCTS = [
       { value: 'AI-ready', label: 'Automated serial testing with Nexus' },
     ],
     advantages: [
-      ['Remote serial debugging', 'Debug and maintain equipment without standing next to it.'],
-      ['Two independent channels', 'Work with two serial links at once from a single device.'],
-      ['Monitoring, logging and commands in one place', 'Watch traffic, keep logs and run commands from the same workflow.'],
-      ['Test automation, not basic serial conversion', 'Plotune Nexus turns serial links into AI-agent-ready test steps.'],
+      ['Remote serial debugging', 'Debug and maintain equipment without standing next to it.', 'remote'],
+      ['Two independent channels', 'Work with two serial links at once from a single device.', 'channels'],
+      ['Monitoring, logging and commands in one place', 'Watch traffic, keep logs and run commands from the same workflow.', 'browser'],
+      ['Test automation, not basic serial conversion', 'Plotune Nexus turns serial links into AI-agent-ready test steps.', 'ai'],
     ],
     features: [
       '2 independent serial channels',
@@ -117,6 +121,8 @@ export const PRODUCTS = [
     slug: 'daq',
     name: 'Bridge DAQ',
     short: 'Remote analog measurement for automated validation.',
+    tag: 'Analog · 7 inputs',
+    diagram: { left: { nodes: ['AI 1', 'AI 2', 'AI 3', 'AI 4', 'AI 5', 'AI 6', 'AI 7'], ports: 7, kind: 'terminal', caption: '±10 V analog inputs' }, right: null, caption: '7 × removable terminals' },
     tagline: 'Capture Real-World Signals with Confidence.',
     blurb: 'An accessible, connected DAQ solution combining analog measurement with remote monitoring and test automation.',
     definition: 'A compact, seven-channel analog data acquisition device for connected engineering measurements and automated validation.',
@@ -126,10 +132,10 @@ export const PRODUCTS = [
       { value: 'AI-ready', label: 'Measurements inside automated test workflows' },
     ],
     advantages: [
-      ['Seven analog channels, compact', 'Seven independent analog voltage inputs in a single bench-ready device.'],
-      ['Remote monitoring and recording', 'Watch and record measurements without being at the bench.'],
-      ['Measurements inside automated tests', 'Plotune Nexus brings physical measurements into automated test workflows.'],
-      ['Browser access, no desktop DAQ application', 'Open live measurements in the browser instead of installing a traditional DAQ application.'],
+      ['Seven analog channels, compact', 'Seven independent analog voltage inputs in a single bench-ready device.', 'signal'],
+      ['Remote monitoring and recording', 'Watch and record measurements without being at the bench.', 'remote'],
+      ['Measurements inside automated tests', 'Plotune Nexus brings physical measurements into automated test workflows.', 'ai'],
+      ['Browser access, no desktop DAQ application', 'Open live measurements in the browser instead of installing a traditional DAQ application.', 'browser'],
     ],
     features: [
       '7 independent analog voltage input channels',
@@ -152,6 +158,8 @@ export const PRODUCTS = [
     slug: 'io',
     name: 'Bridge I/O',
     short: 'Remote mixed-signal I/O for test fixtures and automation.',
+    tag: 'Digital + analog · 12 I/O',
+    diagram: { left: { nodes: ['DI 1', 'DI 2', 'DI 3', 'DI 4', 'AI 1', 'AI 2'], ports: 6, kind: 'terminal', caption: 'Sensors, switches' }, right: { nodes: ['DO 1', 'DO 2', 'DO 3', 'DO 4', 'AO 1', 'AO 2'], ports: 6, kind: 'terminal', caption: 'Actuators, fixtures' }, caption: '12 I/O points · removable terminals' },
     tagline: 'Control and Monitor the Physical World.',
     blurb: 'An accessible mixed-signal I/O interface designed to simplify connected hardware testing and automation.',
     definition: 'A compact mixed-signal input/output interface for connected test-bench control, signal monitoring and hardware automation.',
@@ -161,11 +169,11 @@ export const PRODUCTS = [
       { value: 'Remote', label: 'Control of test fixtures from anywhere' },
     ],
     advantages: [
-      ['Digital and analog I/O in one device', 'Four digital inputs, four digital outputs, two analog inputs and two analog outputs together.'],
-      ['Two analog outputs', 'Generate and simulate signals as part of a test.'],
-      ['Remote control of test fixtures', 'Drive and monitor your fixture without being next to it.'],
-      ['Automated hardware interaction', 'Plotune Nexus lets AI agents sequence tests that touch real hardware.'],
-      ['Fewer separate modules', 'May simplify setups that would otherwise need separate I/O modules or PLC-based control.'],
+      ['Digital and analog I/O in one device', 'Four digital inputs, four digital outputs, two analog inputs and two analog outputs together.', 'sliders'],
+      ['Two analog outputs', 'Generate and simulate signals as part of a test.', 'signal'],
+      ['Remote control of test fixtures', 'Drive and monitor your fixture without being next to it.', 'fixture'],
+      ['Automated hardware interaction', 'Plotune Nexus lets AI agents sequence tests that touch real hardware.', 'ai'],
+      ['Fewer separate modules', 'May simplify setups that would otherwise need separate I/O modules or PLC-based control.', 'modules'],
     ],
     features: [
       '4 digital inputs (24 V)',
@@ -188,12 +196,12 @@ export const PRODUCTS = [
 
 // What every Bridge shares: the family-level story on /bridge.
 export const COMMON_FEATURES = [
-  ['Remote Hardware Access', 'Reach your hardware from anywhere, not just from the workstation it is plugged into.'],
-  ['Browser-Based Workflows', 'Configure devices, monitor signals and control hardware in the browser.'],
-  ['AI-Ready Test Automation', 'Native Plotune Nexus integration lets AI agents run tests, interact with hardware and collect results.'],
-  ['USB-C and Wi-Fi', 'Connect over USB-C or integrated Wi-Fi.'],
-  ['Compact, Bench-Ready', 'Compact hardware designed for engineering workbenches.'],
-  ['Entry-Level Pricing', 'Prices from $129, so every bench can be connected.'],
+  ['Remote Hardware Access', 'Reach your hardware from anywhere, not just from the workstation it is plugged into.', 'remote'],
+  ['Browser-Based Workflows', 'Configure devices, monitor signals and control hardware in the browser.', 'browser'],
+  ['AI-Ready Test Automation', 'Native Plotune Nexus integration lets AI agents run tests, interact with hardware and collect results.', 'ai'],
+  ['USB-C and Wi-Fi', 'Connect over USB-C or integrated Wi-Fi.', 'usb'],
+  ['Compact, Bench-Ready', 'Compact hardware designed for engineering workbenches.', 'compact'],
+  ['Entry-Level Pricing', 'Prices from $129, so every bench can be connected.', 'price'],
 ];
 
 // Shown next to a price.

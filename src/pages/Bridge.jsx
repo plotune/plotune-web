@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import BridgeCarousel from '../components/bridge/BridgeCarousel';
 import BridgeCartLink from '../components/bridge/BridgeCartLink';
+import BridgeIcon from '../components/bridge/BridgeIcon';
 import ProductImage from '../components/bridge/ProductImage';
+import SystemDiagram from '../components/bridge/SystemDiagram';
 import { COMMON_FEATURES, PRODUCTS, priceLabel } from '../content/bridgeCatalog';
 import { trackBridge } from '../utils/bridgeFunnel';
 import { useCtaTracking } from '../utils/ctaTracking';
@@ -11,17 +13,17 @@ import { withFunnelParams } from '../utils/funnel';
 
 // /bridge: the family landing page, the second step of the funnel
 //   Plotune Home -> Bridge -> Bridge product (/bridge/<slug>) -> request (/request) -> sent.
-// It stays about the products and what every Bridge shares. Technical detail lives on each product
-// page; this page's one job is to send the visitor to the right one. Product facts, images and
-// prices all come from src/content/bridgeCatalog.js.
+// Built to be scanned, not read: pictures, one system diagram, icon tiles and a three-step strip,
+// with a sentence or less of text per block. Detail lives on the product pages. Product facts,
+// images and prices all come from src/content/bridgeCatalog.js. A test caps the visible word count.
 
 const productHref = (product) => withFunnelParams(`/bridge/${product.slug}`);
 const clickProduct = (product, placement) => () => trackBridge('bridge_product_clicked', { product: product.id, placement });
 
 const STEPS = [
-  ['Choose your Bridge', 'Pick the interface your bench needs, or combine several.'],
-  ['Send a request', 'Tell us where to send the offer. Nothing is charged and nothing is paid on this site.'],
-  ['We confirm and agree payment', 'Within 1 business day we confirm availability, tax and shipping, and agree the payment method with you by email.'],
+  ['Choose your Bridge', 'choose'],
+  ['Send a request', 'send'],
+  ['We confirm and agree payment', 'confirm'],
 ];
 
 export default function Bridge() {
@@ -38,9 +40,8 @@ export default function Bridge() {
         </Link>
         <div className="bridge-hero-caption">
           <div>
-            <p className="technical-label">0{i + 1} / Plotune</p>
             <h3>{product.name}</h3>
-            <p>{product.short}</p>
+            <p className="technical-label">{product.tag}</p>
           </div>
           <Link className="text-link" to={productHref(product)} onClick={clickProduct(product, 'hero_carousel')}>View {product.name} →</Link>
         </div>
@@ -57,16 +58,13 @@ export default function Bridge() {
     />
 
     <section className="design-container nexus-intro">
-      <div className="section-index"><span>Plotune Bridge / Connected hardware interfaces</span><BridgeCartLink fallback={<span>CAN · Serial · DAQ · I/O</span>} /></div>
+      <div className="section-index"><span>Plotune Bridge</span><BridgeCartLink fallback={<span>CAN · Serial · DAQ · I/O</span>} /></div>
       <div className="product-spread">
         <div className="product-copy">
-          <p className="technical-label">Plotune Bridge</p>
           <h1>Connect your hardware.<br />Access it anywhere.<br /><span>Automate with AI.</span></h1>
-          <p>A family of compact hardware interfaces that connect physical engineering systems to browser-based workflows, remote access and automated testing.</p>
           <div className="design-actions">
             <div>
               <a className="design-button" href="#bridge-products" ref={chooseCta.ref} onClick={() => trackBridge('bridge_choose_clicked', { placement: 'hero' })}>Choose Your Bridge ↓</a>
-              <p className="action-note">USB-C and Wi-Fi · browser-based · Nexus-ready</p>
             </div>
           </div>
         </div>
@@ -76,14 +74,12 @@ export default function Bridge() {
 
     <section className="design-container bridge-products" id="bridge-products">
       <div className="section-index"><span>01 / Choose your Bridge</span><span>Four interfaces</span></div>
-      <h2>Four interfaces.<br />Pick the one your bench needs.</h2>
-      <div className="bridge-product-grid">{PRODUCTS.map((product, i) => (
+      <div className="bridge-product-grid">{PRODUCTS.map((product) => (
         <Link className="bridge-card" key={product.id} to={productHref(product)} onClick={clickProduct(product, 'grid')}>
           <ProductImage product={product} index={0} />
           <div className="bridge-card-body">
-            <p className="technical-label">0{i + 1}</p>
             <h3>{product.name}</h3>
-            <p>{product.short}</p>
+            <p className="technical-label">{product.tag}</p>
             <p className="bridge-card-price">{priceLabel(product)}</p>
             <span className="text-link">View {product.name} →</span>
           </div>
@@ -93,26 +89,27 @@ export default function Bridge() {
 
     <section className="nexus-workflow">
       <div className="design-container">
-        <div className="section-index"><span>02 / On every Bridge</span><span>One connected ecosystem</span></div>
-        <h2>More than an adapter.<br />A connected test workflow.</h2>
-        <p>A Bridge is not just a cheaper way to plug a bus into a laptop. It joins your hardware to remote access, measurement, control and automated engineering workflows, and that is what sets the family apart.</p>
-        <div className="bridge-eco-grid bridge-eco-grid-3">{COMMON_FEATURES.map(([title, copy]) => <article key={title}>
-          <h3>{title}</h3>
-          <p>{copy}</p>
-        </article>)}</div>
+        <div className="section-index"><span>02 / On every Bridge</span><span>One workflow</span></div>
+        <h2>Every Bridge.<br />One connected workflow.</h2>
+        <SystemDiagram />
+        <ul className="bridge-icon-row">{COMMON_FEATURES.map(([title, , icon]) => <li key={title}>
+          <BridgeIcon name={icon} />
+          <span>{title}</span>
+        </li>)}</ul>
       </div>
     </section>
 
     <section className="design-container bridge-how">
       <div className="section-index"><span>03 / How ordering works</span><span>No payment on this site</span></div>
-      <h2>Request it.<br />We take it from there.</h2>
-      <ol className="workflow-sequence">{STEPS.map(([title, copy], i) => <li key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{copy}</p></li>)}</ol>
+      <ol className="bridge-steps">{STEPS.map(([title, icon], i) => <li key={title}>
+        <span className="bridge-step-icon"><BridgeIcon name={icon} size={32} /></span>
+        <span className="technical-label">0{i + 1}</span>
+        <strong>{title}</strong>
+      </li>)}</ol>
     </section>
 
     <section className="closing-section design-container">
-      <p className="technical-label">From hardware connectivity to intelligent automation</p>
       <h2>Plotune Bridge connects your devices.<br /><span>Plotune Nexus makes them intelligent.</span></h2>
-      <p>Explore the Plotune Bridge family and find the right interface for your next project.</p>
       <div className="design-actions">
         <a className="design-button" href="#bridge-products" ref={closingCta.ref} onClick={() => trackBridge('bridge_choose_clicked', { placement: 'closing' })}>Choose Your Bridge ↑</a>
         <Link className="text-link" to={withFunnelParams('/contact')}>Not sure which one? Talk to us →</Link>

@@ -3,6 +3,8 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import BridgeCarousel from '../components/bridge/BridgeCarousel';
 import BridgeCartLink from '../components/bridge/BridgeCartLink';
+import BridgeIcon from '../components/bridge/BridgeIcon';
+import ProductDiagram from '../components/bridge/ProductDiagram';
 import ProductImage from '../components/bridge/ProductImage';
 import { PRICE_NOTE, PRODUCTS, getProduct, isPriced, priceLabel } from '../content/bridgeCatalog';
 import { ensureItem } from '../utils/bridgeCart';
@@ -66,7 +68,7 @@ const BridgeProduct = () => {
         <div className="product-copy">
           <p className="technical-label">Plotune {product.name}</p>
           <h1>{product.tagline}</h1>
-          <p>{product.blurb}</p>
+          <p>{product.short}</p>
           <div className="bridge-price" aria-label="Price">
             <strong>{priceLabel(product)}</strong>
             <span>{isPriced(product) ? PRICE_NOTE : 'We quote it when you send your request'}</span>
@@ -87,67 +89,49 @@ const BridgeProduct = () => {
       <dl className="bridge-stats">{product.highlights.map(({ value, label }) => <div key={label}><dt>{value}</dt><dd>{label}</dd></div>)}</dl>
     </section>
 
-    <section className="design-container bridge-detail">
-      <div className="section-index"><span>01 / Why it&apos;s different</span><span>{product.name}</span></div>
-      <h2>Not just an adapter.<br />A connected test step.</h2>
-      <div className="bridge-eco-grid">{product.advantages.map(([title, copy]) => <article key={title}>
-        <h3>{title}</h3>
-        <p>{copy}</p>
-      </article>)}</div>
+    <section className="design-container bridge-detail bridge-diagram-section">
+      <div className="section-index"><span>01 / How it connects</span><span>{product.name}</span></div>
+      <ProductDiagram product={product} />
     </section>
 
     <section className="design-container bridge-detail">
-      <div className="section-index"><span>02 / Capabilities</span><span>{product.name}</span></div>
-      <div className="interface-layout">
-        <div>
-          <h2>What {product.name}<br />is built to do.</h2>
-          <p>{product.definition}</p>
-          {product.boundary && <p className="bridge-boundary"><strong>Still to be determined.</strong> {product.boundary}</p>}
-        </div>
-        <ul className="bridge-features">{product.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
-      </div>
+      <div className="section-index"><span>02 / Why it&apos;s different</span><span>{product.name}</span></div>
+      <ul className="bridge-icon-tiles">{product.advantages.map(([title, , icon]) => <li key={title}>
+        <BridgeIcon name={icon} size={32} />
+        <strong>{title}</strong>
+      </li>)}</ul>
     </section>
 
     <section className="design-container bridge-detail">
       <div className="section-index"><span>03 / Built for</span><span>Applications</span></div>
-      <div className="interface-layout">
-        <h2>Where {product.name}<br />earns its place.</h2>
-        <ul className="bridge-chips">{product.applications.map((application) => <li key={application}>{application}</li>)}</ul>
-      </div>
-    </section>
-
-    <section className="nexus-workflow">
-      <div className="design-container">
-        <div className="section-index"><span>04 / With Plotune Nexus</span><span>AI-ready automation</span></div>
-        <h2>Plotune Bridge connects your devices.<br />Plotune Nexus makes them intelligent.</h2>
-        <p>Integrate with Plotune Nexus to let AI agents execute tests, interact with hardware and collect results.</p>
-        <div className="workflow-links"><Link to="/nexus">Explore Plotune Nexus ↗</Link></div>
-      </div>
+      <ul className="bridge-chips">{product.applications.map((application) => <li key={application}>{application}</li>)}</ul>
+      <details className="bridge-specs" onToggle={(e) => { if (e.currentTarget.open) trackBridge('bridge_specs_opened', { product: product.id }); }}>
+        <summary>Full specifications</summary>
+        <ul className="bridge-features">{product.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+        {product.boundary && <p className="bridge-boundary"><strong>Still to be determined.</strong> {product.boundary}</p>}
+      </details>
     </section>
 
     <section className="design-container bridge-products bridge-others">
-      <div className="section-index"><span>05 / The rest of the family</span><Link to="/bridge">All Bridge products ↗</Link></div>
-      <h2>Build the bench<br />around it.</h2>
+      <div className="section-index"><span>04 / The rest of the family</span><Link to="/bridge">All Bridge products ↗</Link></div>
       <div className="bridge-product-grid bridge-product-grid-3">{others.map((other) => (
         <Link className="bridge-card" key={other.id} to={withFunnelParams(`/bridge/${other.slug}`)} onClick={() => trackBridge('bridge_product_clicked', { product: other.id, placement: 'related' })}>
           <ProductImage product={other} index={0} />
           <div className="bridge-card-body">
             <h3>{other.name}</h3>
-            <p>{other.short}</p>
+            <p className="technical-label">{other.tag}</p>
             <p className="bridge-card-price">{priceLabel(other)}</p>
-            <span className="text-link">View {other.name} →</span>
           </div>
         </Link>
       ))}</div>
     </section>
 
     <section className="closing-section design-container">
-      <p className="technical-label">Ready when you are</p>
       <h2>Get {product.name}<br />on your bench.</h2>
-      <p>Send a request and we confirm availability, the exact tax and shipping within 1 business day. Nothing is charged until you approve the invoice.</p>
       <div className="design-actions">
         <button type="button" className="design-button" ref={bottomCta.ref} onClick={request('bottom')}>Request {product.name} ↗</button>
         <Link className="text-link" to={withFunnelParams('/contact')}>Questions? Talk to us →</Link>
+        <Link className="text-link" to="/nexus">See Plotune Nexus →</Link>
       </div>
     </section>
 

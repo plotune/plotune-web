@@ -8,6 +8,15 @@ import Bridge from './Bridge';
 jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
+
+// A page for people who scan: count the words a visitor can see, leaving out the drawings' own
+// labels and the collapsed "Full specifications" fold.
+const visibleWords = (root) => {
+  const clone = root.cloneNode(true);
+  clone.querySelectorAll('svg, details').forEach((n) => n.remove());
+  return clone.textContent.split(/\s+/).filter(Boolean).length;
+};
+
 let container; let root;
 beforeEach(() => {
   posthog.capture.mockClear();
@@ -29,7 +38,7 @@ test('the page stays product-level: no V1 wording and no raw spec dump', () => {
   expect(text).not.toMatch(/\bV1\b/);
   expect(text).not.toMatch(/Classical CAN channels|RS-232|±10 V/); // spec detail lives on product pages
   expect(text).not.toMatch(/early commercial|commercial development|subject to (implementation|validation)/i);
-  expect(text).toContain('More than an adapter.');
+  expect(text).toContain('One connected workflow.');
   expect(text).toContain('$199');
   expect(text).not.toMatch(/target price|not final|initial target/i);
 });
@@ -40,4 +49,10 @@ test('product clicks and carousel moves are tracked with their placement', () =>
   act(() => { container.querySelector('[aria-label="Next slide"]').dispatchEvent(new MouseEvent('click', { bubbles: true })); });
   expect(posthog.capture).toHaveBeenCalledWith('bridge_carousel_slide', expect.objectContaining({ slide: 'serial', placement: 'hero' }));
   expect(container.querySelector('[aria-label="Previous slide"]').disabled).toBe(false);
+});
+
+test('stays scannable: few visible words, the rest is pictures and diagrams', () => {
+  
+  const words = visibleWords(container.querySelector('main'));
+  expect(words).toBeLessThan(210);
 });
