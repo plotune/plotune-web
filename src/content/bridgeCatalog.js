@@ -197,7 +197,10 @@ export const PRODUCTS = [
     ],
     applications: ['ECU test fixtures', 'Sensor simulation', 'Automated functional testing', 'Industrial prototyping', 'Hardware-in-the-loop support'],
     boundary: 'Digital output current capacity, analog output accuracy, isolation and protection ratings are still to be determined.',
-    images: imageSet('Bridge I/O'),
+    images: [
+      { src: '/assets/bridge/io/1.webp', alt: 'Plotune Bridge I/O with the USB-C port, the DC IN jack, four digital output terminals (DO 1 to 4) and two analog output terminals (AO 1 and 2)' },
+      { src: '/assets/bridge/io/2.webp', alt: 'Plotune Bridge I/O seen from the input side, with four digital input terminals (DI 1 to 4) and two analog input terminals (AI 1 and 2)' },
+    ],
     price: 259,
   },
 ];

@@ -13,7 +13,8 @@ test('every product has a unique id and slug, copy, three images and highlights'
     expect(p.definition).toBeTruthy();
     expect(p.applications.length).toBeGreaterThan(2);
     expect(p.highlights).toHaveLength(3);
-    expect(p.images).toHaveLength(3);
+    expect(p.images.length).toBeGreaterThanOrEqual(2); // real photos where we have them, placeholders otherwise
+    expect(p.images.length).toBeLessThanOrEqual(3);
     p.images.forEach((image) => expect(image.alt.length).toBeGreaterThan(10));
   });
   expect(COMMON_FEATURES).toHaveLength(6);
