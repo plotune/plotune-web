@@ -128,6 +128,6 @@ Start with your test environment
 
 Not sure it fits yet? Tell us about your hardware, interfaces and first workflow.
 
-[Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
+[Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct&product=nexus)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
 
 Source: https://www.plotune.net/nexus

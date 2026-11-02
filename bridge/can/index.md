@@ -88,7 +88,7 @@ Full specifications
 
 ## Get Bridge CANon your bench.
 
-[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct&product=bridge)[See Plotune Nexus →](https://www.plotune.net/nexus)
 
 Bridge CAN  $199
 

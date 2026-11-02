@@ -86,7 +86,7 @@ Still to be determined.  Sampling rate, accuracy, noise performance and isolatio
 
 ## Get Bridge DAQon your bench.
 
-[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct)[See Plotune Nexus →](https://www.plotune.net/nexus)
+[Questions? Talk to us →](https://www.plotune.net/contact?entry_source=direct&product=bridge)[See Plotune Nexus →](https://www.plotune.net/nexus)
 
 Bridge DAQ  $249
 

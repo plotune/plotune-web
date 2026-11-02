@@ -1,10 +1,10 @@
-# Tell us about your test environment.
+# Tell us about your setup.
 
 Contact
 
 
 
-We reply with integration details, a timeline, and clear next steps.
+We reply with the right next step for what you are building or testing.
 
 Work emailHow can we help?
 
@@ -22,19 +22,19 @@ See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sig
 
 You tell us about your setup
 
-What you’re testing, what’s already on your bench, and where the manual work is.
+What you work on, what is already on your bench, and where the manual work is.
 
 - 2
 
-We map it to Plotune Nexus
+We point you to the right product
 
-Which interfaces apply, what a first bounded workflow looks like on your equipment.
+Plotune Nexus for automated test workflows, Plotune Bridge for hardware interfaces, Plotune Stream for engineering event history.
 
 - 3
 
 You get a straight answer
 
-Whether it fits, and what setting it up on your bench would actually take.
+Whether it fits, and what getting started would actually take.
 
 Prefer email?contact@plotune.net
 
