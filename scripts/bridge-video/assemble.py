@@ -119,9 +119,11 @@ def publish(dest=None):
     dest = dest or os.path.join(PUBLIC, 'assets', 'bridge', 'video'); os.makedirs(dest, exist_ok=True)
     f = S + 'final/'
     def enc(*args): run([FF, '-hide_banner', '-loglevel', 'error', '-y', *args])
-    # posters: a clean hero frame of the CAN shot (no caption), and a frame of the vertical cut with header + caption
-    enc('-ss', '0.6', '-i', S + SHOTS[0][1], '-frames:v', '1', '-vf', 'scale=1280:720', '-q:v', '3', dest + '/bridge-family-poster.jpg')
-    enc('-ss', '0.95', '-i', f + 'bridge-family-mobile.mp4', '-frames:v', '1', '-q:v', '3', dest + '/bridge-family-mobile-poster.jpg')
+    # posters: the end-card family line-up (all four products + the brand title). It is what the film resolves to, and
+    # it differs from the hero carousel above the film on /bridge, which opens on the CAN close-up.
+    last = 'f%03d.png' % (int(24 * 3.0) - 1)
+    enc('-i', S + 'end_wide/' + last, '-frames:v', '1', '-q:v', '3', dest + '/bridge-family-poster.jpg')
+    enc('-i', S + 'end_tall/' + last, '-frames:v', '1', '-q:v', '3', dest + '/bridge-family-mobile-poster.jpg')
     for name, crf in (('bridge-family', '34'), ('bridge-family-mobile', '35')):
         shutil.copy(f + name + '.mp4', dest + '/' + name + '.mp4')
         enc('-i', f + name + '.mp4', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', crf, '-row-mt', '1', '-an', dest + '/' + name + '.webm')
