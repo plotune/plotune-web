@@ -3,19 +3,20 @@ import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { posthog } from '../posthog';
-import { postLead } from '../utils/leadSubmission';
+import { getEndpointKinds, postLead } from '../utils/leadSubmission';
 import { addItem, clearCart, readCart } from '../utils/bridgeCart';
 import BridgeRequest from './BridgeRequest';
 import { PRODUCTS } from '../content/bridgeCatalog';
 
 jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }));
-jest.mock('../utils/leadSubmission', () => ({ ...jest.requireActual('../utils/leadSubmission'), postLead: jest.fn() }));
+jest.mock('../utils/leadSubmission', () => ({ ...jest.requireActual('../utils/leadSubmission'), postLead: jest.fn(), getEndpointKinds: jest.fn() }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 let container; let root;
 const render = () => act(() => root.render(<HelmetProvider><MemoryRouter initialEntries={['/request']}><BridgeRequest /></MemoryRouter></HelmetProvider>));
 beforeEach(() => {
   window.localStorage.clear(); clearCart(); posthog.capture.mockClear(); postLead.mockReset();
+  getEndpointKinds.mockReset(); getEndpointKinds.mockResolvedValue(['assessment', 'contact', 'order', 'cart']);
   container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container);
 });
 afterEach(() => { act(() => root.unmount()); container.remove(); });
@@ -129,4 +130,52 @@ test('preview builds (no endpoint) say nothing was sent and keep the cart', asyn
   await submit();
   expect(container.querySelector('h1').textContent).toBe('Preview only: nothing was sent');
   expect(readCart()).toHaveLength(1);
+});
+
+test('while the deployed script predates cart requests, the same request goes through the contact path (never filed as something else)', async () => {
+  getEndpointKinds.mockResolvedValue(['assessment', 'contact', 'order']); // what the live script reports today
+  addItem('can', 2); addItem('io');
+  postLead.mockResolvedValue({ status: 'sent' });
+  render();
+  fillValid();
+  type('#cart-sector', 'automotive');
+  await submit();
+  const payload = postLead.mock.calls[0][0];
+  expect(payload.kind).toBe('contact');
+  expect(payload.topic).toBe('Bridge request');
+  expect(payload.items).toBeUndefined();
+  expect(payload.message).toContain('2 × Bridge CAN; 1 × Bridge I/O');
+  expect(payload.message).toContain('Estimated total: $657 USD (excl. tax and shipping)');
+  expect(payload.message).toContain('Delivery country: Germany');
+  expect(payload.message).toContain('Sector: automotive');
+  expect(payload.email).toBe('ada@example.com');
+  expect(payload.submissionId).toBeTruthy();
+  expect(container.querySelector('h1').textContent).toBe('Request received'); // same confirmation for the visitor
+  expect(posthog.capture).toHaveBeenCalledWith('bridge_request_submitted', expect.objectContaining({ route: 'contact_fallback', delivery: 'sent' }));
+});
+
+test('an unknown answer (offline, slow, no reply) also takes the safe contact path', async () => {
+  getEndpointKinds.mockResolvedValue([]);
+  addItem('daq');
+  postLead.mockResolvedValue({ status: 'sent' });
+  render(); fillValid(); await submit();
+  expect(postLead.mock.calls[0][0].kind).toBe('contact');
+});
+
+test('once the script supports it, the structured cart request is used', async () => {
+  addItem('serial');
+  postLead.mockResolvedValue({ status: 'sent' });
+  render(); fillValid(); await submit();
+  expect(postLead.mock.calls[0][0].kind).toBe('cart');
+  expect(posthog.capture).toHaveBeenCalledWith('bridge_request_submitted', expect.objectContaining({ route: 'cart' }));
+});
+
+test('a to-be-quoted request says so in the contact message', async () => {
+  getEndpointKinds.mockResolvedValue(['contact']);
+  const serial = PRODUCTS.find((p) => p.id === 'serial'); const price = serial.price; serial.price = null;
+  try {
+    addItem('serial'); postLead.mockResolvedValue({ status: 'sent' });
+    render(); fillValid(); await submit();
+    expect(postLead.mock.calls[0][0].message).toContain('Estimated total: to be quoted');
+  } finally { serial.price = price; }
 });

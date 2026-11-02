@@ -4,6 +4,7 @@ import Seo from '../components/Seo';
 import BridgeCarousel from '../components/bridge/BridgeCarousel';
 import BridgeCartLink from '../components/bridge/BridgeCartLink';
 import BridgeIcon from '../components/bridge/BridgeIcon';
+import BridgeVideo from '../components/bridge/BridgeVideo';
 import ProductImage from '../components/bridge/ProductImage';
 import SystemDiagram from '../components/bridge/SystemDiagram';
 import { COMMON_FEATURES, PRODUCTS, priceLabel } from '../content/bridgeCatalog';
@@ -70,6 +71,10 @@ export default function Bridge() {
         </div>
         <BridgeCarousel label="Plotune Bridge products" slides={slides} onSlide={(i) => trackBridge('bridge_carousel_slide', { slide: PRODUCTS[i].id, placement: 'hero' })} />
       </div>
+    </section>
+
+    <section className="design-container bridge-film-section" aria-label="Plotune Bridge film">
+      <BridgeVideo />
     </section>
 
     <section className="design-container bridge-products" id="bridge-products">

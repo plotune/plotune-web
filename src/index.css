@@ -834,3 +834,15 @@ img { max-width: 100%; }
   .bridge-steps li { grid-template-columns: 60px auto 1fr; align-items: center; gap: 14px; }
   .bridge-steps li .technical-label { order: 2; display: none; }
 }
+
+/* Bridge film: wide cut on desktop, a separate vertical cut on phones (BridgeVideo.jsx). */
+.bridge-film-section { padding-bottom: 56px; }
+.bridge-film { position: relative; margin: 0; aspect-ratio: 16 / 9; overflow: hidden; background: #14161a; border: 1px solid #d3d9cc; }
+.bridge-film-poster, .bridge-film-poster img, .bridge-film video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.bridge-film video { opacity: 0; transition: opacity .35s ease; }
+.bridge-film video.is-on { opacity: 1; }
+.bridge-film-toggle { position: absolute; right: 16px; bottom: 16px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 50%; background: rgba(16, 18, 21, .66); color: #fff; cursor: pointer; backdrop-filter: blur(6px); }
+.bridge-film-toggle:hover { background: rgba(16, 18, 21, .88); }
+.bridge-film-toggle:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media(max-width:700px) { .bridge-film { aspect-ratio: 9 / 16; max-height: 84vh; margin-inline: auto; } .bridge-film-section { padding-bottom: 40px; } }
+@media(prefers-reduced-motion: reduce) { .bridge-film video { transition: none; } }

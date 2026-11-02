@@ -56,3 +56,12 @@ test('stays scannable: few visible words, the rest is pictures and diagrams', ()
   const words = visibleWords(container.querySelector('main'));
   expect(words).toBeLessThan(210);
 });
+
+test('the family film sits under the hero and carries its pause control', () => {
+  const film = container.querySelector('.bridge-film-section video');
+  expect(film).toBeTruthy();
+  expect(container.querySelector('.bridge-film-toggle')).toBeTruthy();
+  const order = [...container.querySelectorAll('main > section')].map((sec) => sec.className.split(' ').find((c) => c.startsWith('bridge-') || c === 'nexus-intro'));
+  expect(order.indexOf('bridge-film-section')).toBeGreaterThan(order.indexOf('nexus-intro'));
+  expect(order.indexOf('bridge-film-section')).toBeLessThan(order.indexOf('bridge-products'));
+});

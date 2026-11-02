@@ -161,6 +161,11 @@ const serveStatic = () =>
           agentPage = { path: route, ...content };
         }
       }
+      // Autoplaying videos (the /bridge film) start themselves when scrolled into view, and the build-time
+      // browser does scroll them into view. Stop them and let React settle, so the saved HTML is the page's
+      // starting state (poster visible, button reading "Play"), not a frozen "playing" frame.
+      await page.evaluate(() => document.querySelectorAll('video').forEach((video) => video.pause()));
+      await page.waitForTimeout(200);
       // Tracking snippets in index.html inject their own <script src> tags at runtime (the LinkedIn
       // Insight Tag, PostHog's remote config). Captured into the snapshot, those tags load AGAIN on a
       // real visit on top of the ones the snippets inject, so the Insight Tag ran twice on every

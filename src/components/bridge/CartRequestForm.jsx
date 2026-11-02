@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CATALOG_VERSION } from '../../content/bridgeCatalog';
 import { suggestEmailFix } from '../../utils/emailTypos';
-import { buildCartPayload, isValidEmail, newSubmissionId, postLead } from '../../utils/leadSubmission';
+import { buildCartContactPayload, buildCartPayload, getEndpointKinds, isValidEmail, newSubmissionId, postLead } from '../../utils/leadSubmission';
 import { getFunnelContext } from '../../utils/funnel';
 import { SECTORS } from '../OrderRequestForm';
 
@@ -30,6 +30,10 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
   const countryRef = useRef(null);
   const consentRef = useRef(null);
   const submissionRef = useRef({ key: null, id: null });
+
+  // Ask the deployed script what it understands while the visitor fills the form (a cold Apps Script can take
+  // seconds to answer), so submitting does not wait for it.
+  useEffect(() => { getEndpointKinds(); }, []);
 
   const markStarted = () => {
     if (startedRef.current) return;
@@ -68,13 +72,17 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
     // be counted as a request.
     const honeypot = honeypotRef.current ? honeypotRef.current.value : '';
     setSending(true);
-    const outcome = await postLead(buildCartPayload({
+    // The structured 'cart' row only when the deployed script says it understands it; otherwise the same request
+    // goes through the contact path that every deployed version has (see buildCartContactPayload).
+    const structured = (await getEndpointKinds()).includes('cart');
+    const fields = {
       email, country, sector, items, quote,
       catalogVersion: CATALOG_VERSION,
       funnel: getFunnelContext(),
       website: honeypot,
       submissionId: submissionRef.current.id,
-    }));
+    };
+    const outcome = await postLead(structured ? buildCartPayload(fields) : buildCartContactPayload(fields));
     setSending(false);
     track('bridge_request_submitted', {
       lines: items.length,
@@ -84,6 +92,7 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
       country: country.trim().slice(0, 80),
       sector: sector || null,
       delivery: honeypot ? 'ignored' : outcome.status, // sent | not_configured | error | ignored
+      route: structured ? 'cart' : 'contact_fallback',
     });
     if (outcome.status === 'error') { setSendError(true); return; }
     onSent({ status: outcome.status === 'sent' ? 'sent' : 'preview', email: email.trim(), country: country.trim() });
