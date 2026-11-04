@@ -85,7 +85,7 @@ const NexusConnectivity = () => {
         <div className="relative container mx-auto px-5">
           <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr]">
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Plotune Nexus Connectivity</p>
+              <p className="text-sm font-semibold text-primary">Plotune Nexus Connectivity</p>
               <h1 className="mt-5 text-4xl font-semibold text-light-text md:text-6xl">
                 One connection point for your entire test environment.
               </h1>
@@ -161,7 +161,7 @@ const NexusConnectivity = () => {
           <div className="mt-10 space-y-10">
             {enableGroups.map((group) => (
               <div key={group.label}>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{group.label}</p>
+                <p className="text-sm font-semibold text-primary">{group.label}</p>
                 <div className="mt-4 space-y-4">
                   {group.items.map(([title, copy], index) => (
                     <div key={title} className="flex gap-4 rounded-sm bg-dark-card/80 p-5 ">

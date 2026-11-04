@@ -215,7 +215,7 @@ const PartnerPortal = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Partner workspace</p>
+          <p className="text-xs font-semibold text-primary">Partner workspace</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Partner Portal</h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-text">Explore the partner workspace layout and available service areas.</p>
           <div className="mt-5 rounded-sm border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-light-text" role="note">

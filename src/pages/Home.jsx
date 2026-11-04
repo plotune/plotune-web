@@ -1,34 +1,94 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
-import EngineeringDiagram from '../components/EngineeringDiagram';
+import UseCaseCarousel from '../components/UseCaseCarousel';
+import { homeUseCases } from '../content/useCases';
 import { withFunnelParams } from '../utils/funnel';
 
-const ecosystem = [
-  ['/download', 'Desktop', 'Local visualization and engineering data workflows.'],
-  ['/extensions', 'Extensions', 'Components and integrations for your existing tools.'],
-  ['/docs', 'Documentation', 'Interfaces, setup guides and technical reference.'],
+// Home: the Plotune platform story, not one product. Hero -> system panel -> use cases -> product
+// entries (each opens that product's own funnel) -> research -> a single closing action.
+const devices = [['can', 'Bridge CAN'], ['serial', 'Bridge Serial'], ['daq', 'Bridge DAQ'], ['io', 'Bridge I/O']];
+const products = [
+  ['Plotune Nexus', 'Connects AI agents to physical engineering and test systems through MCP.', 'Rent or buy', 'Rent or buy Nexus', '/nexus/pricing'],
+  ['Plotune Bridge', 'Connect your hardware, access it anywhere. CAN, Serial, DAQ and I/O.', '4 models', 'Choose your Bridge', '/bridge'],
+  ['Plotune Stream', 'Bring events from your tools, test benches and scripts into one explorable history.', 'Live demo, no account', 'Try the demo', '/stream/demo'],
 ];
+const research = [
+  ['/research/reports', 'Technical reports', 'Studies on agentic test and validation workflows'],
+  ['/research', 'Model results', 'Comparisons and benchmark data'],
+  ['/research/methodology', 'Methodology', 'How the evaluations are run'],
+];
+
 export default function Home() {
-  return <main className="home-design">
+  return <main className="home-design lx-home">
     <Seo title="Plotune: DataOps Platform & AI-Ready Test Systems" description="Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware." path="/" />
-    <section className="home-intro design-container">
-      <p className="technical-label">Plotune / Engineering systems, connected.</p>
-      <h1>From the physical world.<br /><span>Into your workflow.</span></h1>
-      <div className="intro-bottom"><p>We build tools that connect engineering hardware, data and AI agents. Start at the test bench. Keep control of the operation. Work from the evidence.</p><a href="#nexus-product" className="text-link">Explore the products <span aria-hidden="true">↓</span></a></div>
-    </section>
-    <section id="nexus-product" className="home-nexus design-container">
-      <div className="section-index"><span>01 / Hardware + software</span><span>Plotune Nexus</span></div>
-      <div className="product-spread">
-        <div className="product-copy"><p className="technical-label">The local-first appliance</p><h2>A connection to<br />the real bench.</h2><p>Nexus gives AI agents a controlled MCP surface for physical test systems. Connect engineering interfaces, execute bounded operations and return structured results.</p><div className="design-actions"><Link className="design-button" to="/nexus">Explore Nexus <span aria-hidden="true">↗</span></Link><Link className="text-link" to={withFunnelParams('/ai-readiness')}>Check your AI readiness →</Link></div><dl className="product-specs"><div><dt>Agent interface</dt><dd>MCP</dd></div><div><dt>Deployment</dt><dd>Local-first</dd></div><div><dt>Connections</dt><dd>CAN · UART · XCP · ROS 2 / DDS</dd></div></dl></div>
-        <figure className="hardware-plate"><span className="technical-label">NEXUS / hardware overview</span><img src="/assets/plotune-nexus.webp" width="1088" height="725" loading="lazy" decoding="async" alt="Plotune Nexus appliance with a finned enclosure and physical connectors" /><figcaption>One appliance. A controlled connection to your test environment.</figcaption></figure>
-      </div>
-      <EngineeringDiagram />
-      <div className="workflow-links"><span className="technical-label">Explore by workflow</span><Link to="/solutions/can-ecu-testing">CAN / ECU testing ↗</Link><Link to="/solutions/ros2-dds-testing">ROS 2 / DDS testing ↗</Link><Link to="/solutions/hil-testing">Hardware-in-the-loop ↗</Link><Link to="/nexus/use-cases">All use cases ↗</Link></div>
-    </section>
-    <section className="home-stream"><div className="design-container"><div className="section-index"><span>02 / Event infrastructure</span><span>Plotune Stream</span></div><div className="stream-spread"><div><p className="technical-label">Any source that speaks HTTP</p><h2>The event is<br />the starting point.</h2><p>Bring events from Python, C/C++, CAPL, MATLAB, ROS, shell scripts or Nexus into an inspectable history. Stream is independent of the hardware that sends it.</p><div className="design-actions"><Link className="design-button" to="/stream">Explore Stream ↗</Link><Link className="text-link" to="/stream/demo">Try the demo experience →</Link></div></div><div className="event-specimen" aria-label="Illustrative event structure"><div className="technical-label">Event structure / illustrative</div><pre><code>{`{\n  "event": "test.completed",\n  "device_id": "bench-01",\n  "session_id": "run-01",\n  "properties": {\n    "outcome": "passed"\n  }\n}`}</code></pre><p>Sender → HTTP → event history → inspection</p><span>Optional context. Arbitrary JSON properties.</span></div></div></div></section>
-    <section className="home-research design-container"><div className="section-index"><span>03 / Research &amp; evidence</span><span>Plotune Research</span></div><div className="research-spread"><h2>Engineering needs<br /><em>evidence.</em></h2><div><p>Read the technical studies. Inspect the benchmark data. Understand the methodology behind agentic test and validation workflows.</p><Link className="text-link" to="/research">Explore the research →</Link></div></div><div className="publication-links"><Link to="/research/reports"><span className="technical-label">Publication</span><strong>Technical reports</strong><span aria-hidden="true">↗</span></Link><Link to="/research"><span className="technical-label">Data</span><strong>Model results &amp; comparisons</strong><span aria-hidden="true">↗</span></Link><Link to="/research/methodology"><span className="technical-label">Protocol</span><strong>Evaluation methodology</strong><span aria-hidden="true">↗</span></Link></div></section>
-    <section id="features" className="home-ecosystem design-container"><div className="section-index"><span>04 / The wider toolkit</span><span>Data operations</span></div>{ecosystem.map(([to,title,copy],i)=><Link to={to} className="ecosystem-row" key={to}><span className="technical-label">0{i+1}</span><h3>{title}</h3><p>{copy}</p><span aria-hidden="true">↗</span></Link>)}</section>
-    <section className="closing-section design-container"><p className="technical-label">Start with your system</p><h2>One real workflow.<br />A clear next step.</h2><div className="design-actions"><Link className="design-button" to="/contact">Contact Us ↗</Link><Link className="text-link" to="/nexus">Explore Nexus →</Link></div></section>
+    <div className="design-container">
+      <header className="lx-hero">
+        <span className="lx-pill"><i />Hardware, data and AI agents, connected</span>
+        <h1>From the physical world. <em>Into your workflow.</em></h1>
+        <p className="lx-lead">Plotune connects engineering hardware to AI agents and keeps the evidence. Start at the test bench and keep control of the operation.</p>
+        <div className="lx-actions">
+          <a className="design-button" href="#products">Choose your product</a>
+          <Link className="design-button secondary" to={withFunnelParams('/contact')}>Talk to us</Link>
+        </div>
+
+        <div className="lx-system" role="group" aria-label="How Plotune products connect">
+          <div className="lx-system-in"><div className="lx-flow">
+            <div className="lx-col">
+              <h4>Test bench</h4>
+              <div className="lx-cc"><div className="lx-devs">{devices.map(([slug, name]) => <figure className="lx-dev" key={slug}>
+                <img src={`/assets/bridge/${slug}/1.webp`} alt="" width="300" height="300" loading="lazy" decoding="async" /><figcaption>{name}</figcaption>
+              </figure>)}</div></div>
+            </div>
+            <div className="lx-wire" aria-hidden="true"><span>Wi-Fi</span></div>
+            <div className="lx-col">
+              <h4>Control</h4>
+              <div className="lx-cc"><span className="lx-agent">AI agents · MCP</span>
+                <div className="lx-tile lx-nexus"><img src="/assets/plotune-nexus.webp" alt="" width="1088" height="725" loading="lazy" decoding="async" /><b>Plotune Nexus</b><small>Controlled operations on real hardware</small></div>
+              </div>
+            </div>
+            <div className="lx-wire" aria-hidden="true"><span>HTTP</span></div>
+            <div className="lx-col">
+              <h4>Evidence</h4>
+              <div className="lx-cc"><div className="lx-tile lx-win">
+                <div className="lx-win-bar"><i /><i /><i /><span>Plotune Stream · Events</span></div>
+                <table><tbody>
+                  <tr><td>12:00:04</td><td className="ev"><span className="lx-ok" />test.completed</td><td><span className="lx-kv">passed</span></td></tr>
+                  <tr><td>12:00:01</td><td className="ev">motor.sample</td><td><span className="lx-kv">72.4 °C</span></td></tr>
+                  <tr><td>11:59:58</td><td className="ev">motor.sample</td><td><span className="lx-kv">71.9 °C</span></td></tr>
+                  <tr><td>11:59:40</td><td className="ev">device.connected</td><td><span className="lx-kv">bench-01</span></td></tr>
+                </tbody></table>
+              </div></div>
+            </div>
+          </div></div>
+          <div className="lx-cap"><span>Example devices and events</span><span>Bridge · Nexus · Stream</span></div>
+        </div>
+      </header>
+
+      <section className="lx-section" id="usecases">
+        <div className="lx-head"><h2>What you can do with Plotune.</h2><p className="lx-sub">Real workflows, from the bus to the browser to AI agents.</p></div>
+        <UseCaseCarousel items={homeUseCases()} label="Plotune use cases" />
+      </section>
+
+      <section className="lx-section" id="products">
+        <div className="lx-head"><h2>Start with a product.</h2><p className="lx-sub">Each product has its own way in. Use one, or connect all three.</p></div>
+        <div className="lx-rows">{products.map(([name, copy, meta, cta, to]) => <div className="lx-row" key={name}>
+          <div><h3>{name}</h3><p>{copy}</p></div><span className="lx-meta">{meta}</span>
+          <Link className="design-button" to={withFunnelParams(to)}>{cta}</Link>
+        </div>)}</div>
+      </section>
+
+      <section className="lx-section">
+        <div className="lx-head"><h2>Engineering needs evidence.</h2><p className="lx-sub">Technical studies, benchmark data and the methods behind agentic test and validation.</p></div>
+        <div className="lx-list">{research.map(([to, title, copy]) => <Link key={to} to={to}><b>{title}</b><span>{copy}</span><i aria-hidden="true">→</i></Link>)}</div>
+      </section>
+
+      <section className="lx-closing">
+        <h2>Not sure where to start?</h2>
+        <p>Tell us what you test today and we will point you to the shortest path from the bench to an AI-driven workflow.</p>
+        <div className="lx-actions"><Link className="design-button" to={withFunnelParams('/contact')}>Talk to us</Link><Link className="design-button secondary" to="/docs">Read the docs</Link></div>
+      </section>
+      <div className="lx-bottom" />
+    </div>
   </main>;
 }

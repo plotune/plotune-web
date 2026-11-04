@@ -295,7 +295,7 @@ const AiReadinessPage = () => {
 
         {step === INTRO && (
           <main className="ai-step flex flex-1 flex-col justify-center pb-16">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">AI Test Readiness</p>
+            <p className="text-sm font-semibold text-primary">AI Test Readiness</p>
             <h1
               ref={headingRef}
               tabIndex={-1}

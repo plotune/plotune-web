@@ -15,7 +15,7 @@ const NexusDocsOverview = () => (
     <section className="relative pt-32 pb-16">
       <div className="absolute inset-0 bg-dark-surface" />
       <div className="nexus-doc-heading relative container mx-auto max-w-3xl px-5">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Documentation</p>
+        <p className="text-sm font-semibold text-primary">Documentation</p>
         <h1 className="mt-5 text-4xl font-semibold leading-tight text-light-text md:text-5xl">Plotune Nexus Documentation</h1>
         <p className="mt-6 text-lg leading-8 text-gray-text">
           Reference documentation for engineers evaluating or operating Plotune Nexus: what the
@@ -34,7 +34,7 @@ const NexusDocsOverview = () => (
               className="nexus-doc-index group flex items-start justify-between gap-6 rounded-sm border border-ink/15 bg-dark-card/60 p-6 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
             >
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{doc.topic}</p>
+                <p className="text-xs font-semibold text-primary">{doc.topic}</p>
                 <h2 className="mt-2 text-xl font-semibold text-light-text group-hover:text-primary">{doc.title}</h2>
                 <p className="mt-2 text-sm leading-6 text-gray-text">{doc.summary}</p>
                 <p className="mt-3 text-xs text-gray-text">{doc.readingTime}</p>

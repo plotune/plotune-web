@@ -70,7 +70,7 @@ const Partnership = () => {
       </section>
 
       <section className="design-container partner-section">
-        <div className="section-index"><span>01 / Partnership programs</span><span>Choose a model</span></div>
+        <div className="section-index"><span>Partnership programs</span><span>Choose a model</span></div>
         <h2>Choose the partnership model that aligns with your business goals and technical expertise.</h2>
         <div className="partner-programs">
           {partnershipTiers.map((tier, index) => (
@@ -87,7 +87,7 @@ const Partnership = () => {
       </section>
 
       <section className="design-container partner-section">
-        <div className="section-index"><span>02 / Why partner with Plotune</span><span>Shared work</span></div>
+        <div className="section-index"><span>Why partner with Plotune</span><span>Shared work</span></div>
         <dl className="partner-benefits">
           {benefits.map((benefit) => (
             <div key={benefit.title}>
@@ -99,7 +99,7 @@ const Partnership = () => {
       </section>
 
       <section className="design-container partner-section">
-        <div className="section-index"><span>03 / See the partnership in action</span><span>Video</span></div>
+        <div className="section-index"><span>See the partnership in action</span><span>Video</span></div>
         <div className="partner-video">
           <iframe
             src="https://www.youtube.com/embed/uudw-lsUGC4"

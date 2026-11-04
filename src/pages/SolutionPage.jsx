@@ -31,7 +31,7 @@ const SolutionPage = () => {
           </Link>
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="max-w-xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">{config.label}</p>
+              <p className="text-sm font-semibold text-primary">{config.label}</p>
               <h1 className="mt-5 text-4xl font-semibold leading-tight text-light-text md:text-5xl">{config.heroTitle}</h1>
               <p className="mt-6 text-lg leading-8 text-gray-text">{config.problem}</p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -46,8 +46,8 @@ const SolutionPage = () => {
 
             <div className="rounded-sm bg-dark-card/80 p-6   md:p-7">
               <div className="flex items-center justify-between gap-3">
-                <span className="font-mono text-xs uppercase tracking-[0.22em] text-primary">{config.exampleScenario.title}</span>
-                <span className="rounded-full bg-dark-card px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-text">Example run</span>
+                <span className="font-mono text-xs text-primary">{config.exampleScenario.title}</span>
+                <span className="rounded-full bg-dark-card px-3 py-1 text-[10px] font-semibold text-gray-text">Example run</span>
               </div>
               <dl className="mt-6 space-y-4">
                 {config.exampleScenario.rows.map(([label, value]) => (

@@ -56,7 +56,7 @@ const ResearchOverview = () => {
       </header>
 
       <section id="benchmark-explorer" className="explorer-workspace" aria-labelledby="explorer-title">
-        <div className="explorer-section-heading"><div><span className="section-label">01 / Explore the benchmark</span><h2 id="explorer-title">Find the right tradeoff.</h2></div><p>Choose a workflow, then a measure. <br />Select any model to see its breakdown.</p></div>
+        <div className="explorer-section-heading"><div><span className="section-label">Explore the benchmark</span><h2 id="explorer-title">Find the right tradeoff.</h2></div><p>Choose a workflow, then a measure. <br />Select any model to see its breakdown.</p></div>
         <div className="explorer-workflows" role="group" aria-label="Filter by workflow">
           {allTasks.map((item) => <button key={item} aria-pressed={task === item} aria-controls="workflow-results" onClick={() => update({ task: item })} className={task === item ? 'selected' : ''}><span aria-hidden="true">{task === item ? '✓' : '+'}</span>{taskLabel(item)}</button>)}
         </div>
@@ -102,7 +102,7 @@ const ResearchOverview = () => {
         </motion.div>
       </section>
 
-      <section className="explorer-landscape" aria-labelledby="landscape-title"><div className="explorer-section-heading"><div><span className="section-label">02 / The bigger picture</span><h2 id="landscape-title">Performance landscape</h2></div><p>What does better performance cost? <br />Explore where each model lands.</p></div>
+      <section className="explorer-landscape" aria-labelledby="landscape-title"><div className="explorer-section-heading"><div><span className="section-label">The bigger picture</span><h2 id="landscape-title">Performance landscape</h2></div><p>What does better performance cost? <br />Explore where each model lands.</p></div>
         <div className="explorer-landscape-toolbar"><div className="explorer-segment" role="group" aria-label="Compare performance against">{['cost', 'latency'].map(key => <button aria-pressed={landscape === key} key={key} onClick={() => update({ landscape: key })} className={landscape === key ? 'selected' : ''}>Performance vs {key === 'cost' ? 'cost' : 'time'} {landscape === key && <span aria-hidden="true">✓</span>}</button>)}</div><span>{taskLabel(task)}</span></div>
         <div key={`${task}-${landscape}`} className="explorer-chart-enter"><ScatterMetricChart chart={scatter} label={`Performance versus ${metricDefinitions[landscape].label}, one point per model`} /></div>
         <p className="explorer-chart-tip">Hover or tap a point for model details. Tap a provider in the legend to hide or show its models.</p>

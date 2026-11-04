@@ -19,7 +19,7 @@ const MoreFromPlotune = () => (
   <section className="bg-dark-bg py-16 md:py-20">
     <div className="container mx-auto px-5">
       <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">More from Plotune</p>
+        <p className="text-sm font-semibold text-primary">More from Plotune</p>
         <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
           There is more to explore.
         </h2>

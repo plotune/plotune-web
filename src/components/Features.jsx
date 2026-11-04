@@ -49,7 +49,7 @@ const Features = () => {
       <div className="container mx-auto px-5">
 
         <div className="text-center mb-10 md:mb-16 max-w-2xl mx-auto">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">The Plotune platform</p>
+          <p className="text-sm font-semibold text-primary">The Plotune platform</p>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold text-light-text">
             A complete DataOps platform.
           </h2>

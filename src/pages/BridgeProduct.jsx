@@ -11,6 +11,8 @@ import { ensureItem } from '../utils/bridgeCart';
 import { trackBridge } from '../utils/bridgeFunnel';
 import { useCtaTracking } from '../utils/ctaTracking';
 import { contactHref, withFunnelParams } from '../utils/funnel';
+import UseCaseCarousel from '../components/UseCaseCarousel';
+import { modelUseCases } from '../content/useCases';
 
 // /bridge/<slug>: one product, the third step of the funnel
 //   Plotune Home -> Bridge -> Bridge product -> request (/request) -> sent.
@@ -89,13 +91,18 @@ const BridgeProduct = () => {
       <dl className="bridge-stats">{product.highlights.map(({ value, label }) => <div key={label}><dt>{value}</dt><dd>{label}</dd></div>)}</dl>
     </section>
 
+    <section className="design-container lx-section" id="bridge-model-use-cases">
+      <div className="lx-head"><h2>What you can do with {product.name}.</h2></div>
+      <UseCaseCarousel items={modelUseCases(product.id)} label={`${product.name} use cases`} />
+    </section>
+
     <section className="design-container bridge-detail bridge-diagram-section">
-      <div className="section-index"><span>01 / How it connects</span><span>{product.name}</span></div>
+      <div className="section-index"><span>How it connects</span><span>{product.name}</span></div>
       <ProductDiagram product={product} />
     </section>
 
     <section className="design-container bridge-detail">
-      <div className="section-index"><span>02 / Why it&apos;s different</span><span>{product.name}</span></div>
+      <div className="section-index"><span>Why it&apos;s different</span><span>{product.name}</span></div>
       <ul className="bridge-icon-tiles">{product.advantages.map(([title, , icon]) => <li key={title}>
         <BridgeIcon name={icon} size={32} />
         <strong>{title}</strong>
@@ -103,7 +110,7 @@ const BridgeProduct = () => {
     </section>
 
     <section className="design-container bridge-detail">
-      <div className="section-index"><span>03 / Built for</span><span>Applications</span></div>
+      <div className="section-index"><span>Built for</span><span>Applications</span></div>
       <ul className="bridge-chips">{product.applications.map((application) => <li key={application}>{application}</li>)}</ul>
       <details className="bridge-specs" onToggle={(e) => { if (e.currentTarget.open) trackBridge('bridge_specs_opened', { product: product.id }); }}>
         <summary>Full specifications</summary>
@@ -113,7 +120,7 @@ const BridgeProduct = () => {
     </section>
 
     <section className="design-container bridge-products bridge-others">
-      <div className="section-index"><span>04 / The rest of the family</span><Link to="/bridge">All Bridge products ↗</Link></div>
+      <div className="section-index"><span>The rest of the family</span><Link to="/bridge">All Bridge products ↗</Link></div>
       <div className="bridge-product-grid bridge-product-grid-3">{others.map((other) => (
         <Link className="bridge-card" key={other.id} to={withFunnelParams(`/bridge/${other.slug}`)} onClick={() => trackBridge('bridge_product_clicked', { product: other.id, placement: 'related' })}>
           <ProductImage product={other} index={0} />

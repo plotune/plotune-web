@@ -54,7 +54,7 @@ test('product clicks and carousel moves are tracked with their placement', () =>
 test('stays scannable: few visible words, the rest is pictures and diagrams', () => {
   
   const words = visibleWords(container.querySelector('main'));
-  expect(words).toBeLessThan(210);
+  expect(words).toBeLessThan(260); // was 210 before the four illustrated use case cards (about 50 words)
 });
 
 test('the family film sits under the hero and carries its pause control', () => {

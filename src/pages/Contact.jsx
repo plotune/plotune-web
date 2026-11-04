@@ -67,7 +67,7 @@ const ContactPage = () => {
       <div className="relative container mx-auto max-w-6xl px-5">
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto_1fr] lg:gap-x-16 lg:gap-y-10">
           <div className="max-w-xl lg:col-start-1 lg:row-start-1">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Contact</p>
+            <p className="text-sm font-semibold text-primary">Contact</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight text-light-text md:text-5xl">
               {config.heading}
             </h1>
@@ -118,7 +118,7 @@ const ContactPage = () => {
           </div>
 
           <div className="lg:col-start-1 lg:row-start-2">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-text">What happens next</h2>
+            <h2 className="text-xs font-semibold text-gray-text">What happens next</h2>
             <ol className="mt-5 space-y-5">
               {config.steps.map(([title, copy], index) => (
                 <li key={title} className="flex gap-4">
@@ -143,7 +143,7 @@ const ContactPage = () => {
         </div>
 
         <div className="mt-14 border-t border-ink/15 pt-12">
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-gray-text">
+          <p className="text-center text-sm font-semibold text-gray-text">
             Other ways to reach us
           </p>
           <div className="mx-auto mt-6 grid max-w-2xl gap-4 sm:grid-cols-2">
