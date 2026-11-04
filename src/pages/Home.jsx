@@ -35,21 +35,21 @@ export default function Home() {
         <div className="lx-system" role="group" aria-label="How Plotune products connect">
           <div className="lx-system-in"><div className="lx-flow">
             <div className="lx-col">
-              <h4>Test bench</h4>
+              <p className="lx-col-label">Test bench</p>
               <div className="lx-cc"><div className="lx-devs">{devices.map(([slug, name]) => <figure className="lx-dev" key={slug}>
                 <img src={`/assets/bridge/${slug}/1.webp`} alt="" width="300" height="300" loading="lazy" decoding="async" /><figcaption>{name}</figcaption>
               </figure>)}</div></div>
             </div>
             <div className="lx-wire" aria-hidden="true"><span>Wi-Fi</span></div>
             <div className="lx-col">
-              <h4>Control</h4>
+              <p className="lx-col-label">Control</p>
               <div className="lx-cc"><span className="lx-agent">AI agents · MCP</span>
                 <div className="lx-tile lx-nexus"><img src="/assets/plotune-nexus.webp" alt="" width="1088" height="725" loading="lazy" decoding="async" /><b>Plotune Nexus</b><small>Controlled operations on real hardware</small></div>
               </div>
             </div>
             <div className="lx-wire" aria-hidden="true"><span>HTTP</span></div>
             <div className="lx-col">
-              <h4>Evidence</h4>
+              <p className="lx-col-label">Evidence</p>
               <div className="lx-cc"><div className="lx-tile lx-win">
                 <div className="lx-win-bar"><i /><i /><i /><span>Plotune Stream · Events</span></div>
                 <table><tbody>

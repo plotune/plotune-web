@@ -342,7 +342,7 @@
   gap: 8px;
   align-items: center;
   font-size: 10px;
-  color: #8b909a;
+  color: #686d77;
   margin-bottom: 23px;
 }
 .sw-breadcrumb svg {
@@ -545,7 +545,7 @@
   gap: 10px;
   border-top: 1px solid #e9eaec;
   font-size: 10px;
-  color: #8b909a;
+  color: #686d77;
 }
 .sw-overview-grid {
   display: grid;
@@ -794,7 +794,7 @@
 }
 .sw-empty p {
   font-size: 11px;
-  color: #8b909a;
+  color: #686d77;
   max-width: 340px;
   margin: 0 auto 14px;
   line-height: 1.8;
@@ -1093,7 +1093,7 @@
   gap: 10px;
   align-items: center;
   font-size: 10px;
-  color: #8b909a;
+  color: #686d77;
   margin-top: 7px;
 }
 .sw-processor-row p .sw-mono {
@@ -1990,7 +1990,7 @@
 }
 /* Refinement: keep supporting text readable and touch targets generous. */
 .sw-app {
-  --sw-muted: #6c727d;
+  --sw-muted: #565b65;
 }
 .sw-page-head p,
 .sw-alarm p,
