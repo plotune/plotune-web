@@ -16,7 +16,7 @@
 .stream-authorize__application-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .stream-authorize__application-heading > div { min-width: 0; }
 .stream-authorize__application-name { margin-top: 6px; color: var(--ink); font-size: 22px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
-.stream-authorize__badge { flex: none; padding: 5px 10px; border: 1px solid #d4d7de; border-radius: var(--r-sm); background: #f3f4f6; color: #34363d; font-size: 13px; font-weight: 500; }
+.stream-authorize__badge { flex: none; padding: 5px 10px; border: 1px solid #d4d7de; border-radius: var(--r-sm); background: #f3f4f6; color: #34506f; font-size: 13px; font-weight: 500; }
 .stream-authorize__destination { margin-top: 12px; color: #5d626c; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
 .stream-authorize__destination strong { color: var(--ink); font-weight: 500; }
 .stream-authorize__details { margin-top: 4px; }
@@ -77,7 +77,7 @@
   background: #fdf9ef;
   cursor: pointer;
 }
-.stream-authorize__write input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; accent-color: #16171b; }
+.stream-authorize__write input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; accent-color: #3d5a80; }
 .stream-authorize__write > span { display: grid; gap: 4px; }
 .stream-authorize__write strong { font-size: 14px; color: #3d2f0c; }
 .stream-authorize__write span span { font-size: 13px; line-height: 1.5; color: #5c4a1c; }

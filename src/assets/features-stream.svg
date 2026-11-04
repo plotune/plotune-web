@@ -27,12 +27,12 @@
   <line class="fsWall" x1="30" y1="76" x2="262" y2="76"/>
   <line class="fsFlowline" x1="30" y1="60" x2="262" y2="60"/>
 
-  <g class="fsPkt fsP1"><rect x="26" y="56" width="16" height="8" rx="4" fill="#16171b" opacity="0.28"/><circle cx="46" cy="60" r="5" fill="#16171b"/></g>
-  <g class="fsPkt fsP2"><rect x="26" y="56" width="16" height="8" rx="4" fill="#16171b" opacity="0.2"/><circle cx="46" cy="60" r="4.5" fill="#16171b" opacity="0.75"/></g>
+  <g class="fsPkt fsP1"><rect x="26" y="56" width="16" height="8" rx="4" fill="#3d5a80" opacity="0.28"/><circle cx="46" cy="60" r="5" fill="#3d5a80"/></g>
+  <g class="fsPkt fsP2"><rect x="26" y="56" width="16" height="8" rx="4" fill="#3d5a80" opacity="0.2"/><circle cx="46" cy="60" r="4.5" fill="#3d5a80" opacity="0.75"/></g>
   <g class="fsPkt fsP3"><rect x="26" y="56" width="16" height="8" rx="4" fill="#16171b" opacity="0.16"/><circle cx="46" cy="60" r="4" fill="#16171b" opacity="0.6"/></g>
 
   <rect class="fsEndNode" x="266" y="40" width="40" height="40" rx="12"/>
-  <g class="fsEq fsE1"><rect x="278" y="56" width="4" height="16" rx="2" fill="#16171b"/></g>
-  <g class="fsEq fsE2"><rect x="284" y="56" width="4" height="16" rx="2" fill="#16171b"/></g>
-  <g class="fsEq fsE3"><rect x="290" y="56" width="4" height="16" rx="2" fill="#16171b"/></g>
+  <g class="fsEq fsE1"><rect x="278" y="56" width="4" height="16" rx="2" fill="#3d5a80"/></g>
+  <g class="fsEq fsE2"><rect x="284" y="56" width="4" height="16" rx="2" fill="#3d5a80"/></g>
+  <g class="fsEq fsE3"><rect x="290" y="56" width="4" height="16" rx="2" fill="#3d5a80"/></g>
 </svg>

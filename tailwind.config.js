@@ -1,11 +1,11 @@
-// The legacy blue/sky/indigo/purple/violet classes now resolve to a neutral graphite scale:
-// the site has one action colour (graphite), and the Plotune indigo lives in --brand only.
-const graphite = {
-  50: '#F7F8F9', 100: '#F0F1F4', 200: '#E5E7EB', 300: '#B9BEC8', 400: '#16171B', 500: '#16171B',
-  600: '#16171B', 700: '#34363D', 800: '#2A2C33', 900: '#1B1C20', 950: '#101113',
+// One accent: slate blue (#3d5a80). The legacy blue/sky/indigo/purple/violet classes resolve to
+// this scale, so older account and workspace screens share the same action colour.
+const slate = {
+  50: '#F4F7FB', 100: '#E8EEF6', 200: '#CFDBEA', 300: '#8FA6C2', 400: '#3D5A80', 500: '#3D5A80',
+  600: '#34506F', 700: '#2D4560', 800: '#263A52', 900: '#1E2E42', 950: '#141F2D',
 };
-const teal = graphite;
-const violet = graphite;
+const teal = slate;
+const violet = slate;
 
 // Status text written for the old dark theme used the light 200-400 shades,
 // which fall below 4.5:1 on paper. Only those shades are darkened; tinted
@@ -23,8 +23,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#16171B',
-        'primary-dark': '#34363D',
+        primary: '#3D5A80',
+        'primary-dark': '#34506F',
         secondary: '#5D626C',
         ink: '#16171B',
         'dark-bg': 'rgb(var(--color-paper) / <alpha-value>)',

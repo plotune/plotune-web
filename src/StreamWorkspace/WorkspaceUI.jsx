@@ -101,14 +101,14 @@ export function Trend({
   values,
   series,
   unit = "",
-  color = "#3b6ea8",
+  color = "#3d5a80",
   label,
   compact = false,
   threshold,
   activeIndex = null,
   onInspectPoint,
 }) {
-  const palette = ["#3b6ea8", "#b17a2c", "#6266ad", "#b34540", "#626770", "#616670"];
+  const palette = ["#3d5a80", "#b17a2c", "#6266ad", "#b34540", "#626770", "#616670"];
   const plotted = series?.length
     ? series.map((item, index) => ({
         ...item,

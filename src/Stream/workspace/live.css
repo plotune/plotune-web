@@ -82,7 +82,7 @@
   min-width: 180px;
 }
 .live-workspace :focus-visible {
-  outline: 2px solid #16171b;
+  outline: 2px solid #3d5a80;
   outline-offset: 3px;
 }
 .live-workspace .sw-code {
@@ -147,7 +147,7 @@
 .live-entry a.sw-button {
   display: inline-flex;
   padding: 12px 18px;
-  background: #16171b;
+  background: #3d5a80;
   color: white;
   border-radius: 4px;
   text-decoration: none;
@@ -239,7 +239,7 @@
 .live-workspace .live-mcp-config > p { margin: 0; }
 .live-mcp-config > .sw-button { align-self: flex-start; }
 .live-empty-actions { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
-.live-key-reminder { padding: 12px; background: #f4f4f5; border-left: 2px solid #16171b; }
+.live-key-reminder { padding: 12px; background: #f4f4f5; border-left: 2px solid #3d5a80; }
 .live-workspace .st-first-event .live-key-reminder { color: #494d55; max-width: none; }
 .live-workspace .st-contract-note { color: #5d626c; font-size: 11px; line-height: 1.7; margin: 12px 0; }
 .live-workspace .st-example-heading span { color: #5d626c; font-size: 11px; }

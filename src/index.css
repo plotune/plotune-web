@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  /* Light, Linear-style system: near-white ground, 1px hairlines, graphite action. The Plotune
-     indigo (--brand) appears only on the logo, focus rings, text selection and active markers. */
+  /* Light, Linear-style system: near-white ground, 1px hairlines, graphite text,
+     slate-blue accent (--accent) for actions, links, focus and active states. */
   --color-paper: 251 251 252;
   --color-surface: 243 244 246;
   --color-panel: 255 255 255;
@@ -12,14 +12,15 @@
   --color-muted: 93 98 108;
   --paper: #fbfbfc;
   --ink: #16171b;
-  --accent: #16171b;
-  --accent-hover: #34363d;
-  --teal: #16171b;
-  --brand: #5b62a7;
-  --brand-soft: #dfe1f3;
+  --accent: #3d5a80;
+  --accent-hover: #34506f;
+  --accent-soft: #e8eef6;
+  --teal: #3d5a80;
+  --brand: #3d5a80;
+  --brand-soft: #e8eef6;
   --line: #e5e7eb;
   --line-strong: #d4d7de;
-  --violet: #5b62a7;
+  --violet: #3d5a80;
   --gold: #f0be57;
   --r-sm: 8px;
   --r-md: 10px;

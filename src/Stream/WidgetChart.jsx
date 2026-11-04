@@ -1,7 +1,7 @@
 import React from "react";
 import { Trend } from "../StreamWorkspace/WorkspaceUI";
 
-const COLORS = ["#3b6ea8", "#b17a2c", "#6266ad", "#b34540", "#626770", "#616670"];
+const COLORS = ["#3d5a80", "#b17a2c", "#6266ad", "#b34540", "#626770", "#616670"];
 
 export function WidgetBars({ series, label }) {
   const points = series.flatMap((item) => item.points).map((point) => point.value).filter(Number.isFinite);

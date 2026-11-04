@@ -45,18 +45,18 @@
 }
 
 .nexus-doc-body em {
-  color: #16171b;
+  color: #3d5a80;
   font-style: italic;
 }
 
 .nexus-doc-body a {
-  color: #16171b;
+  color: #3d5a80;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .nexus-doc-body a:hover {
-  color: #34363d;
+  color: #34506f;
 }
 
 .nexus-doc-body code {
@@ -66,7 +66,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 0.3rem;
   padding: 0.1rem 0.4rem;
-  color: #16171b;
+  color: #3d5a80;
 }
 
 .nexus-doc-body pre {
@@ -117,7 +117,7 @@
 .nexus-doc-body blockquote {
   margin: 0 0 1.25rem;
   padding: 0.9rem 1.25rem;
-  border-left: 3px solid #34363d;
+  border-left: 3px solid #34506f;
   background: rgba(38, 166, 154, 0.08);
   border-radius: 0 0.5rem 0.5rem 0;
   color: #5d626c;
@@ -263,7 +263,7 @@
   padding: 1.5rem 0 !important;
 }
 
-.nexus-doc-cta { border-top: 2px solid #16171b; }
+.nexus-doc-cta { border-top: 2px solid #3d5a80; }
 
 .site-docs .docs-content h1,
 .site-docs .docs-content h2,

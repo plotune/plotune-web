@@ -52,7 +52,7 @@ const ScoreRing = ({ score }) => {
           cy="100"
           r={RADIUS}
           fill="none"
-          stroke="#16171b"
+          stroke="#3d5a80"
           strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}

@@ -9,7 +9,7 @@
     .pulse-c { animation: pulseC 4.8s ease-in-out infinite; }
     .pulse-d { animation: pulseD 4.8s ease-in-out infinite; }
     .beam {
-      stroke: #16171b;
+      stroke: #3d5a80;
       stroke-width: 3;
       stroke-linecap: round;
       stroke-dasharray: 150;
@@ -20,11 +20,11 @@
     .dot { animation: dot 1.6s ease-in-out infinite; }
     .label { fill: #5d626c; font: 11px Inter, Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
     .value { fill: #16171b; font: 600 12px Inter, Arial, sans-serif; }
-    .key { fill: #16171b; font: 600 12px Inter, Arial, sans-serif; }
-    @keyframes pulseA { 0%,100% { fill: #e5e7eb; } 16%,30% { fill: #16171b; } }
-    @keyframes pulseB { 0%,100% { fill: #e5e7eb; } 30%,44% { fill: #16171b; } }
-    @keyframes pulseC { 0%,100% { fill: #e5e7eb; } 44%,58% { fill: #16171b; } }
-    @keyframes pulseD { 0%,100% { fill: #e5e7eb; } 58%,72% { fill: #16171b; } }
+    .key { fill: #3d5a80; font: 600 12px Inter, Arial, sans-serif; }
+    @keyframes pulseA { 0%,100% { fill: #e5e7eb; } 16%,30% { fill: #3d5a80; } }
+    @keyframes pulseB { 0%,100% { fill: #e5e7eb; } 30%,44% { fill: #3d5a80; } }
+    @keyframes pulseC { 0%,100% { fill: #e5e7eb; } 44%,58% { fill: #3d5a80; } }
+    @keyframes pulseD { 0%,100% { fill: #e5e7eb; } 58%,72% { fill: #3d5a80; } }
     @keyframes beam {
       0%, 14% { stroke-dashoffset: 150; opacity: 0; }
       28%, 72% { stroke-dashoffset: 0; opacity: 1; }
@@ -58,14 +58,14 @@
   <text class="label" x="38" y="44">ECU Mesh</text>
 
   <text class="label" x="338" y="44">Checks</text>
-  <circle class="dot" cx="346" cy="78" r="5" fill="#16171b"/>
+  <circle class="dot" cx="346" cy="78" r="5" fill="#3d5a80"/>
   <text class="value" x="360" y="82">12 UDS</text>
-  <circle class="dot" cx="346" cy="112" r="5" fill="#16171b"/>
+  <circle class="dot" cx="346" cy="112" r="5" fill="#3d5a80"/>
   <text class="value" x="360" y="116">4 VINs</text>
-  <circle class="dot" cx="346" cy="146" r="5" fill="#16171b"/>
+  <circle class="dot" cx="346" cy="146" r="5" fill="#3d5a80"/>
   <text class="value" x="360" y="150">0 DTC</text>
 
-  <circle class="dot" cx="42" cy="206" r="5" fill="#16171b"/>
+  <circle class="dot" cx="42" cy="206" r="5" fill="#3d5a80"/>
   <text class="value" x="56" y="210">Discovery complete</text>
   <text class="key" x="226" y="210">sign-off trace docked</text>
 </svg>
