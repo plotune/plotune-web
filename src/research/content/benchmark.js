@@ -9,12 +9,12 @@ const metricDefinitions = {
 // One color per provider (not per model) so the scatter chart's legend can double as a filter —
 // clicking "Anthropic" in a Plotly legend hides/shows every Anthropic model's trace at once.
 const providerColors = {
-  Anthropic: '#d97706', OpenAI: '#10a37f', Google: '#4285f4', DeepSeek: '#7c3aed', Qwen: '#0891b2',
+  Anthropic: '#d97706', OpenAI: '#535760', Google: '#4285f4', DeepSeek: '#7c3aed', Qwen: '#565b64',
   Meta: '#2563eb', Mistral: '#111827', 'Z.ai': '#ef4444', Moonshot: '#f97316', Amazon: '#f59e0b',
-  Cohere: '#7c2d12', Microsoft: '#0ea5e9', NVIDIA: '#76b900', IBM: '#1f70c1', MiniMax: '#fb7185',
+  Cohere: '#7c2d12', Microsoft: '#737984', NVIDIA: '#76b900', IBM: '#1f70c1', MiniMax: '#fb7185',
   xAI: '#111111', Alibaba: '#ea580c',
 };
-const fallbackProviderColors = ['#0f766e', '#9333ea', '#0369a1', '#b91c1c', '#4d7c0f', '#a21caf'];
+const fallbackProviderColors = ['#3e4147', '#9333ea', '#0369a1', '#b91c1c', '#4d7c0f', '#a21caf'];
 const getProviderColor = (provider) => providerColors[provider]
   || fallbackProviderColors[Math.abs([...provider].reduce((hash, char) => hash + char.charCodeAt(0), 0)) % fallbackProviderColors.length];
 
@@ -134,7 +134,7 @@ export const buildScatterChart = (rows, xMetric, yMetric) => {
       hoverlabel: { bgcolor: '#0f172a', font: { color: '#ffffff' } },
       shapes: [{
         type: 'rect', xref: 'x', yref: 'y', x0: quadrantX[0], x1: quadrantX[1], y0: quadrantY[0], y1: quadrantY[1],
-        fillcolor: '#dcfce7', opacity: 0.4, line: { width: 0 }, layer: 'below',
+        fillcolor: '#ebeced', opacity: 0.4, line: { width: 0 }, layer: 'below',
       }],
       annotations: [{
         x: (quadrantX[0] + quadrantX[1]) / 2, y: quadrantY[1],

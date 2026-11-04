@@ -45,14 +45,14 @@ const ScoreRing = ({ score }) => {
   return (
     <div className="relative mx-auto h-56 w-56 sm:h-64 sm:w-64" role="img" aria-label={`${score} percent AI-ready`} data-score={score}>
       <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90" aria-hidden="true">
-        <circle cx="100" cy="100" r={RADIUS} fill="none" stroke="#d2d5ce" strokeWidth="10" />
+        <circle cx="100" cy="100" r={RADIUS} fill="none" stroke="#e5e7eb" strokeWidth="10" />
         <circle
           className="ai-ring-progress"
           cx="100"
           cy="100"
           r={RADIUS}
           fill="none"
-          stroke="#00796b"
+          stroke="#16171b"
           strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}

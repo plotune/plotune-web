@@ -10,7 +10,7 @@ export const projects = [
     total: 46,
     passed: 42,
     duration: "18.4",
-    color: "#00796b",
+    color: "#3b6ea8",
   },
   {
     id: "regen",

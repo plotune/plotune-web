@@ -101,14 +101,14 @@ export function Trend({
   values,
   series,
   unit = "",
-  color = "#00796b",
+  color = "#3b6ea8",
   label,
   compact = false,
   threshold,
   activeIndex = null,
   onInspectPoint,
 }) {
-  const palette = ["#00796b", "#b17a2c", "#6266ad", "#b34540", "#3d8295", "#73864b"];
+  const palette = ["#3b6ea8", "#b17a2c", "#6266ad", "#b34540", "#626770", "#616670"];
   const plotted = series?.length
     ? series.map((item, index) => ({
         ...item,
@@ -164,7 +164,7 @@ export function Trend({
       {!compact && (
         <>
           {[32, 72, 112].map((v) => (
-            <line key={v} x1="40" y1={v} x2="460" y2={v} stroke="#e5e9eb" />
+            <line key={v} x1="40" y1={v} x2="460" y2={v} stroke="#e6e7ea" />
           ))}
           {allValues.length > 0 && <>
             <text x="0" y="35">{ceiling.toFixed(1)}</text>

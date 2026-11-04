@@ -6,7 +6,7 @@
   margin: 2.5rem 0 1rem;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1c242b;
+  color: #16171b;
   scroll-margin-top: 6rem;
 }
 
@@ -18,20 +18,20 @@
   margin: 2rem 0 0.75rem;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #1c242b;
+  color: #16171b;
 }
 
 .nexus-doc-body p {
   margin: 0 0 1.1rem;
   line-height: 1.75;
-  color: #526067;
+  color: #5d626c;
 }
 
 .nexus-doc-body ul,
 .nexus-doc-body ol {
   margin: 0 0 1.1rem;
   padding-left: 1.4rem;
-  color: #526067;
+  color: #5d626c;
   line-height: 1.7;
 }
 
@@ -40,41 +40,41 @@
 }
 
 .nexus-doc-body strong {
-  color: #1c242b;
+  color: #16171b;
   font-weight: 600;
 }
 
 .nexus-doc-body em {
-  color: #00796b;
+  color: #16171b;
   font-style: italic;
 }
 
 .nexus-doc-body a {
-  color: #00796b;
+  color: #16171b;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .nexus-doc-body a:hover {
-  color: #00594f;
+  color: #34363d;
 }
 
 .nexus-doc-body code {
-  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
   font-size: 0.88em;
-  background: #eeeee6;
-  border: 1px solid #d2d5ce;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
   border-radius: 0.3rem;
   padding: 0.1rem 0.4rem;
-  color: #00796b;
+  color: #16171b;
 }
 
 .nexus-doc-body pre {
   margin: 0 0 1.25rem;
   padding: 1rem 1.25rem;
   border-radius: 0.75rem;
-  border: 1px solid #d2d5ce;
-  background: #eeeee6;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
   overflow-x: auto;
 }
 
@@ -82,7 +82,7 @@
   background: none;
   border: none;
   padding: 0;
-  color: #1c242b;
+  color: #16171b;
 }
 
 .nexus-doc-body table {
@@ -105,8 +105,8 @@
 
 .nexus-doc-body tbody td {
   padding: 0.65rem 0.85rem;
-  border-bottom: 1px solid #eeeee6;
-  color: #526067;
+  border-bottom: 1px solid #f3f4f6;
+  color: #5d626c;
   vertical-align: top;
 }
 
@@ -117,10 +117,10 @@
 .nexus-doc-body blockquote {
   margin: 0 0 1.25rem;
   padding: 0.9rem 1.25rem;
-  border-left: 3px solid #00594f;
+  border-left: 3px solid #34363d;
   background: rgba(38, 166, 154, 0.08);
   border-radius: 0 0.5rem 0.5rem 0;
-  color: #526067;
+  color: #5d626c;
 }
 
 .nexus-doc-body hr {
@@ -137,7 +137,7 @@
   padding: 1rem 1.25rem;
   border: 1px solid #d9c99e;
   background: #f4efdf;
-  border-radius: 2px;
+  border-radius: var(--r-sm);
 }
 
 .nexus-doc-note p {
@@ -153,8 +153,8 @@
 /* Engineering reference pages use the shared paper and ink palette. */
 .nexus-doc-overview,
 .nexus-doc-page {
-  color: #1c242b;
-  background: #f7f6f2;
+  color: #16171b;
+  background: #fbfbfc;
 }
 
 .nexus-doc-heading {
@@ -195,8 +195,8 @@
 .nexus-doc-body h2 {
   margin-top: 3.5rem;
   padding-top: 1.2rem;
-  border-top: 1px solid #d2d5ce;
-  font: 500 clamp(1.4rem, 2.6vw, 1.75rem)/1.25 Inter, system-ui, sans-serif;
+  border-top: 1px solid #e5e7eb;
+  font: 500 clamp(1.4rem, 2.6vw, 1.75rem)/1.25 'Inter Variable', system-ui, sans-serif;
   letter-spacing: -.025em;
 }
 
@@ -214,8 +214,8 @@
   color: #435158;
 }
 
-.nexus-doc-body a { color: #00695c; }
-.nexus-doc-body a:hover { color: #004d40; }
+.nexus-doc-body a { color: #313338; }
+.nexus-doc-body a:hover { color: #242629; }
 
 .nexus-doc-body :not(pre) > code {
   overflow-wrap: anywhere;
@@ -224,9 +224,9 @@
 
 .nexus-doc-body pre {
   max-width: 100%;
-  border-radius: 2px;
+  border-radius: var(--r-sm);
   padding: 1rem;
-  color: #1c242b;
+  color: #16171b;
   font-size: .875rem;
   line-height: 1.7;
   tab-size: 2;
@@ -236,14 +236,14 @@
   display: block;
   max-width: 100%;
   overflow-x: auto;
-  border-top: 1px solid #d2d5ce;
-  border-bottom: 1px solid #d2d5ce;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
   -webkit-overflow-scrolling: touch;
 }
 
 .nexus-doc-body thead th {
-  color: #526067;
-  border-bottom: 1px solid #aeb8ad;
+  color: #5d626c;
+  border-bottom: 1px solid #adb1b8;
   white-space: nowrap;
 }
 
@@ -252,18 +252,18 @@
   line-height: 1.55;
 }
 
-.nexus-doc-body hr { border-top-color: #d2d5ce; }
+.nexus-doc-body hr { border-top-color: #e5e7eb; }
 
-.nexus-doc-overview .grid { gap: 0; border-top: 1px solid #1c242b; }
+.nexus-doc-overview .grid { gap: 0; border-top: 1px solid #16171b; }
 .nexus-doc-index {
   border-width: 0 0 1px !important;
-  border-color: #d2d5ce;
+  border-color: #e5e7eb;
   border-radius: 0;
   background: transparent !important;
   padding: 1.5rem 0 !important;
 }
 
-.nexus-doc-cta { border-top: 2px solid #00796b; }
+.nexus-doc-cta { border-top: 2px solid #16171b; }
 
 .site-docs .docs-content h1,
 .site-docs .docs-content h2,
@@ -279,8 +279,8 @@
 }
 
 .site-docs .docs-content pre {
-  border: 1px solid #d2d5ce;
-  border-radius: 2px;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--r-sm);
   padding: 1rem;
   font-size: .875rem;
   line-height: 1.7;

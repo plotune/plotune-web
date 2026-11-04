@@ -66,11 +66,11 @@ const TerminalIcon = () => (
 // red error/destructive-action colors used elsewhere on the site.
 const TOPIC_VISUALS = {
   'Agentic Test & Validation': { from: '#2563d9', to: '#60a5fa', Icon: ValidationIcon },
-  'CAN / ECU Testing': { from: '#0f766e', to: '#2dd4bf', Icon: CircuitIcon },
+  'CAN / ECU Testing': { from: '#3e4147', to: '#787e89', Icon: CircuitIcon },
   'ROS 2 / DDS Testing': { from: '#4338ca', to: '#818cf8', Icon: NodeGraphIcon },
   'Test Automation & Orchestration': { from: '#334155', to: '#64748b', Icon: PipelineIcon },
   'Agentic Test & Development': { from: '#7c3aed', to: '#a78bfa', Icon: SparkIcon },
-  'AI Hardware-in-the-Loop Testing': { from: '#0891b2', to: '#22d3ee', Icon: PlugIcon },
+  'AI Hardware-in-the-Loop Testing': { from: '#565b64', to: '#808590', Icon: PlugIcon },
   'MCP for Hardware Testing': { from: '#1e40af', to: '#3b82f6', Icon: TerminalIcon },
 };
 

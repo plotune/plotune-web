@@ -4,7 +4,7 @@ import { buildBenchmarkView, buildScatterChart } from './benchmark';
 const chartColors = ['#c65d1e', '#1f2937', '#6d28d9'];
 const providerColors = {
   Anthropic: '#c65d1e', OpenAI: '#1f2937', 'Z.ai': '#6d28d9', Qwen: '#1d5db8',
-  MoonshotAI: '#0f5b78', DeepSeek: '#4555c7', NVIDIA: '#5a860b', opencode: '#475569',
+  MoonshotAI: '#3f4248', DeepSeek: '#4555c7', NVIDIA: '#5a860b', opencode: '#475569',
 };
 const providerFromModel = (modelName) => modelName.split(': ')[0];
 const modelColor = (modelName) => providerColors[providerFromModel(modelName)] || '#64748b';
