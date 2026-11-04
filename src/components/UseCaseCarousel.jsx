@@ -6,7 +6,7 @@ import { withFunnelParams } from '../utils/funnel';
 // Illustrated use case cards in a horizontal scroll-snap strip. When the cards belong to more than
 // one group (Nexus, Bridge, Stream), group chips jump to the first card of a group and follow the
 // scroll position. Illustrations are static first-party SVG strings (see content/useCaseArt.js).
-export default function UseCaseCarousel({ items, label = 'Use cases', onCardClick }) {
+export default function UseCaseCarousel({ items, label = 'Use cases', onCardClick, layout = 'carousel' }) {
   const track = useRef(null);
   const [group, setGroup] = useState(items[0]?.group);
   const [edge, setEdge] = useState({ start: true, end: false });
@@ -39,6 +39,18 @@ export default function UseCaseCarousel({ items, label = 'Use cases', onCardClic
     if (el && el.children[i]) el.scrollTo({ left: el.children[i].offsetLeft - el.offsetLeft, behavior: 'smooth' });
   };
 
+  const card = (u) => <Link key={u.title} className="lx-card lx-ucard" to={withFunnelParams(u.href)} onClick={() => onCardClick && onCardClick(u)}>
+    <div className="lx-art" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ART[u.art] }} />
+    <div className="lx-ubody">
+      <span className="lx-tag">{u.group}</span>
+      <h3>{u.title}</h3>
+      <p>{u.body}</p>
+      <span className="lx-more">{u.cta} →</span>
+    </div>
+  </Link>;
+
+  if (layout === 'grid') return <div className="lx-ugrid" data-n={items.length} role="region" aria-label={label}>{items.map(card)}</div>;
+
   return <div className="lx-uc">
     <div className="lx-uc-ctrl">
       {groups.length > 1 ? <div className="lx-chips" role="group" aria-label="Product">
@@ -51,15 +63,7 @@ export default function UseCaseCarousel({ items, label = 'Use cases', onCardClic
     </div>
     <div className="lx-car" ref={track} onScroll={() => requestAnimationFrame(sync)} role="region" aria-label={label} tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } }}>
-      {items.map((u) => <Link key={u.title} className="lx-card lx-ucard" to={withFunnelParams(u.href)} onClick={() => onCardClick && onCardClick(u)}>
-        <div className="lx-art" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ART[u.art] }} />
-        <div className="lx-ubody">
-          <span className="lx-tag">{u.group}</span>
-          <h3>{u.title}</h3>
-          <p>{u.body}</p>
-          <span className="lx-more">{u.cta} →</span>
-        </div>
-      </Link>)}
+      {items.map(card)}
     </div>
   </div>;
 }

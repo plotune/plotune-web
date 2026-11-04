@@ -13,12 +13,16 @@ export const USE_CASES = [
 
   { group: 'Bridge', model: 'can', home: true, art: 'b_can', title: 'ECU and BMS validation', body: 'Monitor and transmit frames, decode signals from your DBC and record to ASC, from the browser.', href: '/bridge/can', cta: 'See Bridge CAN' },
   { group: 'Bridge', model: 'can', art: 'b_can2', title: 'Remote automotive diagnostics', body: 'Run UDS and XCP-on-CAN workflows against a bus that sits in another lab, not on your desk.', href: '/bridge/can', cta: 'See Bridge CAN' },
+  { group: 'Bridge', model: 'can', art: 'can3', title: 'Shared remote test bench', body: 'Keep the bench in the lab and let the whole team use it from their own browser.', href: '/bridge/can', cta: 'See Bridge CAN' },
   { group: 'Bridge', model: 'serial', home: true, art: 'b_ser', title: 'Embedded firmware debugging', body: 'Watch the console of a device on the bench from anywhere, send commands and keep a log.', href: '/bridge/serial', cta: 'See Bridge Serial' },
   { group: 'Bridge', model: 'serial', art: 'b_ser2', title: 'Industrial equipment diagnostics', body: 'Reach industrial equipment over RS-232, RS-422 or RS-485, send commands and log the responses without a site visit.', href: '/bridge/serial', cta: 'See Bridge Serial' },
+  { group: 'Bridge', model: 'serial', art: 'ser3', title: 'Serial protocol validation', body: 'Send bytes and watch the replies to check a protocol before it ships.', href: '/bridge/serial', cta: 'See Bridge Serial' },
   { group: 'Bridge', model: 'daq', home: true, art: 'b_daq', title: 'Sensor monitoring', body: 'Watch sensor voltages live in the browser, record the measurement and export the data.', href: '/bridge/daq', cta: 'See Bridge DAQ' },
   { group: 'Bridge', model: 'daq', art: 'b_daq2', title: 'ECU signal validation', body: 'Check analog signals during a test and keep the measurement inside the automated workflow.', href: '/bridge/daq', cta: 'See Bridge DAQ' },
+  { group: 'Bridge', model: 'daq', art: 'daq3', title: 'Laboratory experiments', body: 'Record up to 7 voltage channels during an experiment and export the data.', href: '/bridge/daq', cta: 'See Bridge DAQ' },
   { group: 'Bridge', model: 'io', home: true, art: 'b_io', title: 'ECU test fixtures', body: 'Switch digital outputs and read inputs of a test fixture from anywhere.', href: '/bridge/io', cta: 'See Bridge I/O' },
   { group: 'Bridge', model: 'io', art: 'b_io2', title: 'Sensor simulation', body: 'Drive a 0-10 V signal to stand in for a sensor while a test sequence runs.', href: '/bridge/io', cta: 'See Bridge I/O' },
+  { group: 'Bridge', model: 'io', art: 'io3', title: 'Automated functional testing', body: 'Run a sequence that drives outputs, reads inputs and checks the result.', href: '/bridge/io', cta: 'See Bridge I/O' },
 
   { group: 'Stream', art: 'st_motor', title: 'Motor test bench', body: 'A reading becomes an event with the device, test session and values kept together.', href: '/stream/demo', cta: 'Try it in the demo' },
   { group: 'Stream', art: 'st_ver', title: 'Automated test verdicts', body: 'Your test runner supplies the verdict and the context needed to investigate it later.', href: '/stream/demo', cta: 'Try it in the demo' },

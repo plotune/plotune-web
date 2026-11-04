@@ -151,3 +151,84 @@ a.lx-card:hover .lx-more { text-decoration: underline; text-underline-offset: 4p
 .bridge-card, .bridge-product-grid > a { border-radius: var(--r-lg); overflow: hidden; background: #fff; box-shadow: var(--shadow-card); }
 .sl-hero, .nexus-intro { padding-top: 112px; }
 @media (max-width: 900px) { .closing-section { margin-top: 72px; padding: 40px 18px; } }
+
+/* Use cases as a balanced grid when a page shows only a few */
+.lx-ugrid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lx-ugrid[data-n="2"], .lx-ugrid[data-n="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lx-ugrid .lx-ucard { flex: none; }
+@media (max-width: 900px) { .lx-ugrid, .lx-ugrid[data-n="2"], .lx-ugrid[data-n="4"] { grid-template-columns: minmax(0, 1fr); } }
+
+/* Solution pages */
+.lx-shero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 56px; align-items: center; padding: 120px 0 0; }
+.lx-shero h1 { font-size: clamp(34px, 4.6vw, 54px); line-height: 1.06; letter-spacing: -.04em; font-weight: 600; margin: 22px 0 18px; text-wrap: balance; }
+.lx-back { display: inline-block; margin-bottom: 22px; color: #5d626c; font-size: 14px; font-weight: 500; text-decoration: none; }
+.lx-back:hover { color: var(--ink); }
+.lx-lead-left { font-size: 17px; line-height: 1.7; color: #5d626c; margin: 0 0 28px; max-width: 54ch; }
+.lx-actions-left { justify-content: flex-start; }
+.lx-run { box-shadow: var(--shadow-lg); border-radius: 20px; }
+.lx-art-lg { height: 230px; }
+.lx-run-body { padding: 20px 24px 22px; }
+.lx-run-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; font: 500 13px var(--font-mono); color: var(--accent); }
+.lx-run-head em { font: 500 11.5px var(--font-sans); font-style: normal; color: #5d626c; background: #f3f4f6; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+.lx-run dl { margin: 0; }
+.lx-run dl div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.lx-run dl div:last-child { border: 0; padding-bottom: 0; }
+.lx-run dt { color: #5d626c; } .lx-run dd { margin: 0; font-family: var(--font-mono); font-size: 13.5px; }
+.lx-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.lx-compare .lx-card { padding: 28px; }
+.lx-compare h2 { margin: 0 0 18px; font-size: 20px; letter-spacing: -.02em; font-weight: 600; }
+.lx-compare ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.lx-compare li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14.5px; line-height: 1.55; color: #5d626c; }
+.lx-compare li svg { margin-top: 3px; }
+.lx-before { background: #fbfbfc; }
+.lx-after { border-color: #c9d5e6; box-shadow: var(--shadow-lg); }
+.lx-after li { color: var(--ink); }
+.lx-chiprow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.lx-chiprow li { padding: 9px 16px; background: #fff; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; font-weight: 500; box-shadow: var(--shadow-card); }
+@media (max-width: 900px) { .lx-shero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 96px; } .lx-compare { grid-template-columns: minmax(0, 1fr); } }
+
+/* Nexus body blocks */
+.lx-panel { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 22px; }
+.lx-icards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.lx-icard { padding: 22px 18px; }
+.lx-icard h3, .lx-step h3 { margin: 14px 0 6px; font-size: 16px; font-weight: 600; letter-spacing: -.015em; }
+.lx-icard p, .lx-step p { margin: 0; color: #5d626c; font-size: 14px; line-height: 1.6; }
+.lx-glyph { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #e8eef6; color: var(--accent); }
+.lx-after-row { margin-top: 18px; }
+.lx-inline { color: var(--accent); font-weight: 500; }
+.lx-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: s; }
+.lx-step { padding: 26px; position: relative; }
+.lx-stepno { position: absolute; top: 26px; right: 26px; font-size: 12.5px; color: var(--faint); font-weight: 500; }
+.lx-linkrow { margin-top: 22px; } .lx-linkrow a { padding: 9px 16px; background: #fff; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--ink); box-shadow: var(--shadow-card); }
+.lx-chiprow.lx-linkrow { display: flex; flex-wrap: wrap; gap: 10px; }
+.lx-chiprow.lx-linkrow a:hover { background: #f3f4f6; }
+.lx-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.lx-duo-card { padding: 34px; gap: 0; }
+.lx-duo-card h2 { margin: 0 0 12px; font-size: clamp(24px, 2.6vw, 32px); letter-spacing: -.03em; line-height: 1.12; font-weight: 600; }
+.lx-duo-card h2 span { color: var(--faint); }
+.lx-duo-card p { margin: 0 0 22px; color: #5d626c; max-width: 52ch; }
+.lx-duo-card .lx-more { margin-top: 22px; display: inline-block; }
+.lx-duo-accent { background: #f4f7fb; border-color: #c9d5e6; }
+@media (max-width: 1000px) { .lx-icards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lx-steps, .lx-duo { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .lx-icards { grid-template-columns: minmax(0, 1fr); } .lx-duo-card { padding: 24px; } }
+
+.lx-art > span { display: block; height: 100%; }
+.lx-art > span > svg { width: 100%; height: 100%; }
+.lx-art-img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lx-icards-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lx-icards-3 .lx-icard { padding: 26px; }
+@media (max-width: 1000px) { .lx-icards-3 { grid-template-columns: minmax(0, 1fr); } }
+.lx-back { display: block; }
+.lx-shero .lx-pill { display: inline-flex; }
+/* spacing after a use case strip that sits above older sections */
+.lx-section + .bridge-detail, .lx-section + .nexus-workflow { margin-top: 96px; }
+/* older section labels become real headings on Bridge pages */
+.bridge-design .section-index span:first-child, .bridge-detail .section-index span:first-child { font-size: clamp(22px, 2.4vw, 28px); letter-spacing: -.03em; font-weight: 600; line-height: 1.15; }
+.bridge-design .section-index, .bridge-detail .section-index { padding-bottom: 24px; align-items: flex-end; }
+.lx-steps-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1000px) { .lx-steps-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .lx-steps-4 { grid-template-columns: minmax(0, 1fr); } }
+.lx-code { padding: 24px; background: #16171b; border-color: #16171b; color: #e9eaee; }
+.lx-code .lx-tag { color: #9aa0ab; }
+.lx-code pre { margin: 6px 0 0; overflow: auto; font-size: 13.5px; line-height: 1.75; color: #dfe3ea; }
+.lx-ns .lx-nexus { padding: 18px; } .lx-ns .lx-nexus b { margin-top: 0; }

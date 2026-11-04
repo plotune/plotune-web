@@ -96,7 +96,7 @@ export default function Bridge() {
 
     <section className="design-container lx-section" id="bridge-use-cases">
       <div className="lx-head"><h2>What you can do with Bridge.</h2><p className="lx-sub">Four ways teams use a Bridge on the bench.</p></div>
-      <UseCaseCarousel items={homeUseCases().filter((u) => u.group === 'Bridge')} label="Bridge use cases" />
+      <UseCaseCarousel items={homeUseCases().filter((u) => u.group === 'Bridge')} label="Bridge use cases" layout="grid" />
     </section>
 
     <section className="nexus-workflow">

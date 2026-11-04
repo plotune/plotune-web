@@ -1,9 +1,18 @@
 import React, { useEffect } from 'react';
 import { useParams, useLocation, Link, Navigate } from 'react-router-dom';
-import { FiArrowRight } from 'react-icons/fi';
 import Seo from '../components/Seo';
+import UseCaseCarousel from '../components/UseCaseCarousel';
+import ART from '../content/useCaseArt';
+import { USE_CASES } from '../content/useCases';
 import { getSolutionSegment, solutionSegmentAliases } from '../content/solutions';
 import { captureFunnelTouch, withFunnelParams } from '../utils/funnel';
+
+// Each solution page: hero with the workflow illustration and an example run, the workflow today
+// against the workflow with Nexus, supported integrations, the other Nexus workflows, one closing action.
+const ART_FOR = { 'can-ecu-testing': 'can_ecu', 'ros2-dds-testing': 'ros', 'test-orchestration': 'auto', 'hil-testing': 'hil' };
+
+const Cross = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#b34540" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>;
+const Tick = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2e8b57" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" /></svg>;
 
 const SolutionPage = () => {
   const { segment } = useParams();
@@ -20,105 +29,63 @@ const SolutionPage = () => {
     return <Navigate to="/nexus" replace />;
   }
 
+  const funnel = { segment: config.slug, solution: config.slug };
+  const others = USE_CASES.filter((u) => u.group === 'Nexus' && u.href !== `/solutions/${config.slug}`);
+
   return (
-    <main className="solution-design bg-dark-bg text-dark-text">
+    <main className="solution-design lx-solution">
       <Seo title={`${config.label} | Plotune Nexus`} description={config.problem} path={`/solutions/${config.slug}`} />
-      <section className="relative pb-16">
-        <div className="absolute inset-0 bg-dark-surface" />
-        <div className="relative container mx-auto px-5 pt-32">
-          <Link to="/research" className="mb-10 inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-gray-text transition-colors hover:text-primary">
-            ← Related research
-          </Link>
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div className="max-w-xl">
-              <p className="text-sm font-semibold text-primary">{config.label}</p>
-              <h1 className="mt-5 text-4xl font-semibold leading-tight text-light-text md:text-5xl">{config.heroTitle}</h1>
-              <p className="mt-6 text-lg leading-8 text-gray-text">{config.problem}</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link to={withFunnelParams('/contact', { segment: config.slug, solution: config.slug })} className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
-                  Discuss your setup <FiArrowRight />
-                </Link>
-                <Link to={withFunnelParams('/nexus', { segment: config.slug, solution: config.slug })} className="inline-flex items-center justify-center gap-2 rounded-full bg-dark-card px-6 py-3 font-semibold text-light-text transition-all duration-300 hover:bg-dark-card">
-                  Explore Nexus
-                </Link>
-              </div>
-            </div>
-
-            <div className="rounded-sm bg-dark-card/80 p-6   md:p-7">
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-mono text-xs text-primary">{config.exampleScenario.title}</span>
-                <span className="rounded-full bg-dark-card px-3 py-1 text-[10px] font-semibold text-gray-text">Example run</span>
-              </div>
-              <dl className="mt-6 space-y-4">
-                {config.exampleScenario.rows.map(([label, value]) => (
-                  <div key={label} className="flex items-center justify-between gap-4 border-b border-ink/15 pb-4 text-sm last:border-0 last:pb-0">
-                    <dt className="text-gray-text">{label}</dt>
-                    <dd className="font-mono text-base text-light-text">{value}</dd>
-                  </div>
-                ))}
-              </dl>
+      <div className="design-container">
+        <header className="lx-shero">
+          <div className="lx-shero-copy">
+            <Link to="/research" className="lx-back">← Related research</Link>
+            <span className="lx-pill"><i />{config.label}</span>
+            <h1>{config.heroTitle}</h1>
+            <p className="lx-lead-left">{config.problem}</p>
+            <div className="lx-actions lx-actions-left">
+              <Link className="design-button" to={withFunnelParams('/contact', funnel)}>Discuss your setup</Link>
+              <Link className="design-button secondary" to={withFunnelParams('/nexus', funnel)}>Explore Nexus</Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="container mx-auto px-5">
-          <div className="solution-comparison grid gap-6 lg:grid-cols-2">
-            <div className="rounded-sm bg-dark-card/80 p-7  md:p-8">
-              <h2 className="text-xl font-semibold text-light-text">The workflow today</h2>
-              <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
-                {config.currentWorkflow.map((item, index) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="technical-label shrink-0">0{index + 1}</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-sm border border-primary/20 bg-dark-card/80 p-7  md:p-8">
-              <h2 className="text-xl font-semibold text-light-text">With Plotune Nexus</h2>
-              <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
-                {config.nexusWorkflow.map((item, index) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="technical-label shrink-0">0{index + 1}</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+          <div className="lx-card lx-run">
+            <div className="lx-art lx-art-lg" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ART[ART_FOR[config.slug]] }} />
+            <div className="lx-run-body">
+              <div className="lx-run-head"><span>{config.exampleScenario.title}</span><em>Example run</em></div>
+              <dl>{config.exampleScenario.rows.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
             </div>
           </div>
-        </div>
-      </section>
+        </header>
 
-      <section className="pb-16">
-        <div className="container mx-auto px-5">
-          <h2 className="text-xl font-semibold text-light-text">Supported integrations</h2>
-          <div className="solution-integrations mt-6">
-            {config.integrations.map((item) => (
-              <div key={item} className="rounded-sm bg-dark-card px-5 py-4 text-sm font-semibold text-light-text">{item}</div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="pb-24">
-        <div className="container mx-auto px-5">
-          <div className="rounded-sm bg-dark-surface p-8 md:p-10">
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h3 className="text-2xl font-semibold text-light-text">See this mapped to your bench.</h3>
-                <p className="mt-2 text-gray-text">Plotune Nexus is one product, this is how it runs against {config.label}.</p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Link to={withFunnelParams('/contact', { segment: config.slug, solution: config.slug })} className="inline-flex shrink-0 whitespace-nowrap items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
-                  Discuss your setup <FiArrowRight />
-                </Link>
-              </div>
+        <section className="lx-section">
+          <div className="lx-compare">
+            <div className="lx-card lx-before">
+              <h2>The workflow today</h2>
+              <ul>{config.currentWorkflow.map((item) => <li key={item}><Cross /><span>{item}</span></li>)}</ul>
+            </div>
+            <div className="lx-card lx-after">
+              <h2>With Plotune Nexus</h2>
+              <ul>{config.nexusWorkflow.map((item) => <li key={item}><Tick /><span>{item}</span></li>)}</ul>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section className="lx-section">
+          <div className="lx-head"><h2>Works with.</h2><p className="lx-sub">Supported integrations for this workflow.</p></div>
+          <ul className="lx-chiprow">{config.integrations.map((item) => <li key={item}>{item}</li>)}</ul>
+        </section>
+
+        <section className="lx-section">
+          <div className="lx-head"><h2>More Nexus workflows.</h2></div>
+          <UseCaseCarousel items={others} label="More Nexus workflows" layout="grid" />
+        </section>
+
+        <section className="lx-closing">
+          <h2>See this mapped to your bench.</h2>
+          <p>Plotune Nexus is one product. This is how it runs against {config.label}.</p>
+          <div className="lx-actions"><Link className="design-button" to={withFunnelParams('/contact', funnel)}>Discuss your setup</Link></div>
+        </section>
+        <div className="lx-bottom" />
+      </div>
     </main>
   );
 };

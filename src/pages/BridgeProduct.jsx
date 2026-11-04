@@ -93,7 +93,7 @@ const BridgeProduct = () => {
 
     <section className="design-container lx-section" id="bridge-model-use-cases">
       <div className="lx-head"><h2>What you can do with {product.name}.</h2></div>
-      <UseCaseCarousel items={modelUseCases(product.id)} label={`${product.name} use cases`} />
+      <UseCaseCarousel items={modelUseCases(product.id)} label={`${product.name} use cases`} layout="grid" />
     </section>
 
     <section className="design-container bridge-detail bridge-diagram-section">
