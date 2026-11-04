@@ -295,7 +295,7 @@ const AiReadinessPage = () => {
 
         {step === INTRO && (
           <main className="ai-step flex flex-1 flex-col justify-center pb-16">
-            <p className="text-sm font-semibold text-primary">AI Test Readiness</p>
+            <p className="ai-pill"><i aria-hidden="true" />AI Test Readiness</p>
             <h1
               ref={headingRef}
               tabIndex={-1}
@@ -307,6 +307,11 @@ const AiReadinessPage = () => {
             <p className="mt-3 text-lg leading-8 text-gray-text">
               Assess how accessible your current test environment is to AI-agent-driven testing.
             </p>
+            <ol className="ai-preview" aria-label="The four questions">
+              {QUESTIONS.map((q, i) => (
+                <li key={q.id}><span aria-hidden="true">{i + 1}</span>{q.title}</li>
+              ))}
+            </ol>
             <button
               type="button"
               onClick={handleStart}
