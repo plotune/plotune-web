@@ -36,7 +36,7 @@ const BusinessImpact = () => {
           </p>
         </div>
 
-        <div className="mx-auto mb-12 max-w-2xl rounded-sm bg-dark-card/60 p-6  ring-1 ring-white/5 md:mb-16">
+        <div className="mx-auto mb-12 max-w-2xl rounded-sm bg-dark-card/60 p-6  ring-1 ring-ink/10 md:mb-16">
           <ImpactTrend className="h-auto w-full" />
         </div>
 

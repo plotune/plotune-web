@@ -232,3 +232,10 @@ a.lx-card:hover .lx-more { text-decoration: underline; text-underline-offset: 4p
 .lx-code .lx-tag { color: #9aa0ab; }
 .lx-code pre { margin: 6px 0 0; overflow: auto; font-size: 13.5px; line-height: 1.75; color: #dfe3ea; }
 .lx-ns .lx-nexus { padding: 18px; } .lx-ns .lx-nexus b { margin-top: 0; }
+
+/* Links inside running text are underlined, so they do not depend on colour alone */
+main p a:not([class*="button"]):not(.design-button):not(.btn):not(.lx-more):not(.text-link),
+main li a:not([class*="button"]):not(.design-button):not(.btn):not(.lx-more):not(.text-link):not(.lx-card),
+main td a { text-decoration: underline; text-underline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.nexus-doc-table { overflow-x: auto; }

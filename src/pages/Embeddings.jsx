@@ -54,10 +54,10 @@ const Embeddings = () => {
           <div className="flex-1 w-full min-w-0 lg:max-w-lg">
             <div className="bg-dark-card  rounded-sm p-8 border border-ink/15 ">
               <div className="flex items-start mb-6">
-                <h3 className="text-light-text font-semibold text-xl">One API Call</h3>
+                <h3 aria-level="2" className="text-light-text font-semibold text-xl">One API Call</h3>
               </div>
 
-              <div className="bg-dark-card rounded-sm p-4 font-mono text-sm text-gray-text overflow-x-auto">
+              <div className="bg-dark-card rounded-sm p-4 font-mono text-sm text-gray-text overflow-x-auto" tabIndex={0}>
                 <pre className="whitespace-pre-wrap">
 {`curl -X POST https://api.plotune.net/v1/embeddings \
   -H "Authorization: Bearer YOUR_KEY" \
@@ -147,7 +147,7 @@ const Embeddings = () => {
                 <h3 className="text-light-text font-semibold text-xl">API Example (Node.js)</h3>
               </div>
 
-              <div className="bg-dark-card rounded-sm p-4 font-mono text-sm text-gray-text overflow-x-auto">
+              <div className="bg-dark-card rounded-sm p-4 font-mono text-sm text-gray-text overflow-x-auto" tabIndex={0}>
                 <pre className="whitespace-pre-wrap">
 {`const response = await axios.post(
   "https://api.plotune.net/v1/embeddings",

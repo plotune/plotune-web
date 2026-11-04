@@ -356,17 +356,17 @@
 .live-workspace .dh-devices { width: 100%; border-collapse: collapse; }
 .live-workspace .dh-devices th,
 .live-workspace .dh-devices td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid #e7e8eb; vertical-align: middle; }
-.live-workspace .dh-devices thead th { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #7c828d; }
+.live-workspace .dh-devices thead th { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #5f646e; }
 .live-workspace .dh-devices tbody th { font-weight: 400; }
 .live-workspace .dh-devices code { overflow-wrap: anywhere; }
 .live-workspace .dh-devices td:last-child { text-align: right; padding-right: 0; }
 .live-workspace .dh-devices .sw-button { min-height: 40px; }
 .live-workspace .dh-more { margin: 16px 23px 0; min-height: 44px; }
 .live-workspace .sw-panel-head .sw-link { min-height: 40px; }
-.live-workspace .dh-note { margin: 12px 23px 0; font-size: 12px; color: #7c828d; }
+.live-workspace .dh-note { margin: 12px 23px 0; font-size: 12px; color: #5f646e; }
 .live-workspace .dh-note:last-child { margin-bottom: 20px; }
 .live-workspace .dh-detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0 0 16px; }
-.live-workspace .dh-detail dt { color: #7c828d; }
+.live-workspace .dh-detail dt { color: #5f646e; }
 .live-workspace .dh-detail dd { margin: 0; overflow-wrap: anywhere; }
 .live-workspace .dh-detail h3 { font-size: 14px; margin: 16px 0 8px; }
 .live-workspace .dh-verdict { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -378,7 +378,7 @@
 .live-workspace .dh-check-pass > svg { color: #2e7d32; }
 .live-workspace .dh-check-warn > svg { color: #b26a00; }
 .live-workspace .dh-check-fail > svg { color: #c62828; }
-.live-workspace .dh-check-unknown > svg { color: #7c828d; }
+.live-workspace .dh-check-unknown > svg { color: #5f646e; }
 @media (max-width: 600px) {
   /* Narrow screens: each device becomes a card (name, last event and status, check). */
   .live-workspace .dh-table-wrap { overflow: visible; }

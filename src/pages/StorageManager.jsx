@@ -420,7 +420,7 @@ const handleUpload = async (file) => {
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-lg border border-ink/15">
-                  <table className="min-w-full divide-y divide-white/10">
+                  <table className="min-w-full divide-y divide-ink/10">
                     <thead className="bg-dark-surface ">
                       <tr>
                         <th
@@ -445,7 +445,7 @@ const handleUpload = async (file) => {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/10">
+                    <tbody className="divide-y divide-ink/10">
                       {filteredFiles.map((filePath, index) => {
                         const fileName = filePath.split('/').pop();
                         const fileExtension = fileName.split('.').pop().toLowerCase();

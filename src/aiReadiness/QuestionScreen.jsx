@@ -29,14 +29,14 @@ const OptionCard = ({ option, type, selected, disabled, onSelect }) => (
       selected
         ? 'border-primary bg-primary/15 text-light-text'
         : disabled
-          ? 'cursor-not-allowed border-ink/15 bg-dark-card/40 text-gray-text/50'
+          ? 'cursor-not-allowed border-ink/15 bg-dark-card/40 text-gray-text'
           : 'border-ink/15 bg-dark-card text-dark-text hover:border-primary/50 active:bg-primary/10'
     }`}
   >
     <span className="min-w-0">
       <span className={`block text-base leading-snug ${selected ? 'font-semibold' : 'font-medium'}`}>{option.label}</span>
       {option.description && (
-        <span className={`mt-1 block text-sm leading-snug ${disabled ? 'text-gray-text/50' : 'text-gray-text'}`}>{option.description}</span>
+        <span className={`mt-1 block text-sm leading-snug ${disabled ? 'text-gray-text' : 'text-gray-text'}`}>{option.description}</span>
       )}
     </span>
     <Indicator type={type} selected={selected} />
@@ -160,7 +160,7 @@ const QuestionScreen = ({
               onBlur={handleInputBlur}
               onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
               // 16px minimum: anything smaller makes iOS Safari zoom the page on focus.
-              className="mt-2 h-12 w-full rounded-lg border border-ink/15 bg-dark-bg px-3 text-base text-light-text placeholder:text-gray-text/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="mt-2 h-12 w-full rounded-lg border border-ink/15 bg-dark-bg px-3 text-base text-light-text placeholder:text-gray-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <p className="mt-2 text-xs leading-5 text-gray-text">{question.other.hint}</p>
           </div>

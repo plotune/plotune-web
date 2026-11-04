@@ -248,7 +248,7 @@ export default function Oscilloscope() {
                 <th className="text-left py-3 px-4 text-light-text font-semibold">Default</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-ink/10">
               {[
                 { option: "timebase", description: "Visible time window in seconds", default: "10" },
                 { option: "autoscale", description: "Automatically adjust Y-axis range to visible data", default: "true" },

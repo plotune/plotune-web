@@ -110,7 +110,8 @@ useEffect(() => {
       <div className="min-h-screen bg-dark-surface   flex items-center justify-center">
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
-          <p className="text-light-text">Loading your profile...</p>
+          <h1 className="sr-only">Profile</h1>
+          <p className="text-light-text" role="status">Loading your profile...</p>
         </div>
       </div>
     );

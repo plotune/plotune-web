@@ -66,7 +66,7 @@ const ExtensionsGrid = ({
             <li key={extension.id} className="catalog-row">
               <span className="technical-label catalog-number">{String(index + 1).padStart(2, '0')}</span>
               <div className="catalog-name">
-                <h3>{extension.name}</h3>
+                <h3 aria-level="2">{extension.name}</h3>
                 <p>by {extension.author}</p>
                 <code>{extension.app_id}</code>
               </div>

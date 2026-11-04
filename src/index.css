@@ -293,7 +293,7 @@ img { max-width: 100%; }
 .site-header [data-nav-dropdown] > div:last-child > div { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-sm); box-shadow: 0 8px 20px #1c242b12; }
 .site-wordmark { font-size: 23px; font-weight: 650; letter-spacing: -.045em; }
 .site-footer { background: #f3f4f6; border-top: 1px solid var(--line); padding-top: 55px; }
-.site-footer h3 { font: 500 12.5px/1.6 var(--font-sans); text-transform: none; letter-spacing: 0; }
+.site-footer h2 { font: 500 12.5px/1.6 var(--font-sans); text-transform: none; letter-spacing: 0; }
 .site-footer a { font-size: 13px; }
 .site-footer ul { display: grid; gap: 0; }
 .site-footer p { font-size: 13px; line-height: 1.8; }

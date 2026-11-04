@@ -66,7 +66,7 @@ export default function Nexus() {
       </div>
 
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-ink/10">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             What Nexus Provides
@@ -90,7 +90,7 @@ export default function Nexus() {
           {setupSteps.map((step, index) => (
             <article
               key={step.title}
-              className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5"
+              className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-ink/10"
             >
               <div className="flex flex-col gap-4 md:flex-row md:items-start">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
@@ -101,7 +101,7 @@ export default function Nexus() {
                     {step.title}
                   </h3>
                   <p className="text-gray-text leading-relaxed mb-4">{step.body}</p>
-                  <code className="block overflow-x-auto rounded-lg border border-white/5 bg-black/30 px-4 py-3 text-sm text-primary">
+                  <code className="block overflow-x-auto rounded-lg border border-ink/10 bg-black/30 px-4 py-3 text-sm text-primary">
                     {step.code}
                   </code>
                 </div>
@@ -133,7 +133,7 @@ export default function Nexus() {
       </section>
 
       <section className="mb-12">
-        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-ink/10">
           <h2 className="text-2xl font-bold text-light-text mb-5 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             First Run Checklist

@@ -149,7 +149,7 @@ export default function Docs() {
   };
 
   return (
-    <div className="site-public site-docs min-h-screen bg-dark-bg">
+    <main className="site-public site-docs min-h-screen bg-dark-bg">
       <Seo
         title="Plotune Documentation"
         description="Documentation for Plotune and Plotune Nexus: components, extensions, calculations, and workflows."
@@ -183,7 +183,7 @@ export default function Docs() {
         </aside>
 
         {/* ── RIGHT: Content ── */}
-        <main className="docs-main">
+        <div className="docs-main">
           <div className="docs-content legacy-doc">
             <Suspense
               fallback={
@@ -195,8 +195,8 @@ export default function Docs() {
               <Component />
             </Suspense>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -8,7 +8,11 @@ import { Note, DocMeta } from '../nexusdocs/NexusDocBlocks';
 import { captureFunnelTouch, withFunnelParams } from '../utils/funnel';
 import '../nexusdocs/NexusDocs.css';
 
-const components = { Note };
+// Code blocks and tables can scroll sideways, so they must be reachable by keyboard.
+const ScrollPre = (props) => <pre tabIndex={0} {...props} />;
+const ScrollTable = (props) => <table tabIndex={0} {...props} />;
+const HeaderCell = ({ children, ...props }) => <th {...props}>{children || <span className="sr-only">Item</span>}</th>;
+const components = { Note, pre: ScrollPre, table: ScrollTable, th: HeaderCell };
 
 const NexusDocPage = () => {
   const { slug } = useParams();

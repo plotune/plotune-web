@@ -64,7 +64,7 @@ const DnsPage = () => {
           <div className="mt-4 p-4 bg-dark-card rounded-custom border border-ink/15">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-light-text mb-1">DNS Limits</h3>
+                <h3 aria-level="2" className="text-lg font-semibold text-light-text mb-1">DNS Limits</h3>
                 <p className="text-gray-text text-sm">
                   Domains in use: {domains.length}/{maxDomains}
                 </p>

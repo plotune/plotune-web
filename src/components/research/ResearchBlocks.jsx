@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const Insight = ({ eyebrow, title, children }) => (
-  <aside className="research-insight">
+  <aside className="research-insight" role="note">
     <span>{eyebrow}</span>
     <h2>{title}</h2>
     <div>{children}</div>

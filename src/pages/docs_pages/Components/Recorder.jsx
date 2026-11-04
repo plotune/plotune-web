@@ -261,7 +261,7 @@ export default function Recorder() {
                 <th className="text-left py-3 px-4 text-light-text font-semibold">Responsibility</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-ink/10">
               {[
                 {
                   thread: "UI Thread (Qt)",

@@ -98,7 +98,7 @@ const ResearchOverview = () => {
           <button className="explorer-show-all" aria-expanded={showAll} onClick={() => setShowAll(!showAll)}>{showAll ? 'Show top 7 models' : 'Show all 13 models'} <span aria-hidden="true">{showAll ? '↑' : '↓'}</span></button>
           <p className="explorer-footnote">{metric === 'performance' ? 'Category-normalized validation index. Equal scores share the same performance; ordering does not break ties.' : `Bars show actual ${metric === 'cost' ? 'cost' : 'duration'}. Shorter bars are better.`} <Link to="/research/methodology">How we measure ↗</Link></p>
         </div>
-        <aside className="explorer-takeaway"><span className="section-label">Reading the results</span><p><b>{best.modelName}</b>{metric === 'performance' ? ' shares or holds the highest validation index' : metric === 'cost' ? ' has the lowest average cost per task' : ' has the shortest average task duration'}{metric === 'performance' ? ` for ${taskLabel(task).toLowerCase()}` : ' in this benchmark'}. Open a model above to compare its strengths across all six workflows.</p></aside>
+        <aside className="explorer-takeaway" role="note"><span className="section-label">Reading the results</span><p><b>{best.modelName}</b>{metric === 'performance' ? ' shares or holds the highest validation index' : metric === 'cost' ? ' has the lowest average cost per task' : ' has the shortest average task duration'}{metric === 'performance' ? ` for ${taskLabel(task).toLowerCase()}` : ' in this benchmark'}. Open a model above to compare its strengths across all six workflows.</p></aside>
         </motion.div>
       </section>
 

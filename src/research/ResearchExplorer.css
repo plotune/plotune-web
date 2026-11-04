@@ -23,7 +23,7 @@
 .explorer-metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:24px; }
 .explorer-workflow-scene { position:relative; }
 .explorer-workflow-context { display:flex; align-items:center; gap:20px; min-height:130px; box-sizing:border-box; margin-bottom:20px; padding:22px 26px; border-left:3px solid var(--green); background:#e7e8ea; border-radius:0 6px 6px 0; }
-.explorer-workflow-number { flex:none; width:54px; color:#787e8a; font:400 44px/1 Georgia,serif; }
+.explorer-workflow-number { flex:none; width:54px; color:#5f646e; font:400 44px/1 Georgia,serif; }
 .explorer-workflow-context h3 { margin:7px 0 8px; font:400 clamp(23px,3vw,31px)/1.15 Georgia,serif; letter-spacing:-.025em; color:var(--ink); }
 .explorer-workflow-context p { margin:0; max-width:640px; color:var(--muted); font-size:12px; line-height:1.7; }
 .explorer-metric { border:1px solid var(--line); padding:21px 22px 0; text-align:left; background:#ffffff; color:var(--ink); border-radius:7px; cursor:pointer; position:relative; transition:background .2s,border-color .2s,box-shadow .2s,transform .2s; }

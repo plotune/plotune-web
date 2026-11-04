@@ -43,7 +43,7 @@ export default function Bridge() {
         </Link>
         <div className="bridge-hero-caption">
           <div>
-            <h3>{product.name}</h3>
+            <h3 aria-level="2">{product.name}</h3>
             <p className="technical-label">{product.tag}</p>
           </div>
           <Link className="text-link" to={productHref(product)} onClick={clickProduct(product, 'hero_carousel')}>View {product.name} →</Link>

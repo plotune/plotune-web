@@ -207,7 +207,7 @@ const ContactForm = ({ topic = null, starters = NEUTRAL.starters({}), placeholde
         onBlur={handleEmailBlur}
         aria-invalid={errors.email ? 'true' : undefined}
         aria-describedby={errors.email ? 'contact-email-error' : emailFix ? 'contact-email-fix' : undefined}
-        className={`mt-2 h-14 w-full rounded-sm border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
+        className={`mt-2 h-14 w-full rounded-sm border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text focus:outline-none focus:ring-1 ${
           errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-ink/15 focus:border-primary focus:ring-primary'
         }`}
       />
@@ -263,7 +263,7 @@ const ContactForm = ({ topic = null, starters = NEUTRAL.starters({}), placeholde
         aria-invalid={errors.message ? 'true' : undefined}
         aria-describedby={errors.message ? 'contact-message-error' : undefined}
         // text-base (16px): smaller makes iOS Safari zoom the page on focus.
-        className={`${showStarters ? 'mt-3' : 'mt-2'} w-full resize-y rounded-sm border bg-dark-bg px-4 py-3 text-base leading-6 text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
+        className={`${showStarters ? 'mt-3' : 'mt-2'} w-full resize-y rounded-sm border bg-dark-bg px-4 py-3 text-base leading-6 text-light-text placeholder:text-gray-text focus:outline-none focus:ring-1 ${
           errors.message ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-ink/15 focus:border-primary focus:ring-primary'
         }`}
       />

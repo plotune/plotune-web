@@ -29,7 +29,7 @@ const AgenticTestDevelopmentPage = () => (
           <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
             {pillar.traditional.map((item, index) => (
               <li key={item} className="flex items-start gap-3">
-                <span aria-hidden="true" className="font-semibold text-gray-text/70">{index + 1}.</span>
+                <span aria-hidden="true" className="font-semibold text-gray-text">{index + 1}.</span>
                 <span>{item}</span>
               </li>
             ))}
