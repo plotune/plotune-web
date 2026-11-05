@@ -1,8 +1,6 @@
 # Real hardware.Controlled operations.
 
-Plotune Nexus / Local-first appliance  Hardware + software
-
-The agent meets the bench.
+Plotune Nexus · local-first appliance 
 
 
 
