@@ -32,11 +32,3 @@
   .ai-progress-fill,
   .ai-ring-progress { transition: none; }
 }
-
-/* Intro: the four questions as a preview, so the visitor sees what they are about to answer */
-.ai-pill { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; height: 28px; padding: 0 12px; border: 1px solid var(--line); background: #fff; border-radius: 999px; font-size: 13px; font-weight: 500; color: #5d626c; box-shadow: var(--shadow-card); }
-.ai-pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-.ai-preview { list-style: none; margin: 28px 0 0; padding: 6px 18px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-card); }
-.ai-preview li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.5; color: var(--ink); }
-.ai-preview li:last-child { border-bottom: 0; }
-.ai-preview li span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #e8eef6; color: var(--accent); font-size: 12px; font-weight: 600; }
