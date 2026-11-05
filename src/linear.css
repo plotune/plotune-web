@@ -251,3 +251,119 @@ main td a { text-decoration: underline; text-underline-offset: 3px; }
 .lx-group h3 { margin: 0 0 4px; font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
 .lx-group p:not(.lx-group-label) { margin: 0; font-size: 14px; line-height: 1.6; color: #5d626c; }
 @media (max-width: 1000px) { .lx-groups { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Home (lh-*): left-aligned hero, photo stage with live product UI, product bento ---------- */
+.lh-hero { padding: 132px 0 40px; }
+.lh-hero h1 { font-size: clamp(44px, 6.4vw, 80px); line-height: 1; letter-spacing: -.048em; font-weight: 560; margin: 26px 0 28px; max-width: 13ch; text-wrap: balance; }
+.lh-hero h1 em { font-style: normal; color: var(--faint-large); }
+.lh-hero-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+.lh-lead { font-size: 18px; line-height: 1.6; color: #5d626c; max-width: 500px; margin: 0; }
+.lh-hero .lx-actions { justify-content: flex-start; }
+
+.lh-stage { position: relative; margin-top: 8px; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); background: #eceef1; box-shadow: var(--shadow-lg); aspect-ratio: 1584 / 672; }
+.lh-stage-photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lh-ui { position: absolute; background: rgba(255,255,255,.86); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(229,231,235,.9); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,18,24,.06), 0 18px 40px -14px rgba(16,18,24,.22); font-size: 12.5px; color: var(--ink); }
+.lh-ui-bar { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); font-weight: 550; font-size: 12px; }
+.lh-ui-meta { margin-left: auto; color: var(--faint); font-weight: 450; font-family: var(--font-mono); font-size: 10.5px; }
+.lh-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.lh-agent { top: 6%; left: 3.2%; width: min(400px, 40%); }
+.lh-agent ol { list-style: none; margin: 0; padding: 6px 0; }
+.lh-agent li { display: grid; grid-template-columns: 14px auto minmax(0,1fr) auto; align-items: center; gap: 8px; padding: 6px 12px; }
+.lh-agent code { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink); }
+.lh-arg { color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11.5px; }
+.lh-res { font-family: var(--font-mono); font-size: 10.5px; color: #2e7d55; }
+.lh-tick { width: 14px; height: 14px; border-radius: 50%; background: #2e8b57; position: relative; }
+.lh-tick::after { content: ""; position: absolute; left: 4.5px; top: 2.5px; width: 4px; height: 7px; border: solid #fff; border-width: 0 1.6px 1.6px 0; transform: rotate(45deg); }
+.lh-verdict { display: flex; justify-content: space-between; align-items: center; margin: 2px 8px 8px; padding: 8px 10px; border-radius: 8px; background: #eef6f1; color: #1f6b45; font-size: 12px; }
+.lh-verdict b { font-weight: 600; }
+.lh-events { top: 6%; right: 3.2%; width: min(300px, 30%); }
+.lh-events table { width: 100%; border-collapse: collapse; }
+.lh-events td { padding: 7px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.lh-events tr:last-child td { border: 0; }
+.lh-events td:first-child { color: var(--faint); font-family: var(--font-mono); font-size: 10.5px; }
+.lh-events td.ev { font-weight: 500; }
+.lh-events td:last-child { text-align: right; }
+.lh-stage-cap { position: absolute; left: 16px; bottom: 12px; font: 11px var(--font-mono); color: #4b5058; background: rgba(255,255,255,.8); padding: 2px 8px; border-radius: 6px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .lh-agent li { animation: lh-in .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(.35s + var(--i) * .45s); }
+  .lh-verdict { animation: lh-in .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: 2.2s; }
+  .lh-events tr:first-child { animation: lh-in .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: 2.5s; }
+  /* Wipe in rather than fade: text keeps full contrast at every frame. */
+  @keyframes lh-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+}
+
+.lh-bento { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; }
+.lh-tile { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-card); transition: border-color .2s, box-shadow .2s; }
+.lh-tile:hover { border-color: var(--line-strong); box-shadow: var(--shadow-lg); }
+.lh-tile img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #eceef1; }
+.lh-tile-body { padding: 24px 26px 26px; }
+.lh-kicker { margin: 0 0 8px; font-size: 13px; font-weight: 550; color: var(--accent); }
+.lh-tile h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.2; letter-spacing: -.028em; font-weight: 580; text-wrap: balance; }
+.lh-tile-body > p:not(.lh-kicker) { margin: 0 0 20px; color: #5d626c; font-size: 15px; line-height: 1.55; }
+.lh-tile-body .design-button { min-height: 42px; }
+.lh-tile-nexus img, .lh-tile-bridge img { aspect-ratio: auto; height: 300px; }
+.lh-tile-stream { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+.lh-tile-stream .lh-tile-body { flex: 1; padding: 32px 40px; max-width: 520px; }
+.lh-stream-ui { flex: 0 0 52%; margin: 22px 0 22px 22px; border: 1px solid var(--line); border-radius: 12px; background: #fafbfc; overflow: hidden; align-self: center; }
+.lh-bars { display: block; width: 100%; height: 120px; padding: 12px 12px 0; }
+.lh-bars rect { fill: var(--accent); opacity: .22; } .lh-bars rect:nth-last-child(-n+6) { opacity: .75; }
+.lh-stream-kpis { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+.lh-stream-kpis span { padding: 8px 10px; font-size: 10.5px; color: var(--faint); }
+.lh-stream-kpis b { display: block; font-size: 15px; letter-spacing: -.02em; color: var(--ink); font-weight: 600; }
+.lh-stream-kpis span + span { border-left: 1px solid var(--line); }
+
+.lh .lx-head h2, .lh .lx-closing h2 { font-weight: 560; letter-spacing: -.04em; }
+
+@media (max-width: 900px) {
+  .lh-hero { padding-top: 104px; }
+  .lh-stage { aspect-ratio: auto; overflow: visible; border: 0; box-shadow: none; background: none; display: grid; gap: 12px; }
+  .lh-stage-photo { border-radius: 16px; border: 1px solid var(--line); aspect-ratio: 4 / 3; height: auto; object-position: 38% 85%; }
+  .lh-ui, .lh-agent, .lh-events { position: static; width: auto; background: #fff; }
+  .lh-stage-cap { position: static; justify-self: start; background: none; padding: 0; }
+  .lh-bento { grid-template-columns: minmax(0, 1fr); }
+  .lh-tile-nexus img, .lh-tile-bridge img { height: auto; aspect-ratio: 16 / 9; }
+  .lh-tile-stream { flex-direction: column; align-items: stretch; }
+  .lh-tile-stream .lh-tile-body { padding: 24px 26px 26px; }
+  .lh-stream-ui { margin: 18px 18px 0; align-self: stretch; }
+}
+
+/* Footer: tighter link rhythm on desktop (touch targets stay 44px on small screens) */
+@media (min-width: 768px) {
+  .site-footer ul.space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0; }
+  .site-footer ul a { min-height: 32px !important; }
+  .site-footer h2 { margin-bottom: 10px !important; }
+}
+
+/* Photographic use case cards */
+.lx-art.lx-photo { padding: 0; background: #eceef1; overflow: hidden; }
+.lx-art.lx-photo img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+@media (prefers-reduced-motion: no-preference) { .lx-ucard:hover .lx-photo img { transform: scale(1.035); } }
+
+/* Nexus hero: photograph fills the plate, caption floats on glass */
+.hardware-plate.lx-photo-plate { padding: 0; overflow: hidden; border-radius: 18px; box-shadow: var(--shadow-lg); }
+.hardware-plate.lx-photo-plate img { margin: 0; aspect-ratio: 4 / 3.4; object-fit: cover; object-position: 62% 60%; }
+.hardware-plate.lx-photo-plate figcaption { position: absolute; left: 14px; right: 14px; bottom: 14px; padding: 9px 12px; border: 1px solid rgba(229,231,235,.9); border-radius: 10px; background: rgba(255,255,255,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: #4b5058; }
+
+/* Nexus hero on phones: most visitors never scroll, so the first screen carries the product photo,
+   the plain one-line pitch and the readiness button. The copy wrapper dissolves so the photo can sit
+   between the headline and the pitch. */
+@media (max-width: 700px) {
+  .nexus-intro { padding-top: 92px; }
+  .nexus-intro > .section-index { display: none; }
+  .nexus-intro .product-spread { display: flex; flex-direction: column; gap: 0; padding-top: 0; }
+  .nexus-intro .product-copy { display: contents; }
+  .nexus-intro .product-copy > .technical-label { order: 1; margin: 0; text-align: left; }
+  .nexus-intro h1 { order: 2; font-size: 36px; margin: 6px 0 14px; }
+  .nexus-intro .lx-photo-plate { order: 3; border-radius: 14px; }
+  .nexus-intro .lx-photo-plate img { aspect-ratio: 16 / 9; }
+  .nexus-intro .lx-photo-plate figcaption { display: none; }
+  .nexus-design .nexus-intro .product-copy > p.nexus-lead { order: 4; margin: 14px 0 16px; font-size: 15.5px; line-height: 1.55; }
+  .nexus-intro .design-actions { order: 5; margin-top: 0; }
+}
+@media (max-width: 700px) and (max-height: 620px) {
+  .nexus-intro { padding-top: 84px; }
+  .nexus-intro h1 { font-size: 30px; margin-bottom: 10px; }
+  .nexus-intro .lx-photo-plate img { aspect-ratio: 2.2 / 1; }
+  .nexus-design .nexus-intro .product-copy > p.nexus-lead { margin: 10px 0 12px; font-size: 14.5px; }
+}

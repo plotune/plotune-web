@@ -6,14 +6,17 @@
 // order inside a question puts the most common answer first and "Other" always last.
 
 export const OTHER_ID = 'other';
+// An `exclusive` option clears every other selection (and is cleared by them). "Not sure yet"
+// keeps visitors who cannot name their interfaces in the assessment instead of losing them at Q1.
+export const NOT_SURE_ID = 'not_sure';
 export const ASSESSMENT_VERSION = 'v1';
 export const QUESTION_COUNT = 4;
 
 export const QUESTIONS = [
   {
     id: 'interfaces',
-    title: 'How does your test bench connect to the system under test?',
-    subtitle: 'Select all that apply.',
+    title: 'How do you connect to the hardware you test?',
+    subtitle: 'Select all that apply. Not sure? Pick the last option.',
     type: 'multi',
     layout: 'grid',
     options: [
@@ -26,6 +29,7 @@ export const QUESTIONS = [
       { id: 'dspace_ni', label: 'dSPACE / NI' },
       { id: 'ethernet_doip', label: 'Ethernet / DoIP' },
       { id: OTHER_ID, label: 'Other / Custom hardware' },
+      { id: NOT_SURE_ID, label: 'Not sure yet / no bench yet', exclusive: true },
     ],
     other: {
       label: 'What interface or hardware do you use?',

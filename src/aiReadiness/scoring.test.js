@@ -1,5 +1,5 @@
 import { scoreAssessment, AREA_IDS, INTERFACE_SCORES, TOOL_SCORES, BOTTLENECK_SCORES, AUTOMATION_SCORES } from './scoring';
-import { EMPTY_ANSWERS, QUESTIONS, OTHER_ID } from './questions';
+import { EMPTY_ANSWERS, QUESTIONS, OTHER_ID, NOT_SURE_ID } from './questions';
 
 const answers = (overrides = {}) => ({
   ...EMPTY_ANSWERS,
@@ -20,13 +20,13 @@ test('is deterministic and an integer between 0 and 100', () => {
   expect(first.score).toBeLessThanOrEqual(100);
 });
 
-test('every score table value is within 0-100 and every option id is scored or "other"', () => {
+test('every score table value is within 0-100 and every option id is scored, "other" or "not sure"', () => {
   [INTERFACE_SCORES, TOOL_SCORES, BOTTLENECK_SCORES, AUTOMATION_SCORES].forEach((table) => {
     Object.values(table).forEach((v) => { expect(v).toBeGreaterThanOrEqual(0); expect(v).toBeLessThanOrEqual(100); });
   });
   const tables = { interfaces: INTERFACE_SCORES, tools: TOOL_SCORES, bottlenecks: BOTTLENECK_SCORES, automation: AUTOMATION_SCORES };
   QUESTIONS.forEach((q) => q.options.forEach((o) => {
-    if (o.id !== OTHER_ID) expect(tables[q.id]).toHaveProperty(o.id);
+    if (o.id !== OTHER_ID && o.id !== NOT_SURE_ID) expect(tables[q.id]).toHaveProperty(o.id);
   }));
 });
 
@@ -85,4 +85,13 @@ test('Serial / UART / RS-485 is a native, high-accessibility interface and leads
   const serial = scoreAssessment(answers({ interfaces: ['serial_uart'] }));
   expect(serial.areas.interfaces.assessed).toBe(true);
   expect(serial.areas.interfaces.score).toBeGreaterThanOrEqual(85);
+});
+
+test('"Not sure yet" is left out like "Other", with its own plain coverage note', () => {
+  const r = scoreAssessment(answers({ interfaces: [NOT_SURE_ID] }));
+  expect(r.areas.interfaces.assessed).toBe(false);
+  expect(r.assessedAreas).toBe(3);
+  expect(r.score).toBeGreaterThanOrEqual(0);
+  expect(r.coverageNote).toMatch(/how your bench connects/);
+  expect(r.coverageNote).not.toMatch(/custom interface/);
 });

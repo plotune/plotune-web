@@ -31,10 +31,19 @@ test('a mixed strip shows one chip per group and every card is a link with an in
   expect(cards).toHaveLength(12);
   cards.forEach((card) => {
     expect(card.querySelector('.lx-art').getAttribute('aria-hidden')).toBe('true');
-    expect(card.querySelector('.lx-art svg')).not.toBeNull();
+    expect(card.querySelector('.lx-art svg, .lx-art img[alt=""]')).not.toBeNull();
     expect(card.querySelector('h3').textContent.length).toBeGreaterThan(3);
   });
   expect(container.querySelector('[role="region"]').getAttribute('aria-label')).toBe('Plotune use cases');
+});
+
+test('a strip never mixes photographs and drawings', () => {
+  const withPhotos = all.filter((u) => u.photo).slice(0, 3);
+  mount(<UseCaseCarousel items={withPhotos} />);
+  expect(container.querySelectorAll('.lx-photo img')).toHaveLength(3);
+  mount(<UseCaseCarousel items={[...withPhotos, { ...withPhotos[0], title: 'No photo here', photo: undefined }]} />);
+  expect(container.querySelectorAll('.lx-photo')).toHaveLength(0);
+  expect(container.querySelectorAll('.lx-art svg')).toHaveLength(4);
 });
 
 test('the first group chip starts pressed and a chip jumps to the first card of its group', () => {

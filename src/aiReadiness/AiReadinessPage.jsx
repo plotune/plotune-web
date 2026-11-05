@@ -157,9 +157,13 @@ const AiReadinessPage = () => {
     const isSelected = current.includes(optionId);
     // Defensive: the UI already dims options at the limit, this guards against fast double taps.
     if (!isSelected && question.max && current.length >= question.max) return;
-    const nextList = isSelected ? current.filter((id) => id !== optionId) : [...current, optionId];
+    const exclusiveIds = question.options.filter((o) => o.exclusive).map((o) => o.id);
+    let nextList;
+    if (isSelected) nextList = current.filter((id) => id !== optionId);
+    else if (exclusiveIds.includes(optionId)) nextList = [optionId];
+    else nextList = [...current.filter((id) => !exclusiveIds.includes(id)), optionId];
     const next = { ...answers, [question.id]: nextList };
-    if (optionId === OTHER_ID && isSelected) next.otherText = { ...answers.otherText, [question.id]: '' };
+    if (current.includes(OTHER_ID) && !nextList.includes(OTHER_ID)) next.otherText = { ...answers.otherText, [question.id]: '' };
     setAnswers(next);
   };
 

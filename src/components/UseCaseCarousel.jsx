@@ -11,6 +11,7 @@ export default function UseCaseCarousel({ items, label = 'Use cases', onCardClic
   const [group, setGroup] = useState(items[0]?.group);
   const [edge, setEdge] = useState({ start: true, end: false });
   const groups = [...new Set(items.map((u) => u.group))];
+  const photos = items.every((u) => u.photo); // never mix photos and drawings in one strip
 
   const sync = useCallback(() => {
     const el = track.current;
@@ -40,7 +41,9 @@ export default function UseCaseCarousel({ items, label = 'Use cases', onCardClic
   };
 
   const card = (u) => <Link key={u.title} className="lx-card lx-ucard" to={withFunnelParams(u.href)} onClick={() => onCardClick && onCardClick(u)}>
-    <div className="lx-art" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ART[u.art] }} />
+    {photos
+      ? <div className="lx-art lx-photo" aria-hidden="true"><img src={`/assets/photos/uc/${u.photo}.webp`} alt="" width="720" height="405" loading="lazy" decoding="async" /></div>
+      : <div className="lx-art" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ART[u.art] }} />}
     <div className="lx-ubody">
       <span className="lx-tag">{u.group}</span>
       <h3>{u.title}</h3>
