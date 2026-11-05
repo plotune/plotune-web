@@ -506,7 +506,7 @@ const PackageMirror = () => {
     <div className="min-h-screen bg-dark-surface pt-24 pb-12">
       <div className="container mx-auto px-4">
         <header className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account tools</p>
+          <p className="text-xs font-semibold text-primary">Account tools</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Package Mirror</h1>
           <p className="mt-2 text-sm text-gray-text">Preview package mirror workflows.</p>
         </header>

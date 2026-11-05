@@ -149,7 +149,7 @@ const EmailCapture = ({ onFirstInput, onSubmit, submission, nexusTo, onNexusClic
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={error ? 'ai-readiness-email-error' : undefined}
         // text-base (16px) so iOS Safari doesn't zoom the page when the field is focused.
-        className={`mt-2 h-14 w-full rounded-sm border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text/60 focus:outline-none focus:ring-1 ${
+        className={`mt-2 h-14 w-full rounded-sm border bg-dark-bg px-4 text-base text-light-text placeholder:text-gray-text focus:outline-none focus:ring-1 ${
           error ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-ink/15 focus:border-primary focus:ring-primary'
         }`}
       />

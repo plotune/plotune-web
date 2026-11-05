@@ -6,7 +6,7 @@ const Hero = () => {
     <section className="relative flex min-h-[88vh] items-start overflow-hidden bg-dark-surface pt-28 pb-16 md:min-h-[640px] md:items-center md:py-24 xl:min-h-screen">
       <div className="container mx-auto px-5">
         <div className="relative z-10 mx-auto max-w-2xl text-center xl:mx-0 xl:text-left">
-          <p className="mb-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+          <p className="mb-5 text-sm font-semibold text-primary">
             Plotune
           </p>
           <h1 className="mb-6 text-4xl font-bold text-light-text md:text-6xl">

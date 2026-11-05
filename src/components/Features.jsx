@@ -49,7 +49,7 @@ const Features = () => {
       <div className="container mx-auto px-5">
 
         <div className="text-center mb-10 md:mb-16 max-w-2xl mx-auto">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">The Plotune platform</p>
+          <p className="text-sm font-semibold text-primary">The Plotune platform</p>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold text-light-text">
             A complete DataOps platform.
           </h2>
@@ -69,7 +69,7 @@ const Features = () => {
               animate={isInView || prefersReducedMotion ? 'visible' : 'hidden'}
               transition={{ delay: index * 0.2 }}
             >
-              <div className="mb-6 rounded-sm bg-dark-bg/50 p-4 ring-1 ring-white/5">
+              <div className="mb-6 rounded-sm bg-dark-bg/50 p-4 ring-1 ring-ink/10">
                 <service.Visual className="h-auto w-full" />
               </div>
 
@@ -88,7 +88,7 @@ const Features = () => {
 
               <ul className="space-y-2">
                 {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center text-light-text/80 text-sm">
+                  <li key={featureIndex} className="flex items-center text-light-text text-sm">
                     <FiCheck aria-hidden="true" className="text-primary mr-3 shrink-0" />
                     {feature}
                   </li>

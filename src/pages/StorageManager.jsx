@@ -262,7 +262,7 @@ const handleUpload = async (file) => {
     <div className="min-h-screen bg-dark-surface pt-24 pb-12">
       <div className="container mx-auto px-4">
         <header className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account tools</p>
+          <p className="text-xs font-semibold text-primary">Account tools</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Storage</h1>
           <p className="mt-2 text-sm text-gray-text">Review and manage your uploaded files.</p>
         </header>
@@ -420,7 +420,7 @@ const handleUpload = async (file) => {
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-lg border border-ink/15">
-                  <table className="min-w-full divide-y divide-white/10">
+                  <table className="min-w-full divide-y divide-ink/10">
                     <thead className="bg-dark-surface ">
                       <tr>
                         <th
@@ -445,7 +445,7 @@ const handleUpload = async (file) => {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/10">
+                    <tbody className="divide-y divide-ink/10">
                       {filteredFiles.map((filePath, index) => {
                         const fileName = filePath.split('/').pop();
                         const fileExtension = fileName.split('.').pop().toLowerCase();

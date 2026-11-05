@@ -177,6 +177,9 @@ const SiteFrame = ({ children }) => {
   return <div className={`app site-${kind}`}>{children}</div>;
 };
 
+// Pages that do not render their own <main> get one here, so every route has a main landmark.
+const Main = ({ children }) => <main>{children}</main>;
+
 function App() {
   return (
     <HelmetProvider>
@@ -191,36 +194,36 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/faq" element={<Faq />} />
-              <Route path="/extensions" element={<Extensions />} />
+              <Route path="/extensions" element={<Main><Extensions /></Main>} />
               <Route path="/blog" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
               <Route path="/community" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
               <Route path="/tutorials" element={<RedirectPage url="https://github.com/plotune/plotune-web/discussions" />} />
-              <Route path="/download" element={<Download />} />
+              <Route path="/download" element={<Main><Download /></Main>} />
               <Route path="/about" element={<About />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/legal" element={<Legal />} />
+              <Route path="/careers" element={<Main><Careers /></Main>} />
+              <Route path="/login" element={<Main><Login /></Main>} />
+              <Route path="/register" element={<Main><Register /></Main>} />
+              <Route path="/legal" element={<Main><Legal /></Main>} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/docs/nexus" element={<NexusDocsOverview />} />
               <Route path="/docs/nexus/:slug" element={<NexusDocPage />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/reset-password" element={<ForgotPassword />} />
+              <Route path="/privacy" element={<Main><Privacy /></Main>} />
+              <Route path="/contact" element={<Main><ContactPage /></Main>} />
+              <Route path="/verify-email" element={<Main><VerifyEmail /></Main>} />
+              <Route path="/reset-password" element={<Main><ForgotPassword /></Main>} />
               <Route path="/stream/authorize" element={<StreamAuthorize />} />
               <Route path="/bridge/authorize" element={<BridgeAuthorize />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<Main><Profile /></Main>} />
               <Route path="/stream" element={<Stream />} />
               <Route path="/streams" element={<Navigate to="/stream/workspace" replace />} />
               <Route path="/stream/demo" element={<StreamDemo />} />
               <Route path="/stream/workspace" element={<LiveStreamWorkspace />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
-              <Route path="/dns" element={<DnsPage />} />
+              <Route path="/dns" element={<Main><DnsPage /></Main>} />
               <Route path="/partners" element={<Partnership />} />
-              <Route path="/partner-portal" element={<PartnerPortal />} />
-              <Route path="/partners/apply" element={<PartnerApplication />} />
+              <Route path="/partner-portal" element={<Main><PartnerPortal /></Main>} />
+              <Route path="/partners/apply" element={<Main><PartnerApplication /></Main>} />
               <Route path="/storage" element={<Navigate to="/dashboard" replace />} />
               <Route path="/mirror" element={<Navigate to="/dashboard" replace />} />
               <Route path="/embed" element={<Embeddings />} />

@@ -1,0 +1,45 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --watchAll=false
+        env:
+          CI: 'true'
+
+  accessibility:
+    name: Accessibility (axe, every public route)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build (no prerender needed for the scan)
+        run: npx craco build
+        env:
+          CI: 'false'
+      - name: Scan every public route, desktop and phone
+        run: npm run a11y -- --json=a11y-findings.json
+      - name: Keep the findings
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-findings
+          path: a11y-findings.json

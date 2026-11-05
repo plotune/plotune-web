@@ -532,7 +532,7 @@ export default function StreamWorkspace() {
               </div>
               <div className="sw-legend">
                 <span>
-                  <i style={{ background: "#00796b" }} />
+                  <i style={{ background: "#3d5a80" }} />
                   Passed
                 </span>
                 <span>
@@ -647,7 +647,7 @@ export default function StreamWorkspace() {
                   compact
                   label={m.name}
                   unit={m.unit}
-                  color={i === 2 ? "#b17a2c" : "#00796b"}
+                  color={i === 2 ? "#b17a2c" : "#3d5a80"}
                 />
                 <div className="sw-panel-foot">
                   <span>Nexus Bench-03</span>

@@ -11,7 +11,7 @@ const Mission = () => {
   return (
     <section id="mission" className="about-mission">
       <div className="design-container">
-        <div className="section-index"><span>02 / Mission</span><span>How we build</span></div>
+        <div className="section-index"><span>Mission</span><span>How we build</span></div>
         <div className="about-mission-grid">
           <div>
             <h2>Make physical engineering work inspectable.</h2>

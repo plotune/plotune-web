@@ -1,11 +1,11 @@
-const teal = {
-  50: '#EEF6F4', 100: '#D5EAE6', 200: '#ACD5CD', 300: '#4F9E93', 400: '#00796B', 500: '#00796B',
-  600: '#00695D', 700: '#00594F', 800: '#004A42', 900: '#003A34', 950: '#00261F',
+// One accent: slate blue (#3d5a80). The legacy blue/sky/indigo/purple/violet classes resolve to
+// this scale, so older account and workspace screens share the same action colour.
+const slate = {
+  50: '#F4F7FB', 100: '#E8EEF6', 200: '#CFDBEA', 300: '#8FA6C2', 400: '#3D5A80', 500: '#3D5A80',
+  600: '#34506F', 700: '#2D4560', 800: '#263A52', 900: '#1E2E42', 950: '#141F2D',
 };
-const violet = {
-  50: '#F1F1FA', 100: '#E2E3F4', 200: '#C7C9EA', 300: '#8A8ED2', 400: '#5B62A7', 500: '#5B62A7',
-  600: '#4F5596', 700: '#434982', 800: '#3B406D', 900: '#2E3255', 950: '#1D2036',
-};
+const teal = slate;
+const violet = slate;
 
 // Status text written for the old dark theme used the light 200-400 shades,
 // which fall below 4.5:1 on paper. Only those shades are darkened; tinted
@@ -23,10 +23,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#00796B',
-        'primary-dark': '#00796B',
-        secondary: '#5B62A7',
-        ink: '#1C242B',
+        primary: '#3D5A80',
+        'primary-dark': '#34506F',
+        secondary: '#5D626C',
+        ink: '#16171B',
         'dark-bg': 'rgb(var(--color-paper) / <alpha-value>)',
         'dark-surface': 'rgb(var(--color-surface) / <alpha-value>)',
         'dark-card': 'rgb(var(--color-panel) / <alpha-value>)',
@@ -48,13 +48,23 @@ module.exports = {
         amber: caution,
         yellow: caution,
         orange: caution,
-        cyan: statusText('#00666F'),
+        cyan: statusText('#3B6EA8'),
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)'],
+        mono: ['var(--font-mono)'],
       },
       boxShadow: {
-        custom: '0 4px 12px rgba(0, 0, 0, 0.25)',
+        custom: '0 1px 2px rgba(16, 18, 24, .04), 0 4px 14px rgba(16, 18, 24, .05)',
       },
       borderRadius: {
-        custom: '8px',
+        sm: '6px',
+        DEFAULT: '8px',
+        md: '8px',
+        lg: '10px',
+        xl: '14px',
+        '2xl': '18px',
+        custom: '10px',
       },
     },
   },

@@ -58,13 +58,13 @@ const DnsPage = () => {
       <div className="container mx-auto px-5 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Account tools</p>
+          <p className="text-xs font-semibold text-primary">Account tools</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Dynamic DNS</h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-text">Create subdomains and copy an update command. This screen currently keeps domain entries in this browser session; it does not configure live DNS.</p>
           <div className="mt-4 p-4 bg-dark-card rounded-custom border border-ink/15">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-light-text mb-1">DNS Limits</h3>
+                <h3 aria-level="2" className="text-lg font-semibold text-light-text mb-1">DNS Limits</h3>
                 <p className="text-gray-text text-sm">
                   Domains in use: {domains.length}/{maxDomains}
                 </p>

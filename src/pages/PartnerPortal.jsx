@@ -215,7 +215,7 @@ const PartnerPortal = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Partner workspace</p>
+          <p className="text-xs font-semibold text-primary">Partner workspace</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-light-text">Partner Portal</h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-text">Explore the partner workspace layout and available service areas.</p>
           <div className="mt-5 rounded-sm border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-light-text" role="note">
@@ -246,7 +246,7 @@ const PartnerPortal = () => {
             <div className="mt-8 p-6 bg-dark-surface  rounded-sm border border-ink/15">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-light-text font-semibold mb-2">Plotune Cloud - Enterprise Partner Tier</h4>
+                  <h4 aria-level="3" className="text-light-text font-semibold mb-2">Plotune Cloud - Enterprise Partner Tier</h4>
                   <p className="text-gray-text text-sm">
                     Full access to all cloud services. Some advanced features require activation.
                     Contact <a href="mailto:contact@plotune.net" className="text-primary hover:underline">contact@plotune.net</a> for custom solutions.
@@ -319,7 +319,7 @@ const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
   <div className="sticky top-24">
     <div className="bg-dark-card rounded-sm border border-ink/15 overflow-hidden">
       <div className="p-4 border-b border-ink/15">
-        <h3 className="font-semibold text-light-text">Cloud Services</h3>
+        <h3 aria-level="2" className="font-semibold text-light-text">Cloud Services</h3>
       </div>
       <nav className="p-2">
         {tabs.map(tab => (
@@ -342,7 +342,7 @@ const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
         <div className="text-sm text-gray-text mb-2">Quick Actions</div>
         <button
           disabled
-          className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text/70 cursor-not-allowed rounded-lg"
+          className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text cursor-not-allowed rounded-lg"
         >
           <i className="fas fa-plus"></i>
           <span>New Support Ticket</span>
@@ -350,7 +350,7 @@ const SidebarNav = ({ tabs, activeTab, setActiveTab, handleComingSoon }) => (
         </button>
         <button
           disabled
-          className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text/70 cursor-not-allowed rounded-lg"
+          className="w-full flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm text-gray-text cursor-not-allowed rounded-lg"
         >
           <i className="fas fa-user-plus"></i>
           <span>Add New Client</span>
@@ -372,14 +372,14 @@ const EmptyStateMessage = () => (
 
 const EmptyStateRow = ({ colSpan }) => (
   <tr>
-    <td colSpan={colSpan} className="py-8 px-4 text-center text-gray-text/60 text-sm">
+    <td colSpan={colSpan} className="py-8 px-4 text-center text-gray-text text-sm">
       <EmptyStateMessage />
     </td>
   </tr>
 );
 
 const EmptyStateText = () => (
-  <div className="py-8 text-center text-gray-text/60 text-sm">
+  <div className="py-8 text-center text-gray-text text-sm">
     <EmptyStateMessage />
   </div>
 );
@@ -419,7 +419,7 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
     <div className="bg-dark-card rounded-sm border border-ink/15 p-6 mb-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-light-text font-semibold text-xl">Usage Analytics</h3>
+          <h3 aria-level="2" className="text-light-text font-semibold text-xl">Usage Analytics</h3>
           <p className="text-gray-text">Monthly consumption across all clients</p>
         </div>
         <div className="flex items-center gap-2">
@@ -621,7 +621,7 @@ const AnalyticsTab = ({ handleComingSoon, usageData }) => (
       </div>
     </div>
 
-    <div className="text-center text-gray-text/60 text-sm mb-6">
+    <div className="text-center text-gray-text text-sm mb-6">
       <EmptyStateMessage />
     </div>
 

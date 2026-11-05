@@ -40,8 +40,8 @@ export default function StreamHeroVisual() {
       </button>)}
     </div>
     <svg className="shv-join" viewBox="0 0 440 56" preserveAspectRatio="none" fill="none" aria-hidden="true">
-      {paths.map((path, index) => <path key={index} d={path} stroke="#b4c4ab" />)}
-      <path className="shv-active-path" key={selected} d={paths[sources.indexOf(source)]} pathLength="1" stroke="#00725a" strokeWidth="1.8" />
+      {paths.map((path, index) => <path key={index} d={path} stroke="#b2b6bd" />)}
+      <path className="shv-active-path" key={selected} d={paths[sources.indexOf(source)]} pathLength="1" stroke="#35383d" strokeWidth="1.8" />
     </svg>
     <div className="shv-hub"><span className="shv-hub-icon"><FiLayers aria-hidden="true" /></span><div><strong translate="no">Plotune Stream</strong><small>Events, with their context.</small></div><span className="shv-http">HTTP</span></div>
     <div className="shv-trunk" aria-hidden="true"><i key={selected} /></div>

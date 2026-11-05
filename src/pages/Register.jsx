@@ -333,6 +333,7 @@ const Register = () => {
               />
               <button
                 type="button"
+                aria-label="Show or hide password"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-text hover:text-light-text"
                 onClick={() => setShowPassword(!showPassword)}
               >
@@ -401,6 +402,7 @@ const Register = () => {
               />
               <button
                 type="button"
+                aria-label="Show or hide password confirmation"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-text hover:text-light-text"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
@@ -429,6 +431,7 @@ const Register = () => {
               <label className="block text-gray-text mb-2 text-sm font-medium">Sector</label>
               <select
                 name="sector"
+                aria-label="Sector"
                 value={sector}
                 onChange={handleInputChange}
                 onBlur={() => validateField('sector')}
@@ -458,6 +461,7 @@ const Register = () => {
               <label className="block text-gray-text mb-2 text-sm font-medium">Country</label>
               <select
                 name="country"
+                aria-label="Country"
                 value={country}
                 onChange={handleInputChange}
                 onBlur={() => validateField('country')}

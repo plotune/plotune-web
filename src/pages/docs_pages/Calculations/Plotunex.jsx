@@ -129,7 +129,7 @@ export default function Plotunex() {
                   <th className="text-left py-3 px-4 text-light-text font-semibold">Purpose</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-ink/10">
                 {[
                   {
                     section: "Header",
@@ -234,7 +234,7 @@ export default function Plotunex() {
                 <th className="text-left py-3 px-4 text-light-text font-semibold">How PLTX Solves It</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-ink/10">
               {[
                 {
                   need: "High-frequency data streams",
@@ -286,7 +286,7 @@ export default function Plotunex() {
                 <th className="text-left py-3 px-4 text-light-text font-semibold">Issue for Plotune</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-ink/10">
               {[
                 {
                   format: "CSV",

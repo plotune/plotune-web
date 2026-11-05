@@ -85,7 +85,7 @@ const NexusConnectivity = () => {
         <div className="relative container mx-auto px-5">
           <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr]">
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Plotune Nexus Connectivity</p>
+              <p className="text-sm font-semibold text-primary">Plotune Nexus Connectivity</p>
               <h1 className="mt-5 text-4xl font-semibold text-light-text md:text-6xl">
                 One connection point for your entire test environment.
               </h1>
@@ -158,23 +158,21 @@ const NexusConnectivity = () => {
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-light-text md:text-4xl">What you can do with Plotune Nexus connected</h2>
           </div>
-          <div className="mt-10 space-y-10">
+          <div className="lx-groups">
             {enableGroups.map((group) => (
-              <div key={group.label}>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{group.label}</p>
-                <div className="mt-4 space-y-4">
-                  {group.items.map(([title, copy], index) => (
-                    <div key={title} className="flex gap-4 rounded-sm bg-dark-card/80 p-5 ">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">
-                        {index + 1}
-                      </div>
+              <div key={group.label} className="lx-card lx-group">
+                <p className="lx-group-label">{group.label}</p>
+                <ul>
+                  {group.items.map(([title, copy]) => (
+                    <li key={title}>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2e8b57" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" /></svg>
                       <div>
-                        <h3 className="font-semibold text-light-text">{title}</h3>
-                        <p className="mt-2 text-sm leading-7 text-gray-text">{copy}</p>
+                        <h3>{title}</h3>
+                        <p>{copy}</p>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             ))}
           </div>

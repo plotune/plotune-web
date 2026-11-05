@@ -61,7 +61,7 @@ const motionCss = `
 `;
 
 const Chip = ({ value }) => (
-  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
+  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold text-gray-text">
     {value}
   </span>
 );
@@ -71,7 +71,7 @@ const NexusShowcase = () => (
     <style>{motionCss}</style>
     <div className="container mx-auto px-5">
       <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Claude &amp; Codex, on the bench</p>
+        <p className="text-sm font-semibold text-primary">Claude &amp; Codex, on the bench</p>
         <h2 className="mt-4 text-3xl font-bold text-light-text md:text-4xl">
           Watch an agent run the bounded workflow and leave the proof.
         </h2>
@@ -88,8 +88,8 @@ const NexusShowcase = () => (
           return (
             <article key={run.id} className="rounded-sm bg-dark-card/80 p-5 ">
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
-                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-gray-text">{run.source}</p>
-                <span className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary" title="Example outcome" aria-label="Example outcome">
+                <p className="font-mono text-[11px] text-gray-text">{run.source}</p>
+                <span className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold text-primary" title="Example outcome" aria-label="Example outcome">
                   {run.status}
                 </span>
               </div>
@@ -115,7 +115,7 @@ const NexusShowcase = () => (
           to="/nexus/use-cases"
           className="group flex flex-col justify-center rounded-sm border border-primary/25 bg-primary/[0.06] p-6 text-left  transition-all duration-300  hover:bg-primary/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary "
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Use Cases</p>
+          <p className="text-sm font-semibold text-primary">Use Cases</p>
           <p className="mt-3 text-lg font-semibold text-light-text">
             See these runs animate end to end, plus the full industry set.
           </p>

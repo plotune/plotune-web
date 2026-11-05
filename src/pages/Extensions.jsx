@@ -380,7 +380,7 @@ const Extensions = () => {
               href={extension.deployment}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#61dafb', textDecoration: 'underline' }}
+              style={{ color: '#a8acb4', textDecoration: 'underline' }}
             >
               Download from GitHub Releases
             </a>

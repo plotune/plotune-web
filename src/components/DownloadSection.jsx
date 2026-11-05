@@ -234,7 +234,7 @@ const DownloadSection = () => {
               <li key={download.name} className="download-row">
                 <div className="download-summary">
                   <span className="technical-label">{String(index + 1).padStart(2, '0')} / {download.type}</span>
-                  <h3>{download.name}</h3>
+                  <h3 aria-level="2">{download.name}</h3>
                   <p>{download.description}</p>
                   <dl className="product-specs">
                     <div><dt>Version</dt><dd>{download.version}</dd></div>
@@ -242,7 +242,7 @@ const DownloadSection = () => {
                   </dl>
                 </div>
                 <div className="download-steps">
-                  {download.command && <pre aria-label="Install command"><code>$ {download.command}</code></pre>}
+                  {download.command && <pre tabIndex={0} aria-label="Install command"><code>$ {download.command}</code></pre>}
                   <p className="technical-label">Installation steps</p>
                   <ol>
                     {download.instructions.map((step) => <li key={step}>{step}</li>)}

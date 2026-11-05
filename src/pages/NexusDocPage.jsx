@@ -8,7 +8,11 @@ import { Note, DocMeta } from '../nexusdocs/NexusDocBlocks';
 import { captureFunnelTouch, withFunnelParams } from '../utils/funnel';
 import '../nexusdocs/NexusDocs.css';
 
-const components = { Note };
+// Code blocks and tables can scroll sideways, so they must be reachable by keyboard.
+const ScrollPre = (props) => <pre tabIndex={0} {...props} />;
+const ScrollTable = (props) => <table tabIndex={0} {...props} />;
+const HeaderCell = ({ children, ...props }) => <th {...props}>{children || <span className="sr-only">Item</span>}</th>;
+const components = { Note, pre: ScrollPre, table: ScrollTable, th: HeaderCell };
 
 const NexusDocPage = () => {
   const { slug } = useParams();
@@ -26,7 +30,7 @@ const NexusDocPage = () => {
   if (!doc) {
     return (
       <main className="flex min-h-[60vh] flex-col items-center justify-center bg-dark-bg px-5 py-20 text-center text-dark-text">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Docs</p>
+        <p className="text-sm font-semibold text-primary">Docs</p>
         <h1 className="mt-4 text-3xl font-semibold text-light-text">We couldn&apos;t find that document.</h1>
         <Link to="/docs/nexus" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition-all duration-300  hover:bg-primary-dark">
           Back to Nexus docs
@@ -46,7 +50,7 @@ const NexusDocPage = () => {
           <Link to="/docs/nexus" className="text-sm text-gray-text transition-colors hover:text-primary">
             &larr; Nexus documentation
           </Link>
-          <p className="mt-5 text-sm font-semibold uppercase tracking-[0.28em] text-primary">{doc.topic}</p>
+          <p className="mt-5 text-sm font-semibold text-primary">{doc.topic}</p>
           <h1 className="mt-3 text-4xl font-semibold leading-tight text-light-text md:text-5xl">{doc.title}</h1>
           <p className="mt-6 text-lg leading-8 text-gray-text">{doc.summary}</p>
           <div className="mt-6">
@@ -88,7 +92,7 @@ const NexusDocPage = () => {
 
       <section className="pb-24">
         <div className="container mx-auto max-w-3xl px-5">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-text">More Nexus documentation</p>
+          <p className="text-sm font-semibold text-gray-text">More Nexus documentation</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             {otherDocs.map((other) => (
               <Link
@@ -96,7 +100,7 @@ const NexusDocPage = () => {
                 to={`/docs/nexus/${other.slug}`}
                 className="group rounded-sm border border-ink/15 bg-dark-card/60 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-dark-card/90"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{other.topic}</p>
+                <p className="text-xs font-semibold text-primary">{other.topic}</p>
                 <p className="mt-2 font-semibold text-light-text group-hover:text-primary">{other.title}</p>
               </Link>
             ))}

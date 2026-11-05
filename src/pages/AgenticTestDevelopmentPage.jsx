@@ -13,7 +13,7 @@ const AgenticTestDevelopmentPage = () => (
     <section className="relative pt-32 pb-16">
       <div className="absolute inset-0 bg-dark-surface" />
       <div className="relative container mx-auto px-5">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">{pillar.label}</p>
+        <p className="text-sm font-semibold text-primary">{pillar.label}</p>
         <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-tight text-light-text md:text-5xl">{pillar.heroTitle}</h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-text">{pillar.intro}</p>
       </div>
@@ -29,7 +29,7 @@ const AgenticTestDevelopmentPage = () => (
           <ul className="mt-6 space-y-4 text-sm leading-6 text-gray-text">
             {pillar.traditional.map((item, index) => (
               <li key={item} className="flex items-start gap-3">
-                <span aria-hidden="true" className="font-semibold text-gray-text/70">{index + 1}.</span>
+                <span aria-hidden="true" className="font-semibold text-gray-text">{index + 1}.</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -62,7 +62,7 @@ const AgenticTestDevelopmentPage = () => (
                 to={withFunnelParams(`/solutions/${slug}`)}
                 className="group rounded-sm bg-dark-card/80 p-5  transition-all duration-300 hover:bg-dark-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{segment.label}</p>
+                <p className="text-xs font-semibold text-primary">{segment.label}</p>
                 <p className="mt-2 text-sm leading-6 text-gray-text">{segment.heroTitle}</p>
                 <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-light-text">
                   Read more <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1" />

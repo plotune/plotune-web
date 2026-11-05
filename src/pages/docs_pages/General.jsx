@@ -152,7 +152,7 @@ export default function General() {
         <div className="bg-dark-surface  rounded-sm p-6 border border-ink/15">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-lg font-semibold text-light-text mb-3">Main Areas</h4>
+              <h4 aria-level="3" className="text-lg font-semibold text-light-text mb-3">Main Areas</h4>
               <ul className="space-y-2 text-gray-text">
                 <li className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
@@ -173,7 +173,7 @@ export default function General() {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-light-text mb-3">Data Sources</h4>
+              <h4 aria-level="3" className="text-lg font-semibold text-light-text mb-3">Data Sources</h4>
               <div className="flex flex-wrap gap-2">
                 {['UART', 'CAN Bus', 'Bluetooth', 'CSV Files', 'Network Streams', 'Simulation'].map((source) => (
                   <span key={source} className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm">
@@ -201,7 +201,7 @@ export default function General() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-lg font-semibold text-light-text mb-3">Plugin Capabilities</h4>
+              <h4 aria-level="3" className="text-lg font-semibold text-light-text mb-3">Plugin Capabilities</h4>
               <ul className="space-y-2 text-gray-text">
                 <li className="flex items-center gap-2">
                   <i className="fas fa-plus text-primary text-sm"></i>
@@ -222,7 +222,7 @@ export default function General() {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-light-text mb-3">Distribution</h4>
+              <h4 aria-level="3" className="text-lg font-semibold text-light-text mb-3">Distribution</h4>
               <ul className="space-y-2 text-gray-text">
                 <li className="flex items-center gap-2">
                   <i className="fas fa-store text-primary text-sm"></i>

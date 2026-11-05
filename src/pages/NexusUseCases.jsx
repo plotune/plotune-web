@@ -867,7 +867,7 @@ const motionCss = `
 `;
 
 const CaseChip = ({ value }) => (
-  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
+  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold text-gray-text">
     {value}
   </span>
 );
@@ -890,8 +890,8 @@ const IndustryTab = ({ industry, isActive, onSelect }) => (
 const ResultBlock = ({ result }) => (
   <div className="mt-5 overflow-hidden rounded-sm bg-dark-surface/80 p-4">
     <div className="flex items-center justify-between gap-3">
-      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-primary">{result.run}</span>
-      <span className="text-[10px] uppercase tracking-[0.18em] text-gray-text">Example run</span>
+      <span className="font-mono text-[11px] text-primary">{result.run}</span>
+      <span className="text-[10px] text-gray-text">Example run</span>
     </div>
     <dl className="mt-3 space-y-2">
       {result.rows.map(([label, value]) => (
@@ -940,7 +940,7 @@ const FamilyTab = ({ family, isActive, onSelect }) => (
     }`}
     aria-pressed={isActive}
   >
-    <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{family.shell}</p>
+    <p className="font-mono text-xs text-gray-text">{family.shell}</p>
     <h2 className="mt-3 text-2xl font-semibold">{family.label}</h2>
     <p className="mt-2 text-sm text-gray-text">{family.railLabel}</p>
   </button>
@@ -953,10 +953,10 @@ const HeroProof = ({ family, scenario, cycle }) => {
     <div className="rounded-sm bg-dark-card/80 p-5  ">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{family.shell}</p>
+          <p className="font-mono text-xs text-gray-text">{family.shell}</p>
           <h2 className="mt-3 text-2xl font-semibold text-light-text">{scenario.label}</h2>
         </div>
-        <span title="Example outcome" aria-label="Example outcome" className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <span title="Example outcome" aria-label="Example outcome" className="rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold text-primary">
           {scenario.status}
         </span>
       </div>
@@ -984,7 +984,7 @@ const ArtifactCard = ({ scenario, isActive, cycle, onSelect }) => {
         <div className="min-w-0">
           <h3 className="text-xl font-semibold text-light-text">{scenario.label}</h3>
         </div>
-        <span title="Example outcome" aria-label="Example outcome" className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <span title="Example outcome" aria-label="Example outcome" className="shrink-0 rounded-full bg-primary/12 px-3 py-1 text-[11px] font-semibold text-primary">
           {scenario.status}
         </span>
       </div>
@@ -1008,7 +1008,7 @@ const ResultMatrix = ({ scenarios }) => (
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="text-[11px] uppercase tracking-[0.22em] text-gray-text">
+            <tr className="text-[11px] text-gray-text">
               <th className="px-4 py-4 font-semibold">Scenario</th>
               <th className="px-4 py-4 font-semibold">Output</th>
               <th className="px-4 py-4 font-semibold">State</th>
@@ -1023,7 +1023,7 @@ const ResultMatrix = ({ scenarios }) => (
                 <td className="px-4 py-4 font-semibold">{scenario.label}</td>
                 <td className="px-4 py-4 text-gray-text">{scenario.chips[0]}</td>
                 <td className="px-4 py-4">
-                  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold text-primary">
                     {scenario.status}
                   </span>
                 </td>
@@ -1118,7 +1118,7 @@ const NexusUseCases = () => {
         <div className="relative container mx-auto px-5">
           <div className="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-center">
             <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Plotune Nexus</p>
+              <p className="text-sm font-semibold text-primary">Plotune Nexus</p>
               <h1 className="mt-5 text-5xl font-semibold text-light-text md:text-7xl">
                 Use Cases
               </h1>
@@ -1181,8 +1181,8 @@ const NexusUseCases = () => {
         <div className="container mx-auto px-5">
           <div className="rounded-sm bg-dark-card/80 p-3   md:p-4">
             <div className="flex items-center justify-between px-3 pb-3 pt-1">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-gray-text">{activeFamilyConfig.shell}</p>
-              <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-text">
+              <p className="font-mono text-xs text-gray-text">{activeFamilyConfig.shell}</p>
+              <span className="rounded-full bg-dark-card px-3 py-1 text-[11px] font-semibold text-gray-text">
                 {activeFamilyConfig.runtimeLabel}
               </span>
             </div>
@@ -1215,7 +1215,7 @@ const NexusUseCases = () => {
 
           <div id="artifacts" className="mt-8 flex scroll-mt-24 items-end justify-between gap-6">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Artifacts</p>
+              <p className="text-sm font-semibold text-primary">Artifacts</p>
               <h2 className="mt-4 text-3xl font-semibold text-light-text md:text-4xl">
                 Outputs from the active flow
               </h2>
@@ -1240,7 +1240,7 @@ const NexusUseCases = () => {
           </div>
 
           <div id="industries" className="mt-24 scroll-mt-24">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Scenarios by industry</p>
+            <p className="text-sm font-semibold text-primary">Scenarios by industry</p>
             <h2 className="mt-4 text-3xl font-semibold text-light-text md:text-4xl">
               See how Plotune Nexus works in your world
             </h2>
@@ -1277,7 +1277,7 @@ const NexusUseCases = () => {
               <div className="mt-8 space-y-6">
                 {groupFeatures(activeIndustryConfig.features).map((group) => (
                   <div key={group.id}>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-text">{group.label}</p>
+                    <p className="text-xs font-semibold text-gray-text">{group.label}</p>
                     <div className="mt-3 space-y-3">
                       {group.items.map((feature) => {
                         const key = `${activeIndustryConfig.id}:${feature.title}`;

@@ -315,3 +315,16 @@ test('Retake is not logged as a Back action', () => {
   click(button('Retake the assessment'));
   expect(events()).not.toContain('ai_readiness_back_clicked');
 });
+
+test('"Not sure yet" on question 1 replaces other picks, is replaced by them, and still reaches a score', () => {
+  click(button('Start assessment'));
+  click(card('PEAK / PCAN'));
+  click(card('Not sure yet'));
+  expect(card('PEAK / PCAN').getAttribute('aria-checked')).toBe('false');
+  expect(card('Not sure yet').getAttribute('aria-checked')).toBe('true');
+  click(card('Vector'));
+  expect(card('Not sure yet').getAttribute('aria-checked')).toBe('false');
+  click(card('Not sure yet'));
+  click(button('Continue'));
+  expect(propsOf('ai_readiness_q1_completed').interfaces).toEqual(['not_sure']);
+});

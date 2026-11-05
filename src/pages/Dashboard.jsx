@@ -50,7 +50,7 @@ export default function Dashboard() {
       <div className="container mx-auto max-w-5xl px-5">
         <header className="mb-8 flex flex-wrap items-start justify-between gap-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Your Plotune account</p>
+            <p className="text-xs font-semibold text-primary">Your Plotune account</p>
             <h1 className="mt-2 text-3xl font-semibold text-light-text">Dashboard</h1>
             <p className="mt-3 text-sm leading-7 text-gray-text">
               {user?.full_name || user?.username ? `Welcome back, ${user.full_name || user.username}. ` : ''}

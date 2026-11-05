@@ -20,7 +20,7 @@ const Footer = () => {
             </p>
           </div>
           <div>
-            <h3 id="footer-product" className="text-xl font-semibold text-light-text mb-5">Product</h3>
+            <h2 id="footer-product" className="text-xl font-semibold text-light-text mb-5">Product</h2>
             <nav aria-labelledby="footer-product"><ul className="space-y-3">
               <li><Link to="/#features" className={linkClass('/')}>Features</Link></li>
               <li><Link to="/nexus" aria-current={location.pathname === '/nexus' ? 'page' : undefined} className={linkClass('/nexus')}>Nexus</Link></li>
@@ -44,7 +44,7 @@ const Footer = () => {
             </nav>
           </div>
           <div>
-            <h3 id="footer-resources" className="text-xl font-semibold text-light-text mb-5">Resources</h3>
+            <h2 id="footer-resources" className="text-xl font-semibold text-light-text mb-5">Resources</h2>
             <nav aria-labelledby="footer-resources"><ul className="space-y-3">
               <li><Link to="/docs" aria-current={location.pathname === '/docs' ? 'page' : undefined} className={linkClass('/docs')}>Documentation</Link></li>
               <li><Link to="/research" className={linkClass('/research')}>Research</Link></li>
@@ -65,7 +65,7 @@ const Footer = () => {
             </nav>
           </div>
           <div>
-            <h3 id="footer-company" className="text-xl font-semibold text-light-text mb-5">Company</h3>
+            <h2 id="footer-company" className="text-xl font-semibold text-light-text mb-5">Company</h2>
             <nav aria-labelledby="footer-company"><ul className="space-y-3">
               <li><Link to="/about" aria-current={location.pathname === '/about' ? 'page' : undefined} className={linkClass('/about')}>About Us</Link></li>
               <li><Link to="/partners" aria-current={location.pathname === '/partners' ? 'page' : undefined} className={linkClass('/partners')}>Partnership</Link></li>

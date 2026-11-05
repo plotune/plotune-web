@@ -1,4 +1,4 @@
-import { OTHER_ID } from './questions';
+import { NOT_SURE_ID, OTHER_ID } from './questions';
 
 // ---------------------------------------------------------------------------------------------
 // AI Test Readiness scoring -- V1
@@ -188,7 +188,9 @@ export const scoreAssessment = (answers) => {
     unknownAreaIds,
     // Only shown when something genuinely could not be assessed.
     coverageNote: unknownAreaIds.length
-      ? `We couldn’t fully assess ${unknownAreaIds.map((id) => UNASSESSED_NOTES[id]).join(' and ')}.`
+      ? `We couldn’t fully assess ${unknownAreaIds.map((id) => (
+        id === 'interfaces' && (answers.interfaces || []).includes(NOT_SURE_ID) ? 'how your bench connects' : UNASSESSED_NOTES[id]
+      )).join(' and ')}.`
       : '',
   };
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Trend } from "../StreamWorkspace/WorkspaceUI";
 
-const COLORS = ["#00796b", "#b17a2c", "#6266ad", "#b34540", "#3d8295", "#73864b"];
+const COLORS = ["#3d5a80", "#b17a2c", "#6266ad", "#b34540", "#626770", "#616670"];
 
 export function WidgetBars({ series, label }) {
   const points = series.flatMap((item) => item.points).map((point) => point.value).filter(Number.isFinite);
@@ -15,7 +15,7 @@ export function WidgetBars({ series, label }) {
   const width = Math.max(1, group * 0.74 / Math.max(1, series.length));
   const zero = y(0);
   return <svg className="st-widget-bars" viewBox="0 0 480 154" role="img" aria-label={`${label} bar chart`}>
-    {[28, 77, 126].map((line) => <line key={line} x1="40" x2="460" y1={line} y2={line} stroke="#e5e9eb" />)}
+    {[28, 77, 126].map((line) => <line key={line} x1="40" x2="460" y1={line} y2={line} stroke="#e6e7ea" />)}
     {series.flatMap((item, seriesIndex) => item.points.map((point, pointIndex) => {
       if (!Number.isFinite(point.value)) return null;
       const x = 40 + pointIndex * group + (group - width * series.length) / 2 + seriesIndex * width;
