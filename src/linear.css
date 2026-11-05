@@ -325,7 +325,7 @@ main td a { text-decoration: underline; text-underline-offset: 3px; }
   .lh-tile-nexus img, .lh-tile-bridge img { height: auto; aspect-ratio: 16 / 9; }
   .lh-tile-stream { flex-direction: column; align-items: stretch; }
   .lh-tile-stream .lh-tile-body { padding: 24px 26px 26px; }
-  .lh-stream-ui { margin: 18px 18px 0; align-self: stretch; }
+  .lh-stream-ui { flex: none; margin: 18px 18px 0; align-self: stretch; }
 }
 
 /* Footer: tighter link rhythm on desktop (touch targets stay 44px on small screens) */
@@ -345,25 +345,27 @@ main td a { text-decoration: underline; text-underline-offset: 3px; }
 .hardware-plate.lx-photo-plate img { margin: 0; aspect-ratio: 4 / 3.4; object-fit: cover; object-position: 62% 60%; }
 .hardware-plate.lx-photo-plate figcaption { position: absolute; left: 14px; right: 14px; bottom: 14px; padding: 9px 12px; border: 1px solid rgba(229,231,235,.9); border-radius: 10px; background: rgba(255,255,255,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: #4b5058; }
 
-/* Nexus hero on phones: most visitors never scroll, so the first screen carries the product photo,
-   the plain one-line pitch and the readiness button. The copy wrapper dissolves so the photo can sit
-   between the headline and the pitch. */
+/* Nexus hero (.nx-hero only: the Bridge pages share the nexus-intro classes). Same pill as the
+   home hero instead of a small label and breadcrumb strip. On phones most visitors never scroll,
+   so the first screen carries the product photo, the plain one-line pitch and the readiness button;
+   the copy wrapper dissolves so the photo can sit between the headline and the pitch. */
+.nx-hero { padding-top: 112px; }
+.nx-hero h1 { margin-top: 20px; }
 @media (max-width: 700px) {
-  .nexus-intro { padding-top: 92px; }
-  .nexus-intro > .section-index { display: none; }
-  .nexus-intro .product-spread { display: flex; flex-direction: column; gap: 0; padding-top: 0; }
-  .nexus-intro .product-copy { display: contents; }
-  .nexus-intro .product-copy > .technical-label { order: 1; margin: 0; text-align: left; }
-  .nexus-intro h1 { order: 2; font-size: 36px; margin: 6px 0 14px; }
-  .nexus-intro .lx-photo-plate { order: 3; border-radius: 14px; }
-  .nexus-intro .lx-photo-plate img { aspect-ratio: 16 / 9; }
-  .nexus-intro .lx-photo-plate figcaption { display: none; }
-  .nexus-design .nexus-intro .product-copy > p.nexus-lead { order: 4; margin: 14px 0 16px; font-size: 15.5px; line-height: 1.55; }
-  .nexus-intro .design-actions { order: 5; margin-top: 0; }
+  .nx-hero { padding-top: 92px; }
+  .nx-hero .product-spread { display: flex; flex-direction: column; gap: 0; padding-top: 0; }
+  .nx-hero .product-copy { display: contents; }
+  .nx-hero .nx-pill { order: 1; align-self: flex-start; }
+  .nexus-design .nx-hero h1 { order: 2; font-size: 36px; margin: 16px 0 14px; }
+  .nx-hero .lx-photo-plate { order: 3; border-radius: 14px; }
+  .nx-hero .lx-photo-plate img { aspect-ratio: 16 / 9; }
+  .nx-hero .lx-photo-plate figcaption { display: none; }
+  .nexus-design .nx-hero .product-copy > p.nexus-lead { order: 4; margin: 14px 0 16px; font-size: 15.5px; line-height: 1.55; }
+  .nx-hero .design-actions { order: 5; margin-top: 0; }
 }
 @media (max-width: 700px) and (max-height: 620px) {
-  .nexus-intro { padding-top: 84px; }
-  .nexus-intro h1 { font-size: 30px; margin-bottom: 10px; }
-  .nexus-intro .lx-photo-plate img { aspect-ratio: 2.2 / 1; }
-  .nexus-design .nexus-intro .product-copy > p.nexus-lead { margin: 10px 0 12px; font-size: 14.5px; }
+  .nx-hero { padding-top: 84px; }
+  .nexus-design .nx-hero h1 { font-size: 30px; margin: 12px 0 10px; }
+  .nx-hero .lx-photo-plate img { aspect-ratio: 2.2 / 1; }
+  .nexus-design .nx-hero .product-copy > p.nexus-lead { margin: 10px 0 12px; font-size: 14.5px; }
 }

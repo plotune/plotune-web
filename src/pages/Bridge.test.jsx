@@ -33,6 +33,10 @@ test('one h1, a carousel of the four products and a product grid that leads to e
   expect(gridLinks).toEqual(['/bridge/can', '/bridge/serial', '/bridge/daq', '/bridge/io']);
 });
 
+test('the Bridge hero does not take the Nexus-only phone layout', () => {
+  expect(container.querySelector('.nx-hero')).toBeNull();
+});
+
 test('the page stays product-level: no V1 wording and no raw spec dump', () => {
   const text = container.textContent;
   expect(text).not.toMatch(/\bV1\b/);

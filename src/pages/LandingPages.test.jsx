@@ -37,6 +37,15 @@ test('Nexus: four use case cards in a balanced grid, five interface cards, three
   [...container.querySelectorAll('.section-index span')].forEach((span) => expect(span.textContent).not.toMatch(/^0\d \//)); // no decorative numbering
 });
 
+test('Nexus hero: the home-style pill above the headline, a photo, and the readiness button in the hero', () => {
+  render(<Nexus />);
+  const hero = container.querySelector('.nx-hero');
+  expect(hero.querySelector('.lx-pill').textContent).toContain('Plotune Nexus');
+  expect(hero.querySelector('.section-index')).toBeNull();
+  expect(hero.querySelector('img').getAttribute('src')).toMatch(/photos\/nexus-rack/);
+  expect(path(hero.querySelector('.design-button'))).toBe('/ai-readiness');
+});
+
 test('Nexus/Stream: the integration model, four steps and the demo link', () => {
   render(<NexusStream />);
   expect(container.querySelectorAll('h1')).toHaveLength(1);
