@@ -1,102 +1,77 @@
-# From the physical world.Into your workflow.
+# From the physical world. Into your workflow.
 
-Plotune / Engineering systems, connected.
+Plotune Nexus and a Plotune Bridge CAN connected to an ECU board on a lab bench 
 
+Agent session  Nexus · MCP
 
+- `acquire_can_interface` can0 · 500 kbit/s  ok
 
-We build tools that connect engineering hardware, data and AI agents. Start at the test bench. Keep control of the operation. Work from the evidence.
+- `send_dbc_message` BrakeCmd · Pressure=40  ok
 
-[Explore the products](https://www.plotune.net/#nexus-product)
+- `wait_dbc_signal` BrakeStatus.Active == 1  38 ms
 
-01 / Hardware + software  Plotune Nexus
+- `capture_can_snapshot` 2 412 frames  saved
 
-The local-first appliance
+Verdict Passed
 
-## A connection tothe real bench.
+Stream · Events  live
 
-Nexus gives AI agents a controlled MCP surface for physical test systems. Connect engineering interfaces, execute bounded operations and return structured results.
+| 12:00:04 | test.completed | passed |
+| --- | --- | --- |
+| 12:00:01 | motor.sample | 72.4 °C |
+| 11:59:58 | motor.sample | 71.9 °C |
+| 11:59:40 | device.connected | bench-01 |
 
-[Explore Nexus](https://www.plotune.net/nexus)[Check your AI readiness →](https://www.plotune.net/ai-readiness?entry_source=direct)
+ Example run
 
-Agent interface
+## One platform. Three ways in.
 
-MCP
+Use one product, or connect all three.
 
-Deployment
+Plotune Nexus in front of a hardware test rack 
 
-Local-first
+Plotune Nexus
 
-Connections
+### AI agents on real hardware, under your control.
 
-CAN · UART · XCP · ROS 2 / DDS
+Connects AI agents to physical engineering and test systems through MCP.
 
-NEXUS / hardware overview  Plotune Nexus appliance with a finned enclosure and physical connectors 
+[Rent or buy Nexus](https://www.plotune.net/nexus/pricing?entry_source=direct)
 
-One appliance. A controlled connection to your test environment.
+Plotune Bridge CAN, Serial, DAQ and I/O on a bench 
 
-Architecture / request → result
+Plotune Bridge
 
-01 / MCP  AI agent 
+### Your hardware, reachable anywhere.
 
-Requests a bounded operation
+CAN, Serial, DAQ and I/O. Wireless, managed from the browser.
 
-02 / Local appliance  Plotune Nexus 
+[Choose your Bridge](https://www.plotune.net/bridge?entry_source=direct)
 
-Applies access and execution controls
+Plotune Stream
 
-03 / CAN · UART · ROS 2 / DDS  Physical test system 
+### Every run, one explorable history.
 
-Interfaces with connected equipment
+Bring events from your tools, test benches and scripts together. Live demo, no account.
 
-Structured results & recorded evidence
+[Try the demo](https://www.plotune.net/stream/demo?entry_source=direct)
 
-Explore by workflow [CAN / ECU testing ↗](https://www.plotune.net/solutions/can-ecu-testing)[ROS 2 / DDS testing ↗](https://www.plotune.net/solutions/ros2-dds-testing)[Hardware-in-the-loop ↗](https://www.plotune.net/solutions/hil-testing)[All use cases ↗](https://www.plotune.net/nexus/use-cases)
+## What you can do with Plotune.
 
-02 / Event infrastructure  Plotune Stream
+Real workflows, from the bus to the browser to AI agents.
 
-Any source that speaks HTTP
+[NexusCAN / ECU testingAcquire the interface, send only the approved message, gate on decoded signals and package the run as one reviewable artifact.See the workflow →](https://www.plotune.net/solutions/can-ecu-testing?entry_source=direct)[NexusROS 2 / DDS testingRun unattended hardware tests and judge requirements on live telemetry, without ROS tooling on your side.See the workflow →](https://www.plotune.net/solutions/ros2-dds-testing?entry_source=direct)[NexusTest automationLet agents run, watch and re-run sequences, so an engineer is not needed in the loop for every build.See the workflow →](https://www.plotune.net/solutions/test-orchestration?entry_source=direct)[NexusAI hardware-in-the-loopGive AI agents access to real hardware while you keep control of the boundary.See the workflow →](https://www.plotune.net/solutions/hil-testing?entry_source=direct)[BridgeECU and BMS validationMonitor and transmit frames, decode signals from your DBC and record to ASC, from the browser.See Bridge CAN →](https://www.plotune.net/bridge/can?entry_source=direct)[BridgeEmbedded firmware debuggingWatch the console of a device on the bench from anywhere, send commands and keep a log.See Bridge Serial →](https://www.plotune.net/bridge/serial?entry_source=direct)[BridgeSensor monitoringWatch sensor voltages live in the browser, record the measurement and export the data.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)[BridgeECU test fixturesSwitch digital outputs and read inputs of a test fixture from anywhere.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)[StreamMotor test benchA reading becomes an event with the device, test session and values kept together.Try it in the demo →](https://www.plotune.net/stream/demo?entry_source=direct)[StreamAutomated test verdictsYour test runner supplies the verdict and the context needed to investigate it later.Try it in the demo →](https://www.plotune.net/stream/demo?entry_source=direct)[StreamTemperature limit alertsYour script detects a threshold crossing and records the reading alongside its configured limit.Try it in the demo →](https://www.plotune.net/stream/demo?entry_source=direct)[StreamSession investigationSearch the history and filter by device or session to find the moment that matters.Try it in the demo →](https://www.plotune.net/stream/demo?entry_source=direct)
 
-## The event isthe starting point.
+## Engineering needs evidence.
 
-Bring events from Python, C/C++, CAPL, MATLAB, ROS, shell scripts or Nexus into an inspectable history. Stream is independent of the hardware that sends it.
+Technical studies, benchmark data and the methods behind agentic test and validation.
 
-[Explore Stream ↗](https://www.plotune.net/stream)[Try the demo experience →](https://www.plotune.net/stream/demo)
+[Technical reportsStudies on agentic test and validation workflows](https://www.plotune.net/research/reports)[Model resultsComparisons and benchmark data](https://www.plotune.net/research)[MethodologyHow the evaluations are run](https://www.plotune.net/research/methodology)
 
-Event structure / illustrative
+## Not sure where to start?
 
-```
-{
-  "event": "test.completed",
-  "device_id": "bench-01",
-  "session_id": "run-01",
-  "properties": {
-    "outcome": "passed"
-  }
-}
-```
+Tell us what you test today and we will point you to the shortest path from the bench to an AI-driven workflow.
 
-Sender → HTTP → event history → inspection
-
- Optional context. Arbitrary JSON properties.
-
-03 / Research & evidence  Plotune Research
-
-## Engineering needsevidence.
-
-Read the technical studies. Inspect the benchmark data. Understand the methodology behind agentic test and validation workflows.
-
-[Explore the research →](https://www.plotune.net/research)
-
-[PublicationTechnical reports](https://www.plotune.net/research/reports)[DataModel results & comparisons](https://www.plotune.net/research)[ProtocolEvaluation methodology](https://www.plotune.net/research/methodology)
-
-04 / The wider toolkit  Data operations
-
-[01DesktopLocal visualization and engineering data workflows.](https://www.plotune.net/download)[02ExtensionsComponents and integrations for your existing tools.](https://www.plotune.net/extensions)[03DocumentationInterfaces, setup guides and technical reference.](https://www.plotune.net/docs)
-
-Start with your system
-
-## One real workflow.A clear next step.
-
-[Contact Us ↗](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
+[Talk to us](https://www.plotune.net/contact?entry_source=direct)[Read the docs](https://www.plotune.net/docs)
 
 Source: https://www.plotune.net/

@@ -1,6 +1,6 @@
 # How well do agentshandle the real work?
 
-01 / Explore the benchmark 
+Explore the benchmark 
 
 ## Find the right tradeoff.
 
@@ -21,7 +21,7 @@ Category-normalized validation index. Equal scores share the same performance; o
 
 Fable 5.1 shares or holds the highest validation index for all workflows. Open a model above to compare its strengths across all six workflows.
 
-02 / The bigger picture 
+The bigger picture 
 
 ## Performance landscape
 

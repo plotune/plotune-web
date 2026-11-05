@@ -1,66 +1,44 @@
 # Give AI agents access to real hardware without giving up control of the boundary
 
-[← Related research](https://www.plotune.net/research)
-
-AI Hardware-in-the-Loop Testing
-
-
-
-Giving an AI agent access to real hardware raises a different question than giving it access to a shell: what happens when it's wrong? Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely.
-
-[Discuss your setup](https://www.plotune.net/contact?segment=hil-testing&solution=hil-testing&entry_source=direct)[Explore Nexus](https://www.plotune.net/nexus?segment=hil-testing&solution=hil-testing&entry_source=direct)
-
-Containerized sim on virtual CAN  Example run
-
-Controller
-
-staged container
-
-Bus
-
-virtual CAN
-
-Gateway
-
-approved frames only
-
-Boundary proof
-
-captured
-
 ## The workflow today
 
-- 01  Run the simulator and controller on whichever engineer's machine last set it up
+- Run the simulator and controller on whichever engineer's machine last set it up
 
-- 02  Bridge virtual and real hardware by hand, with no enforced boundary on what crosses
+- Bridge virtual and real hardware by hand, with no enforced boundary on what crosses
 
-- 03  Give an AI agent either full shell access or no access at all, with no middle ground
+- Give an AI agent either full shell access or no access at all, with no middle ground
 
-- 04  Trust a "looks right" run instead of a boundary you can point to and prove
+- Trust a "looks right" run instead of a boundary you can point to and prove
 
 ## With Plotune Nexus
 
-- 01  Run the controller or simulator as a staged container, not a laptop only one person can restart
+- Run the controller or simulator as a staged container, not a laptop only one person can restart
 
-- 02  Bridge virtual and real CAN through a policy gateway that lets only approved frames cross
+- Bridge virtual and real CAN through a policy gateway that lets only approved frames cross
 
-- 03  Give the agent a bounded operation set (acquire, capture, wait, send only approved frames, stop, package), not raw shell access
+- Give the agent a bounded operation set (acquire, capture, wait, send only approved frames, stop, package), not raw shell access
 
-- 04  Connect over MCP with OAuth and delegated access, so what the agent can touch is a policy decision, not a trust exercise
+- Connect over MCP with OAuth and delegated access, so what the agent can touch is a policy decision, not a trust exercise
 
-## Supported integrations
+## Works with.
 
-Containerized simulation
+Supported integrations for this workflow.
 
-Virtual CAN + policy gateway
+- Containerized simulation
 
-MCP + OAuth
+- Virtual CAN + policy gateway
 
-Bounded operation set
+- MCP + OAuth
 
-### See this mapped to your bench.
+- Bounded operation set
 
-Plotune Nexus is one product, this is how it runs against AI Hardware-in-the-Loop Testing.
+## More Nexus workflows.
+
+[NexusCAN / ECU testingAcquire the interface, send only the approved message, gate on decoded signals and package the run as one reviewable artifact.See the workflow →](https://www.plotune.net/solutions/can-ecu-testing?entry_source=direct)[NexusROS 2 / DDS testingRun unattended hardware tests and judge requirements on live telemetry, without ROS tooling on your side.See the workflow →](https://www.plotune.net/solutions/ros2-dds-testing?entry_source=direct)[NexusTest automationLet agents run, watch and re-run sequences, so an engineer is not needed in the loop for every build.See the workflow →](https://www.plotune.net/solutions/test-orchestration?entry_source=direct)
+
+## See this mapped to your bench.
+
+Plotune Nexus is one product. This is how it runs against AI Hardware-in-the-Loop Testing.
 
 [Discuss your setup](https://www.plotune.net/contact?segment=hil-testing&solution=hil-testing&entry_source=direct)
 

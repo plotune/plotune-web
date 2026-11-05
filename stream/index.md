@@ -44,7 +44,7 @@ Python  C/C++  CAPL  MATLAB  ROS 2  Nexus  HTTP clients
 
  Any system that can send an HTTP request.
 
-01 / Interactive demo 
+Interactive demo 
 
 ## One event.The whole picture.
 
@@ -109,7 +109,7 @@ Search event history, filter by device or session, and explore dashboards in the
 
 Motor sample selected
 
-02 / Built for your next investigation 
+Built for your next investigation 
 
 ## Less searching.More understanding.
 
@@ -133,7 +133,7 @@ Inspect device and session identifiers alongside the properties your application
 
 Bring event history into dashboards and saved views you can return to.
 
-03 / Choose your next step 
+Choose your next step 
 
 ## Explore Stream.Or bring your own events.
 

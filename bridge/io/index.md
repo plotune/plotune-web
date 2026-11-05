@@ -30,9 +30,13 @@ Remote
 
 Control of test fixtures from anywhere
 
-01 / How it connects  Bridge I/O
+## What you can do with Bridge I/O.
 
-02 / Why it's different  Bridge I/O
+[BridgeECU test fixturesSwitch digital outputs and read inputs of a test fixture from anywhere.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)[BridgeSensor simulationDrive a 0-10 V signal to stand in for a sensor while a test sequence runs.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)[BridgeAutomated functional testingRun a sequence that drives outputs, reads inputs and checks the result.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)
+
+How it connects  Bridge I/O
+
+Why it's different  Bridge I/O
 
 - Digital and analog I/O in one device
 
@@ -44,7 +48,7 @@ Control of test fixtures from anywhere
 
 - Fewer separate modules
 
-03 / Built for  Applications
+Built for  Applications
 
 - ECU test fixtures
 
@@ -82,7 +86,7 @@ Full specifications
 
 Still to be determined.  Digital output current capacity, analog output accuracy, isolation and protection ratings are still to be determined.
 
-04 / The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
 
 [Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249](https://www.plotune.net/bridge/daq?entry_source=direct)
 

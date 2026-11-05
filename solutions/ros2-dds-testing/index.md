@@ -1,68 +1,46 @@
 # Run unattended ROS 2 hardware tests without ROS tooling on your side
 
-[← Related research](https://www.plotune.net/research)
-
-ROS 2 / DDS Testing
-
-
-
-Testing a ROS 2 robot usually means SSHing into the robot, running ros2 CLI commands by hand, and eyeballing topic echoes to decide whether a requirement passed, a process that does not scale past the one person who knows the stack.
-
-[Discuss your setup](https://www.plotune.net/contact?segment=ros2-dds-testing&solution=ros2-dds-testing&entry_source=direct)[Explore Nexus](https://www.plotune.net/nexus?segment=ros2-dds-testing&solution=ros2-dds-testing&entry_source=direct)
-
-Requirement-verdict gate on live telemetry  Example run
-
-Runs
-
-15 / 15 PASS
-
-Gate evaluations
-
-30 / 30 matched
-
-Match latency
-
-0.26 – 0.37 s
-
-Flakes
-
-0
-
 ## The workflow today
 
-- 01  SSH into the robot and run ros2 topic echo / ros2 service call by hand
+- SSH into the robot and run ros2 topic echo / ros2 service call by hand
 
-- 02  Eyeball telemetry in a terminal to judge whether a requirement passed
+- Eyeball telemetry in a terminal to judge whether a requirement passed
 
-- 03  Re-run the same manual steps for every regression check
+- Re-run the same manual steps for every regression check
 
-- 04  No artifact: the "evidence" is whoever happened to be watching the terminal
+- No artifact: the "evidence" is whoever happened to be watching the terminal
 
 ## With Plotune Nexus
 
-- 01  Join the robot's DDS domain over the network, no ROS tooling needed on your side
+- Join the robot's DDS domain over the network, no ROS tooling needed on your side
 
-- 02  Publish a bounded command and gate the next step on live telemetry, not a fixed wait
+- Publish a bounded command and gate the next step on live telemetry, not a fixed wait
 
-- 03  Record multiple topics into a single MCAP artifact as an unattended, bounded job
+- Record multiple topics into a single MCAP artifact as an unattended, bounded job
 
-- 04  Wrap join → command → gate → record into one repeatable sequence with a pass/fail verdict
+- Wrap join → command → gate → record into one repeatable sequence with a pass/fail verdict
 
-## Supported integrations
+## Works with.
 
-CycloneDDS
+Supported integrations for this workflow.
 
-Cross-host discovery
+- CycloneDDS
 
-MCAP recording
+- Cross-host discovery
 
-wait_dds_signal gating
+- MCAP recording
 
-Containerized controller supervision
+- wait_dds_signal gating
 
-### See this mapped to your bench.
+- Containerized controller supervision
 
-Plotune Nexus is one product, this is how it runs against ROS 2 / DDS Testing.
+## More Nexus workflows.
+
+[NexusCAN / ECU testingAcquire the interface, send only the approved message, gate on decoded signals and package the run as one reviewable artifact.See the workflow →](https://www.plotune.net/solutions/can-ecu-testing?entry_source=direct)[NexusTest automationLet agents run, watch and re-run sequences, so an engineer is not needed in the loop for every build.See the workflow →](https://www.plotune.net/solutions/test-orchestration?entry_source=direct)[NexusAI hardware-in-the-loopGive AI agents access to real hardware while you keep control of the boundary.See the workflow →](https://www.plotune.net/solutions/hil-testing?entry_source=direct)
+
+## See this mapped to your bench.
+
+Plotune Nexus is one product. This is how it runs against ROS 2 / DDS Testing.
 
 [Discuss your setup](https://www.plotune.net/contact?segment=ros2-dds-testing&solution=ros2-dds-testing&entry_source=direct)
 

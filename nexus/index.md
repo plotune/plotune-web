@@ -6,7 +6,7 @@ The agent meets the bench.
 
 
 
-Nexus connects AI agents to physical engineering and test systems through MCP. Hardware interaction and first-write artifacts happen on the appliance; cloud services support routing, identity and export.
+Nexus lets AI agents run tests on your real hardware through MCP. You decide what they can touch, and every run is recorded on the appliance.
 
 [Check Your AI Readiness ↗](https://www.plotune.net/ai-readiness?entry_source=direct)
 
@@ -14,13 +14,19 @@ Nexus connects AI agents to physical engineering and test systems through MCP. H
 
 [See How It Connects →](https://www.plotune.net/nexus/connectivity)
 
-NEXUS / hardware overview  Plotune Nexus appliance with a finned enclosure and physical connectors 
+Plotune Nexus appliance on a lab bench in front of a hardware test rack 
 
 Plotune-defined hardware. Pre-integrated software. Managed lifecycle.
 
-01 / System architecture  Request, operation, evidence
+## What teams do with Nexus.
+
+Four workflows, from a single CAN bus to AI agents on real hardware.
+
+[NexusCAN / ECU testingAcquire the interface, send only the approved message, gate on decoded signals and package the run as one reviewable artifact.See the workflow →](https://www.plotune.net/solutions/can-ecu-testing?entry_source=direct)[NexusROS 2 / DDS testingRun unattended hardware tests and judge requirements on live telemetry, without ROS tooling on your side.See the workflow →](https://www.plotune.net/solutions/ros2-dds-testing?entry_source=direct)[NexusTest automationLet agents run, watch and re-run sequences, so an engineer is not needed in the loop for every build.See the workflow →](https://www.plotune.net/solutions/test-orchestration?entry_source=direct)[NexusAI hardware-in-the-loopGive AI agents access to real hardware while you keep control of the boundary.See the workflow →](https://www.plotune.net/solutions/hil-testing?entry_source=direct)
 
 ## One controlled surface.A physical result.
+
+A request goes in, a bounded operation runs on the bench, evidence comes back.
 
 Architecture / request → result
 
@@ -42,61 +48,49 @@ Conceptual workflow. No hardware is connected.
 
 Conceptual flow. Available operations depend on transport, connected hardware, access and configuration.
 
-02 / Engineering interfaces [Compatibility matrix ↗](https://www.plotune.net/docs/nexus/hardware-compatibility)
-
 ## Speak the languageof your system.
 
-Use the supported transports on your bench, rig or vehicle. Check the documented native, container and scale-up tiers before choosing hardware.
+Use the supported transports on your bench, rig or vehicle. [Compatibility matrix ↗](https://www.plotune.net/docs/nexus/hardware-compatibility)
 
-[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
-
-01 
-
-CAN / CAN FD
+- ### CAN / CAN FD
 
 Linux CAN transports for bus interaction and capture.
 
-02 
-
-UART
+- ### UART
 
 Serial interfaces, including RS-485 and modem-control lines.
 
-03 
-
-XCP
+- ### XCP
 
 CAN and Ethernet transports with different supported operations.
 
-04 
-
-UDS / DoIP
+- ### UDS / DoIP
 
 Diagnostics through reachable network and CAN transports.
 
-05 
-
-ROS 2 / DDS
+- ### ROS 2 / DDS
 
 Join an existing DDS domain, discover topics and record evidence.
 
-03 / From requirement to evidence  A bounded workflow
+[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
 
 ## Discover. Execute.Record what happened.
 
-- 01 
+A bounded workflow, from requirement to evidence.
+
+- Step 1 
 
 ### Inspect the system
 
 Discover the available interfaces and current state before requesting an operation.
 
-- 02 
+- Step 2 
 
 ### Run a bounded operation
 
 Use the relevant MCP tools and job controls within the configured access and execution limits.
 
-- 03 
+- Step 3 
 
 ### Keep the evidence
 
@@ -104,30 +98,24 @@ Return status, metadata and retrieval paths for locally recorded logs, traces an
 
 [CAN / ECU testing ↗](https://www.plotune.net/solutions/can-ecu-testing)[ROS 2 / DDS testing ↗](https://www.plotune.net/solutions/ros2-dds-testing)[Stream integration ↗](https://www.plotune.net/nexus/stream)[View Use Cases ↗](https://www.plotune.net/nexus/use-cases)
 
-04 / Read the engineering details
-
 ## Know the boundary.
 
 Local-first operation is documented alongside cloud dependencies, hardware compatibility and current constraints. Start with the architecture and security model.
 
-[Read the Nexus documentation →](https://www.plotune.net/docs/nexus)
-
 [Security model ↗](https://www.plotune.net/docs/nexus/security-model)[Data handling ↗](https://www.plotune.net/docs/nexus/data-handling)[Protocols ↗](https://www.plotune.net/docs/nexus/protocols)
 
-05 / Rent or buy  Launch price
+[Read the Nexus documentation →](https://www.plotune.net/docs/nexus)
 
 ## Rent it for a project.Or keep it.
 
 Monthly rental or one-time purchase, with full functionality either way. See the options and what they cost for your project.
 
-[See rent & buy options ↗](https://www.plotune.net/nexus/pricing?entry_source=direct&from=nexus_pricing_band)
-
-Start with your test environment
+[See rent & buy options](https://www.plotune.net/nexus/pricing?entry_source=direct&from=nexus_pricing_band)
 
 ## Map Nexusto your bench.
 
 Not sure it fits yet? Tell us about your hardware, interfaces and first workflow.
 
-[Get Your Integration Plan ↗](https://www.plotune.net/contact?entry_source=direct&product=nexus)[View Use Cases →](https://www.plotune.net/nexus/use-cases)
+[Get Your Integration Plan](https://www.plotune.net/contact?entry_source=direct&product=nexus)[View Use Cases](https://www.plotune.net/nexus/use-cases)
 
 Source: https://www.plotune.net/nexus

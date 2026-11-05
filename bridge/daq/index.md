@@ -32,9 +32,13 @@ AI-ready
 
 Measurements inside automated test workflows
 
-01 / How it connects  Bridge DAQ
+## What you can do with Bridge DAQ.
 
-02 / Why it's different  Bridge DAQ
+[BridgeSensor monitoringWatch sensor voltages live in the browser, record the measurement and export the data.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)[BridgeECU signal validationCheck analog signals during a test and keep the measurement inside the automated workflow.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)[BridgeLaboratory experimentsRecord up to 7 voltage channels during an experiment and export the data.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)
+
+How it connects  Bridge DAQ
+
+Why it's different  Bridge DAQ
 
 - Seven analog channels, compact
 
@@ -44,7 +48,7 @@ Measurements inside automated test workflows
 
 - Browser access, no desktop DAQ application
 
-03 / Built for  Applications
+Built for  Applications
 
 - Sensor monitoring
 
@@ -80,7 +84,7 @@ Full specifications
 
 Still to be determined.  Sampling rate, accuracy, noise performance and isolation are still to be determined. ADC resolution on its own does not establish measurement accuracy.
 
-04 / The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
 
 [Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259](https://www.plotune.net/bridge/io?entry_source=direct)
 

@@ -2,8 +2,6 @@
 
 Restore fixture 1 Acquire interface 2 Capture baseline 3 Apply permitted action 4 Verify observed result 5 Release and package evidence
 
-[What is evaluated](https://www.plotune.net/research/methodology#scope)[Test environment](https://www.plotune.net/research/methodology#environment)[Task families](https://www.plotune.net/research/methodology#families)[Metrics and scoring](https://www.plotune.net/research/methodology#scoring)[Monthly releases](https://www.plotune.net/research/methodology#releases)
-
 ## What is evaluated
 
 The unit of evaluation is a complete task, not a written answer. A task is successful only when the required observed state, acceptance checks, and supporting evidence are present.

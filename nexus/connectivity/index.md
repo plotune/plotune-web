@@ -54,49 +54,35 @@ Flexible integration for non-standard or bespoke test environments.
 
 Control
 
-1
-
-### Describe tests in plain language
+- ### Describe tests in plain language
 
 Tell Plotune Nexus what you need to validate. It figures out how to run it.
 
-2
-
-### Update software and calibrations remotely
+- ### Update software and calibrations remotely
 
 Apply changes to your ECU or calibration target from anywhere.
 
-3
-
-### Run automated test routines on a schedule
+- ### Run automated test routines on a schedule
 
 Create, execute, and repeat test jobs without manual intervention.
 
 Signals & data
 
-1
-
-### Read and write CAN and XCP signals directly
+- ### Read and write CAN and XCP signals directly
 
 Interact with your measurement setup instantly, no extra tooling required.
 
-2
-
-### Log data based on conditions
+- ### Log data based on conditions
 
 Define signal thresholds or events. Plotune Nexus logs what matters, when it matters.
 
 Storage & integration
 
-1
-
-### Store results in your own systems
+- ### Store results in your own systems
 
 Results go directly to your database or data environment, no manual export.
 
-2
-
-### Connect to AI validation services securely
+- ### Connect to AI validation services securely
 
 Extend Plotune Nexus with AI-powered validation while keeping your data protected.
 

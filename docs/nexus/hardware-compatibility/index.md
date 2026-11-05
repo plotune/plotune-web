@@ -88,7 +88,7 @@ Nexus is sold as a managed appliance, not software for self-install on arbitrary
 
  
 
-|  | Standard Nexus Appliance | Expanded Nexus Appliance |
+| Item | Standard Nexus Appliance | Expanded Nexus Appliance |
 | --- | --- | --- |
 | Form factor | DIN rail or wall mount | Custom chassis |
 | CPU | Intel Celeron J6412 / AMD Ryzen Embedded | Intel Elkhart Lake / AMD Ryzen Embedded V-series |
