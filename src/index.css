@@ -194,6 +194,11 @@ img { max-width: 100%; }
 .field-hint button { padding: 10px 0; margin: -10px 0; border: 0; background: none; color: var(--teal); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .field-note { margin-top: 6px; color: #686d77; font-size: 12px; line-height: 1.6; }
 .field-error { margin-top: 4px; color: #b03a2e; font-size: 13px; line-height: 1.6; }
+.country-field { position: relative; }
+.country-suggestions { position: absolute; z-index: 20; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px; list-style: none; max-height: 264px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12); }
+.country-suggestions[hidden] { display: none; }
+.country-suggestions li { display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 6px; color: var(--ink); font-size: 16px; cursor: pointer; }
+.country-suggestions li:hover, .country-suggestions li.is-active { background: rgba(61, 90, 128, 0.1); }
 .offer-send-error { margin-top: 16px; }
 .offer-send-error a { text-decoration: underline; }
 .offer-submit { width: 100%; margin-top: 24px; min-height: 56px; cursor: pointer; }

@@ -187,3 +187,18 @@ test('a to-be-quoted request says so in the contact message', async () => {
     expect(postLead.mock.calls[0][0].message).toContain('Estimated total: to be quoted');
   } finally { serial.price = price; }
 });
+
+test('the country must be one from the suggestions; an alias is sent as the proper name', async () => {
+  addItem('can');
+  postLead.mockResolvedValue({ status: 'sent' });
+  render();
+  type('#cart-email', 'ada@example.com');
+  type('#cart-country', 'Recep200789'); // what iPhone autofill put in this field once
+  click(container.querySelector('#cart-consent'));
+  await submit();
+  expect(postLead).not.toHaveBeenCalled();
+  expect(container.querySelector('#cart-country-error').textContent).toMatch(/Pick your country/);
+  type('#cart-country', 'uk');
+  await submit();
+  expect(postLead.mock.calls[0][0].country).toBe('United Kingdom');
+});

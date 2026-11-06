@@ -144,7 +144,7 @@ test('a filled honeypot (bot) is sent for the server to discard, but never count
   click(byText('Continue'));
   click(byText('Request this offer'));
   setValue('#order-email', 'bot@spam.example');
-  setValue('#order-country', 'Nowhere');
+  setValue('#order-country', 'Germany');
   agree();
   setValue('input[name="hp_extra_field"]', 'http://spam');
   await submit();

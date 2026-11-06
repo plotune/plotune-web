@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CATALOG_VERSION } from '../../content/bridgeCatalog';
 import { suggestEmailFix } from '../../utils/emailTypos';
 import { trackGoogleAdsOrderRequestConversion } from '../../utils/googleAds';
+import CountryField from '../CountryField';
+import { resolveCountry } from '../../utils/countryMatch';
 import { buildCartContactPayload, buildCartPayload, getEndpointKinds, isValidEmail, newSubmissionId, postLead } from '../../utils/leadSubmission';
 import { getFunnelContext } from '../../utils/funnel';
 import { SECTORS } from '../OrderRequestForm';
@@ -57,7 +59,9 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
     if (sending) return;
     const next = {};
     if (!isValidEmail(email)) next.email = 'Enter a valid email, like name@company.com';
+    const countryName = resolveCountry(country);
     if (!country.trim()) next.country = 'Add your country, so we can quote tax and shipping.';
+    else if (!countryName) next.country = 'Pick your country from the suggestions, so we can quote tax and shipping.';
     if (!consent) next.consent = 'Please accept the Privacy Policy to send the request.';
     setErrors(next);
     setSendError(false);
@@ -66,7 +70,7 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
     if (next.consent) { consentRef.current?.focus(); return; }
 
     // The same id for a retry of the same request, so a slow first reply can't make a duplicate.
-    const key = [email.trim().toLowerCase(), country.trim(), sector, JSON.stringify(items)].join('|');
+    const key = [email.trim().toLowerCase(), countryName, sector, JSON.stringify(items)].join('|');
     if (submissionRef.current.key !== key) submissionRef.current = { key, id: newSubmissionId() };
 
     // A filled honeypot means a bot: the server discards it but still answers ok, so it must not
@@ -77,7 +81,7 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
     // goes through the contact path that every deployed version has (see buildCartContactPayload).
     const structured = (await getEndpointKinds()).includes('cart');
     const fields = {
-      email, country, sector, items, quote,
+      email, country: countryName, sector, items, quote,
       catalogVersion: CATALOG_VERSION,
       funnel: getFunnelContext(),
       website: honeypot,
@@ -94,14 +98,14 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
       units: items.reduce((sum, item) => sum + item.qty, 0),
       products: items.map((item) => item.id).join(','),
       priced: quote.total !== null,
-      country: country.trim().slice(0, 80),
+      country: countryName,
       sector: sector || null,
       delivery: honeypot ? 'ignored' : outcome.status, // sent | not_configured | error | ignored
       route: structured ? 'cart' : 'contact_fallback',
       google_ads_conversion: googleAdsConversion,
     });
     if (outcome.status === 'error') { setSendError(true); return; }
-    onSent({ status: outcome.status === 'sent' ? 'sent' : 'preview', email: email.trim(), country: country.trim() });
+    onSent({ status: outcome.status === 'sent' ? 'sent' : 'preview', email: email.trim(), country: countryName });
   };
 
   return (
@@ -147,16 +151,13 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
       <div className="field-pair">
         <div>
           <label htmlFor="cart-country">Delivery country</label>
-          <input
+          <CountryField
             id="cart-country"
-            ref={countryRef}
-            type="text"
-            autoComplete="country-name"
+            inputRef={countryRef}
             value={country}
-            maxLength={80}
-            onChange={(e) => { setCountry(e.target.value); if (errors.country) setErrors((x) => ({ ...x, country: undefined })); markStarted(); }}
-            aria-invalid={errors.country ? 'true' : undefined}
-            aria-describedby={errors.country ? 'cart-country-error' : undefined}
+            onChange={(next) => { setCountry(next); if (errors.country) setErrors((x) => ({ ...x, country: undefined })); markStarted(); }}
+            invalid={Boolean(errors.country)}
+            describedBy={errors.country ? 'cart-country-error' : undefined}
           />
           {errors.country && <div id="cart-country-error" role="alert" className="field-error">{errors.country}</div>}
         </div>

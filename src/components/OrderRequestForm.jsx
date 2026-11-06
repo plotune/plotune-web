@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { suggestEmailFix } from '../utils/emailTypos';
 import { trackGoogleAdsOrderRequestConversion } from '../utils/googleAds';
+import CountryField from './CountryField';
+import { resolveCountry } from '../utils/countryMatch';
 import { buildOrderPayload, isValidEmail, newSubmissionId, postLead } from '../utils/leadSubmission';
 import { getFunnelContext } from '../utils/funnel';
 import { OFFER_VERSION } from '../utils/nexusOffer';
@@ -75,7 +77,9 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
     if (status === 'sending') return;
     const nextErrors = {};
     if (!isValidEmail(email)) nextErrors.email = 'Enter a valid email, like name@company.com';
+    const countryName = resolveCountry(country);
     if (!country.trim()) nextErrors.country = 'Add your country, so we can quote tax and shipping.';
+    else if (!countryName) nextErrors.country = 'Pick your country from the suggestions, so we can quote tax and shipping.';
     if (!consent) nextErrors.consent = 'Please accept the Privacy Policy to send the request.';
     setErrors(nextErrors);
     setSendError(false);
@@ -84,7 +88,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
     if (nextErrors.consent) { consentRef.current?.focus(); return; }
 
     // The same id for a retry of the same request, so a slow first reply can't make a duplicate.
-    const key = [email.trim().toLowerCase(), country.trim(), sector, offer, JSON.stringify(quote)].join('|');
+    const key = [email.trim().toLowerCase(), countryName, sector, offer, JSON.stringify(quote)].join('|');
     if (submissionRef.current.key !== key) submissionRef.current = { key, id: newSubmissionId() };
 
     // A filled honeypot means a bot: the server discards it but still answers ok, so it must not be
@@ -92,7 +96,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
     const honeypot = honeypotRef.current ? honeypotRef.current.value : '';
     setStatus('sending');
     const outcome = await postLead(buildOrderPayload({
-      email, country, sector, offer,
+      email, country: countryName, sector, offer,
       months: offer === 'rent' ? months : null,
       quote,
       offerVersion: OFFER_VERSION,
@@ -106,7 +110,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       offer,
       months: offer === 'rent' ? months : null,
       with_support: offer === 'buy' ? Boolean(quote.withSupport) : null,
-      country: country.trim().slice(0, 80),
+      country: countryName,
       sector: sector || null,
       delivery: honeypot ? 'ignored' : outcome.status, // sent | not_configured | error | ignored
       google_ads_conversion: googleAdsConversion,
@@ -116,7 +120,7 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       setSendError(true);
       return;
     }
-    setSent({ summary, email: email.trim(), country: country.trim() });
+    setSent({ summary, email: email.trim(), country: countryName });
     setStatus(outcome.status === 'sent' ? 'sent' : 'preview');
     onDone();
   };
@@ -188,16 +192,13 @@ const OrderRequestForm = ({ offer, months, quote, summary, track, headingRef, on
       <div className="field-pair">
         <div>
           <label htmlFor="order-country">Delivery country</label>
-          <input
+          <CountryField
             id="order-country"
-            ref={countryRef}
-            type="text"
-            autoComplete="country-name"
+            inputRef={countryRef}
             value={country}
-            maxLength={80}
-            onChange={(e) => { setCountry(e.target.value); if (errors.country) setErrors((x) => ({ ...x, country: undefined })); markStarted(); }}
-            aria-invalid={errors.country ? 'true' : undefined}
-            aria-describedby={errors.country ? 'order-country-error' : undefined}
+            onChange={(next) => { setCountry(next); if (errors.country) setErrors((x) => ({ ...x, country: undefined })); markStarted(); }}
+            invalid={Boolean(errors.country)}
+            describedBy={errors.country ? 'order-country-error' : undefined}
           />
           {errors.country && <div id="order-country-error" role="alert" className="field-error">{errors.country}</div>}
         </div>
