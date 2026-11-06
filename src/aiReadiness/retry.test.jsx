@@ -38,9 +38,10 @@ test('a retry after a failed/slow send re-uses the same submission id; a new add
 
   expect(container.textContent).toContain('Plotune'); // wordmark on the intro
   click(btn('Start assessment'));
-  click(card('PEAK / PCAN')); click(btn('Continue'));
-  click(card('Python')); click(btn('Continue'));
-  click(card('Setting up')); click(btn('Continue'));
+  const think = () => act(() => { jest.advanceTimersByTime(4000); }); // human pace (leadQuality.js)
+  click(card('PEAK / PCAN')); think(); click(btn('Continue'));
+  click(card('Python')); think(); click(btn('Continue'));
+  click(card('Setting up')); think(); click(btn('Continue'));
   click(card('Partially automated'));
   act(() => { jest.advanceTimersByTime(300); });
 

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FiArrowRight } from 'react-icons/fi';
 import EmailCapture from './EmailCapture';
 
 const RADIUS = 88;
@@ -82,7 +84,26 @@ const Coverage = ({ assessed, total }) => (
   </div>
 );
 
-const ResultScreen = ({ result, headingRef, onEmailStarted, onEmailSubmit, submission, nexusTo, onNexusClick, onRetake }) => (
+// Shown instead of the email form when the answers look careless (leadQuality.js): the visitor
+// keeps their score and a way onward, but there is no lead to capture.
+const NexusNext = ({ nexusTo, onNexusClick }) => (
+  <div className="ai-step rounded-sm border border-ink/10 bg-dark-card p-6 text-center">
+    <h2 className="text-xl font-semibold leading-snug text-light-text">See how an agent reaches your bench</h2>
+    <p className="mt-2 text-base leading-7 text-gray-text">
+      Plotune Nexus connects AI agents to CAN, UART, DDS and the tools you already use.
+    </p>
+    <Link
+      to={nexusTo}
+      onClick={() => onNexusClick('result_no_email')}
+      className="mt-5 inline-flex min-h-[48px] items-center gap-1.5 rounded-full bg-primary px-6 text-base font-semibold text-white transition-colors duration-100 hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+    >
+      Explore Plotune Nexus
+      <FiArrowRight aria-hidden="true" />
+    </Link>
+  </div>
+);
+
+const ResultScreen = ({ result, headingRef, onEmailStarted, onEmailSubmit, submission, showEmailCapture = true, nexusTo, onNexusClick, onRetake }) => (
   <div className="ai-step pb-10">
     <div className="pt-2 text-center">
       <h1 ref={headingRef} tabIndex={-1} className="text-lg font-medium text-gray-text outline-none">
@@ -102,13 +123,17 @@ const ResultScreen = ({ result, headingRef, onEmailStarted, onEmailSubmit, submi
     </div>
 
     <div className="mt-10">
-      <EmailCapture
-        onFirstInput={onEmailStarted}
-        onSubmit={onEmailSubmit}
-        submission={submission}
-        nexusTo={nexusTo}
-        onNexusClick={onNexusClick}
-      />
+      {showEmailCapture || submission ? (
+        <EmailCapture
+          onFirstInput={onEmailStarted}
+          onSubmit={onEmailSubmit}
+          submission={submission}
+          nexusTo={nexusTo}
+          onNexusClick={() => onNexusClick('email_confirmation')}
+        />
+      ) : (
+        <NexusNext nexusTo={nexusTo} onNexusClick={onNexusClick} />
+      )}
     </div>
 
     <div className="mt-6 text-center">

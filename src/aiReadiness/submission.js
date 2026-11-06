@@ -24,11 +24,12 @@ export { EMAIL_PATTERN, isValidEmail, newSubmissionId } from '../utils/leadSubmi
 //     attribution: { entry_source, utm_* , referrer, ... },
 //     versions: { assessment, scoring }, submittedAt,
 //     submissionId <- same value on retries of one lead; the backend de-duplicates on it
+//     quality   <- { score, flags[], countsAsAdConversion, version } from leadQuality.js
 //     website   <- hidden honeypot field; always empty for real visitors
 //   }
 // ---------------------------------------------------------------------------------------------
 
-export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, website = '', submissionId = '' }) => ({
+export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, website = '', submissionId = '', quality = null }) => ({
   email: email.trim(),
   answers,
   result: {
@@ -44,6 +45,8 @@ export const buildSubmissionPayload = ({ email, answers, result, funnel = {}, we
   submittedAt: new Date().toISOString(),
   submissionId,
   website,
+  // Lead-quality estimate (leadQuality.js): { score, flags[], countsAsAdConversion, version }.
+  ...(quality ? { quality } : {}),
 });
 
 export const isSubmissionConfigured = isLeadEndpointConfigured;

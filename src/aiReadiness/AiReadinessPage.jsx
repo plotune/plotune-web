@@ -11,6 +11,7 @@ import QuestionScreen from './QuestionScreen';
 import ResultScreen from './ResultScreen';
 import { EMPTY_ANSWERS, OTHER_ID, QUESTIONS, QUESTION_COUNT, isAnswered } from './questions';
 import { scoreAssessment } from './scoring';
+import { assessAnswers, assessLead } from './leadQuality';
 import {
   AI_READINESS_EVENTS,
   answerProperties,
@@ -71,8 +72,14 @@ const AiReadinessPage = () => {
   const advancedFromRef = useRef(null); // guards against a double tap advancing twice
   const introIdxRef = useRef(null); // history index of the intro entry, for a clean Retake
   const submissionIdRef = useRef({ email: null, id: null });
+  // Seconds spent on each question (latest completion), for the lead-quality estimate. Not persisted:
+  // after a reload the timing is unknown, which leadQuality treats as neutral.
+  const stepSecondsRef = useRef({});
 
   const result = useMemo(() => scoreAssessment(answers), [answers]);
+  // Recomputed on every render (cheap): the timing lives in a ref, and the step change that follows
+  // each completion re-renders.
+  const answerQuality = assessAnswers(answers, stepSecondsRef.current);
 
   const goTo = useCallback((next, { replace = false } = {}) => {
     navigate(`${location.pathname}${location.search}`, { state: { alStep: next }, replace });
@@ -117,7 +124,14 @@ const AiReadinessPage = () => {
   useEffect(() => {
     if (step === RESULT && scoreShownForRef.current !== result.score) {
       scoreShownForRef.current = result.score;
-      trackAiReadiness(AI_READINESS_EVENTS.scoreShown, { ...answerProperties(answers), ...resultProperties(result) });
+      const quality = assessAnswers(answers, stepSecondsRef.current);
+      trackAiReadiness(AI_READINESS_EVENTS.scoreShown, {
+        ...answerProperties(answers),
+        ...resultProperties(result),
+        lead_quality_score: quality.score,
+        lead_quality_flags: quality.flags,
+        email_capture_shown: quality.showEmailCapture,
+      });
     }
   }, [step, result, answers]);
 
@@ -129,9 +143,11 @@ const AiReadinessPage = () => {
     if (advancedFromRef.current === fromStep) return;
     advancedFromRef.current = fromStep;
     const q = QUESTIONS[fromStep - 1];
+    const secondsOnStep = Math.round((Date.now() - stepEnteredAtRef.current) / 100) / 10;
+    stepSecondsRef.current = { ...stepSecondsRef.current, [q.id]: secondsOnStep };
     trackAiReadiness(AI_READINESS_EVENTS.questionCompleted(fromStep), {
       ...questionProperties(q.id, currentAnswers),
-      seconds_on_step: Math.round((Date.now() - stepEnteredAtRef.current) / 100) / 10,
+      seconds_on_step: secondsOnStep,
       is_revisit: completedRef.current.has(q.id),
     });
     completedRef.current.add(q.id);
@@ -191,6 +207,7 @@ const AiReadinessPage = () => {
     setAnswers(EMPTY_ANSWERS);
     setSubmission(null);
     completedRef.current = new Set();
+    stepSecondsRef.current = {};
     scoreShownForRef.current = null;
     backByButtonRef.current = true; // not a "back" the visitor made; don't log one
     // Return to the original intro entry (dropping Q1..result from Back's path), so the phone's
@@ -208,19 +225,25 @@ const AiReadinessPage = () => {
     // backend uses to avoid saving (and emailing about) the same lead twice.
     const normalized = email.trim().toLowerCase();
     if (submissionIdRef.current.email !== normalized) submissionIdRef.current = { email: normalized, id: newSubmissionId() };
+    const quality = assessLead(answers, stepSecondsRef.current, email);
     const payload = buildSubmissionPayload({
-      email, answers, result, funnel: getFunnelContext(), website, submissionId: submissionIdRef.current.id,
+      email, answers, result, funnel: getFunnelContext(), website, submissionId: submissionIdRef.current.id, quality,
     });
     const outcome = await submitAssessment(payload);
     // Only a real, confirmed lead counts as a LinkedIn conversion (no-op until configured).
     const linkedinConversion = outcome.status === 'sent' ? trackLinkedInLead() : false;
-    // Its own Google Ads action ("AI Readiness Lead"), not Kişi.
-    const googleAdsConversion = outcome.status === 'sent' ? trackGoogleAdsAiReadinessConversion(submissionIdRef.current.id) : false;
+    // Its own Google Ads action ("AI Readiness Lead"), not Kişi. Only leads that pass the quality
+    // estimate are reported, so bidding doesn't learn to buy more careless taps.
+    const googleAdsConversion = outcome.status === 'sent' && quality.countsAsAdConversion
+      ? trackGoogleAdsAiReadinessConversion(submissionIdRef.current.id)
+      : false;
     // The email itself is intentionally NOT sent to PostHog.
     trackAiReadiness(AI_READINESS_EVENTS.emailSubmitted, {
       ...answerProperties(answers),
       ...resultProperties(result),
       delivery: outcome.status, // sent | not_configured | error
+      lead_quality_score: quality.score,
+      lead_quality_flags: quality.flags,
       linkedin_conversion: linkedinConversion,
       google_ads_conversion: googleAdsConversion,
     });
@@ -347,8 +370,9 @@ const AiReadinessPage = () => {
               onEmailStarted={() => trackAiReadiness(AI_READINESS_EVENTS.emailStarted, resultProperties(result))}
               onEmailSubmit={handleEmailSubmit}
               submission={submission}
+              showEmailCapture={answerQuality.showEmailCapture}
               nexusTo={withFunnelParams('/nexus')}
-              onNexusClick={() => trackAiReadiness(AI_READINESS_EVENTS.nexusClicked, { from: 'email_confirmation', ...resultProperties(result) })}
+              onNexusClick={(from) => trackAiReadiness(AI_READINESS_EVENTS.nexusClicked, { from, ...resultProperties(result) })}
               onRetake={handleRetake}
             />
           </main>

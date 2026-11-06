@@ -54,11 +54,14 @@ const click = (el) => act(() => { el.dispatchEvent(new MouseEvent('click', { bub
 const events = () => posthog.capture.mock.calls.map(([name]) => name);
 const propsOf = (name) => posthog.capture.mock.calls.find(([n]) => n === name)[1];
 
+// A person reads each screen for a few seconds; instant clicks look careless to leadQuality.js.
+const think = (ms = 4000) => act(() => { jest.advanceTimersByTime(ms); });
+
 const completeAll = () => {
   click(button('Start assessment'));
-  click(card('PEAK / PCAN')); click(button('Continue'));
-  click(card('Python / custom scripts')); click(button('Continue'));
-  click(card('Investigating failed tests')); click(button('Continue'));
+  click(card('PEAK / PCAN')); think(); click(button('Continue'));
+  click(card('Python / custom scripts')); think(); click(button('Continue'));
+  click(card('Investigating failed tests')); think(); click(button('Continue'));
   click(card('Partially automated'));
   act(() => { jest.advanceTimersByTime(300); });
 };
