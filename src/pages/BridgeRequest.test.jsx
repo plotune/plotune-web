@@ -7,8 +7,10 @@ import { getEndpointKinds, postLead } from '../utils/leadSubmission';
 import { addItem, clearCart, readCart } from '../utils/bridgeCart';
 import BridgeRequest from './BridgeRequest';
 import { PRODUCTS } from '../content/bridgeCatalog';
+import { trackGoogleAdsOrderRequestConversion } from '../utils/googleAds';
 
 jest.mock('../posthog', () => ({ posthog: { capture: jest.fn() } }));
+jest.mock('../utils/googleAds', () => ({ trackGoogleAdsOrderRequestConversion: jest.fn() }));
 jest.mock('../utils/leadSubmission', () => ({ ...jest.requireActual('../utils/leadSubmission'), postLead: jest.fn(), getEndpointKinds: jest.fn() }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -16,6 +18,7 @@ let container; let root;
 const render = () => act(() => root.render(<HelmetProvider><MemoryRouter initialEntries={['/request']}><BridgeRequest /></MemoryRouter></HelmetProvider>));
 beforeEach(() => {
   window.localStorage.clear(); clearCart(); posthog.capture.mockClear(); postLead.mockReset();
+  trackGoogleAdsOrderRequestConversion.mockReset(); trackGoogleAdsOrderRequestConversion.mockReturnValue(true);
   getEndpointKinds.mockReset(); getEndpointKinds.mockResolvedValue(['assessment', 'contact', 'order', 'cart']);
   container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container);
 });
@@ -96,7 +99,10 @@ test('a valid request posts the cart, confirms, clears the cart and never tracks
   expect(readCart()).toEqual([]);
   const tracked = JSON.stringify(posthog.capture.mock.calls);
   expect(tracked).not.toContain('ada@example.com');
-  expect(posthog.capture).toHaveBeenCalledWith('bridge_request_submitted', expect.objectContaining({ lines: 2, units: 3, products: 'can,io', priced: true, delivery: 'sent' }));
+  expect(posthog.capture).toHaveBeenCalledWith('bridge_request_submitted', expect.objectContaining({ lines: 2, units: 3, products: 'can,io', priced: true, delivery: 'sent', google_ads_conversion: true }));
+  // Counted as the "Nexus Order Request" Google Ads action, de-duplicated by the submission id.
+  expect(trackGoogleAdsOrderRequestConversion).toHaveBeenCalledTimes(1);
+  expect(trackGoogleAdsOrderRequestConversion).toHaveBeenCalledWith(payload.submissionId);
 });
 
 test('a failed send keeps the cart and offers a retry with the same submission id', async () => {
@@ -120,6 +126,7 @@ test('a filled honeypot is discarded without a conversion-like signal', async ()
   type('input[name="hp_extra_field"]', 'spam');
   await submit();
   expect(posthog.capture).toHaveBeenCalledWith('bridge_request_submitted', expect.objectContaining({ delivery: 'ignored' }));
+  expect(trackGoogleAdsOrderRequestConversion).not.toHaveBeenCalled();
 });
 
 test('preview builds (no endpoint) say nothing was sent and keep the cart', async () => {
@@ -130,6 +137,7 @@ test('preview builds (no endpoint) say nothing was sent and keep the cart', asyn
   await submit();
   expect(container.querySelector('h1').textContent).toBe('Preview only: nothing was sent');
   expect(readCart()).toHaveLength(1);
+  expect(trackGoogleAdsOrderRequestConversion).not.toHaveBeenCalled();
 });
 
 test('while the deployed script predates cart requests, the same request goes through the contact path (never filed as something else)', async () => {

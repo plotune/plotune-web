@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CATALOG_VERSION } from '../../content/bridgeCatalog';
 import { suggestEmailFix } from '../../utils/emailTypos';
+import { trackGoogleAdsOrderRequestConversion } from '../../utils/googleAds';
 import { buildCartContactPayload, buildCartPayload, getEndpointKinds, isValidEmail, newSubmissionId, postLead } from '../../utils/leadSubmission';
 import { getFunnelContext } from '../../utils/funnel';
 import { SECTORS } from '../OrderRequestForm';
@@ -84,6 +85,10 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
     };
     const outcome = await postLead(structured ? buildCartPayload(fields) : buildCartContactPayload(fields));
     setSending(false);
+    // A saved Bridge request is the same buying signal as a Nexus one: the "Nexus Order Request"
+    // Google Ads action (transaction_id = submission id, so a retry can't count twice).
+    const saved = outcome.status === 'sent' && !honeypot;
+    const googleAdsConversion = saved ? trackGoogleAdsOrderRequestConversion(submissionRef.current.id) : false;
     track('bridge_request_submitted', {
       lines: items.length,
       units: items.reduce((sum, item) => sum + item.qty, 0),
@@ -93,6 +98,7 @@ const CartRequestForm = ({ items, quote, track, onSent }) => {
       sector: sector || null,
       delivery: honeypot ? 'ignored' : outcome.status, // sent | not_configured | error | ignored
       route: structured ? 'cart' : 'contact_fallback',
+      google_ads_conversion: googleAdsConversion,
     });
     if (outcome.status === 'error') { setSendError(true); return; }
     onSent({ status: outcome.status === 'sent' ? 'sent' : 'preview', email: email.trim(), country: country.trim() });
