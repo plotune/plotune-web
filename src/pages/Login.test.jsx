@@ -132,3 +132,15 @@ test('without a next, GitHub login leaves no Bridge value behind and returns to 
   await settle();
   expect(sessionStorage.getItem(KEY)).toBeNull();
 });
+
+test('Google leaves the site with the validated next stored, like GitHub', async () => {
+  api.get.mockResolvedValue({ data: { auth_url: 'https://accounts.google.com/o/oauth2/v2/auth' } });
+  renderAt(`/login?next=${encodeURIComponent(BRIDGE_NEXT)}`);
+  const google = [...container.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Google');
+  expect(google.disabled).toBe(false);
+  await act(async () => google.click());
+  await settle();
+  expect(api.get).toHaveBeenCalledWith('/login/google');
+  expect(sessionStorage.getItem(KEY)).toBe(BRIDGE_NEXT);
+  expect(window.location.href).toBe('https://accounts.google.com/o/oauth2/v2/auth');
+});
