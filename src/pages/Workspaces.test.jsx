@@ -8,7 +8,7 @@ import client from '../workspaces/client';
 import { resetWorkspaceStore } from '../workspaces/store';
 
 jest.mock('react-helmet-async', () => ({ Helmet: () => null }));
-jest.mock('../workspaces/client', () => ({ __esModule: true, default: { listWorkspaces: jest.fn(), createWorkspace: jest.fn() }, sessionAuthorization: () => 'Bearer t' }));
+jest.mock('../workspaces/client', () => ({ __esModule: true, default: { listWorkspaces: jest.fn(), createWorkspace: jest.fn(), getWorkspace: jest.fn() }, sessionAuthorization: () => 'Bearer t' }));
 
 let container; let root;
 const flush = () => act(async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); });
@@ -32,14 +32,17 @@ test('with no workspace the page offers one clear way to create the first', asyn
   expect([...container.querySelectorAll('button')].filter((b) => b.textContent === 'New workspace')).toHaveLength(1);
 });
 
-test('each workspace is a card with its role and one action', async () => {
+test('each workspace is one link card with its role and a one-line state', async () => {
   client.listWorkspaces.mockResolvedValue([{ id: 'w1', name: 'Rig team', role: 'Owner', revision: 1 }, { id: 'w2', name: 'Lab', role: 'Viewer', revision: 1 }]);
+  client.getWorkspace.mockImplementation(async (id) => ({ projects: id === 'w1' ? [{ services: ['stream', 'rms'] }, { services: ['stream'] }, { services: [] }] : [] }));
   await render(<Workspaces />);
-  const cards = container.querySelectorAll('.ws-card');
+  const cards = container.querySelectorAll('a.ws-card');
   expect(cards).toHaveLength(2);
+  expect(cards[0].getAttribute('href')).toBe('/workspaces/w1');
   expect(cards[1].textContent).toContain('Viewer');
-  expect(cards[0].querySelectorAll('a, button')).toHaveLength(1);
-  expect(cards[0].querySelector('a').getAttribute('href')).toBe('/workspaces/w1');
+  expect(cards[0].textContent).toContain('3 projects · Stream, RMS');
+  expect(cards[1].textContent).toContain('No projects');
+  expect(container.textContent).not.toContain('Open');
 });
 
 test('creating a workspace opens its page; a limit error stays in the dialog', async () => {
