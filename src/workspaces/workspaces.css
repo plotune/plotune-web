@@ -48,6 +48,7 @@
 .ws-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .ws-card__head h3, .ws-card__title { margin: 0; min-width: 0; font-size: 17px; font-weight: 600; letter-spacing: -.015em; line-height: 1.35; overflow-wrap: anywhere; }
 .ws-card--link { display: flex; height: 100%; gap: 6px; color: var(--ink); text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+.ws-page a.ws-card--link, .ws-page a.ws-card--link * { text-decoration: none; }
 .ws-card--link:hover { border-color: var(--line-strong); box-shadow: var(--shadow-lg); }
 .ws-card--link:focus-visible { outline-offset: 2px; }
 .ws-card__state { display: block; }
