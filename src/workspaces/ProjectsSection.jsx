@@ -1,4 +1,5 @@
 import React, { useId, useState } from 'react';
+import { Link } from 'react-router-dom';
 import client from './client';
 import { ConfirmDialog } from './Dialog';
 import NameDialog from './FormDialog';
@@ -48,6 +49,7 @@ export default function ProjectsSection({ workspace, canManage, run }) {
             <ProjectCard
               key={project.id}
               project={project}
+              workspaceId={workspace.id}
               canManage={canManage}
               expanded={open === project.id}
               onToggle={() => setOpen(open === project.id ? null : project.id)}
@@ -124,7 +126,7 @@ export default function ProjectsSection({ workspace, canManage, run }) {
   );
 }
 
-function ProjectCard({ project, canManage, expanded, onToggle, onService, onRename, onDelete }) {
+function ProjectCard({ project, workspaceId, canManage, expanded, onToggle, onService, onRename, onDelete }) {
   const id = useId();
   const [busyService, setBusyService] = useState('');
   const [error, setError] = useState('');
@@ -163,6 +165,9 @@ function ProjectCard({ project, canManage, expanded, onToggle, onService, onRena
                   <span className="ws-muted">{service.description}</span>
                 </div>
                 <div className="ws-row__side">
+                  {on(service.id) && service.open && (
+                    <Link className="ws-link-button" to={service.open(workspaceId, project.id)}>Open in {service.name}<span className="sr-only"> for {project.name}</span></Link>
+                  )}
                   <span className="ws-state-text">{on(service.id) ? 'On' : 'Off'}</span>
                   {canManage && (
                     <button
