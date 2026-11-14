@@ -32,16 +32,21 @@ test('with no workspace the page offers one clear way to create the first', asyn
   expect([...container.querySelectorAll('button')].filter((b) => b.textContent === 'New workspace')).toHaveLength(1);
 });
 
-test('each workspace is one link card with its role and a one-line state', async () => {
-  client.listWorkspaces.mockResolvedValue([{ id: 'w1', name: 'Rig team', role: 'Owner', revision: 1 }, { id: 'w2', name: 'Lab', role: 'Viewer', revision: 1 }]);
-  client.getWorkspace.mockImplementation(async (id) => ({ projects: id === 'w1' ? [{ services: ['stream', 'rms'] }, { services: ['stream'] }, { services: [] }] : [] }));
+test('each workspace is one link card with its role and a one-line state from the list', async () => {
+  client.listWorkspaces.mockResolvedValue([
+    { id: 'w1', name: 'Rig team', role: 'Owner', revision: 1, projectCount: 3, services: ['stream', 'rms'] },
+    { id: 'w2', name: 'Lab', role: 'Viewer', revision: 1, projectCount: 0, services: [] },
+    { id: 'w3', name: 'One', role: 'Admin', revision: 1, projectCount: 1, services: [] },
+  ]);
   await render(<Workspaces />);
   const cards = container.querySelectorAll('a.ws-card');
-  expect(cards).toHaveLength(2);
+  expect(cards).toHaveLength(3);
   expect(cards[0].getAttribute('href')).toBe('/workspaces/w1');
   expect(cards[1].textContent).toContain('Viewer');
   expect(cards[0].textContent).toContain('3 projects · Stream, RMS');
-  expect(cards[1].textContent).toContain('No projects');
+  expect(cards[1].textContent).toContain('No projects yet');
+  expect(cards[2].textContent).toContain('1 project');
+  expect(client.getWorkspace).not.toHaveBeenCalled();
   expect(container.textContent).not.toContain('Open');
 });
 

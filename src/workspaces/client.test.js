@@ -32,7 +32,7 @@ test('without a session no request is made and the failure is a 401', async () =
 test('lists workspaces with the session as Bearer and keeps only the documented fields', async () => {
   const request = jest.fn().mockResolvedValue(response(200, { items: [{ id: 'w1', name: 'Rig', role: 'Owner', revision: 3, extra: 1 }] }));
   const items = await make(request).listWorkspaces();
-  expect(items).toEqual([{ id: 'w1', name: 'Rig', role: 'Owner', revision: 3 }]);
+  expect(items).toEqual([{ id: 'w1', name: 'Rig', role: 'Owner', revision: 3, projectCount: 0, services: [] }]);
   expect(request.mock.calls[0][0]).toMatchObject({ method: 'get', url: '/v1/workspaces', headers: { Authorization: 'Bearer session' } });
 });
 

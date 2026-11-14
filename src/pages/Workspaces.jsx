@@ -20,41 +20,19 @@ export default function Workspaces() {
   return <WorkspaceList />;
 }
 
-// "3 projects · Stream, RMS": read from each workspace's detail (cached by ETag), three at a time.
-const stateLine = (workspace) => {
-  const count = workspace.projects.length;
-  const services = [...new Set(workspace.projects.flatMap((project) => project.services))].map(serviceName);
-  return `${count === 0 ? 'No projects' : count === 1 ? '1 project' : `${count} projects`}${services.length ? ` · ${services.join(', ')}` : ''}`;
+// "3 projects · Stream, RMS", from the list itself (projectCount and the distinct services).
+export const stateLine = ({ projectCount, services }) => {
+  const count = Number(projectCount) || 0;
+  if (count === 0) return 'No projects yet';
+  const names = (Array.isArray(services) ? services : []).map(serviceName);
+  return `${count === 1 ? '1 project' : `${count} projects`}${names.length ? ` · ${names.join(', ')}` : ''}`;
 };
-
-function useWorkspaceSummaries(items) {
-  const [lines, setLines] = useState({});
-  const key = items.map((item) => item.id).join('|');
-  React.useEffect(() => {
-    let cancelled = false;
-    const queue = [...items];
-    const worker = async () => {
-      while (queue.length && !cancelled) {
-        const item = queue.shift();
-        try {
-          const detail = await client.getWorkspace(item.id);
-          const line = detail?.projects ? stateLine(detail) : null;
-          if (line && !cancelled) setLines((current) => ({ ...current, [item.id]: line }));
-        } catch { /* the card simply shows no summary */ }
-      }
-    };
-    Promise.all([worker(), worker(), worker()]);
-    return () => { cancelled = true; };
-  }, [key]);
-  return lines;
-}
 
 function WorkspaceList() {
   const navigate = useNavigate();
   const expire = useSessionExpiry();
   const { status, items, failure, reload } = useWorkspaceList({ refresh: true });
   const [creating, setCreating] = useState(false);
-  const lines = useWorkspaceSummaries(status === 'ready' ? items : []);
 
   React.useEffect(() => { if (failure) expire(failure); }, [failure, expire]);
 
@@ -114,7 +92,7 @@ function WorkspaceList() {
                     <h2 className="ws-card__title">{workspace.name}</h2>
                     <RolePill role={workspace.role} />
                   </span>
-                  <span className="ws-muted ws-card__state">{lines[workspace.id] || '\u00a0'}</span>
+                  <span className="ws-muted ws-card__state">{stateLine(workspace)}</span>
                 </Link>
               </li>
             ))}

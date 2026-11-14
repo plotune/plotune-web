@@ -103,7 +103,7 @@ export function createWorkspaceClient({
   return {
     async listWorkspaces({ signal } = {}) {
       const body = await data('get', '/v1/workspaces', { signal });
-      return asArray(body?.items).map(({ id, name, role, revision }) => ({ id, name, role, revision }));
+      return asArray(body?.items).map(({ id, name, role, revision, projectCount, services }) => ({ id, name, role, revision, projectCount: Number(projectCount) || 0, services: asArray(services) }));
     },
     async createWorkspace(name) {
       const body = await data('post', '/v1/workspaces', { body: { name } });
