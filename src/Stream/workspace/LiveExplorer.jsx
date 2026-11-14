@@ -11,12 +11,16 @@ import { createEventExport } from "../exportModel";
 import { collectEvents, wireConditions } from "./client";
 import { useExplorer, useRealtime } from "./hooks";
 
+// A 401 about a project claim is not the end of the session; the message already explains it.
+const CLAIM_CODES = ["claim_expired", "claim_revoked", "invalid_token", "claim_failed"];
+const sessionEnded = (error) => error.status === 401 && !CLAIM_CODES.includes(error.code);
+
 export function Failure({ error, retry }) {
   if (!error) return null;
   return (
     <div className="live-notice" role="alert">
       <strong>
-        {error.status === 401
+        {sessionEnded(error)
           ? "Your session expired. Sign in again."
           : error.status === 403
             ? "You do not have access to this project or action."
@@ -26,7 +30,7 @@ export function Failure({ error, retry }) {
                 ? "The account is out of credits. Add credits or wait for the monthly reset."
                 : error.message}
       </strong>
-      {error.status === 401 && (
+      {sessionEnded(error) && (
         <a href={streamWorkspaceLogin(window.location.search)}>Sign in</a>
       )}
       {error.status === 403 && (

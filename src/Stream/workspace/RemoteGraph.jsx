@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ReadOnlyContext } from "./access";
 import DashboardGraph from "../DashboardGraph";
 import { Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { buildWidgetSeries } from "../widgetModel";
@@ -16,6 +17,7 @@ export default function RemoteGraph({
   onRemove,
   moves,
 }) {
+  const readOnly = useContext(ReadOnlyContext);
   const [state, setState] = useState({ loading: true });
   const [retry, setRetry] = useState(0);
   const definition = JSON.stringify({
@@ -81,9 +83,9 @@ export default function RemoteGraph({
             Loading matching events…
           </p>
         )}
-        <button className="sw-link live-pad" onClick={() => onEdit(state.widget || widget)}>
+        {!readOnly && <button className="sw-link live-pad" onClick={() => onEdit(state.widget || widget)}>
           Edit widget
-        </button>
+        </button>}
       </Panel>
     );
   return (

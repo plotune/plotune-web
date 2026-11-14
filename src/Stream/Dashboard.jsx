@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { ReadOnlyContext } from "./workspace/access";
 import { FiArrowLeft, FiMoreHorizontal, FiPlus } from "react-icons/fi";
 import { Dialog, Panel } from "../StreamWorkspace/WorkspaceUI";
 import DashboardGraph from "./DashboardGraph";
@@ -19,6 +20,7 @@ export default function Dashboard({
   // C05 tiles (workspace only): saved insights, notes and reordering.
   insights = [], onSaveTiles, onCreateInsight, renderInsight,
 }) {
+  const readOnly = useContext(ReadOnlyContext);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [baseDashboard, setBaseDashboard] = useState(null);
@@ -65,14 +67,14 @@ export default function Dashboard({
       {error && <p role="alert">{error}</p>}
       <div className="st-dashboard-collection-head">
         <span>{dashboards.length} project dashboard{dashboards.length === 1 ? "" : "s"}</span>
-        <button className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(true)}><FiPlus /> New dashboard</button>
+        {!readOnly && <button className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(true)}><FiPlus /> New dashboard</button>}
       </div>
       {dashboards.length ? <div className="st-dashboard-list">
         {ordered.map((item) => <Panel key={item.id} title={item.name} meta={tilesEnabled ? `${dashboardTiles(item).length} tile${dashboardTiles(item).length === 1 ? "" : "s"} · Updated ${stamp(item.updatedAt)}` : `${item.widgets?.length || 0} widgets · Updated ${stamp(item.updatedAt)}`} className="st-dashboard-list-item" action={(
           <details className="st-dashboard-menu"><summary aria-label={`Options for ${item.name}`}><FiMoreHorizontal /></summary><div>
             <button type="button" onClick={() => onOpen(item.id)}>Open dashboard</button>
-            <button type="button" onClick={() => { const next = window.prompt("Rename dashboard", item.name); if (next?.trim()) action(() => onRename(item.id, next.trim(), item.description)); }}>Rename</button>
-            <button type="button" className="danger" onClick={() => { if (window.confirm(`Delete “${item.name}” and its ${tilesEnabled ? "tiles" : "widgets"}? Saved insights stay.`)) action(() => onDelete(item.id)); }}>Delete</button>
+            {!readOnly && <button type="button" onClick={() => { const next = window.prompt("Rename dashboard", item.name); if (next?.trim()) action(() => onRename(item.id, next.trim(), item.description)); }}>Rename</button>}
+            {!readOnly && <button type="button" className="danger" onClick={() => { if (window.confirm(`Delete “${item.name}” and its ${tilesEnabled ? "tiles" : "widgets"}? Saved insights stay.`)) action(() => onDelete(item.id)); }}>Delete</button>}
           </div></details>
         )}>
           <button className="st-dashboard-open" type="button" onClick={() => onOpen(item.id)}>
@@ -105,9 +107,9 @@ export default function Dashboard({
     {error && <p role="alert">{error}</p>}
     <div className="st-dashboard-detail-head">
       <button className="sw-link" type="button" onClick={onBack}><FiArrowLeft /> Dashboards</button>
-      <div className="st-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) action(() => onRename(dashboard.id, next.trim(), dashboard.description)); }}>Edit dashboard</button>{tilesEnabled
+      {!readOnly && <div className="st-dashboard-detail-actions"><button className="sw-button" type="button" onClick={() => { const next = window.prompt("Rename dashboard", dashboard.name); if (next?.trim()) action(() => onRename(dashboard.id, next.trim(), dashboard.description)); }}>Edit dashboard</button>{tilesEnabled
         ? <button className="sw-button sw-primary" type="button" onClick={() => setAdding("choose")}><FiPlus /> Add tile</button>
-        : <button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button>}</div>
+        : <button className="sw-button sw-primary" type="button" onClick={() => editWidget()}><FiPlus /> Add widget</button>}</div>}
     </div>
     {dashboard.description && <p className="st-dashboard-description">{dashboard.description}</p>}
     {tiles.length ? <div className="st-dashboard-grid">

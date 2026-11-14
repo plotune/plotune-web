@@ -5,6 +5,7 @@ import CaptureGuide from "./CaptureGuide";
 import McpSetup from "./McpSetup";
 import { FiCopy, FiTerminal } from "react-icons/fi";
 import { Failure } from "./LiveExplorer";
+import { canManageStream } from "./access";
 
 export default function ConnectionSetup({ client, metadata, mcp = false }) {
   const [suppliedKey, setSuppliedKey] = useState("");
@@ -69,8 +70,11 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
           ) : (
             <>
               <p>
-                Key prefix: <code>{metadata.project.keyPrefix}…</code>. Existing
-                keys cannot be recovered.
+                {metadata.project.hasKey
+                  ? "A capture key is set up for this project. Existing keys cannot be recovered."
+                  : canManageStream(metadata.role)
+                    ? "This project has no capture key yet. Create one to start sending events."
+                    : "This project has no capture key yet. An owner or admin can create it."}
               </p>
               <label>
                 Use your existing key <span>Optional · held in memory</span>
@@ -89,12 +93,13 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
             This key allows event capture and read-only MCP access. Keep it in
             your own system's secret store.
           </p>
-          {metadata.role !== "Member" && (
-            <div className="live-key-rotation"><p>Replace the key only if you need to update or revoke client access.</p><button
+          {canManageStream(metadata.role) && (
+            <div className="live-key-rotation"><p>{metadata.project.hasKey ? "Replace the key only if you need to update or revoke client access." : "The key is shown once. Copy it into your own secret store."}</p><button
               className="sw-button"
               disabled={metadata.busy}
               onClick={async () => {
                 if (
+                  metadata.project.hasKey &&
                   !window.confirm(
                     "Rotate this project's key? The old key will stop accepting capture and MCP requests. Update every client that uses it.",
                   )
@@ -103,13 +108,13 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
                 try {
                   await metadata.rotate();
                   setSuppliedKey("");
-                  setStatus("New key created. Update your clients.");
+                  setStatus(metadata.project.hasKey ? "New key created. Update your clients." : "Capture key created. Copy it now.");
                 } catch (cause) {
                   setError(cause);
                 }
               }}
             >
-              Rotate API key
+              {metadata.project.hasKey ? "Rotate API key" : "Create capture key"}
             </button></div>
           )}
         </div>

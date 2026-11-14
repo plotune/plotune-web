@@ -48,6 +48,7 @@ export function useWorkspaceDetail(workspaceId) {
   const sequence = useRef(0);
 
   const load = useCallback(async () => {
+    if (!workspaceId) return null;
     const mine = ++sequence.current;
     try {
       const workspace = await client.getWorkspace(workspaceId);
@@ -66,7 +67,7 @@ export function useWorkspaceDetail(workspaceId) {
 
   useEffect(() => {
     sequence.current += 1;
-    setState({ status: 'loading', workspace: null, failure: null, stale: false });
+    setState({ status: workspaceId ? 'loading' : 'idle', workspace: null, failure: null, stale: false });
     load();
     return () => { sequence.current += 1; };
   }, [load]);

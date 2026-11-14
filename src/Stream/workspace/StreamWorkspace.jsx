@@ -16,14 +16,14 @@ import {
   FiSend,
   FiSettings,
   FiMenu,
-  FiPlus,
+  FiSliders,
   FiChevronRight,
   FiCpu,
   FiBookOpen,
 } from "react-icons/fi";
 import { streamWorkspaceLogin } from "../../utils/streamWorkspaceNavigation";
 import { AuthContext } from "../../context/AuthContext";
-import { Dialog, Empty, Panel } from "../../StreamWorkspace/WorkspaceUI";
+import { Empty, Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { AddCreditsDialog, CreditsSummary } from "./Credits";
 import Dashboard from "../Dashboard";
 import Webhooks from "../Webhooks";
@@ -38,6 +38,12 @@ import {
   wireConditions,
 } from "./client";
 import { useWorkspaceMetadata } from "./hooks";
+import { ReadOnlyContext, canManageStream, canSeeWebhooks } from "./access";
+import workspaceClient from "../../workspaces/client";
+import { createClaimManager } from "../../workspaces/claims";
+import { useWorkspaceDetail, useWorkspaceList } from "../../workspaces/hooks";
+import { readSelection, rememberSelection } from "../../workspaces/store";
+import { failureMessage } from "../../workspaces/errors";
 import LiveExplorer, { Failure } from "./LiveExplorer";
 import RemoteGraph from "./RemoteGraph";
 import { InsightTile } from "./DashboardTiles";
@@ -75,9 +81,6 @@ const cleanResource = ({ revision, updatedAt, createdAt, signing, ...record }) =
     : {}),
 });
 
-const PLAN_NAMES = { free: "Free", premium: "Premium", business: "Business" };
-const planName = (plan) => PLAN_NAMES[plan] || plan;
-
 export default function StreamWorkspace() {
   const auth = useContext(AuthContext);
   const loginLocation = useLocation();
@@ -107,15 +110,38 @@ export default function StreamWorkspace() {
 }
 
 export function Workspace({ token, user, logout, onUnauthorized }) {
+  const [params, setParams] = useSearchParams();
+  // Projects, their names and the Stream switch come from the workspace API; Stream calls carry a
+  // Stream claim for the selected project (renewed through this helper, kept in memory only).
+  const claims = useMemo(() => createClaimManager({ requestClaim: workspaceClient.requestClaim }), [token]);
+  const workspaces = useWorkspaceList();
+  const wantedWorkspace = params.get("workspace") || "";
+  const workspaceId = (
+    workspaces.items.find((item) => item.id === wantedWorkspace) ||
+    workspaces.items.find((item) => item.id === readSelection()?.workspaceId) ||
+    workspaces.items[0]
+  )?.id || "";
+  const workspace = useWorkspaceDetail(workspaceId);
   const client = useMemo(
     () =>
       createStreamClient(token, {
         onUnauthorized: () => onUnauthorized?.(token),
+        claims,
+        workspaceId,
       }),
-    [token, onUnauthorized],
+    [token, onUnauthorized, claims, workspaceId],
   );
-  const [params, setParams] = useSearchParams();
-  const requestedProject = params.get("project") || "";
+  useEffect(() => {
+    if (workspaces.failure?.status === 401 || workspace.failure?.status === 401) onUnauthorized?.(token);
+  }, [workspaces.failure, workspace.failure, onUnauthorized, token]);
+  const streamProjects = useMemo(
+    () => (workspace.workspace?.projects || []).filter((p) => p.services.includes("stream")).map(({ id, name }) => ({ id, name })),
+    [workspace.workspace],
+  );
+  const wantedProject = params.get("project") || "";
+  // Only a project of this workspace with Stream switched on can be opened.
+  const requestedProject = streamProjects.some((p) => p.id === wantedProject) ? wantedProject : "";
+  const projectsLoading = workspaces.status === "loading" || workspaces.status === "idle" || (Boolean(workspaceId) && workspace.status === "loading");
   const [navOpen, setNavOpen] = useState(false);
   const [mobile, setMobile] = useState(
     () => window.matchMedia("(max-width: 800px)").matches,
@@ -156,20 +182,18 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     document.addEventListener("pointerdown", dismiss);
     return () => { document.removeEventListener("keydown", dismiss); document.removeEventListener("pointerdown", dismiss); };
   }, [accountOpen]);
-  const [createOpen, setCreateOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [createError, setCreateError] = useState(null);
-  const view = NAV.some(([id]) => id === params.get("view"))
+  const metadata = useWorkspaceMetadata(client, requestedProject, ["settings", "webhooks"].includes(params.get("view")) ? params.get("view") : null, streamProjects);
+  // A Viewer sees no webhooks, and nothing that changes shared data.
+  const navItems = NAV.filter(([id]) => id !== "webhooks" || canSeeWebhooks(metadata.role));
+  const view = navItems.some(([id]) => id === params.get("view"))
     ? params.get("view")
     : "events";
-  const metadata = useWorkspaceMetadata(client, requestedProject, ["settings", "webhooks"].includes(view) ? view : null);
-  const atProjectLimit = Boolean(metadata.plan) && metadata.plan.ownedProjects >= metadata.plan.projectLimit;
+  const readOnly = metadata.role === "Viewer";
   const [refreshingShared, setRefreshingShared] = useState(false);
   const refreshShared = async () => {
     setRefreshingShared(true);
-    // Check the selected project first; a denied scope must not cancel the fresh
-    // project list that lets a member choose another accessible project.
-    try { await metadata.reload(); await metadata.loadProjects(); }
+    // Check the selected project first; a denied scope must not cancel the fresh project list.
+    try { await metadata.reload(); await workspace.reload(); }
     finally { setRefreshingShared(false); }
   };
   const dashboardId = params.get("dashboard");
@@ -191,9 +215,12 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
     [setParams],
   );
   useEffect(() => {
-    if (!requestedProject && metadata.projects.length)
-      location({ project: metadata.projects[0].id }, true);
-  }, [requestedProject, metadata.projects, location]);
+    if (!requestedProject && !wantedProject && streamProjects.length)
+      location({ project: streamProjects[0].id, workspace: workspaceId }, true);
+  }, [requestedProject, wantedProject, streamProjects, workspaceId, location]);
+  useEffect(() => {
+    if (workspace.workspace) rememberSelection({ workspaceId, workspaceName: workspace.workspace.name, projectId: requestedProject || null });
+  }, [workspace.workspace, workspaceId, requestedProject]);
   const project = metadata.project;
   const [discoveryState, setDiscoveryState] = useState({});
   const [usage, setUsage] = useState(null);
@@ -344,8 +371,9 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
   const title =
     dashboard && view === "dashboards"
       ? dashboard.name
-      : NAV.find(([id]) => id === view)[1];
+      : navItems.find(([id]) => id === view)[1];
   return (
+    <ReadOnlyContext.Provider value={readOnly}>
     <div className="sw-app st-app live-workspace ph-no-capture rr-block">
       <header className="sw-topbar">
         <button
@@ -417,6 +445,20 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
         className={`sw-sidebar ${navOpen ? "is-open" : ""}`}
       >
         <div className="sw-project-select">
+          {workspaces.items.length > 1 && (
+            <>
+              <span>WORKSPACE</span>
+              <select
+                aria-label="Workspace"
+                value={workspaceId}
+                onChange={(e) => location({ workspace: e.target.value, project: null, dashboard: null, filter: null })}
+              >
+                {workspaces.items.map((item) => (
+                  <option key={item.id} value={item.id}>{item.name}</option>
+                ))}
+              </select>
+            </>
+          )}
           <span>PROJECT</span>
           <select
             aria-label="Project"
@@ -424,6 +466,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
             onChange={(e) =>
               location({
                 project: e.target.value,
+                workspace: workspaceId,
                 dashboard: null,
                 filter: null,
               })
@@ -432,28 +475,20 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
             <option value="" disabled>
               Select a project
             </option>
-            {metadata.projects.map((p) => (
+            {streamProjects.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
             ))}
           </select>
-          <button
-            className="sw-link st-create-link"
-            onClick={() => {
-              setName("");
-              setCreateError(null);
-              setCreateOpen(true);
-              setNavOpen(false);
-            }}
-          >
-            <FiPlus />
-            Create project
-          </button>
+          <Link className="sw-link st-create-link" to={workspaceId ? `/workspaces/${encodeURIComponent(workspaceId)}` : "/workspaces"}>
+            <FiSliders />
+            Manage in workspace
+          </Link>
         </div>
         <nav aria-label="Workspace navigation">
           {/* Data views, then setup; Project Settings is its own link below. */}
-          {[NAV.slice(0, 4), NAV.slice(4, -1)].map((items, index) => (
+          {[navItems.slice(0, 4), navItems.slice(4, -1)].map((items, index) => (
             <div className="sw-nav-group" key={index}>
               {index === 1 && <p>SETUP</p>}
               {items.map(([id, label, Icon]) => (
@@ -510,29 +545,32 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
             error={metadata.error}
             retry={refreshShared}
           />
-          {metadata.projectsLoading || metadata.loading ? (
+          {workspace.failure && workspace.failure.status !== 401 && (
+            <div className="live-notice" role="alert">
+              <strong>{failureMessage(workspace.failure)}</strong>
+              <button className="sw-link" onClick={() => workspace.reload()}>Retry / refresh</button>
+            </div>
+          )}
+          {projectsLoading || metadata.loading ? (
             <p role="status">Loading your workspace…</p>
           ) : !project ? (
-            <Empty
-              title={
-                requestedProject
-                  ? "Project unavailable"
-                  : "Create your first project"
-              }
-              description={
-                requestedProject
-                  ? "Choose an accessible project, or retry when the service is available."
-                  : "Send arbitrary JSON events from your systems and share their context with your team."
-              }
-              action={
-                <button
-                  className="sw-button sw-primary"
-                  onClick={() => setCreateOpen(true)}
-                >
-                  Create project
-                </button>
-              }
-            />
+            workspaces.items.length === 0 && workspaces.status === "ready" ? (
+              <Empty
+                title="Create your first workspace"
+                description="Projects, teammates and services live in a workspace. Create one, then turn on Stream for a project."
+                action={<Link className="sw-button sw-primary" to="/workspaces">Open workspaces</Link>}
+              />
+            ) : (
+              <Empty
+                title={wantedProject ? "Project unavailable" : "Turn on Stream for a project"}
+                description={
+                  wantedProject
+                    ? "This project does not have Stream turned on, or you no longer have access. Choose another project, or manage the workspace."
+                    : "None of the projects in this workspace has Stream switched on yet. An owner or admin can turn it on in the workspace."
+                }
+                action={<Link className="sw-button sw-primary" to={workspaceId ? `/workspaces/${encodeURIComponent(workspaceId)}` : "/workspaces"}>Manage in workspace</Link>}
+              />
+            )
           ) : (
             <React.Fragment key={project.id}>
               {view === "events" && (
@@ -674,7 +712,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                 />
               )}
               {view === "settings" && (
-                <ProjectSettings client={client} metadata={metadata} />
+                <ProjectSettings metadata={metadata} workspaceId={workspaceId} />
               )}
               {view === "webhooks" && (
                 <>
@@ -684,7 +722,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                     events={[]}
                     discoveredEventNames={discoveryState.data?.eventNames}
                     webhooks={metadata.webhooks}
-                    readOnly={metadata.role === "Member"}
+                    readOnly={!canManageStream(metadata.role)}
                     onSigning={(id) => setSigning({ id, secret: null, rotated: false, error: null, webhook: null })}
                     onCreate={(record) =>
                       withSecret(() => client.saveResource(project.id, "webhooks", cleanResource(record)), false)
@@ -716,7 +754,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                       webhook={signing.webhook ?? metadata.webhooks.find((w) => w.id === signing.id)}
                       secret={signing.secret}
                       rotated={signing.rotated}
-                      canManage={metadata.role !== "Member"}
+                      canManage={canManageStream(metadata.role)}
                       busy={metadata.busy}
                       error={signing.error}
                       onClose={() => setSigning(null)}
@@ -783,72 +821,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
           onRedeemed={() => setUsageRefresh((value) => value + 1)}
         />
       )}
-      {createOpen && (
-        <Dialog
-          title="Create a project"
-          subtitle="A shared home for your events, filters and dashboards."
-          onClose={() => setCreateOpen(false)}
-        >
-          {atProjectLimit ? (
-            <div className="sw-detail-body st-create-form" role="status">
-              <p>
-                Your {planName(metadata.plan.plan)} plan includes {metadata.plan.projectLimit} project{metadata.plan.projectLimit === 1 ? "" : "s"}, and you own{" "}
-                {metadata.plan.ownedProjects}. Projects other people share with you don't count.
-              </p>
-              <button autoFocus className="sw-button sw-primary" type="button" onClick={() => setCreateOpen(false)}>
-                Close
-              </button>
-            </div>
-          ) : (
-          <form
-            className="sw-detail-body st-create-form"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setCreateError(null);
-              try {
-                const created = await metadata.create(name.trim());
-                location({
-                  project: created.id,
-                  view: "events",
-                  dashboard: null,
-                  filter: null,
-                });
-                setCreateOpen(false);
-              } catch (error) {
-                setCreateError(error);
-              }
-            }}
-          >
-            <label>
-              Project name
-              <input
-                autoFocus
-                required
-                maxLength={64}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <p>
-              Your new API key will be shown once. Save it before leaving this
-              session.
-            </p>
-            {metadata.plan && (
-              <p className="st-plan-note">
-                This will be project {metadata.plan.ownedProjects + 1} of {metadata.plan.projectLimit} on your {planName(metadata.plan.plan)} plan.
-              </p>
-            )}
-            <Failure error={createError} />
-            <button
-              className="sw-button sw-primary"
-              disabled={!name.trim() || metadata.busy}
-            >
-              Create project
-            </button>
-          </form>
-          )}
-        </Dialog>
-      )}
     </div>
+    </ReadOnlyContext.Provider>
   );
 }

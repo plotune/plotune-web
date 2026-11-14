@@ -63,7 +63,6 @@ const Privacy = routePage(() => import('./pages/Privacy'));
 const ContactPage = routePage(() => import('./pages/Contact'));
 const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
 const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
-const StreamAuthorize = routePage(() => import('./pages/StreamAuthorize'));
 const BridgeAuthorize = routePage(() => import('./pages/BridgeAuthorize'));
 const Authorize = routePage(() => import('./pages/Authorize'));
 const Workspaces = routePage(() => import('./pages/Workspaces'));
@@ -92,6 +91,12 @@ const ResearchMethodology = routePage(() => import('./research/ResearchMethodolo
 const RedirectToSolutionsPillar = () => {
   const location = useLocation();
   return <Navigate to={`/solutions/agentic-test-development${location.search}`} replace />;
+};
+
+// Stream's own consent page is gone; the shared authority sends people to /authorize.
+const RedirectToConsent = () => {
+  const location = useLocation();
+  return <Navigate to={`/authorize${location.search}`} replace />;
 };
 
 // Jakob: an unknown URL must not render as a silent blank page between Header and
@@ -214,7 +219,7 @@ function App() {
               <Route path="/contact" element={<Main><ContactPage /></Main>} />
               <Route path="/verify-email" element={<Main><VerifyEmail /></Main>} />
               <Route path="/reset-password" element={<Main><ForgotPassword /></Main>} />
-              <Route path="/stream/authorize" element={<StreamAuthorize />} />
+              <Route path="/stream/authorize" element={<RedirectToConsent />} />
               <Route path="/bridge/authorize" element={<BridgeAuthorize />} />
               <Route path="/authorize" element={<Authorize />} />
               <Route path="/workspaces" element={<Workspaces />} />
