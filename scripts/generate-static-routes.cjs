@@ -27,7 +27,7 @@ const routes = [
   '/stream', '/nexus', '/nexus/connectivity', '/nexus/stream', '/nexus/use-cases', '/nexus/pricing', '/bridge',
   '/solutions/agentic-test-development', '/agentic-test-development',
   '/research', '/research/results', '/research/reports', '/research/methodology',
-  '/dashboard', '/streams', '/streams/connect', '/mirror', '/storage',
+  '/dashboard', '/workspaces', '/authorize', '/streams', '/streams/connect', '/mirror', '/storage',
   '/ai-readiness', '/request', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision',
 ];
 

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShoppingBag, FiBookOpen, FiChevronDown, FiLink } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
+import WorkspaceSwitcher from '../workspaces/WorkspaceSwitcher';
 
 // SVG icons instead of the Material Icons ligature font: that font is an external Google Fonts
 // load, and when it fails (slow network, ad blocker, offline) the ligature falls back to its
@@ -97,6 +98,8 @@ const Header = () => {
   const userNavItems = [
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { to: '/profile', label: 'Profile', icon: 'person' },
+    // The workspace switcher is the one entry point to workspaces (list, settings, switching).
+    { to: '/workspaces', label: 'Workspaces', switcher: true },
     { to: '/stream/workspace', label: 'Stream workspace', icon: 'stream' },
     { to: 'https://bridge.plotune.net', label: 'Bridge', icon: 'bridge', keepBrandName: true, isExternal: true },
     // Mirror and Storage are unavailable; keep them out of navigation.
@@ -225,7 +228,7 @@ const Header = () => {
           <ul id="main-navigation" className={`xl:flex gap-4 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface  p-5' : 'hidden xl:flex'}`}>
             {navItems.map((item) => (
               <li key={item.to}>
-                {renderNavLink(item)}
+                {item.switcher ? <WorkspaceSwitcher /> : renderNavLink(item)}
               </li>
             ))}
             {/* Logout button for logged-in users in mobile menu */}

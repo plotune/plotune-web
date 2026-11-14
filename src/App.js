@@ -65,6 +65,9 @@ const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
 const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
 const StreamAuthorize = routePage(() => import('./pages/StreamAuthorize'));
 const BridgeAuthorize = routePage(() => import('./pages/BridgeAuthorize'));
+const Authorize = routePage(() => import('./pages/Authorize'));
+const Workspaces = routePage(() => import('./pages/Workspaces'));
+const WorkspaceDetail = routePage(() => import('./pages/WorkspaceDetail'));
 const Profile = routePage(() => import('./pages/Profile'));
 const Dashboard = routePage(() => import('./pages/Dashboard'));
 const Stream = routePage(() => import('./pages/Stream'));
@@ -172,7 +175,7 @@ const SiteFrame = ({ children }) => {
     }
   }, [pathname]);
   const kind = /^\/(login|register|reset-password|verify-email)/.test(pathname) ? 'auth'
-    : /^\/(dashboard|profile|storage|mirror|dns|streams|partner-portal)/.test(pathname) ? 'account'
+    : /^\/(dashboard|profile|storage|mirror|dns|streams|partner-portal|workspaces|authorize)/.test(pathname) ? 'account'
     : pathname.startsWith('/docs') ? 'docs' : 'public';
   return <div className={`app site-${kind}`}>{children}</div>;
 };
@@ -213,6 +216,9 @@ function App() {
               <Route path="/reset-password" element={<Main><ForgotPassword /></Main>} />
               <Route path="/stream/authorize" element={<StreamAuthorize />} />
               <Route path="/bridge/authorize" element={<BridgeAuthorize />} />
+              <Route path="/authorize" element={<Authorize />} />
+              <Route path="/workspaces" element={<Workspaces />} />
+              <Route path="/workspaces/:workspaceId" element={<WorkspaceDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Main><Profile /></Main>} />
               <Route path="/stream" element={<Stream />} />
@@ -279,6 +285,9 @@ const initialRoutes = [
   [/^\/verify-email\/?$/, VerifyEmail],
   [/^\/reset-password\/?$/, ForgotPassword],
   [/^\/dashboard\/?$/, Dashboard],
+  [/^\/workspaces\/?$/, Workspaces],
+  [/^\/workspaces\/[^\/]+\/?$/, WorkspaceDetail],
+  [/^\/authorize\/?$/, Authorize],
   [/^\/profile\/?$/, Profile],
   [/^\/stream\/?$/, Stream],
   [/^\/streams\/?$/, LiveStreamWorkspace],
