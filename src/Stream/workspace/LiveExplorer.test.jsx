@@ -581,7 +581,7 @@ test("inline setup guides real capture without simulation or a false claim that 
   };
   act(() => mountRoot(fixture(client, { projectKey: "plt_synthetic-key", onOpenSetup: () => {} })));
   await flush();
-  expect(container.textContent).toContain("Save your project key now");
+  expect(container.textContent).toContain("Save your capture key now");
   expect(container.textContent).toContain("Send an event from your system");
   expect(container.textContent).not.toContain("Simulate event");
   expect(container.querySelector('[aria-label="curl integration snippet"]').textContent).toContain("https://stream.example.test/capture");

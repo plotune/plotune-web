@@ -6,7 +6,7 @@ export default function CaptureGuide({ apiKey, origin = "https://stream.plotune.
   const [language, setLanguage] = useState("curl");
   const [copied, setCopied] = useState("");
   const [error, setError] = useState("");
-  const snippet = captureExample(language, apiKey || "YOUR_PROJECT_KEY", origin);
+  const snippet = captureExample(language, apiKey || "YOUR_CAPTURE_KEY", origin);
   return (
     <div className={`st-integration ${compact ? "compact" : ""}`}>
       <div className="st-example-heading">
@@ -30,7 +30,7 @@ export default function CaptureGuide({ apiKey, origin = "https://stream.plotune.
       {error && <p role="alert">{error}</p>}
       {copied === snippet && <span className="live-sr-only" role="status">Example copied</span>}
       <p className="st-contract-note">
-        {apiKey ? "This example uses your project key. Keep it private." : "Replace YOUR_PROJECT_KEY with your stored key."}
+        {apiKey ? "This example uses your capture key. Keep it private." : "Replace YOUR_CAPTURE_KEY with your stored capture key."}
         {" "}A successful capture returns HTTP 201. Open Events and load the new events when they appear.
       </p>
     </div>

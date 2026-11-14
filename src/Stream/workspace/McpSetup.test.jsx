@@ -80,12 +80,12 @@ test("the MCP view leads with sign-in and keeps project-key access behind one di
   const client = { origin: "https://stream.plotune.net", mcp: jest.fn() };
   const { container, unmount } = mount(<ConnectionSetup client={client} metadata={metadata} mcp />);
   const headings = [...container.querySelectorAll("h2, h3")].map((h) => h.textContent);
-  expect(headings.indexOf("Connect your AI client")).toBeLessThan(headings.indexOf("Project key access"));
+  expect(headings.indexOf("Connect your AI client")).toBeLessThan(headings.indexOf("Capture key access"));
   const disclosure = container.querySelector("details.mcp-key-alternative");
   expect(disclosure.open).toBe(false);
-  expect(disclosure.querySelector("summary").textContent).toBe("Use a project key instead");
+  expect(disclosure.querySelector("summary").textContent).toBe("Use a capture key instead");
   // Key display, rotation and the key-based check all live inside the disclosure.
-  for (const text of ["Rotate API key", "Check MCP connection", "Copy example"]) {
+  for (const text of ["Rotate capture key", "Check MCP connection", "Copy example"]) {
     const button = [...container.querySelectorAll("button")].find((b) => b.textContent === text);
     expect(disclosure.contains(button)).toBe(true);
   }

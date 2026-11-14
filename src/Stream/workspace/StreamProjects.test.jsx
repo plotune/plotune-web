@@ -78,8 +78,8 @@ test("an owner creates the first capture key, sees it once, and the button becom
   expect(call[1].method).toBe("POST");
   expect(JSON.parse(call[1].body)).toEqual({ revision: 4 });
   expect(call[1].headers.Authorization).toBe("Bearer stream-claim");
-  expect(container.querySelector('input[aria-label="New project API key"]').value).toBe("plt_secret_once");
-  expect(button("Rotate API key")).toBeTruthy();
+  expect(container.querySelector('input[aria-label="New capture key"]').value).toBe("plt_secret_once");
+  expect(button("Rotate capture key")).toBeTruthy();
 });
 
 test("a member sees no key button; a viewer sees no webhooks and no write controls", async () => {

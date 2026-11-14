@@ -229,7 +229,7 @@ export default function LiveExplorer({
                 <p className="sw-eyebrow">CONNECT YOUR SYSTEM</p>
                 <h2>Send an event from your system</h2>
                 <p>Run an example below, then load the new events when they arrive.</p>
-                <p className="live-key-reminder"><strong>Save your project key now.</strong> It will not be shown again after a refresh. The example below includes it.</p>
+                <p className="live-key-reminder"><strong>Save your capture key now.</strong> It will not be shown again after a refresh. The example below includes it.</p>
                 <CaptureGuide apiKey={projectKey} origin={client.origin} compact />
                 <button className="sw-link" onClick={onOpenSetup}>Open API setup and save key</button>
               </section>

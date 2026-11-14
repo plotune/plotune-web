@@ -81,6 +81,9 @@ const cleanResource = ({ revision, updatedAt, createdAt, signing, ...record }) =
     : {}),
 });
 
+// A select cannot wrap its label, so a long name is also written out in full beneath it.
+const FullName = ({ name }) => (name && name.length > 18 ? <small className="st-full-name">{name}</small> : null);
+
 export default function StreamWorkspace() {
   const auth = useContext(AuthContext);
   const loginLocation = useLocation();
@@ -450,6 +453,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               <span>WORKSPACE</span>
               <select
                 aria-label="Workspace"
+                title={workspaces.items.find((item) => item.id === workspaceId)?.name}
                 value={workspaceId}
                 onChange={(e) => location({ workspace: e.target.value, project: null, dashboard: null, filter: null })}
               >
@@ -457,11 +461,13 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
               </select>
+              <FullName name={workspaces.items.find((item) => item.id === workspaceId)?.name} />
             </>
           )}
           <span>PROJECT</span>
           <select
             aria-label="Project"
+            title={streamProjects.find((p) => p.id === requestedProject)?.name}
             value={requestedProject}
             onChange={(e) =>
               location({
@@ -481,6 +487,7 @@ export function Workspace({ token, user, logout, onUnauthorized }) {
               </option>
             ))}
           </select>
+          <FullName name={streamProjects.find((p) => p.id === requestedProject)?.name} />
           <Link className="sw-link st-create-link" to={workspaceId ? `/workspaces/${encodeURIComponent(workspaceId)}` : "/workspaces"}>
             <FiSliders />
             Manage in workspace
