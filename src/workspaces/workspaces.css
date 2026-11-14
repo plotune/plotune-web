@@ -47,7 +47,10 @@
 .ws-card { display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--r-lg); background: #fff; box-shadow: var(--shadow-card); }
 .ws-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .ws-card__head h3, .ws-card__title { margin: 0; min-width: 0; font-size: 17px; font-weight: 600; letter-spacing: -.015em; line-height: 1.35; overflow-wrap: anywhere; }
-.ws-card__action { align-self: flex-start; }
+.ws-card--link { display: flex; height: 100%; gap: 6px; color: var(--ink); text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+.ws-card--link:hover { border-color: var(--line-strong); box-shadow: var(--shadow-lg); }
+.ws-card--link:focus-visible { outline-offset: 2px; }
+.ws-card__state { display: block; }
 .ws-card__panel { padding-top: 14px; border-top: 1px solid var(--line); }
 .ws-card__tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .ws-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
@@ -72,6 +75,9 @@
 .ws-state-text { color: #3f444d; font-size: 13px; font-weight: 600; min-width: 28px; }
 .ws-reason { color: #8d241e; font-size: 13px; line-height: 1.5; }
 
+.ws-role-select { min-height: 44px; padding: 6px 30px 6px 12px; border: 1px solid #838893; border-radius: var(--r-sm); background: #fff; color: var(--ink); font-size: 14px; font-weight: 500; }
+.ws-role-select:disabled { background: #f3f4f6; cursor: progress; }
+.ws-link-button--danger { color: #a8261f; }
 .design-button.ws-small { min-height: 44px; padding: 6px 14px; font-size: 13.5px; }
 .design-button.danger { background: #a8261f; border-color: #a8261f; }
 .design-button.danger:hover:not(:disabled) { background: #8d1f19; border-color: #8d1f19; }

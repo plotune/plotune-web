@@ -6,8 +6,26 @@ import { ASSIGNABLE_ROLES, ROLE_DESCRIPTIONS, canEditPerson } from './roles';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const RANK = { Admin: 3, Member: 2, Viewer: 1 };
+// Lowering access, or anything that touches an Admin, is confirmed; raising Viewer to Member is not.
+export const roleChangeNeedsConfirm = (from, to) => RANK[to] < RANK[from] || from === 'Admin' || to === 'Admin';
+
 export default function MembersSection({ workspace, canManage, run }) {
   const [dialog, setDialog] = useState(null);
+  const [rowError, setRowError] = useState({ key: '', message: '' });
+  const [busyKey, setBusyKey] = useState('');
+  const applyRole = async (person, role) => {
+    setBusyKey(person.key); setRowError({ key: '', message: '' });
+    const result = await run((revision) => client.putMember(workspace.id, person.email, role, revision), { success: `${person.name} is now ${role}.` });
+    setBusyKey('');
+    if (!result.ok && result.message) setRowError({ key: person.key, message: result.message });
+    return result;
+  };
+  const chooseRole = (person, role) => {
+    if (role === person.role) return;
+    if (roleChangeNeedsConfirm(person.role, role)) setDialog({ type: 'role', person, role });
+    else applyRole(person, role);
+  };
   const headingId = useId();
   const close = () => setDialog(null);
   const people = [
@@ -34,16 +52,24 @@ export default function MembersSection({ workspace, canManage, run }) {
                 <strong>{person.name}</strong>
                 {person.email && person.email !== person.name && <span className="ws-muted">{person.email}</span>}
                 {person.pending && <span className="ws-muted">Invited. Joins when they sign in with this address.</span>}
+                {rowError.key === person.key && <span className="ws-reason" role="alert">{rowError.message}</span>}
                 {canManage && person.role === 'Owner' && workspace.role !== 'Owner' && <span className="ws-muted">Only the owner can change this.</span>}
               </div>
               <div className="ws-row__side">
-                <RolePill role={person.role} />
-                {editable && (
+                {editable ? (
                   <>
-                    <button type="button" className="design-button secondary ws-small" onClick={() => setDialog({ type: 'role', person })}>Change role<span className="sr-only"> for {person.name}</span></button>
-                    <button type="button" className="design-button secondary ws-small ws-danger-outline" onClick={() => setDialog({ type: 'remove', person })}>{person.pending ? 'Cancel invite' : 'Remove'}<span className="sr-only"> {person.name}</span></button>
+                    <select
+                      className="ws-role-select"
+                      aria-label={`Role for ${person.name}`}
+                      value={person.role}
+                      disabled={busyKey === person.key}
+                      onChange={(event) => chooseRole(person, event.target.value)}
+                    >
+                      {ASSIGNABLE_ROLES.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                    <button type="button" className="ws-link-button ws-link-button--danger" onClick={() => setDialog({ type: 'remove', person })}>{person.pending ? 'Cancel invite' : 'Remove'}<span className="sr-only"> {person.name}</span></button>
                   </>
-                )}
+                ) : <RolePill role={person.role} />}
               </div>
             </li>
           );
@@ -65,14 +91,17 @@ export default function MembersSection({ workspace, canManage, run }) {
       )}
 
       {dialog?.type === 'role' && (
-        <RoleDialog
-          title={`Change role for ${dialog.person.name}`}
-          submitLabel="Save role"
-          initialRole={ASSIGNABLE_ROLES.includes(dialog.person.role) ? dialog.person.role : 'Member'}
-          currentRole={dialog.person.role}
-          onClose={close}
-          onSubmit={({ role }) => run((revision) => client.putMember(workspace.id, dialog.person.email, role, revision), { success: `${dialog.person.name} is now ${role}.` })}
-        />
+        <RemoveDialog
+          title={`Change ${dialog.person.name} to ${dialog.role}?`}
+          confirmLabel={`Change to ${dialog.role}`}
+          busyLabel="Saving…"
+          danger={false}
+          onCancel={close}
+          onConfirm={() => applyRole(dialog.person, dialog.role)}
+          onDone={close}
+        >
+          <p>{RANK[dialog.role] < RANK[dialog.person.role] ? 'They will have less access in every project of this workspace. ' : ''}{ROLE_DESCRIPTIONS[dialog.role]}</p>
+        </RemoveDialog>
       )}
 
       {dialog?.type === 'remove' && (
@@ -98,7 +127,7 @@ function RemoveDialog({ children, onConfirm, onDone, ...props }) {
     const result = await onConfirm();
     if (result.ok) onDone(); else setState({ busy: false, error: result.message });
   };
-  return <ConfirmDialog {...props} danger busy={state.busy} error={state.error} onConfirm={confirm}>{children}</ConfirmDialog>;
+  return <ConfirmDialog {...props} danger={props.danger !== false} busy={state.busy} error={state.error} onConfirm={confirm}>{children}</ConfirmDialog>;
 }
 
 // Invite (e-mail and role) or change a role. Owner is never offered: ownership moves by transfer.

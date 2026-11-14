@@ -197,3 +197,41 @@ test('a failed refresh keeps the last good view and says so', async () => {
   expect(container.textContent).toContain('last version we loaded');
   expect(container.querySelector('h1').textContent).toBe('Rig team');
 });
+
+test('people rows: editable rows get a role select and a quiet Remove; others just show the role', async () => {
+  client.putMember.mockResolvedValue({});
+  await render(base('Owner', { invites: [{ email: 'new@x.io', role: 'Member' }] }));
+  const row = (name) => [...container.querySelectorAll('.ws-row')].find((r) => r.textContent.includes(name));
+  expect(row('Ada').querySelector('select')).toBeNull();
+  expect(row('Ada').textContent).toContain('Owner');
+  const select = row('Bo').querySelector('select[aria-label="Role for Bo"]');
+  expect(select.value).toBe('Member');
+  expect(button('Cancel invite')).toBeTruthy();
+  expect(container.querySelector('select[aria-label="Role for new@x.io"]')).not.toBeNull();
+  // Raising access applies at once.
+  const set = (el, value) => act(async () => { Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(el, value); el.dispatchEvent(new Event('change', { bubbles: true })); });
+  await set(select, 'Member');
+  expect(client.putMember).not.toHaveBeenCalled();
+  const viewerRow = container.querySelector('select[aria-label="Role for new@x.io"]');
+  await set(viewerRow, 'Viewer');
+  // Lowering access asks first.
+  expect(client.putMember).not.toHaveBeenCalled();
+  const dialog = document.querySelector('[role="dialog"]');
+  expect(dialog.textContent).toContain('less access');
+  await click(button('Change to Viewer', dialog));
+  expect(client.putMember).toHaveBeenCalledWith('w1', 'new@x.io', 'Viewer', 5);
+});
+
+test('raising Member to Admin is confirmed because it affects an Admin; Viewer to Member is not', async () => {
+  client.putMember.mockResolvedValue({});
+  await render(base('Owner', { members: [
+    { accountId: '1', displayName: 'Ada', role: 'Owner', email: 'ada@x.io' },
+    { accountId: '2', displayName: 'Bo', role: 'Member', email: 'bo@x.io' },
+    { accountId: '3', displayName: 'Dee', role: 'Viewer', email: 'dee@x.io' },
+  ] }));
+  const set = (el, value) => act(async () => { Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(el, value); el.dispatchEvent(new Event('change', { bubbles: true })); });
+  await set(container.querySelector('select[aria-label="Role for Dee"]'), 'Member');
+  expect(client.putMember).toHaveBeenCalledWith('w1', 'dee@x.io', 'Member', 5);
+  await set(container.querySelector('select[aria-label="Role for Bo"]'), 'Admin');
+  expect(document.querySelector('[role="dialog"]').textContent).toContain('Change Bo to Admin?');
+});
