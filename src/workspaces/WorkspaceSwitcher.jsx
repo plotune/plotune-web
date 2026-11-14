@@ -39,10 +39,11 @@ export default function WorkspaceSwitcher({ onNavigate }) {
       <button
         ref={button}
         type="button"
-        className="flex min-h-[44px] items-center gap-2 rounded-lg font-medium text-base text-dark-text transition-colors duration-300 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="ws-switcher__button flex min-h-[44px] items-center gap-2 rounded-lg font-medium text-base text-dark-text transition-colors duration-300 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((value) => !value)}
+        title={label || undefined}
       >
         <FiUsers aria-hidden="true" className="text-lg" />
         <span className="ws-switcher__label" translate="no">{label || 'Workspaces'}</span>
