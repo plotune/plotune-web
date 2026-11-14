@@ -84,7 +84,7 @@ function WorkspaceList() {
             {items.map((workspace) => (
               <li key={workspace.id}>
                 <Link
-                  className="ws-card ws-card--link"
+                  className="ws-card ws-card--link lx-card"
                   to={`/workspaces/${encodeURIComponent(workspace.id)}`}
                   onClick={() => rememberSelection({ workspaceId: workspace.id, workspaceName: workspace.name })}
                 >
