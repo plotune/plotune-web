@@ -87,6 +87,10 @@ test('header links Bridge externally next to an unchanged Stream link for guests
   // The account menu shows an icon for every product entry, Bridge included.
   expect(userBridge.querySelector('svg')).not.toBeNull();
   expect(user.container.querySelector('a[href="/stream/workspace"]').textContent).toBe('Stream workspace');
+  // RMS has one entry for a signed-in user, beside Stream, and none for a visitor.
+  expect(user.container.querySelectorAll('a[href="/rms"]')).toHaveLength(1);
+  expect(user.container.querySelector('a[href="/rms"]').textContent).toBe('RMS');
+  expect(guest.container.querySelector('a[href="/rms"]')).toBeNull();
 
   act(() => user.root.unmount());
 });

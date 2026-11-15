@@ -85,6 +85,18 @@ test('sign-in return paths accept only workspace pages and the consent request',
   expect(safeWorkspaceNext(null)).toBeNull();
 });
 
+test('sign-in return paths accept the RMS page and one project of it, nothing else under /rms', () => {
+  expect(safeWorkspaceNext('/rms')).toBe('/rms');
+  expect(safeWorkspaceNext('/rms/')).toBe('/rms');
+  expect(safeWorkspaceNext('/rms/3f2a-1b')).toBe('/rms/3f2a-1b');
+  expect(safeWorkspaceNext('/rms/3f2a-1b/9c-77')).toBe('/rms/3f2a-1b/9c-77');
+  expect(safeWorkspaceNext('/rms/a/b/c')).toBeNull();
+  expect(safeWorkspaceNext('/rms/a/b?next=https://evil')).toBeNull();
+  expect(safeWorkspaceNext('/rms/a/../b')).toBeNull();
+  expect(safeWorkspaceNext('/rmsx')).toBeNull();
+  expect(workspaceLogin('/rms/w1/p1', { expired: true })).toBe('/login?expired=1&next=%2Frms%2Fw1%2Fp1');
+});
+
 test('login links keep the consent request and mark an expired session', () => {
   expect(consentLogin('abc.def')).toBe(`/login?next=${encodeURIComponent('/authorize?request=abc.def')}`);
   expect(workspaceLogin('/workspaces/w1', { expired: true })).toBe(`/login?expired=1&next=${encodeURIComponent('/workspaces/w1')}`);

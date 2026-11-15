@@ -28,7 +28,7 @@ const routes = [
   '/solutions/agentic-test-development', '/agentic-test-development',
   '/research', '/research/results', '/research/reports', '/research/methodology',
   '/dashboard', '/workspaces', '/authorize', '/streams', '/streams/connect', '/mirror', '/storage',
-  '/ai-readiness', '/request', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision',
+  '/ai-readiness', '/request', '/stream/demo', '/stream/workspace', '/stream/prototypes/vision', '/rms',
 ];
 
 // One route per published research article, read straight from each .mdx file's own
