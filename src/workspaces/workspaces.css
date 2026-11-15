@@ -157,3 +157,12 @@
   .ws-empty--large { padding: 28px 20px; }
 }
 @media (prefers-reduced-motion: reduce) { .ws-loading__bar { animation: none; } }
+
+/* With RMS beside Stream in the signed-in nav, a long workspace name no longer fits between 1280 px (where the
+   full nav first shows) and 1535 px (where the container widens): entries stay on one line, gaps tighten
+   and the name is shortened. */
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .site-header nav a, .site-header .ws-switcher__button { white-space: nowrap; }
+  .site-header nav > ul { column-gap: 12px; }
+  .site-header .ws-switcher__label { max-width: 100px; }
+}

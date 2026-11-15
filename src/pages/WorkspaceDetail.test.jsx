@@ -236,13 +236,17 @@ test('raising Member to Admin is confirmed because it affects an Admin; Viewer t
   expect(document.querySelector('[role="dialog"]').textContent).toContain('Change Bo to Admin?');
 });
 
-test('an enabled service has one Open entry; viewers get it too, and RMS has none until its page exists', async () => {
-  await render(base('Viewer', { projects: [{ id: 'p1', name: 'Bench', revision: 1, services: ['stream', 'rms'] }, { id: 'p2', name: 'Off', revision: 1, services: [] }] }));
+test('an enabled service has one Open entry; viewers get it too; Stream and RMS sit together on a project that has both', async () => {
+  await render(base('Viewer', { projects: [{ id: 'p1', name: 'Bench', revision: 1, services: ['stream', 'rms'] }, { id: 'p2', name: 'Off', revision: 1, services: [] }, { id: 'p3', name: 'Reqs', revision: 1, services: ['rms'] }] }));
   const buttons = [...container.querySelectorAll('button')].filter((b) => b.textContent.startsWith('Details'));
   await click(buttons[0]);
-  const links = [...container.querySelectorAll('a')].filter((a) => a.textContent.startsWith('Open in'));
-  expect(links).toHaveLength(1);
-  expect(links[0].getAttribute('href')).toBe('/stream/workspace?workspace=w1&project=p1');
+  const links = () => [...container.querySelectorAll('a')].filter((a) => a.textContent.startsWith('Open in'));
+  expect(links().map((a) => [a.textContent.replace(/ for .*/, ''), a.getAttribute('href')])).toEqual([
+    ['Open in Stream', '/stream/workspace?workspace=w1&project=p1'],
+    ['Open in RMS', '/rms/w1/p1'],
+  ]);
   await click(buttons[1]);
-  expect([...container.querySelectorAll('a')].filter((a) => a.textContent.startsWith('Open in'))).toHaveLength(0);
+  expect(links()).toHaveLength(0);
+  await click(buttons[2]);
+  expect(links().map((a) => a.getAttribute('href'))).toEqual(['/rms/w1/p3']);
 });

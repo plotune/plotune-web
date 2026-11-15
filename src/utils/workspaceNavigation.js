@@ -1,11 +1,13 @@
 // Sign-in return paths for the workspace pages. Login accepts only these same-site routes in
 // `next`; the consent request keeps only its opaque signed blob.
 const WORKSPACE_PATH = /^\/workspaces(?:\/[A-Za-z0-9-]{1,64})?\/?$/;
+// RMS opens one project: /rms, or /rms/<workspace>/<project>.
+const RMS_PATH = /^\/rms(?:\/[A-Za-z0-9-]{1,64}(?:\/[A-Za-z0-9-]{1,64})?)?\/?$/;
 const REQUEST_BLOB = /^[A-Za-z0-9_.~%+=-]{1,4096}$/;
 
 export function safeWorkspaceNext(value) {
   if (typeof value !== 'string' || value.length > 4200) return null;
-  if (WORKSPACE_PATH.test(value)) return value.replace(/\/$/, '') || '/workspaces';
+  if (WORKSPACE_PATH.test(value) || RMS_PATH.test(value)) return value.replace(/\/$/, '') || '/workspaces';
   const match = /^\/authorize\?request=([^&#]*)$/.exec(value);
   if (!match || !REQUEST_BLOB.test(match[1])) return null;
   let request;

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShoppingBag, FiBookOpen, FiChevronDown, FiLink } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiUser, FiGrid, FiActivity, FiShoppingBag, FiBookOpen, FiChevronDown, FiLink, FiCheckSquare } from 'react-icons/fi';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
 import WorkspaceSwitcher from '../workspaces/WorkspaceSwitcher';
@@ -9,7 +9,7 @@ import WorkspaceSwitcher from '../workspaces/WorkspaceSwitcher';
 // load, and when it fails (slow network, ad blocker, offline) the ligature falls back to its
 // literal name as visible text (e.g. a login link showing "account_circle").
 const navIconMap = {
-  person: FiUser, dashboard: FiGrid, stream: FiActivity, bridge: FiLink, store: FiShoppingBag, science: FiBookOpen,
+  person: FiUser, dashboard: FiGrid, stream: FiActivity, bridge: FiLink, store: FiShoppingBag, science: FiBookOpen, rms: FiCheckSquare,
 };
 const NavIcon = ({ name, className }) => {
   const Icon = navIconMap[name];
@@ -101,6 +101,7 @@ const Header = () => {
     // The workspace switcher is the one entry point to workspaces (list, settings, switching).
     { to: '/workspaces', label: 'Workspaces', switcher: true },
     { to: '/stream/workspace', label: 'Stream workspace', icon: 'stream' },
+    { to: '/rms', label: 'RMS', icon: 'rms', keepBrandName: true },
     { to: 'https://bridge.plotune.net', label: 'Bridge', icon: 'bridge', keepBrandName: true, isExternal: true },
     // Mirror and Storage are unavailable; keep them out of navigation.
 

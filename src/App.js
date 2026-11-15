@@ -73,6 +73,7 @@ const Stream = routePage(() => import('./pages/Stream'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
 const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
 const LiveStreamWorkspace = routePage(() => import('./Stream/workspace/StreamWorkspace'));
+const RmsWorkspace = routePage(() => import('./rms/RmsWorkspace'));
 const DnsPage = routePage(() => import('./pages/DnsPage'));
 const Partnership = routePage(() => import('./pages/Partnership'));
 const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));
@@ -131,8 +132,12 @@ const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
   useLayoutEffect(() => {
+    // '#/...' is an app's own hash route (the RMS workspace keeps its view there), not an element id:
+    // it is not a selector, and moving the page for it would fight the app.
+    if (hash.startsWith('#/')) return;
     if (hash) {
-      const element = document.querySelector(hash);
+      let element = null;
+      try { element = document.querySelector(hash); } catch { /* not a valid selector */ }
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
         return;
@@ -156,6 +161,8 @@ const NavigationWrapper = ({ children }) => {
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
   const shouldHide = hideLayoutPaths.includes(normalizedPath);
+  // RMS is a full-height app under the site header; the footer would sit below its own scroll area.
+  const hideFooter = shouldHide || normalizedPath === '/rms' || normalizedPath.startsWith('/rms/');
 
   if (location.pathname.startsWith('/research')) {
     return <ResearchLayout>{children}</ResearchLayout>;
@@ -165,7 +172,7 @@ const NavigationWrapper = ({ children }) => {
     <>
       {!shouldHide && <Header />}
       {children}
-      {!shouldHide && <Footer />}
+      {!hideFooter && <Footer />}
     </>
   );
 };
@@ -181,6 +188,7 @@ const SiteFrame = ({ children }) => {
   }, [pathname]);
   const kind = /^\/(login|register|reset-password|verify-email)/.test(pathname) ? 'auth'
     : /^\/(dashboard|profile|storage|mirror|dns|streams|partner-portal|workspaces|authorize)/.test(pathname) ? 'account'
+    : /^\/rms(\/|$)/.test(pathname) ? 'app'
     : pathname.startsWith('/docs') ? 'docs' : 'public';
   return <div className={`app site-${kind}`}>{children}</div>;
 };
@@ -231,6 +239,7 @@ function App() {
               <Route path="/stream/demo" element={<StreamDemo />} />
               <Route path="/stream/workspace" element={<LiveStreamWorkspace />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
+              <Route path="/rms/:workspaceId?/:projectId?" element={<RmsWorkspace />} />
               <Route path="/dns" element={<Main><DnsPage /></Main>} />
               <Route path="/partners" element={<Partnership />} />
               <Route path="/partner-portal" element={<Main><PartnerPortal /></Main>} />
@@ -299,6 +308,7 @@ const initialRoutes = [
   [/^\/stream\/demo\/?$/, StreamDemo],
   [/^\/stream\/workspace\/?$/, LiveStreamWorkspace],
   [/^\/stream\/prototypes\/vision\/?$/, StreamWorkspace],
+  [/^\/rms(?:\/[^\/]+){0,2}\/?$/, RmsWorkspace],
   [/^\/dns\/?$/, DnsPage],
   [/^\/partners\/?$/, Partnership],
   [/^\/partner-portal\/?$/, PartnerPortal],
