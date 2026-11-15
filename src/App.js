@@ -160,9 +160,8 @@ const NavigationWrapper = ({ children }) => {
   // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
-  const shouldHide = hideLayoutPaths.includes(normalizedPath);
-  // RMS is a full-height app under the site header; the footer would sit below its own scroll area.
-  const hideFooter = shouldHide || normalizedPath === '/rms' || normalizedPath.startsWith('/rms/');
+  // Like the Stream workspace, RMS is a full-screen app with its own chrome: no site header or footer.
+  const shouldHide = hideLayoutPaths.includes(normalizedPath) || normalizedPath === '/rms' || normalizedPath.startsWith('/rms/');
 
   if (location.pathname.startsWith('/research')) {
     return <ResearchLayout>{children}</ResearchLayout>;
@@ -172,7 +171,7 @@ const NavigationWrapper = ({ children }) => {
     <>
       {!shouldHide && <Header />}
       {children}
-      {!hideFooter && <Footer />}
+      {!shouldHide && <Footer />}
     </>
   );
 };

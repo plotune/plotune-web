@@ -1,30 +1,16 @@
-/* The RMS page: the site header stays, a project bar sits under it, and the RMS app fills the rest.
-   The vendored app is scoped to its mount point and fills the height of its container, so this only
-   sizes that container under the fixed 80 px site header and the project bar. */
-.rms-page { --rms-header: 80px; height: 100dvh; box-sizing: border-box; display: flex; flex-direction: column; padding-top: var(--rms-header); background: var(--paper, #fbfbfc); color: var(--ink, #16171b); }
-
-.rms-bar { flex: none; display: flex; align-items: flex-end; gap: 16px; box-sizing: border-box; padding: 14px 20px 12px; border-bottom: 1px solid var(--line, #e5e7eb); background: var(--paper, #fbfbfc); }
-.rms-bar label { display: grid; gap: 4px; min-width: 0; flex: 0 1 280px; }
-.rms-bar label span { font: 600 11px/14px var(--font-sans, inherit); letter-spacing: .6px; text-transform: uppercase; color: #5d626c; }
-.rms-bar select { width: 100%; min-width: 0; height: 36px; box-sizing: border-box; padding: 4px 28px 4px 10px; border: 1px solid var(--line-strong, #d4d7de); border-radius: 8px; background-color: #fff; font: 500 14px var(--font-sans, inherit); color: var(--ink, #16171b); text-overflow: ellipsis; }
-.rms-bar__link { margin-left: auto; align-self: center; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: var(--accent, #3d5a80); font: 600 13px var(--font-sans, inherit); text-decoration: none; }
-.rms-bar__link:hover { text-decoration: underline; text-underline-offset: 4px; }
-
-.rms-state { flex: 1; min-height: 0; overflow: auto; display: grid; place-items: center; padding: 24px 16px; }
-.rms-state__card { width: min(460px, 100%); display: grid; gap: 12px; padding: 28px; border: 1px solid var(--line, #e5e7eb); border-radius: 14px; background: #fff; }
-.rms-state__card[data-busy] { border-color: transparent; background: transparent; text-align: center; }
-.rms-state h1 { margin: 0; font: 500 22px/1.25 var(--font-sans, inherit); letter-spacing: -.02em; }
-.rms-state p { margin: 0; color: #444a53; font-size: 15px; line-height: 1.6; }
-.rms-state__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
-.rms-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--accent, #3d5a80); border-radius: 8px; background: var(--accent, #3d5a80); color: #fff; font: 600 14px var(--font-sans, inherit); text-decoration: none; cursor: pointer; }
-.rms-button:hover { background: #34506f; text-decoration: none; }
-
-.rms-host[hidden] { display: none; }
+/* The RMS page is full screen like the Stream workspace: no site header, footer or bar. The vendored app
+   (scoped to .rms-mount, with its own sidebar and project switcher) fills the viewport; loading, empty and
+   error states are full-screen too, in RMS's look. */
+.rms-page { height: 100dvh; display: flex; flex-direction: column; background: #fbfbfc; color: #16171b; font-family: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; }
 .rms-host { flex: 1; min-height: 0; }
+.rms-host[hidden] { display: none; }
 
-/* Phone: the two selects stack at full width (no truncated names). */
-@media (max-width: 760px) {
-  .rms-bar { flex-direction: column; align-items: stretch; gap: 10px; padding-inline: 16px; }
-  .rms-bar label { flex: none; }
-  .rms-bar__link { display: none; }
-}
+.rms-state { flex: 1; min-height: 0; overflow: auto; display: grid; place-items: center; padding: 24px 16px; background: radial-gradient(circle at 20% 10%, #eef2f8, transparent 50%), #fbfbfc; }
+.rms-state__card { width: min(420px, 100%); display: grid; gap: 12px; padding: 32px; border: 1px solid #e5e7eb; border-radius: 16px; background: #fff; box-shadow: 0 1px 2px #16171b0a, 0 4px 16px #16171b0f; }
+.rms-state__card[data-busy] { border-color: transparent; background: transparent; box-shadow: none; text-align: center; }
+.rms-state h1 { margin: 0; font-size: 22px; font-weight: 650; line-height: 1.25; letter-spacing: -.3px; }
+.rms-state p { margin: 0; color: #444a53; font-size: 14px; line-height: 1.6; }
+.rms-state__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.rms-button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 18px; border: 1px solid #3d5a80; border-radius: 8px; background: #3d5a80; color: #fff; font: 520 14px 'Inter Variable', Inter, system-ui, sans-serif; text-decoration: none; cursor: pointer; }
+.rms-button:hover { background: #34506f; }
+.rms-button:focus-visible { outline: 2px solid #3d5a80; outline-offset: 2px; }

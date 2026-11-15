@@ -6,7 +6,7 @@ jest.mock('./rms/RmsWorkspace', () => ({ __esModule: true, default: () => <main 
 
 import App from './App';
 
-// The RMS route is an app under the site header: the footer is left out, and a '#/...' hash (the RMS
+// The RMS route is a full-screen app like the Stream workspace: no site header or footer, and a '#/...' hash (the RMS
 // app's own route) must not be read as a CSS selector by the scroll handling.
 describe('App routing: /rms', () => {
   let container;
@@ -19,16 +19,17 @@ describe('App routing: /rms', () => {
     await act(async () => { root.render(<App />); });
   };
 
-  test.each(['/rms', '/rms/w1/p1', '/rms/w1/p1/'])('%s renders the RMS page under the site header, without the site footer', async (path) => {
+  test.each(['/rms', '/rms/w1/p1', '/rms/w1/p1/'])('%s renders the RMS page full screen, without the site header or footer', async (path) => {
     await renderAt(path);
     expect(container.querySelector('[data-testid="rms-page"]')).not.toBeNull();
-    expect(container.querySelector('header')).not.toBeNull();
+    expect(container.querySelector('header')).toBeNull();
     expect(container.querySelector('footer')).toBeNull();
     expect(container.querySelector('.app.site-app')).not.toBeNull();
   });
 
   test('another page keeps its footer', async () => {
     await renderAt('/nexus');
+    expect(container.querySelector('header')).not.toBeNull();
     expect(container.querySelector('footer')).not.toBeNull();
   });
 

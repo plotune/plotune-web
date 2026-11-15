@@ -45,8 +45,7 @@ const render = async (entry, auth = { token: 't', isLoading: false }) => {
   await flush();
 };
 const where = () => container.querySelector('[data-testid="where"]').textContent;
-const select = (label) => [...container.querySelectorAll('.rms-bar label')].find((l) => l.textContent.startsWith(label))?.querySelector('select');
-const choose = (el, value) => act(async () => { Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(el, value); el.dispatchEvent(new Event('change', { bubbles: true })); });
+const pick = (workspaceId, projectId) => act(async () => { mountedOptions().switcher.onSelect(workspaceId, projectId); });
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -85,26 +84,30 @@ test('a project link mounts the RMS module with the API base, the project and a 
   expect(container.querySelector('.rms-mount').textContent).toBe('RMS app');
 });
 
-test('the picker offers only the RMS-enabled projects and workspaces, and switching changes the route', async () => {
+test('the switcher given to the app lists only RMS-enabled projects, grouped by workspace, and selecting one changes the route', async () => {
   await render('/rms/w1/p1');
-  expect([...select('Project').options].map((o) => o.textContent)).toEqual(['Brake ECU', 'Parking brake']);
-  expect([...select('Workspace').options].map((o) => o.textContent)).toEqual(['Rig team', 'Lab']);
-  expect(select('Project').value).toBe('p1');
-  await choose(select('Project'), 'p3');
-  expect(where()).toBe('/rms/w1/p3');
+  const { switcher } = mountedOptions();
+  expect(switcher.groups).toEqual([
+    { workspaceId: 'w1', workspaceName: 'Rig team', projects: [{ id: 'p1', name: 'Brake ECU' }, { id: 'p3', name: 'Parking brake' }] },
+    { workspaceId: 'w2', workspaceName: 'Lab', projects: [{ id: 'p9', name: 'Bench' }] },
+  ]);
+  expect([switcher.workspaceId, switcher.projectId, switcher.manageHref]).toEqual(['w1', 'p1', '/workspaces/w1']);
+  await pick('w1', 'p3');
   await flush();
+  expect(where()).toBe('/rms/w1/p3');
   expect(mountedOptions().projectId).toBe('p3');
-  await choose(select('Workspace'), 'w2');
+  await pick('w2', 'p9');
   await flush();
   expect(where()).toBe('/rms/w2/p9');
-  expect(mountedOptions().projectId).toBe('p9');
+  expect(mountedOptions().switcher.manageHref).toBe('/workspaces/w2');
+  expect(container.querySelector('header, .rms-bar')).toBeNull();
 });
 
 test('the module is unmounted when the project changes and when the route is left', async () => {
   jest.useFakeTimers();
   await render('/rms/w1/p1');
   const first = mounts[0];
-  await choose(select('Project'), 'p3');
+  await pick('w1', 'p3');
   await flush();
   act(() => jest.runOnlyPendingTimers());
   expect(first.unmount).toHaveBeenCalledTimes(1);
@@ -123,7 +126,7 @@ test('/rms opens the first RMS project; a remembered one wins', async () => {
   expect(mountedOptions().projectId).toBe('p1');
   act(() => root.unmount()); container.remove();
   resetWorkspaceStore();
-  window.localStorage.setItem('plotune-workspace-selection:v1', JSON.stringify({ workspaceId: 'w1', workspaceName: 'Rig team', projectId: 'p3' }));
+  window.localStorage.setItem('plotune-rms-last:v1', JSON.stringify({ workspaceId: 'w1', projectId: 'p3' }));
   container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container);
   await render('/rms');
   expect(where()).toBe('/rms/w1/p3');
@@ -167,7 +170,7 @@ test('a workspace whose list entry says RMS but whose projects have none shows t
   client.listWorkspaces.mockResolvedValue([W1]);
   await render('/rms');
   expect(container.querySelector('h1').textContent).toBe('No project has RMS enabled');
-  expect(container.querySelector('main a').getAttribute('href')).toBe('/workspaces/w1');
+  expect(container.querySelector('main a').getAttribute('href')).toBe('/workspaces');
 });
 
 test('a project without RMS in the link is explained and nothing is mounted', async () => {
@@ -175,7 +178,7 @@ test('a project without RMS in the link is explained and nothing is mounted', as
   expect(container.querySelector('h1').textContent).toBe('Project unavailable');
   expect(loadRmsEmbed).not.toHaveBeenCalled();
   expect(client.requestClaim).not.toHaveBeenCalled();
-  expect(select('Project').value).toBe('');
+  expect(container.querySelector('main a').getAttribute('href')).toBe('/rms/w1/p1');
 });
 
 describe('failures', () => {

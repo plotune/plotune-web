@@ -4,13 +4,11 @@ import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-route
 import { AuthContext } from '../context/AuthContext';
 import workspaceClient from '../workspaces/client';
 import { createClaimManager } from '../workspaces/claims';
-import { useSessionExpiry, useWorkspaceDetail, useWorkspaceList } from '../workspaces/hooks';
-import { readSelection, rememberSelection } from '../workspaces/store';
+import { useSessionExpiry, useWorkspaceList } from '../workspaces/hooks';
 import { serviceIds } from '../workspaces/services';
 import { failureMessage } from '../workspaces/errors';
 import { workspaceLogin } from '../utils/workspaceNavigation';
 import { EmbedLoadError, loadRmsEmbed, RMS_API_BASE } from './embed';
-import '../workspaces/workspaces.css'; // the header's workspace switcher label limits live here
 import './rms.css';
 
 const SERVICE = 'rms';
@@ -68,88 +66,81 @@ export default function RmsPage() {
   );
 }
 
+// The last project opened, kept as a convenience only (it is checked against the projects the account can use).
+const LAST_KEY = 'plotune-rms-last:v1';
+const readLast = () => { try { return JSON.parse(window.localStorage.getItem(LAST_KEY)) || null; } catch { return null; } };
+const writeLast = (value) => { try { window.localStorage.setItem(LAST_KEY, JSON.stringify(value)); } catch { /* optional */ } };
+
+// The RMS-enabled projects of every workspace that has any, grouped by workspace.
+function useRmsGroups(workspaces) {
+  const [state, setState] = useState({ key: '', status: 'idle', groups: [], failure: null });
+  const key = workspaces.map((item) => item.id).join('|');
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    if (!workspaces.length) { setState({ key, status: 'ready', groups: [], failure: null }); return undefined; }
+    let live = true;
+    setState({ key, status: 'loading', groups: [], failure: null });
+    Promise.all(workspaces.map((item) => workspaceClient.getWorkspace(item.id)))
+      .then((details) => {
+        if (!live) return;
+        const groups = details
+          .map((detail) => ({
+            workspaceId: detail.id,
+            workspaceName: detail.name,
+            projects: detail.projects.filter((project) => project.services.includes(SERVICE)).map(({ id, name }) => ({ id, name })),
+          }))
+          .filter((group) => group.projects.length > 0);
+        setState({ key, status: 'ready', groups, failure: null });
+      })
+      .catch((failure) => { if (live) setState({ key, status: 'error', groups: [], failure }); });
+    return () => { live = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, attempt]);
+  const stale = state.key !== key;
+  return { status: stale ? 'loading' : state.status, groups: stale ? [] : state.groups, failure: stale ? null : state.failure, reload: () => setAttempt((n) => n + 1) };
+}
+
 function Workspace() {
   const { workspaceId: wantedWorkspace = '', projectId: wantedProject = '' } = useParams();
   const navigate = useNavigate();
   const expire = useSessionExpiry();
   const list = useWorkspaceList();
-
   const rmsWorkspaces = useMemo(() => list.items.filter((item) => serviceIds(item.services).includes(SERVICE)), [list.items]);
-  const workspaceId = (
-    list.items.find((item) => item.id === wantedWorkspace)
-    || rmsWorkspaces.find((item) => item.id === readSelection()?.workspaceId)
-    || rmsWorkspaces[0]
-  )?.id || '';
-  const detail = useWorkspaceDetail(workspaceId);
-  // The detail hook keeps the previous workspace's data for one render after the id changes.
-  const current = detail.workspace?.id === workspaceId ? detail.workspace : null;
-  const projects = useMemo(
-    () => (current?.projects || []).filter((project) => project.services.includes(SERVICE)),
-    [current],
-  );
-  const project = workspaceId === wantedWorkspace ? projects.find((item) => item.id === wantedProject) : null;
-  const loading = list.status === 'idle' || list.status === 'loading' || (Boolean(workspaceId) && !current && detail.status !== 'error');
+  const { status, groups, failure, reload } = useRmsGroups(list.status === 'ready' ? rmsWorkspaces : []);
+  const loading = list.status === 'idle' || list.status === 'loading' || (list.status === 'ready' && status !== 'ready' && status !== 'error');
 
+  useEffect(() => { expire(list.failure); expire(failure); }, [list.failure, failure, expire]);
+
+  const find = (workspaceId, projectId) => {
+    const group = groups.find((item) => item.workspaceId === workspaceId);
+    const project = group?.projects.find((item) => item.id === projectId);
+    return project ? { group, project } : null;
+  };
+  const chosen = find(wantedWorkspace, wantedProject);
+  // /rms (or a link that no longer fits) opens the project used last, else the first one.
+  const last = readLast();
+  const fallback = find(last?.workspaceId, last?.projectId) || (groups[0] && { group: groups[0], project: groups[0].projects[0] });
   useEffect(() => {
-    if (expire(list.failure) || expire(detail.failure)) return;
-  }, [list.failure, detail.failure, expire]);
+    if (!loading && !chosen && fallback && !wantedProject) navigate(rmsPath(fallback.group.workspaceId, fallback.project.id), { replace: true });
+  }, [loading, chosen, fallback, wantedProject, navigate]);
+  useEffect(() => { if (chosen) writeLast({ workspaceId: chosen.group.workspaceId, projectId: chosen.project.id }); }, [chosen]);
 
-  // /rms and /rms/<workspace> choose a project for you: the one you used last, else the first.
-  const remembered = readSelection();
-  const fallbackProject = (remembered?.workspaceId === workspaceId && projects.find((item) => item.id === remembered.projectId)) || projects[0];
-  const choosing = !wantedProject || (wantedWorkspace !== workspaceId && !project);
-  useEffect(() => {
-    if (!loading && choosing && workspaceId && fallbackProject) navigate(rmsPath(workspaceId, fallbackProject.id), { replace: true });
-  }, [loading, choosing, workspaceId, fallbackProject, navigate]);
-  useEffect(() => {
-    if (project && current) rememberSelection({ workspaceId, workspaceName: current.name, projectId: project.id });
-  }, [project, current, workspaceId]);
-
-  const settingsLink = workspaceId ? `/workspaces/${encodeURIComponent(workspaceId)}` : '/workspaces';
-  const picker = !loading && workspaceId && projects.length > 0 && (
-    <nav className="rms-bar" aria-label="RMS project">
-      {rmsWorkspaces.length > 1 && (
-        <label>
-          <span>Workspace</span>
-          <select
-            value={workspaceId}
-            title={list.items.find((item) => item.id === workspaceId)?.name}
-            onChange={(event) => navigate(`/rms/${encodeURIComponent(event.target.value)}`)}
-          >
-            {rmsWorkspaces.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-          </select>
-        </label>
-      )}
-      <label>
-        <span>Project</span>
-        <select
-          value={project?.id || ''}
-          title={project?.name}
-          onChange={(event) => navigate(rmsPath(workspaceId, event.target.value))}
-        >
-          {!project && <option value="" disabled>Select a project</option>}
-          {projects.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-        </select>
-      </label>
-      <Link className="rms-bar__link" to={settingsLink}>Manage in workspace</Link>
-    </nav>
-  );
-
+  const settingsLink = chosen ? `/workspaces/${encodeURIComponent(chosen.group.workspaceId)}` : (fallback ? `/workspaces/${encodeURIComponent(fallback.group.workspaceId)}` : '/workspaces');
   let body;
   if (loading) {
     body = <State busy>Loading your projects…</State>;
-  } else if (list.status === 'error' || (detail.status === 'error' && !current)) {
-    const failure = list.status === 'error' ? list.failure : detail.failure;
-    body = failure?.status === 401 ? <State busy>Your session ended. Taking you to sign in…</State> : (
+  } else if (list.status === 'error' || status === 'error') {
+    const cause = list.status === 'error' ? list.failure : failure;
+    body = cause?.status === 401 ? <State busy>Your session ended. Taking you to sign in…</State> : (
       <State
         title="We could not load your projects"
         alert
-        actions={<button type="button" className="rms-button" onClick={() => (list.status === 'error' ? list.reload() : detail.reload())}>Try again</button>}
+        actions={<button type="button" className="rms-button" onClick={() => (list.status === 'error' ? list.reload() : reload())}>Try again</button>}
       >
-        {failureMessage(failure)}
+        {failureMessage(cause)}
       </State>
     );
-  } else if (!workspaceId || projects.length === 0) {
+  } else if (groups.length === 0) {
     body = (
       <State
         title="No project has RMS enabled"
@@ -158,21 +149,36 @@ function Workspace() {
         Enable it in workspace settings.
       </State>
     );
-  } else if (!project) {
-    body = choosing ? <State busy>Opening RMS…</State> : (
-      <State title="Project unavailable" actions={<Link className="rms-button" to={settingsLink}>Open workspace settings</Link>}>
-        This project does not have RMS turned on, or you no longer have access. Choose another project above.
+  } else if (!chosen) {
+    body = wantedProject ? (
+      <State title="Project unavailable" actions={<Link className="rms-button" to={rmsPath(fallback.group.workspaceId, fallback.project.id)}>Open {fallback.project.name}</Link>}>
+        This project does not have RMS turned on, or you no longer have access.
       </State>
-    );
+    ) : <State busy>Opening RMS…</State>;
   } else {
-    body = <RmsEmbed key={`${workspaceId}|${project.id}`} workspaceId={workspaceId} projectId={project.id} onExpired={() => expire({ status: 401 })} />;
+    const switcher = {
+      groups,
+      workspaceId: chosen.group.workspaceId,
+      projectId: chosen.project.id,
+      manageHref: settingsLink,
+      onSelect: (workspaceId, projectId) => navigate(rmsPath(workspaceId, projectId)),
+    };
+    body = (
+      <RmsEmbed
+        key={`${chosen.group.workspaceId}|${chosen.project.id}`}
+        workspaceId={chosen.group.workspaceId}
+        projectId={chosen.project.id}
+        switcher={switcher}
+        settingsLink={settingsLink}
+        onExpired={() => expire({ status: 401 })}
+      />
+    );
   }
-
-  return <div className="rms-page">{picker}{body}</div>;
+  return <div className="rms-page">{body}</div>;
 }
 
 // Mounts the RMS module for one project and unmounts it when the project or the page changes.
-function RmsEmbed({ workspaceId, projectId, onExpired }) {
+function RmsEmbed({ workspaceId, projectId, switcher, settingsLink, onExpired }) {
   const host = useRef(null);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState({ phase: 'loading', failure: null });
@@ -216,6 +222,7 @@ function RmsEmbed({ workspaceId, projectId, onExpired }) {
           apiBase: RMS_API_BASE,
           projectId,
           getClaim,
+          switcher,
           // A claim 401 that persists after one refresh: the account session ended.
           onSessionEnd: () => { if (!cancelled) expired.current(); },
           onError: (failure) => fail(failure),
@@ -236,6 +243,8 @@ function RmsEmbed({ workspaceId, projectId, onExpired }) {
         node?.remove();
       }, 0);
     };
+    // The switcher is read once per mounted project (the page remounts on a project change).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceId, projectId, attempt, claims]);
 
   const retry = useCallback(() => { claims.clear(); setAttempt((value) => value + 1); }, [claims]);
@@ -250,7 +259,7 @@ function RmsEmbed({ workspaceId, projectId, onExpired }) {
           actions={(
             <>
               {problem.retry && <button type="button" className="rms-button" onClick={retry}>Try again</button>}
-              {!problem.retry && <Link className="rms-button" to={`/workspaces/${encodeURIComponent(workspaceId)}`}>Open workspace settings</Link>}
+              {!problem.retry && <Link className="rms-button" to={settingsLink}>Open workspace settings</Link>}
             </>
           )}
         >
