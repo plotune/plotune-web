@@ -7,6 +7,11 @@
 // It replaces public/rms-app/ with the built files (content-hashed ES module and stylesheet, logo, font and its
 // licence), writes the manifest as a plain manifest.json (the build's own .vite/ directory is a dot-directory that
 // GitHub Pages and gh-pages leave out), and records the plotune-cloud commit in VERSION. Nothing is fetched or run.
+//
+// One change is made to the stylesheet: the RMS build styles bare elements and :root/body (button, a, h1, ...),
+// which would restyle the site header while RMS is open. Every selector is prefixed with .rms-mount (the element
+// the RMS page mounts into), and :root/html/body rules apply to that element instead. Nothing else is edited.
+const postcss = require('postcss');
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
@@ -31,6 +36,26 @@ if (!commit) {
 }
 if (!/^[0-9a-f]{40}$/.test(commit || '')) fail('could not read the plotune-cloud commit; pass --commit=<40-character sha>.');
 
+const SCOPE = '.rms-mount';
+const scopeSelector = (selector) => {
+  const sel = selector.trim();
+  if (sel === '*') return [SCOPE, `${SCOPE} *`];
+  const root = /^(?::root|html|body)(?![\w-])/.exec(sel);
+  return [root ? `${SCOPE}${sel.slice(root[0].length)}` : `${SCOPE} ${sel}`];
+};
+function scopeStylesheet(css) {
+  const tree = postcss.parse(css);
+  const visit = (container) => container.each((node) => {
+    if (node.type === 'rule' && !(node.parent.type === 'atrule' && /keyframes$/i.test(node.parent.name))) {
+      node.selectors = node.selectors.flatMap(scopeSelector);
+    } else if (node.type === 'atrule' && /^(media|supports|container|layer)$/i.test(node.name)) {
+      visit(node);
+    }
+  });
+  visit(tree);
+  return tree.toString();
+}
+
 const target = path.join(__dirname, '..', 'public', 'rms-app');
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(path.join(target, 'assets'), { recursive: true });
@@ -39,7 +64,8 @@ const copy = (relative) => {
   const file = path.join(from, relative);
   if (!fs.existsSync(file)) fail(`${relative} is missing from ${from}.`);
   fs.mkdirSync(path.dirname(path.join(target, relative)), { recursive: true });
-  fs.copyFileSync(file, path.join(target, relative));
+  if (relative === style) fs.writeFileSync(path.join(target, relative), scopeStylesheet(fs.readFileSync(file, 'utf8')));
+  else fs.copyFileSync(file, path.join(target, relative));
 };
 // The module, its stylesheet, then whatever else sits beside them (logo, font, font licence); dot-files and maps stay out.
 const walk = (dir, base = '') => fs.readdirSync(dir, { withFileTypes: true }).flatMap((item) => {
