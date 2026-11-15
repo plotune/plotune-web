@@ -57,7 +57,10 @@ export default function Dashboard() {
               Choose a product to get started.
             </p>
           </div>
-          <Link to="/profile" className="inline-flex min-h-[44px] items-center rounded-sm border border-ink/20 px-5 text-sm font-medium text-light-text hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">Manage account</Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/workspaces" className="inline-flex min-h-[44px] items-center rounded-sm border border-ink/20 px-5 text-sm font-medium text-light-text hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">Workspaces</Link>
+            <Link to="/profile" className="inline-flex min-h-[44px] items-center rounded-sm border border-ink/20 px-5 text-sm font-medium text-light-text hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">Manage account</Link>
+          </div>
         </header>
         <section aria-label="Products and tools" className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {destinations.map(({ title, description, action, to, external, Icon }) => {

@@ -394,3 +394,5 @@
   .live-workspace .dh-issues .sw-button { order: 3; }
   .live-workspace .dh-detail dl { grid-template-columns: 1fr; }
 }
+
+.sw-project-select small.st-full-name { display: block; margin: 0 0 8px 5px; font-size: 12px; line-height: 1.4; color: #4a4f59; overflow-wrap: anywhere; }

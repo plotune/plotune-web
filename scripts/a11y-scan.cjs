@@ -25,7 +25,7 @@ const args = Object.fromEntries(process.argv.slice(2).map((a) => { const [k, v] 
 // tutorials) are left out on purpose.
 const EXTRA = ['/login', '/register', '/reset-password', '/verify-email', '/legal', '/privacy', '/careers', '/partners',
   '/partners/apply', '/dns', '/dashboard', '/profile', '/partner-portal', '/embed', '/ai-readiness', '/stream/demo',
-  '/stream/workspace', '/stream/authorize', '/stream/prototypes/vision', '/bridge/authorize', '/research/methodology',
+  '/stream/workspace', '/rms', '/workspaces', '/authorize', '/stream/prototypes/vision', '/bridge/authorize', '/research/methodology',
   '/research/reports', '/research/results', '/docs/nexus', '/nexus/use-cases', '/nexus/connectivity', '/contact'];
 const SKIP = new Set(['/blog', '/community', '/tutorials']);
 

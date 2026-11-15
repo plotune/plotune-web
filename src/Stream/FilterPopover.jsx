@@ -1,4 +1,5 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
+import { ReadOnlyContext } from "./workspace/access";
 import { FiChevronDown, FiPlus, FiX } from "react-icons/fi";
 import { discoverPropertyPaths, PROPERTY_OPERATORS, searchPropertyPaths, UNIVERSAL_OPERATORS } from "./filterModel";
 
@@ -21,6 +22,7 @@ function describe(condition) {
 export default function FilterPopover({
   events, discoveredProperties, filters, activeFilterId, conditions, onApply, onSave, onRename, onDelete, referenceCount,
 }) {
+  const readOnly = useContext(ReadOnlyContext);
   const [failure, setFailure] = useState("");
   const [busy, setBusy] = useState(false);
   const perform = async (operation) => { setBusy(true); setFailure(""); try { await operation(); return true; } catch (error) { setFailure(error.message); return false; } finally { setBusy(false); } };
@@ -133,7 +135,7 @@ export default function FilterPopover({
                 </select>
               </label>
             )}
-            {selectedFilter && (
+            {selectedFilter && !readOnly && (
               <details className="st-filter-manage">
                 <summary>Saved filter options</summary>
                 <div>
@@ -181,7 +183,7 @@ export default function FilterPopover({
             )}
             <div className="st-filter-popover-foot">
               {conditions.length > 0 && <span>{conditions.length} condition{conditions.length === 1 ? "" : "s"} · AND</span>}
-              {!showSave ? <button type="button" className="sw-link" disabled={!conditions.length} onClick={() => setShowSave(true)}>{activeFilterId ? "Save as new" : "Save filter"}</button> : (
+              {readOnly ? null : !showSave ? <button type="button" className="sw-link" disabled={!conditions.length} onClick={() => setShowSave(true)}>{activeFilterId ? "Save as new" : "Save filter"}</button> : (
                 <form onSubmit={saveCurrent}><input aria-label="Saved filter name" autoFocus placeholder="Filter name" value={saveName} onChange={(event) => setSaveName(event.target.value)} required /><button type="submit" disabled={busy}>Save</button><button type="button" onClick={() => { creationId.current = null; setShowSave(false); }}>Cancel</button></form>
               )}
             </div>

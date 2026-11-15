@@ -292,6 +292,8 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
     retryDiscovery?.();
   };
   const canManage = role === "Owner" || role === "Admin";
+  // A Viewer reads definitions; opening an editor would only end in a refusal.
+  const canWrite = role !== "Viewer";
   const byName = useMemo(() => new Map((catalog?.events || []).map((e) => [e.name, e])), [catalog]);
   const byPath = useMemo(() => new Map((catalog?.properties || []).map((p) => [p.path, p])), [catalog]);
   const eventNames = useMemo(() => [...new Set([...(discovery?.eventNames || []), ...byName.keys()])].sort(), [discovery, byName]);
@@ -324,7 +326,7 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
                     const entry = byName.get(name);
                     return (
                       <tr key={name}>
-                        <td><button className="sw-link sw-mono" onClick={() => setEditing({ kind: "event", name })}>{name}</button></td>
+                        <td>{canWrite ? <button className="sw-link sw-mono" onClick={() => setEditing({ kind: "event", name })}>{name}</button> : <span className="sw-mono">{name}</span>}</td>
                         <td className={entry?.description ? "" : "ct-missing"}>{entry?.description || "Not described"}</td>
                         <td>{entry?.owner || "—"}</td>
                         <td>{entry?.verified && <span className="ct-badge">Verified</span>}{!discovery?.eventNames?.includes(name) && <span className="ct-badge ct-muted">Not seen</span>}</td>
@@ -349,7 +351,7 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
                     const entry = byPath.get(p.path);
                     return (
                       <tr key={p.path}>
-                        <td><button className="sw-link sw-mono" onClick={() => setEditing({ kind: "property", property: p })}>{p.path}</button></td>
+                        <td>{canWrite ? <button className="sw-link sw-mono" onClick={() => setEditing({ kind: "property", property: p })}>{p.path}</button> : <span className="sw-mono">{p.path}</span>}</td>
                         <td>{p.types.join(", ") || "—"}</td>
                         <td>{entry?.unit || "—"}</td>
                         <td>{PROPERTY_KINDS.find(([v]) => v === (entry?.kind || ""))?.[1]}</td>
@@ -365,7 +367,7 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
       )}
       {catalog && tab === "actions" && (
         <Panel title="Actions" meta={`${catalog.actions.length} defined`}
-          action={<button className="sw-button sw-primary" onClick={() => setEditing({ kind: "action" })}><FiPlus /> New action</button>}>
+          action={canWrite ? <button className="sw-button sw-primary" onClick={() => setEditing({ kind: "action" })}><FiPlus /> New action</button> : null}>
           {catalog.actions.length === 0 ? (
             <Empty title="Name what you look for" description='An action is a reusable match, such as "Overheat" = motor.sample where temp > 90 or drone.error where code = THERMAL. Pick it in Explorer or use it from MCP.' />
           ) : (
@@ -375,7 +377,7 @@ export default function Catalog({ client, project, role, discovery, discoveryErr
                 <tbody>
                   {catalog.actions.map((a) => (
                     <tr key={a.id}>
-                      <td><button className="sw-link" onClick={() => setEditing({ kind: "action", action: a })}>{a.name}</button></td>
+                      <td>{canWrite ? <button className="sw-link" onClick={() => setEditing({ kind: "action", action: a })}>{a.name}</button> : a.name}</td>
                       <td>{a.steps.map((s) => s.name + (s.filterId ? ` where ${filters.find((f) => f.id === s.filterId)?.name || "deleted filter"}` : "") + (s.conditions?.length ? ` (+${s.conditions.length})` : "")).join(" or ")}</td>
                       <td>{a.description || "—"}</td>
                     </tr>

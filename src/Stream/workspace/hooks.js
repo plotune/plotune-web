@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resourceData, uiConditions } from "./client";
+import { canManageStream, canSeeWebhooks } from "./access";
 import { pollWhileVisible } from "./visiblePolling";
 
 const empty = {
@@ -8,23 +9,21 @@ const empty = {
   filters: [],
   dashboards: [],
   webhooks: [],
-  members: [],
 };
-export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
-  const [projects, setProjects] = useState([]);
-  const [projectsLoading, setProjectsLoading] = useState(true);
+// `projects` are the workspace's Stream-enabled projects ({id, name}) from api.plotune.net; Stream
+// itself no longer lists, creates or renames projects.
+export function useWorkspaceMetadata(client, projectId, privilegedView = null, projects = []) {
   const [detail, setDetail] = useState(empty);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
   const [keys, setKeys] = useState({});
-  // The account's plan and project limit; null from a Worker that predates plans.
-  const [plan, setPlan] = useState(null);
   const selected = useRef(projectId);
   selected.current = projectId;
+  const names = useRef(projects);
+  names.current = projects;
   const generation = useRef(0),
-    mounted = useRef(true),
-    projectListGeneration = useRef(0);
+    mounted = useRef(true);
   const verification = useMemo(() => ({ client, projectId, pending: 0 }), [client, projectId]);
   const invalidate = useCallback(() => {
     generation.current++;
@@ -37,33 +36,14 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
   }, []);
   useEffect(() => client.subscribeAuthorizationFailure?.((cause) => {
     if (cause.status === 403 && cause.projectId && cause.projectId !== selected.current) return;
-    generation.current++; projectListGeneration.current++;
-    setDetail(empty); setProjects([]); setError(cause);
+    generation.current++;
+    setDetail(empty); setError(cause);
     // A data-plane 403 can precede control propagation for a newly created
     // project. Hide its UI, but retain the one-time key in memory until fresh
     // Worker authorization proves the role changed (or the session is invalid).
     if (cause.status === 401) setKeys({});
-    setLoading(false); setProjectsLoading(false);
+    setLoading(false);
   }), [client]);
-  const loadProjects = useCallback(
-    async (signal, force = true) => {
-      const request = ++projectListGeneration.current;
-      try {
-        const result = await client.projects(signal, { useCache: !force });
-        if (!signal?.aborted && mounted.current && request === projectListGeneration.current) { setProjects(result.items); setPlan(result.plan || null); }
-      } catch (cause) {
-        if (cause.name !== "AbortError" && mounted.current && request === projectListGeneration.current) setError(cause);
-      } finally {
-        if (!signal?.aborted && mounted.current) setProjectsLoading(false);
-      }
-    },
-    [client],
-  );
-  useEffect(() => {
-    const abort = new AbortController();
-    loadProjects(abort.signal, false);
-    return () => abort.abort();
-  }, [loadProjects]);
   const reload = useCallback(
     async (signal, propagateFailure = false, force = true) => {
       if (!projectId || selected.current !== projectId || !mounted.current)
@@ -74,15 +54,15 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
       const request = ++generation.current;
       try {
         const result = await client.project(projectId, signal);
-        const admin = result.membership.role !== "Member";
-        const [filters, dashboards, webhooks, members] = await Promise.all([
+        const role = result.membership.role;
+        const admin = canManageStream(role);
+        const [filters, dashboards, webhooks] = await Promise.all([
           client.resources(projectId, "filters", signal, { useCache: !force }),
           client.resources(projectId, "dashboards", signal, { useCache: !force }),
-          // Every member reads webhooks; only the members list stays Owner/Admin.
-          privilegedView === "webhooks"
+          // Owner, Admin and Member read webhooks; a Viewer never sees them.
+          privilegedView === "webhooks" && canSeeWebhooks(role)
             ? client.resources(projectId, "webhooks", signal)
             : { items: [] },
-          admin && privilegedView === "settings" ? client.members(projectId, signal) : { items: [] },
         ]);
         if (
           request !== generation.current ||
@@ -94,20 +74,16 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
           return;
         }
         setDetail({
-          project: result.project,
-          role: result.membership.role,
+          project: { ...result.project, name: names.current.find((p) => p.id === projectId)?.name || "Project" },
+          role,
           filters: filters.items.map((r) => ({
             ...resourceData(r),
             conditions: uiConditions(r.data.conditions),
           })),
           dashboards: dashboards.items.map(resourceData),
           webhooks: webhooks.items.map(resourceData),
-          members: members.items,
         });
         if (!admin) setKeys((current) => { const next = { ...current }; delete next[projectId]; return next; });
-        setProjects((current) =>
-          current.map((p) => (p.id === projectId ? result.project : p)),
-        );
         setError(null);
         return result.project;
       } catch (cause) {
@@ -160,27 +136,6 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
     },
     [reload, projectId],
   );
-  const create = async (name) => {
-    setBusy(true);
-    setError(null);
-    try {
-      const result = await client.createProject(name);
-      if (mounted.current) {
-        setProjects((current) => [...current, result.project]);
-        setPlan((current) => (current ? { ...current, ownedProjects: current.ownedProjects + 1 } : current));
-        setKeys((current) => ({
-          ...current,
-          [result.project.id]: result.api_key,
-        }));
-      }
-      return result.project;
-    } catch (cause) {
-      if (mounted.current) setError(cause);
-      throw cause;
-    } finally {
-      if (mounted.current) setBusy(false);
-    }
-  };
   const rotate = async () => {
     const id = projectId;
     return mutate(async () => {
@@ -193,16 +148,12 @@ export function useWorkspaceMetadata(client, projectId, privilegedView = null) {
   return {
     ...detail,
     projects,
-    plan,
-    projectsLoading,
     loading,
     error,
     busy,
     keys,
     reload,
-    loadProjects,
     mutate,
-    create,
     rotate,
     setError,
   };

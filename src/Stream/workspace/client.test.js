@@ -1,3 +1,4 @@
+import { createClaimManager } from "../../workspaces/claims";
 import {
   collectEvents,
   createStreamClient,
@@ -194,7 +195,7 @@ test.each([401, 403, 429, 503])(
     const { client } = setup(
       response({ error: { code: "test", message: "Unavailable" } }, status),
     );
-    await expect(client.projects()).rejects.toMatchObject({
+    await expect(client.credits()).rejects.toMatchObject({
       status,
       code: "test",
     });
@@ -268,7 +269,7 @@ test("only an account 401 invalidates the workspace session; a project-key MCP f
     status: 401,
   });
   expect(onUnauthorized).not.toHaveBeenCalled();
-  await expect(client.projects()).rejects.toMatchObject({ status: 401 });
+  await expect(client.credits()).rejects.toMatchObject({ status: 401 });
   expect(onUnauthorized).toHaveBeenCalledTimes(1);
 });
 
@@ -398,4 +399,100 @@ test("credits are account routes under /v1/projects; redeem posts only the code"
     ["/v1/projects/credits/redeem", "POST"],
   ]);
   expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({ code: "LAUNCH50" });
+});
+
+// Stream claims (docs/architecture/workspace-contract.md 6 and 7.1): project calls send the claim.
+describe("Stream claims", () => {
+  const claimsWith = (...tokens) => {
+    const requestClaim = jest.fn();
+    tokens.forEach((token) => requestClaim.mockResolvedValueOnce(
+      token instanceof Error ? Promise.reject(token) : { service: "stream", token, expiresAt: new Date(Date.now() + 900000).toISOString(), role: "Admin", projectRevision: 1 },
+    ));
+    return { requestClaim, manager: createClaimManager({ requestClaim }) };
+  };
+  const make = (fetcher, manager, onUnauthorized = jest.fn()) => ({
+    client: createStreamClient("Bearer account-jwt", { fetcher, claims: manager, workspaceId: "w1", onUnauthorized }),
+    onUnauthorized,
+  });
+  const auth = (fetcher, call = 0) => fetcher.mock.calls[call][1].headers.Authorization;
+
+  test("project and data routes send the claim; credits keep the account session", async () => {
+    const { requestClaim, manager } = claimsWith("claim-1");
+    const fetcher = jest.fn().mockResolvedValue(response({ ok: true }));
+    const { client } = make(fetcher, manager);
+    await client.resources("p1", "filters");
+    await client.discovery("p1");
+    await client.credits();
+    expect(auth(fetcher, 0)).toBe("Bearer claim-1");
+    expect(auth(fetcher, 1)).toBe("Bearer claim-1");
+    expect(auth(fetcher, 2)).toBe("Bearer account-jwt");
+    expect(requestClaim).toHaveBeenCalledTimes(1);
+    expect(requestClaim).toHaveBeenCalledWith("w1", "p1", "stream");
+  });
+
+  test("the project read returns the role from the claim, with Stream's own project state", async () => {
+    const { manager } = claimsWith("claim-1");
+    const fetcher = jest.fn().mockResolvedValue(response({ project: { id: "p1", revision: 3, hasKey: false, state: "active" } }));
+    const { client } = make(fetcher, manager);
+    expect(await client.project("p1")).toMatchObject({ project: { hasKey: false }, membership: { role: "Admin" } });
+  });
+
+  test.each(["claim_expired", "claim_revoked", "invalid_token"])("a 401 %s renews the claim once and retries once", async (code) => {
+    const { requestClaim, manager } = claimsWith("old", "new");
+    const fetcher = jest.fn()
+      .mockResolvedValueOnce(response({ error: { code, message: "no" } }, 401))
+      .mockResolvedValueOnce(response({ items: [] }));
+    const { client, onUnauthorized } = make(fetcher, manager);
+    await expect(client.resources("p1", "filters")).resolves.toEqual({ items: [] });
+    expect([auth(fetcher, 0), auth(fetcher, 1)]).toEqual(["Bearer old", "Bearer new"]);
+    expect(requestClaim).toHaveBeenCalledTimes(2);
+    expect(onUnauthorized).not.toHaveBeenCalled();
+  });
+
+  test("a second rejection is explained and never signs the person out", async () => {
+    const { manager } = claimsWith("old", "new");
+    const fetcher = jest.fn().mockResolvedValue(response({ error: { code: "claim_revoked", message: "raw" } }, 401));
+    const { client, onUnauthorized } = make(fetcher, manager);
+    const failure = await client.resources("p1", "filters").catch((error) => error);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(failure).toMatchObject({ status: 401, code: "claim_revoked" });
+    expect(failure.message).toMatch(/access to this project changed/);
+    expect(onUnauthorized).not.toHaveBeenCalled();
+  });
+
+  test("503 auth_unavailable keeps the session and says to retry", async () => {
+    const { manager } = claimsWith("claim-1");
+    const fetcher = jest.fn().mockResolvedValue(response({ error: { code: "auth_unavailable", message: "raw" } }, 503));
+    const { client, onUnauthorized } = make(fetcher, manager);
+    const failure = await client.resources("p1", "filters").catch((error) => error);
+    expect(failure).toMatchObject({ status: 503, code: "auth_unavailable" });
+    expect(failure.message).toMatch(/Try again in a few seconds/);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(onUnauthorized).not.toHaveBeenCalled();
+  });
+
+  test("only a 401 from the claim request itself ends the session; a 409 says Stream is off", async () => {
+    const unauthorized = claimsWith(Object.assign(new Error("x"), { status: 401, code: "invalid_token" }));
+    const fetcher = jest.fn();
+    const first = make(fetcher, unauthorized.manager);
+    await expect(first.client.resources("p1", "filters")).rejects.toMatchObject({ status: 401 });
+    expect(first.onUnauthorized).toHaveBeenCalledTimes(1);
+    expect(fetcher).not.toHaveBeenCalled();
+    const off = claimsWith(Object.assign(new Error("x"), { status: 409, code: "service_not_enabled" }));
+    const second = make(fetcher, off.manager);
+    const failure = await second.client.resources("p1", "filters").catch((error) => error);
+    expect(failure).toMatchObject({ status: 409 });
+    expect(failure.message).toMatch(/not turned on/);
+    expect(second.onUnauthorized).not.toHaveBeenCalled();
+  });
+
+  test("the capture key is created with POST .../key using the claim", async () => {
+    const { manager } = claimsWith("claim-1");
+    const fetcher = jest.fn().mockResolvedValue(response({ api_key: "plt_x", project: { id: "p1", revision: 4, hasKey: true, state: "active" } }));
+    const { client } = make(fetcher, manager);
+    await client.rotateKey("p1", 3);
+    expect(fetcher.mock.calls[0][0]).toBe("https://stream.plotune.net/v1/projects/p1/key");
+    expect(fetcher.mock.calls[0][1]).toMatchObject({ method: "POST", body: JSON.stringify({ revision: 3 }) });
+    expect(auth(fetcher)).toBe("Bearer claim-1");
+  });
 });

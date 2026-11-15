@@ -1,0 +1,16 @@
+/* The RMS page is full screen like the Stream workspace: no site header, footer or bar. The vendored app
+   (scoped to .rms-mount, with its own sidebar and project switcher) fills the viewport; loading, empty and
+   error states are full-screen too, in RMS's look. */
+.rms-page { height: 100dvh; display: flex; flex-direction: column; background: #fbfbfc; color: #16171b; font-family: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; }
+.rms-host { flex: 1; min-height: 0; }
+.rms-host[hidden] { display: none; }
+
+.rms-state { flex: 1; min-height: 0; overflow: auto; display: grid; place-items: center; padding: 24px 16px; background: radial-gradient(circle at 20% 10%, #eef2f8, transparent 50%), #fbfbfc; }
+.rms-state__card { width: min(420px, 100%); display: grid; gap: 12px; padding: 32px; border: 1px solid #e5e7eb; border-radius: 16px; background: #fff; box-shadow: 0 1px 2px #16171b0a, 0 4px 16px #16171b0f; }
+.rms-state__card[data-busy] { border-color: transparent; background: transparent; box-shadow: none; text-align: center; }
+.rms-state h1 { margin: 0; font-size: 22px; font-weight: 650; line-height: 1.25; letter-spacing: -.3px; }
+.rms-state p { margin: 0; color: #444a53; font-size: 14px; line-height: 1.6; }
+.rms-state__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.rms-button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 18px; border: 1px solid #3d5a80; border-radius: 8px; background: #3d5a80; color: #fff; font: 520 14px 'Inter Variable', Inter, system-ui, sans-serif; text-decoration: none; cursor: pointer; }
+.rms-button:hover { background: #34506f; }
+.rms-button:focus-visible { outline: 2px solid #3d5a80; outline-offset: 2px; }

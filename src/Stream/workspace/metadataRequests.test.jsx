@@ -13,7 +13,6 @@ beforeEach(() => {
   fetcher = jest.fn(async (url) => {
     const path = new URL(url).pathname;
     if (!server.allowed) return reply({ error: { code: "forbidden", message: "Permission removed" } }, 403);
-    if (path === "/v1/projects") return reply({ items: [project] });
     if (path === "/v1/projects/p") return reply({ project, membership: { role: server.role } });
     if (path.endsWith("/filters")) return reply({ items: [{ id: "f", kind: "filter", revision: server.revision, data: { id: "f", name: "Shared", conditions: [{ path: "environment", operator: "equals", value: server.value }] } }] });
     return reply({ items: [] });
@@ -26,13 +25,13 @@ const client = (token = "Bearer cache-session") => createStreamClient(token, { f
 
 test("warm reload uses one fresh permission request, cached team resources, and the current role", async () => {
   await act(async () => mount(<Probe client={client()} />));
-  expect(fetcher).toHaveBeenCalledTimes(4);
+  expect(fetcher).toHaveBeenCalledTimes(3);
   act(() => root.unmount()); root = createRoot(document.createElement("div")); mount = root.render.bind(root);
   fetcher.mockClear(); server.role = "Member";
   await act(async () => mount(<Probe client={client()} />));
   expect(fetcher).toHaveBeenCalledTimes(1);
   expect(new URL(fetcher.mock.calls[0][0]).pathname).toBe("/v1/projects/p");
-  expect(state.role).toBe("Member"); expect(state.members).toEqual([]); expect(state.webhooks).toEqual([]);
+  expect(state.role).toBe("Member"); expect(state.webhooks).toEqual([]);
   expect(state.filters[0].conditions[0].value).toBe("real");
   server.value = "simulation"; server.revision = 2;
   await act(async () => state.reload());
@@ -88,17 +87,4 @@ test("temporary runtime denial keeps a one-time key hidden in memory; fresh Memb
   server.role = "Member";
   await act(async () => state.reload());
   expect(state.keys.p).toBeUndefined();
-});
-
-test("a fresh project list can recover other accessible projects after the selected scope is denied", async () => {
-  const api = client();
-  await act(async () => mount(<Probe client={api} />));
-  const original = fetcher.getMockImplementation();
-  fetcher.mockImplementation((url, options) => new URL(url).pathname === "/v1/projects"
-    ? Promise.resolve(reply({ items: [{ ...project, id: "q", name: "Other accessible project" }] }))
-    : original(url, options));
-  server.allowed = false;
-  await act(async () => state.reload());
-  await act(async () => state.loadProjects());
-  expect(state.project).toBeNull(); expect(state.projects.map((item) => item.id)).toEqual(["q"]);
 });

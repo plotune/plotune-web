@@ -5,6 +5,7 @@ import CaptureGuide from "./CaptureGuide";
 import McpSetup from "./McpSetup";
 import { FiCopy, FiTerminal } from "react-icons/fi";
 import { Failure } from "./LiveExplorer";
+import { canManageStream } from "./access";
 
 export default function ConnectionSetup({ client, metadata, mcp = false }) {
   const [suppliedKey, setSuppliedKey] = useState("");
@@ -15,7 +16,7 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
   const [copied, setCopied] = useState(null);
   const raw = metadata.keys[metadata.project.id];
   const key = raw || suppliedKey;
-  const snippet = mcpExample(key || "YOUR_PROJECT_KEY", client.origin);
+  const snippet = mcpExample(key || "YOUR_CAPTURE_KEY", client.origin);
   const mcpUrl = `${client.origin}/mcp`;
   useEffect(() => {
     if (!copied) return undefined;
@@ -34,7 +35,7 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
     }
   };
   const keyAccess = (
-      <Panel title={mcp ? "Project key access" : "Project connection"} meta={metadata.project.name}>
+      <Panel title={mcp ? "Capture key access" : "Project connection"} meta={metadata.project.name}>
         <div className="st-connection live-project-connection">
           <label>{mcp ? "MCP endpoint" : "Ingestion endpoint"}
             <div className="st-endpoint">
@@ -45,12 +46,12 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
           <div className="live-project-key">{raw ? (
             <>
               <p>
-                Copy this key now. It is held only in this browser session and
+                Copy this capture key now. It is held only in this browser session and
                 will not be returned again.
               </p>
               <div className="live-key">
                 <input
-                  aria-label="New project API key"
+                  aria-label="New capture key"
                   readOnly
                   type={revealed ? "text" : "password"}
                   value={raw}
@@ -69,47 +70,55 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
           ) : (
             <>
               <p>
-                Key prefix: <code>{metadata.project.keyPrefix}…</code>. Existing
-                keys cannot be recovered.
+                {metadata.project.hasKey
+                  ? "A capture key is set up for this project. Existing keys cannot be recovered."
+                  : canManageStream(metadata.role)
+                    ? "This project has no capture key yet. Create one to start sending events; it is shown once."
+                    : "This project has no capture key yet. An owner or admin can create it."}
               </p>
-              <label>
-                Use your existing key <span>Optional · held in memory</span>
-                <input
-                  type="password"
-                  autoComplete="off"
-                  value={suppliedKey}
-                  onChange={(e) => setSuppliedKey(e.target.value)}
-                  placeholder="Paste a key to generate examples or check MCP"
-                />
-              </label>
+              {metadata.project.hasKey && (
+                <label>
+                  Use your existing capture key <span>Optional · held in memory</span>
+                  <input
+                    type="password"
+                    autoComplete="off"
+                    value={suppliedKey}
+                    onChange={(e) => setSuppliedKey(e.target.value)}
+                    placeholder="Paste a capture key to generate examples or check MCP"
+                  />
+                </label>
+              )}
             </>
           )}
           </div>
-          <p>
-            This key allows event capture and read-only MCP access. Keep it in
-            your own system's secret store.
-          </p>
-          {metadata.role !== "Member" && (
-            <div className="live-key-rotation"><p>Replace the key only if you need to update or revoke client access.</p><button
+          {(raw || metadata.project.hasKey) && (
+            <p>
+              This key allows event capture and read-only MCP access. Keep it in
+              your own system's secret store.
+            </p>
+          )}
+          {canManageStream(metadata.role) && (
+            <div className="live-key-rotation">{metadata.project.hasKey && <p>Replace the capture key only if you need to update or revoke client access.</p>}<button
               className="sw-button"
               disabled={metadata.busy}
               onClick={async () => {
                 if (
+                  metadata.project.hasKey &&
                   !window.confirm(
-                    "Rotate this project's key? The old key will stop accepting capture and MCP requests. Update every client that uses it.",
+                    "Rotate this project's capture key? The old key will stop accepting capture and MCP requests. Update every client that uses it.",
                   )
                 )
                   return;
                 try {
                   await metadata.rotate();
                   setSuppliedKey("");
-                  setStatus("New key created. Update your clients.");
+                  setStatus(metadata.project.hasKey ? "New key created. Update your clients." : "Capture key created. Copy it now.");
                 } catch (cause) {
                   setError(cause);
                 }
               }}
             >
-              Rotate API key
+              {metadata.project.hasKey ? "Rotate capture key" : "Create capture key"}
             </button></div>
           )}
         </div>
@@ -141,12 +150,12 @@ export default function ConnectionSetup({ client, metadata, mcp = false }) {
         <McpSetup url={mcpUrl} projectName={metadata.project.name} copy={copy} copied={copied} />
       </Panel>
       <details className="mcp-key-alternative">
-        <summary>Use a project key instead</summary>
-        <p className="st-muted">For clients without sign-in support. A project key reads event history only; dashboards, analysis and health need sign-in.</p>
+        <summary>Use a capture key instead</summary>
+        <p className="st-muted">For clients without sign-in support. A capture key reads event history only; dashboards, analysis and health need sign-in.</p>
         {keyAccess}
         <Panel title="Client configuration">
         <div className="st-connection live-mcp-config">
-          <p>Configuration format varies by MCP client. Use the endpoint and project key below in your client's remote MCP settings.</p>
+          <p>Configuration format varies by MCP client. Use the endpoint and capture key below in your client's remote MCP settings.</p>
           <div className="sw-code-head">
             <span>Client configuration</span>
             <button className="sw-link" onClick={() => copy(snippet)}>Copy example</button>

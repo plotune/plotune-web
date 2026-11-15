@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { ReadOnlyContext } from "./access";
 import { FiMoreHorizontal, FiPlay } from "react-icons/fi";
 import { Panel } from "../../StreamWorkspace/WorkspaceUI";
 import { estimateText, kindLabel, queryRange, RANGES, TERMINAL } from "../insightModel";
@@ -13,6 +14,8 @@ const timeOf = (iso) => {
 const who = (email) => (email || "").split("@")[0];
 
 export function TileMenu({ label, moves, children, onRemove, removeLabel = "Remove from dashboard" }) {
+  const readOnly = useContext(ReadOnlyContext);
+  if (readOnly) return null;
   return <details className="st-dashboard-menu"><summary aria-label={`Options for ${label}`}><FiMoreHorizontal /></summary><div>
     {children}
     {moves?.up && <button type="button" onClick={moves.up}>Move earlier</button>}

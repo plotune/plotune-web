@@ -1,4 +1,6 @@
 import { createMetadataCache } from "./metadataCache";
+import { isClaimRejection } from "../../workspaces/claims";
+import { failureMessage } from "../../workspaces/errors";
 
 // PR #44, finalized Redis/R2 event plane. Cached snapshots are not server persistence.
 export const STREAM_ORIGIN =
@@ -14,6 +16,13 @@ export class StreamFailure extends Error {
     this.retryAfter = retryAfter;
   }
 }
+// Plain words for the claim failures (contract section 7.1): the claim was already renewed once.
+const CLAIM_MESSAGES = {
+  claim_expired: "Your access to this project could not be renewed. Reload the page to continue.",
+  claim_revoked: "Your access to this project changed. Reload the page to see what you can do now.",
+  invalid_token: "Your access to this project could not be confirmed. Reload the page to continue.",
+  auth_unavailable: "Plotune could not check your access right now. Try again in a few seconds.",
+};
 export const wireConditions = (conditions = []) =>
   conditions.map(({ path, operator, value }) => ({
     path,
@@ -111,6 +120,10 @@ export function createStreamClient(
     timeout = 15000,
     onUnauthorized = () => {},
     cacheOptions,
+    // Project calls carry a Stream claim from api.plotune.net instead of the account session:
+    // `claims` is a createClaimManager() and `workspaceId` the workspace the projects belong to.
+    claims = null,
+    workspaceId = "",
   } = {},
 ) {
   const url = new URL(origin);
@@ -135,7 +148,33 @@ export function createStreamClient(
     const text = params.toString();
     return text ? `?${text}` : "";
   };
-  async function request(path, { method = "GET", body, signal, key } = {}) {
+  // Account-level routes (credits) and the project key keep their own credentials; every other
+  // /v1/projects/:pid/* and /v1/data/projects/:pid/* call sends the Stream claim.
+  const claimProject = (path) => {
+    const scope = path.match(/^\/v1\/(?:data\/)?projects\/([^/?]+)/);
+    return scope && scope[1] !== "credits" ? decodeURIComponent(scope[1]) : null;
+  };
+  async function request(path, options = {}) {
+    const projectId = claims && options.key === undefined ? claimProject(path) : null;
+    if (!projectId) return send(path, options, authorization, true);
+    try {
+      return await claims.withClaim(workspaceId, projectId, "stream", (token) => send(path, options, `Bearer ${token}`, false));
+    } catch (error) {
+      if (error instanceof StreamFailure) {
+        // Reached after the claim was renewed and the call retried once.
+        if ([401, 403].includes(error.status)) { error.projectId = projectId; await cache.authorizationFailed(error); }
+        throw error;
+      }
+      if (error?.name === "AbortError") throw error;
+      // The claim request itself failed (plotune-api). Only a 401 there means the session ended.
+      if (error?.status === 401) onUnauthorized();
+      if (error?.code === "tab_hidden")
+        throw new StreamFailure(503, "claim_paused", "This tab was in the background. Reload the page to continue.");
+      const status = Number.isInteger(error?.status) ? error.status : 503;
+      throw new StreamFailure(status === 0 ? 503 : status, error?.code || "claim_failed", failureMessage(error), error?.retryAfter ?? null);
+    }
+  }
+  async function send(path, { method = "GET", body, signal, key } = {}, auth, account) {
     const controller = new AbortController();
     const abort = () => controller.abort();
     if (signal?.aborted) controller.abort();
@@ -149,7 +188,7 @@ export function createStreamClient(
         redirect: "error",
         cache: "no-store",
         headers: {
-          Authorization: key !== undefined ? `Bearer ${key}` : authorization,
+          Authorization: key !== undefined ? `Bearer ${key}` : auth,
           ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
         },
         ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
@@ -168,7 +207,8 @@ export function createStreamClient(
         throw new StreamFailure(
           response.status,
           result.error?.code || "request_failed",
-          result.error?.message ||
+          CLAIM_MESSAGES[result.error?.code] ||
+            result.error?.message ||
             `Stream request failed (${response.status}).`,
           response.headers?.get("Retry-After"),
         );
@@ -176,12 +216,13 @@ export function createStreamClient(
       return result;
     } catch (error) {
       if (error instanceof StreamFailure) {
-        if ([401, 403].includes(error.status) && key === undefined) {
+        if ([401, 403].includes(error.status) && key === undefined && account) {
           const scope = path.match(/^\/v1\/(?:data\/)?projects\/([^/]+)/);
           error.projectId = scope ? decodeURIComponent(scope[1]) : null;
           await cache.authorizationFailed(error);
         }
-        if (error.status === 401 && key === undefined) onUnauthorized();
+        // A 401 about a claim never ends the account session; only the account-level routes do.
+        if (error.status === 401 && key === undefined && account) onUnauthorized();
         throw error;
       }
       if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
@@ -303,20 +344,16 @@ export function createStreamClient(
     clearMetadataCache: () => cache.invalidate(),
     pages,
     query: pageRequest,
-    projects: (signal, { useCache = false } = {}) => cache.read("/v1/projects", () => request("/v1/projects", { signal }), { useCache, signal }),
-    project: (id, signal) => request(metadata(id), { signal }),
-    createProject: (name) =>
-      request("/v1/projects", { method: "POST", body: { name } }),
-    renameProject: (id, name, revision) =>
-      request(metadata(id), { method: "PATCH", body: { name, revision } }),
+    // The project's Stream state ({id, revision, hasKey, state}) and the caller's role, which the
+    // claim carries (the project route no longer includes membership).
+    project: async (id, signal) => {
+      const result = await request(metadata(id), { signal });
+      const claim = claims ? await claims.getClaim(workspaceId, id, "stream") : null;
+      return { ...result, membership: { role: claim?.role || result.membership?.role || null } };
+    },
+    // Creates the first capture key or replaces it (Owner, Admin). The key is returned once.
     rotateKey: (id, revision) =>
       request(metadata(id, "/key"), { method: "POST", body: { revision } }),
-    members: (id, signal) => request(metadata(id, "/members"), { signal }),
-    member: (id, email, role, revision, remove = false) =>
-      request(metadata(id, `/members/${encoded(email)}`), {
-        method: remove ? "DELETE" : "PUT",
-        body: { revision, ...(!remove ? { role } : {}) },
-      }),
     resources: (id, kind, signal, { useCache = false } = {}) =>
       cache.read(metadata(id, `/${kind}`), () => request(metadata(id, `/${kind}`), { signal }), { useCache, signal }),
     saveResource: (id, kind, record, existing) =>

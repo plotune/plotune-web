@@ -63,14 +63,17 @@ const Privacy = routePage(() => import('./pages/Privacy'));
 const ContactPage = routePage(() => import('./pages/Contact'));
 const VerifyEmail = routePage(() => import('./pages/VerifyEmail'));
 const ForgotPassword = routePage(() => import('./pages/ForgotPassword'));
-const StreamAuthorize = routePage(() => import('./pages/StreamAuthorize'));
 const BridgeAuthorize = routePage(() => import('./pages/BridgeAuthorize'));
+const Authorize = routePage(() => import('./pages/Authorize'));
+const Workspaces = routePage(() => import('./pages/Workspaces'));
+const WorkspaceDetail = routePage(() => import('./pages/WorkspaceDetail'));
 const Profile = routePage(() => import('./pages/Profile'));
 const Dashboard = routePage(() => import('./pages/Dashboard'));
 const Stream = routePage(() => import('./pages/Stream'));
 const StreamWorkspace = routePage(() => import('./StreamWorkspace/StreamWorkspace'));
 const StreamDemo = routePage(() => import('./StreamDemo/StreamDemo'));
 const LiveStreamWorkspace = routePage(() => import('./Stream/workspace/StreamWorkspace'));
+const RmsWorkspace = routePage(() => import('./rms/RmsWorkspace'));
 const DnsPage = routePage(() => import('./pages/DnsPage'));
 const Partnership = routePage(() => import('./pages/Partnership'));
 const PartnerApplication = routePage(() => import('./pages/PartnerApplication'));
@@ -89,6 +92,12 @@ const ResearchMethodology = routePage(() => import('./research/ResearchMethodolo
 const RedirectToSolutionsPillar = () => {
   const location = useLocation();
   return <Navigate to={`/solutions/agentic-test-development${location.search}`} replace />;
+};
+
+// Stream's own consent page is gone; the shared authority sends people to /authorize.
+const RedirectToConsent = () => {
+  const location = useLocation();
+  return <Navigate to={`/authorize${location.search}`} replace />;
 };
 
 // Jakob: an unknown URL must not render as a silent blank page between Header and
@@ -123,8 +132,12 @@ const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
   useLayoutEffect(() => {
+    // '#/...' is an app's own hash route (the RMS workspace keeps its view there), not an element id:
+    // it is not a selector, and moving the page for it would fight the app.
+    if (hash.startsWith('#/')) return;
     if (hash) {
-      const element = document.querySelector(hash);
+      let element = null;
+      try { element = document.querySelector(hash); } catch { /* not a valid selector */ }
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
         return;
@@ -147,7 +160,8 @@ const NavigationWrapper = ({ children }) => {
   // GitHub Pages 301s a directory-style route to '/route/', and the Routes below match
   // either form, so the layout check has to as well.
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
-  const shouldHide = hideLayoutPaths.includes(normalizedPath);
+  // Like the Stream workspace, RMS is a full-screen app with its own chrome: no site header or footer.
+  const shouldHide = hideLayoutPaths.includes(normalizedPath) || normalizedPath === '/rms' || normalizedPath.startsWith('/rms/');
 
   if (location.pathname.startsWith('/research')) {
     return <ResearchLayout>{children}</ResearchLayout>;
@@ -172,7 +186,8 @@ const SiteFrame = ({ children }) => {
     }
   }, [pathname]);
   const kind = /^\/(login|register|reset-password|verify-email)/.test(pathname) ? 'auth'
-    : /^\/(dashboard|profile|storage|mirror|dns|streams|partner-portal)/.test(pathname) ? 'account'
+    : /^\/(dashboard|profile|storage|mirror|dns|streams|partner-portal|workspaces|authorize)/.test(pathname) ? 'account'
+    : /^\/rms(\/|$)/.test(pathname) ? 'app'
     : pathname.startsWith('/docs') ? 'docs' : 'public';
   return <div className={`app site-${kind}`}>{children}</div>;
 };
@@ -211,8 +226,11 @@ function App() {
               <Route path="/contact" element={<Main><ContactPage /></Main>} />
               <Route path="/verify-email" element={<Main><VerifyEmail /></Main>} />
               <Route path="/reset-password" element={<Main><ForgotPassword /></Main>} />
-              <Route path="/stream/authorize" element={<StreamAuthorize />} />
+              <Route path="/stream/authorize" element={<RedirectToConsent />} />
               <Route path="/bridge/authorize" element={<BridgeAuthorize />} />
+              <Route path="/authorize" element={<Authorize />} />
+              <Route path="/workspaces" element={<Workspaces />} />
+              <Route path="/workspaces/:workspaceId" element={<WorkspaceDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Main><Profile /></Main>} />
               <Route path="/stream" element={<Stream />} />
@@ -220,6 +238,7 @@ function App() {
               <Route path="/stream/demo" element={<StreamDemo />} />
               <Route path="/stream/workspace" element={<LiveStreamWorkspace />} />
               <Route path="/stream/prototypes/vision" element={<StreamWorkspace />} />
+              <Route path="/rms/:workspaceId?/:projectId?" element={<RmsWorkspace />} />
               <Route path="/dns" element={<Main><DnsPage /></Main>} />
               <Route path="/partners" element={<Partnership />} />
               <Route path="/partner-portal" element={<Main><PartnerPortal /></Main>} />
@@ -279,12 +298,16 @@ const initialRoutes = [
   [/^\/verify-email\/?$/, VerifyEmail],
   [/^\/reset-password\/?$/, ForgotPassword],
   [/^\/dashboard\/?$/, Dashboard],
+  [/^\/workspaces\/?$/, Workspaces],
+  [/^\/workspaces\/[^\/]+\/?$/, WorkspaceDetail],
+  [/^\/authorize\/?$/, Authorize],
   [/^\/profile\/?$/, Profile],
   [/^\/stream\/?$/, Stream],
   [/^\/streams\/?$/, LiveStreamWorkspace],
   [/^\/stream\/demo\/?$/, StreamDemo],
   [/^\/stream\/workspace\/?$/, LiveStreamWorkspace],
   [/^\/stream\/prototypes\/vision\/?$/, StreamWorkspace],
+  [/^\/rms(?:\/[^\/]+){0,2}\/?$/, RmsWorkspace],
   [/^\/dns\/?$/, DnsPage],
   [/^\/partners\/?$/, Partnership],
   [/^\/partner-portal\/?$/, PartnerPortal],

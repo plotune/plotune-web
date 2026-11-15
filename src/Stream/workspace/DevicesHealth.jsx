@@ -216,7 +216,7 @@ export default function DevicesHealth({ client, project }) {
             <button className="sw-button dh-more" disabled={more} onClick={loadMore}>{more ? "Loading…" : "Show more devices"}</button>
           )}
           {devices.truncated && <p className="dh-note">The device list reached its size limit; some devices may not be listed.</p>}
-          <p className="dh-note">Events sent with a wrong or replaced project key are refused before they reach the project, so those devices are not listed.</p>
+          <p className="dh-note">Events sent with a wrong or replaced capture key are refused before they reach the project, so those devices are not listed.</p>
         </Panel>
       )}
       {issue && (

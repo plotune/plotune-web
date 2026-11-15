@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { streamWorkspaceReturn } from '../utils/streamWorkspaceNavigation';
+import { safeWorkspaceNext } from '../utils/workspaceNavigation';
 import { safeBridgeNext, rememberBridgeLoginReturn, takeBridgeLoginReturn } from '../utils/bridgeAuthorize';
 
 const Login = () => {
@@ -23,10 +24,15 @@ const Login = () => {
   // serves password login directly; GitHub leaves the site, so its value is kept in sessionStorage
   // and consumed here once, after login completes.
   const bridgeNext = safeBridgeNext(new URLSearchParams(location.search).get('next'));
+  // Workspace pages and the shared consent request come back through login the same way.
+  const accountNext = safeWorkspaceNext(new URLSearchParams(location.search).get('next'));
+  useEffect(() => { if (accountNext) sessionStorage.setItem('workspace_login_return', accountNext); }, [accountNext]);
   const afterLogin = () => {
     const storedBridgeNext = takeBridgeLoginReturn();
     // An explicit Bridge hand-off wins over a Stream return that may be left over from an abandoned attempt.
-    const target = workspaceReturn || bridgeNext || storedBridgeNext || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || '/dashboard';
+    let storedAccountNext = null;
+    try { storedAccountNext = safeWorkspaceNext(sessionStorage.getItem('workspace_login_return')); sessionStorage.removeItem('workspace_login_return'); } catch { /* optional */ }
+    const target = accountNext || workspaceReturn || bridgeNext || storedBridgeNext || streamWorkspaceReturn(sessionStorage.getItem('stream_login_return')) || storedAccountNext || '/dashboard';
     sessionStorage.removeItem('stream_login_return');
     navigate(target);
   };

@@ -8,7 +8,7 @@ assert.equal(version, 1);
 const paths = new Set(pages.map(page => page.path));
 assert.equal(paths.size, pages.length);
 for (const page of pages) {
-  assert(!/^\/(dashboard|profile|login|register|streams|storage|mirror|embed|dns|partner-portal)(\/|$)/.test(page.path), page.path);
+  assert(!/^\/(dashboard|profile|login|register|streams|storage|mirror|embed|dns|partner-portal|workspaces|authorize|rms)(\/|$)/.test(page.path), page.path);
   assert(page.markdown.startsWith('# '), page.path);
   assert(!/\]\(https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|\))/.test(page.markdown), `${page.path}: preview link leaked into export`);
   assert(page.markdown.length > 200, page.path);

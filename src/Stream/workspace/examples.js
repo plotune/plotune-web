@@ -8,7 +8,7 @@ export const EXAMPLE_NOTES = {
   MATLAB: "Uses webwrite and jsondecode. Run once in MATLAB with network access to the endpoint.",
   "ROS 2": "Source your ROS 2 environment. Requires rclpy and std_msgs. Waits up to 30 seconds for one /motor/temperature reading, then sends outside the subscription callback and exits.",
   CAPL: "CANoe CAPL on Windows with curl.exe on PATH. Set the measurement's write directory. Press S once to send illustrative readings; replace them with your DBC signals when integrating.",
-  JavaScript: "Run with Node.js 18 or newer. Keep the project key in your own system; do not embed it in a public website.",
+  JavaScript: "Run with Node.js 18 or newer. Keep the capture key in your own system; do not embed it in a public website.",
 };
 
 export function captureExample(language, key, origin) {
