@@ -94,7 +94,6 @@ function useRmsGroups(workspaces) {
       })
       .catch((failure) => { if (live) setState({ key, status: 'error', groups: [], failure }); });
     return () => { live = false; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, attempt]);
   const stale = state.key !== key;
   return { status: stale ? 'loading' : state.status, groups: stale ? [] : state.groups, failure: stale ? null : state.failure, reload: () => setAttempt((n) => n + 1) };
@@ -244,7 +243,6 @@ function RmsEmbed({ workspaceId, projectId, switcher, settingsLink, onExpired })
       }, 0);
     };
     // The switcher is read once per mounted project (the page remounts on a project change).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceId, projectId, attempt, claims]);
 
   const retry = useCallback(() => { claims.clear(); setAttempt((value) => value + 1); }, [claims]);
