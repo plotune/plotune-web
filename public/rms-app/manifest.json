@@ -1,0 +1,12 @@
+{
+  "src/embed.tsx": {
+    "file": "assets/rms-embed-BEioRsy-.js",
+    "name": "embed",
+    "src": "src/embed.tsx",
+    "isEntry": true
+  },
+  "style.css": {
+    "file": "assets/rms-embed-BpDAUrGU.css",
+    "src": "style.css"
+  }
+}
