@@ -20321,17 +20321,37 @@ function Ga({ api: e, session: t, onDisconnect: n, chrome: r = "standalone", swi
 									"aria-hidden": "true",
 									children: de.slice(0, 1).toUpperCase()
 								}),
-								children: (e) => /* @__PURE__ */ (0, B.jsxs)(B.Fragment, { children: [/* @__PURE__ */ (0, B.jsxs)("div", {
-									className: "me",
-									children: [/* @__PURE__ */ (0, B.jsx)("strong", { children: de }), /* @__PURE__ */ (0, B.jsx)("small", { children: $e[t.role] ?? t.role })]
-								}), n && /* @__PURE__ */ (0, B.jsx)("button", {
-									type: "button",
-									role: "menuitem",
-									onClick: () => {
-										e(), n();
-									},
-									children: "Sign out"
-								})] })
+								children: (e) => /* @__PURE__ */ (0, B.jsxs)(B.Fragment, { children: [
+									/* @__PURE__ */ (0, B.jsxs)("div", {
+										className: "me",
+										children: [/* @__PURE__ */ (0, B.jsx)("strong", { children: de }), /* @__PURE__ */ (0, B.jsx)("small", { children: $e[t.role] ?? t.role })]
+									}),
+									i && /* @__PURE__ */ (0, B.jsxs)(B.Fragment, { children: [
+										/* @__PURE__ */ (0, B.jsx)("a", {
+											role: "menuitem",
+											href: "/profile",
+											children: "Profile"
+										}),
+										/* @__PURE__ */ (0, B.jsx)("a", {
+											role: "menuitem",
+											href: "/workspaces",
+											children: "All workspaces"
+										}),
+										/* @__PURE__ */ (0, B.jsx)("a", {
+											role: "menuitem",
+											href: "/dashboard",
+											children: "Dashboard"
+										})
+									] }),
+									n && /* @__PURE__ */ (0, B.jsx)("button", {
+										type: "button",
+										role: "menuitem",
+										onClick: () => {
+											e(), n();
+										},
+										children: "Sign out"
+									})
+								] })
 							})]
 						})
 					]
