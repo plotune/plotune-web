@@ -5,7 +5,7 @@ import RmsPage, { rmsProblem } from './RmsWorkspace';
 import { AuthContext } from '../context/AuthContext';
 import client from '../workspaces/client';
 import { resetWorkspaceStore } from '../workspaces/store';
-import { EmbedLoadError, loadRmsEmbed, attachRmsStyle } from './embed';
+import { EmbedLoadError, loadRmsEmbed } from './embed';
 
 jest.mock('react-helmet-async', () => ({ Helmet: () => null }));
 jest.mock('../workspaces/client', () => {
@@ -16,7 +16,6 @@ jest.mock('./embed', () => ({
   RMS_API_BASE: 'https://rms.plotune.net',
   EmbedLoadError: class EmbedLoadError extends Error { constructor(message) { super(message); this.name = 'EmbedLoadError'; } },
   loadRmsEmbed: jest.fn(),
-  attachRmsStyle: jest.fn(),
 }));
 
 const W1 = { id: 'w1', name: 'Rig team', role: 'Owner', revision: 1, projectCount: 3, services: ['stream', 'rms'] };
@@ -25,7 +24,7 @@ const detail = (id, name, projects) => ({ id, name, revision: 1, role: 'Owner', 
 const P = (id, name, services) => ({ id, name, revision: 1, services });
 const claimFor = (token, ageMs = 0) => ({ service: 'rms', token, expiresAt: new Date(Date.now() + 900_000 - ageMs).toISOString(), role: 'Owner', projectRevision: 1 });
 
-let container; let root; let mounts; let styleHandle; let invalidate;
+let container; let root; let mounts; let invalidate;
 const Where = () => { const location = useLocation(); return <p data-testid="where">{location.pathname}{location.search}</p>; };
 const flush = () => act(async () => { for (let i = 0; i < 8; i += 1) await Promise.resolve(); });
 const render = async (entry, auth = { token: 't', isLoading: false }) => {
@@ -54,13 +53,10 @@ beforeEach(() => {
   Object.values(client).forEach((fn) => fn.mockReset());
   resetWorkspaceStore(); window.localStorage.clear();
   mounts = [];
-  styleHandle = { ready: Promise.resolve(), detach: jest.fn() };
-  attachRmsStyle.mockReset().mockReturnValue(styleHandle);
   loadRmsEmbed.mockReset().mockResolvedValue({
-    styleHref: '/rms-app/assets/rms.css',
     mount: jest.fn((element, options) => {
       const handle = { element, options, unmount: jest.fn() };
-      element.textContent = 'RMS app';
+      element.className = 'rms-mount'; element.textContent = 'RMS app';
       mounts.push(handle);
       return handle;
     }),
@@ -87,7 +83,6 @@ test('a project link mounts the RMS module with the API base, the project and a 
   expect(client.requestClaim).toHaveBeenCalledTimes(1);
   expect(container.querySelector('.rms-host').hidden).toBe(false);
   expect(container.querySelector('.rms-mount').textContent).toBe('RMS app');
-  expect(styleHandle.detach).not.toHaveBeenCalled();
 });
 
 test('the picker offers only the RMS-enabled projects and workspaces, and switching changes the route', async () => {
@@ -105,7 +100,7 @@ test('the picker offers only the RMS-enabled projects and workspaces, and switch
   expect(mountedOptions().projectId).toBe('p9');
 });
 
-test('the module is unmounted and its stylesheet released when the project changes and when the route is left', async () => {
+test('the module is unmounted when the project changes and when the route is left', async () => {
   jest.useFakeTimers();
   await render('/rms/w1/p1');
   const first = mounts[0];
@@ -119,7 +114,6 @@ test('the module is unmounted and its stylesheet released when the project chang
   await act(async () => root.render(<MemoryRouter><p>elsewhere</p></MemoryRouter>));
   act(() => jest.runOnlyPendingTimers());
   expect(mounts[1].unmount).toHaveBeenCalledTimes(1);
-  expect(styleHandle.detach).toHaveBeenCalledTimes(2);
   jest.useRealTimers();
 });
 
@@ -235,11 +229,22 @@ describe('failures', () => {
     expect(mounts).toHaveLength(1);
   });
 
-  test('the stylesheet failing to load counts as the module failing to load', async () => {
-    attachRmsStyle.mockImplementation(() => ({ ready: Promise.reject(new EmbedLoadError('css')), detach: jest.fn() }));
+  test('onSessionEnd from the app sends the person to sign in, coming back here', async () => {
     await render('/rms/w1/p1');
-    expect(container.querySelector('h1').textContent).toBe('RMS could not be loaded');
-    expect(mounts).toHaveLength(0);
+    await act(async () => { mountedOptions().onSessionEnd(); });
+    await flush();
+    expect(invalidate).toHaveBeenCalled();
+    expect(where()).toBe('/login?expired=1&next=%2Frms%2Fw1%2Fp1');
+  });
+
+  test('onError from the app shows the error state with a retry that mounts it again', async () => {
+    await render('/rms/w1/p1');
+    await act(async () => { mountedOptions().onError(Object.assign(new Error('x'), { status: 503, code: 'auth_unavailable' })); });
+    expect(container.querySelector('h1').textContent).toBe('RMS is temporarily unavailable');
+    await act(async () => [...container.querySelectorAll('button')].find((b) => b.textContent === 'Try again').click());
+    await flush();
+    expect(mounts).toHaveLength(2);
+    expect(container.querySelector('h1')).toBeNull();
   });
 
   test('the project list failing offers a retry', async () => {

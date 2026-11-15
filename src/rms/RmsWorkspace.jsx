@@ -9,7 +9,7 @@ import { readSelection, rememberSelection } from '../workspaces/store';
 import { serviceIds } from '../workspaces/services';
 import { failureMessage } from '../workspaces/errors';
 import { workspaceLogin } from '../utils/workspaceNavigation';
-import { attachRmsStyle, EmbedLoadError, loadRmsEmbed, RMS_API_BASE } from './embed';
+import { EmbedLoadError, loadRmsEmbed, RMS_API_BASE } from './embed';
 import '../workspaces/workspaces.css'; // the header's workspace switcher label limits live here
 import './rms.css';
 
@@ -185,23 +185,22 @@ function RmsEmbed({ workspaceId, projectId, onExpired }) {
     let cancelled = false;
     let handle = null;
     let element = null;
-    let style = null;
     setState({ phase: 'loading', failure: null });
 
-    let live = false;
+    const reported = new WeakSet();
     const fail = (failure) => {
-      if (cancelled) return;
+      if (cancelled || (failure && typeof failure === 'object' && reported.has(failure))) return;
+      if (failure && typeof failure === 'object') reported.add(failure);
       if (failure?.status === 401) { expired.current(); return; }
       setState({ phase: 'error', failure });
     };
-    // The module only needs the token. Why a claim could not be had is this page's to explain, so
-    // a failure after the module is running ends the view here; before that, the setup below does.
+    // The module only needs the token; why a claim could not be had is this page's to explain.
     const getClaim = async (refresh = false) => {
       try {
         return (await claims.getClaim(workspaceId, projectId, SERVICE, { force: Boolean(refresh) })).token;
       } catch (failure) {
-        // A hidden tab simply does not renew a claim; anything else ends this view.
-        if (live && failure?.code !== 'tab_hidden') fail(failure);
+        // A hidden tab simply does not renew a claim; anything else is reported through onError/onSessionEnd.
+        if (failure?.code !== 'tab_hidden') fail(failure);
         throw failure;
       }
     };
@@ -209,14 +208,18 @@ function RmsEmbed({ workspaceId, projectId, onExpired }) {
     (async () => {
       try {
         const [embed] = await Promise.all([loadRmsEmbed(), getClaim(false)]);
-        style = attachRmsStyle(embed.styleHref);
-        await style.ready;
         if (cancelled || !host.current) return;
         element = document.createElement('div');
-        element.className = 'rms-mount';
+        element.style.height = '100%';
         host.current.appendChild(element);
-        handle = embed.mount(element, { apiBase: RMS_API_BASE, projectId, getClaim });
-        live = true;
+        handle = embed.mount(element, {
+          apiBase: RMS_API_BASE,
+          projectId,
+          getClaim,
+          // A claim 401 that persists after one refresh: the account session ended.
+          onSessionEnd: () => { if (!cancelled) expired.current(); },
+          onError: (failure) => fail(failure),
+        });
         setState({ phase: 'ready', failure: null });
       } catch (failure) {
         fail(failure instanceof EmbedLoadError || typeof failure?.status === 'number' ? failure : new EmbedLoadError(String(failure?.message || failure)));
@@ -227,12 +230,10 @@ function RmsEmbed({ workspaceId, projectId, onExpired }) {
       cancelled = true;
       const mounted = handle;
       const node = element;
-      const sheet = style;
       // React forbids unmounting a root from inside another root's commit; do it right after.
       setTimeout(() => {
         try { mounted?.unmount(); } catch { /* the page is going away anyway */ }
         node?.remove();
-        sheet?.detach();
       }, 0);
     };
   }, [workspaceId, projectId, attempt, claims]);
