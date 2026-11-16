@@ -1,5 +1,11 @@
 # Automate CAN-based ECU testing without losing the engineer in the loop
 
+It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day.
+
+## Release-gate CAN capture
+
+An example run.
+
 Release-gate CAN capture  Example run
 
 Commanded pressure
@@ -18,7 +24,7 @@ Decision
 
 release evidence ready
 
-## The workflow today
+### The workflow today
 
 - Attach the adapter and bring the bus up manually before every run
 
@@ -28,7 +34,7 @@ release evidence ready
 
 - Write up what happened afterward, from memory or screenshots
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Acquire the CAN interface as a bounded operation, released when the run ends
 

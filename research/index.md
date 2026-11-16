@@ -2,8 +2,7 @@
 
 ## Find the right tradeoff.
 
-Choose a workflow, then a measure. 
-Select any model to see its breakdown.
+Choose a workflow, then a measure.  Select any model to see its breakdown.
 
 ### Ranked by validation index
 
@@ -19,8 +18,7 @@ Fable 5.1 shares or holds the highest validation index for all workflows. Open a
 
 ## Performance landscape
 
-What does better performance cost? 
-Explore where each model lands.
+What does better performance cost?  Explore where each model lands.
 
 All workflows
 

@@ -82,8 +82,7 @@ Source: https://www.plotune.net/
 
 ## Find the right tradeoff.
 
-Choose a workflow, then a measure. 
-Select any model to see its breakdown.
+Choose a workflow, then a measure.  Select any model to see its breakdown.
 
 ### Ranked by validation index
 
@@ -99,8 +98,7 @@ Fable 5.1 shares or holds the highest validation index for all workflows. Open a
 
 ## Performance landscape
 
-What does better performance cost? 
-Explore where each model lands.
+What does better performance cost?  Explore where each model lands.
 
 All workflows
 
@@ -194,9 +192,9 @@ Source: https://www.plotune.net/research/methodology
 
 # Questions about Plotune
 
-How the workspace and its tools fit together, and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware while keeping their data local.
+How the workspace and its tools fit together , and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware while keeping their data local .
 
-A doubtful reviewer holds a puzzle piece that does not quite fit.
+ A doubtful reviewer holds a puzzle piece that does not quite fit.
 
 ## About Plotune
 
@@ -217,6 +215,12 @@ MCP (Model Context Protocol) is a standard way for AI agents to call defined too
 Put a narrow, bounded control layer in front of the hardware. Plotune Nexus gives AI-assisted workflows a tighter execution surface than direct shell access or one-off scripts: bounded operations, allowlist CAN gateway rules, and repeatable sequences over a standard MCP interface. Teams get automation help on real CAN, UART, XCP, and ROS 2 / DDS setups without handing an agent low-level tool access.
 
 The alternative to accumulating one-off scripts is a standard, bounded control surface. Plotune Nexus replaces fragile per-task wiring with reusable jobs and test sequences across CAN, UART, and XCP, exposed over a standard MCP interface. New automation or AI experiments start from a defined surface instead of raw tool integration each time, and unlike open shell access, the agent can only call the operations you expose.
+
+## More answers
+
+Trust and data control, and connecting to real systems, come next.
+
+ A small crew sends a drone on a mission.
 
 ## Trust, safety, and data control
 
@@ -326,14 +330,6 @@ Source: https://www.plotune.net/faq
 
 # Know what happened. Keep the context.
 
-Bring events from your tools, test benches, and scripts into one explorable history. Find the moment, follow the device or session, and see the details that matter.
-
-[Try the demo](https://www.plotune.net/stream/demo)[Open workspace](https://www.plotune.net/stream/workspace)
-
- Explore without an account, or connect your own events.
-
-Small creatures catching signals with a net and passing them down a pipeline of events.
-
 Works with Python, C/C++, CAPL, MATLAB, ROS 2,  Nexus  and HTTP clients. Any system that can send an HTTP request.
 
 ## One event. The whole picture.
@@ -412,7 +408,7 @@ Bring event history into dashboards and saved views you can return to.
 
 ## Part of your workspace.
 
-Stream is switched on per project, next to [RMS](https://www.plotune.net/rms). Create a workspace, add a project, and turn on what the project needs.
+Stream is switched on per project, next to [RMS](https://www.plotune.net/rms).  Create a workspace, add a project, and turn on what the project needs.
 
 [See RMS](https://www.plotune.net/rms)
 
@@ -428,31 +424,31 @@ Source: https://www.plotune.net/stream
 
 ## Review and approval
 
-Requirements move from Draft to In review to Approved, and each change to the wording is a new revision. The person who decides sees the statement and approves or rejects it.
+Requirements move from Draft to In review to Approved, and each change to the wording is a new revision.  The person who decides sees the statement and approves or rejects it.
+
+ An engineer holds up a puzzle piece that does not fit while a tall reviewer leans in to look at the gap.
 
 ## Traceability
 
-Link requirements to the requirements they refine, to test cases and to use cases. The gaps are listed: requirements without a test case, failing tests, links to re-check.
+Link requirements to the requirements they refine, to test cases and to use cases.  The gaps are listed: requirements without a test case, failing tests, links to re-check.
 
 ## Verification
 
-Test cases have recorded results with evidence. A requirement counts as verified only when its tests pass at the level you set as the target.
+Test cases have recorded results with evidence.  A requirement counts as verified only when its tests pass at the level you set as the target.
 
 ## Baselines
 
-Freeze the approved requirements as a reference, then compare it with the live specification later and see what changed.
+Freeze the approved requirements as a reference, then compare it with the live specification later.  You see what changed.
 
 ## AI agents and partner tools
 
-AI agents work in RMS through MCP, with the access you approve, and every change they make is recorded with a reason. Exchange requirements and test cases with partner tools as ReqIF files.
+AI agents work in RMS through MCP, with the access you approve, and every change they make is recorded with a reason.  Exchange requirements and test cases with partner tools as ReqIF files.
 
 ## Part of your workspace
 
-RMS is switched on per project in a workspace, next to Stream. Turn it on for the projects that need it, turn it off when they do not.
+RMS is switched on per project in a workspace, next to Stream.  Turn it on for the projects that need it, turn it off when they do not.
 
 [See Stream](https://www.plotune.net/stream)
-
-An engineer holds up a puzzle piece that does not fit while a tall reviewer leans in to look at the gap.
 
 ## Start with a workspace.
 
@@ -889,6 +885,8 @@ Source: https://www.plotune.net/bridge
 
 # What is agentic test & development?
 
+Agentic test & development is a different approach: an AI agent reads the current state of a real system and takes the next bounded, pre-approved action, rather than following a script that breaks the moment reality doesn't match it exactly.
+
 ## Traditional automation vs. an agentic workflow
 
 ## Traditional automation
@@ -913,9 +911,9 @@ Source: https://www.plotune.net/bridge
 
 ## Explore by workflow
 
-[CAN / ECU TestingAutomate CAN-based ECU testing without losing the engineer in the loopRead more →](https://www.plotune.net/solutions/can-ecu-testing?entry_source=direct)[ROS 2 / DDS TestingRun unattended ROS 2 hardware tests without ROS tooling on your sideRead more →](https://www.plotune.net/solutions/ros2-dds-testing?entry_source=direct)[Test Automation & OrchestrationWhy test automation still requires an engineer in the loopRead more →](https://www.plotune.net/solutions/test-orchestration?entry_source=direct)[AI Hardware-in-the-Loop TestingGive AI agents access to real hardware without giving up control of the boundaryRead more →](https://www.plotune.net/solutions/hil-testing?entry_source=direct)
+ An AI assistant testing a metal bracket
 
-An AI assistant testing a metal bracket
+[CAN / ECU TestingAutomate CAN-based ECU testing without losing the engineer in the loopRead more →](https://www.plotune.net/solutions/can-ecu-testing?entry_source=direct)[ROS 2 / DDS TestingRun unattended ROS 2 hardware tests without ROS tooling on your sideRead more →](https://www.plotune.net/solutions/ros2-dds-testing?entry_source=direct)[Test Automation & OrchestrationWhy test automation still requires an engineer in the loopRead more →](https://www.plotune.net/solutions/test-orchestration?entry_source=direct)[AI Hardware-in-the-Loop TestingGive AI agents access to real hardware without giving up control of the boundaryRead more →](https://www.plotune.net/solutions/hil-testing?entry_source=direct)
 
 ## See the bounded-operation model in practice.
 
@@ -941,6 +939,8 @@ See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sig
 
 [Check your test bench](https://www.plotune.net/ai-readiness?entry_source=direct)
 
+Prefer email?contact@plotune.net
+
 ## What happens next
 
 - 1
@@ -961,9 +961,7 @@ You get a straight answer
 
 Whether it fits, and what getting started would actually take.
 
-Two characters toss a ball across a bridge.
-
-Prefer email?contact@plotune.net
+ Two characters toss a ball across a bridge.
 
 ## Other ways to reach us
 
@@ -975,21 +973,23 @@ Source: https://www.plotune.net/contact
 
 # One engineering workspace, in the cloud.
 
-Create a workspace, add projects, and add what each project needs: RMS for requirements, Stream for event history. Nexus and Bridge bring real test hardware into the same work.
+Create a workspace, add projects, and add what each project needs.  RMS for requirements, Stream for event history. Nexus and Bridge bring real test hardware into the same work.
 
 [Create a workspace](https://www.plotune.net/register)[Contact us](https://www.plotune.net/contact)
 
-A figure steps from a sketch to a finished part.
+ A figure steps from a sketch to a finished part.
 
 ## What a workspace holds
 
-RMS and Stream are available today and are added to a project with a switch. Nexus and Bridge are products of their own. Coming: adding Nexus, Bridge, GPU compute and other sources to a workspace the same way.
+RMS and Stream are available today and are added to a project with a switch.  Nexus and Bridge are products of their own. Coming: adding Nexus, Bridge, GPU compute and other sources to a workspace the same way.
 
 [Cloud toolRMSRequirements with revisions, review and approval, traceability, test evidence and baselines.Explore →](https://www.plotune.net/rms)[Cloud toolStreamOne explorable history for events from your tools, benches and scripts.Explore →](https://www.plotune.net/stream)[HardwareNexusThe local-first appliance that connects AI agents to real test hardware.Explore →](https://www.plotune.net/nexus)[HardwareBridgeCAN, Serial, DAQ and I/O devices managed from the browser.Explore →](https://www.plotune.net/bridge)[Desktop appDesktopLocal visualization and engineering data workflows.Explore →](https://www.plotune.net/download)[PublicationResearchStudies and benchmark data on agentic test and validation.Explore →](https://www.plotune.net/research)
 
 ## Make physical engineering work inspectable.
 
-Engineering teams already have the hardware, the scripts and the data. What is usually missing is a controlled way to connect them. Plotune, founded in 2025, builds that connection and keeps the operator in charge of it.
+Plotune, founded in 2025, connects the hardware, scripts and data you already have, and keeps the operator in charge.
+
+ Small workers pass links of a chain from hand to hand.
 
 - ### Bounded
 
@@ -1003,8 +1003,6 @@ Hardware interaction and first-write data stay on your side. Cloud services supp
 
 A run should leave results, logs and artifacts that an engineer can inspect and a reviewer can approve.
 
-Small workers pass links of a chain from hand to hand.
-
 ## Talk to the team.
 
 Tell us what you build and test. We will tell you where Plotune fits.
@@ -1017,15 +1015,17 @@ Source: https://www.plotune.net/about
 
 # Careers at Plotune
 
-We are not hiring for a specific role right now, but we are always glad to hear from engineers who want to help build the workspace. Check back for new openings.
+We are not hiring for a specific role right now, but we are always glad to hear from engineers who want to help build the workspace.  Check back for new openings.
 
-Linked arms and joints move one another.
+ Linked arms and joints move one another.
 
 ## Join the talent pool.
 
-Tell us what you work on and we will get in touch when an opening matches your expertise. We keep your profile on file for matching roles.
+Tell us what you work on and we will get in touch when an opening matches your expertise.  We keep your profile on file for matching roles.
 
 Express interest[or use the contact form →](https://www.plotune.net/contact)
+
+ A small crew prepares a drone.
 
 Source: https://www.plotune.net/careers
 
@@ -1033,9 +1033,9 @@ Source: https://www.plotune.net/careers
 
 # Download Plotune Desktop
 
-The desktop app for local visualization and engineering data workflows. Choose your operating system and package.
+The desktop app for local visualization and engineering data workflows.  Choose your operating system and package.
 
-A tiny test lab with a small rig on a bench.
+ A tiny test lab with a small rig on a bench.
 
 - ### Debian/Ubuntu (.deb)
 
@@ -1153,6 +1153,12 @@ Need help?  Check out our [documentation](https://www.plotune.net/docs) or join 
 
 Linux is the primary supported platform. Windows builds are provided on a best-effort basis.
 
+## Install and update
+
+The answers below cover requirements, releases, the Linux install and older versions.
+
+ A part taking shape in CAD.
+
 ## Download questions
 
 Source: https://www.plotune.net/download
@@ -1161,9 +1167,9 @@ Source: https://www.plotune.net/download
 
 # Extensions
 
-Extensions add data sources, processing and export to the Plotune desktop app. Search the catalog and install what your work needs.
+Extensions add data sources, processing and export to the Plotune desktop app.  Search the catalog and install what your work needs.
 
-A workshop where ribbons are cut and tied into bows.
+ A workshop where ribbons are cut and tied into bows.
 
 Showing 7 of 7 extensions
 
@@ -1353,7 +1359,7 @@ Source: https://www.plotune.net/extensions
 
 # Legal information
 
-Understanding the terms, licenses, and policies that govern the use of Plotune and its extensions.
+Understanding the terms, licenses, and policies that govern the use of Plotune  and its extensions .
 
 ## Terms of Service
 
@@ -1437,7 +1443,7 @@ Source: https://www.plotune.net/legal
 
 # Privacy policy
 
-Plotune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
+Plotune is committed to protecting your privacy.  This Privacy Policy explains how we collect, use, and safeguard your information.
 
 ## Overview
 
@@ -1553,11 +1559,11 @@ Source: https://www.plotune.net/privacy
 
 # Plotune documentation
 
-Components, calculations, extensions and the SDK of the desktop app, and the guides for Nexus.
+Components, calculations, extensions and the SDK of the desktop app , and the guides for Nexus .
 
 [Nexus documentation](https://www.plotune.net/docs/nexus)[Browse extensions →](https://www.plotune.net/extensions)
 
-A designer works on a part drawing.
+ A designer works on a part drawing.
 
 ## Plotune Overview
 
@@ -1676,6 +1682,14 @@ Distributed stream processing
 Advanced plugin store with auto-deployment
 
 Last updated: November 2025 — Plotune Core v1.0.0
+
+## Nexus guides
+
+The Nexus guides live in their own documentation.
+
+[Nexus documentation](https://www.plotune.net/docs/nexus)
+
+ A designer sketches a piston.
 
 Source: https://www.plotune.net/docs
 
@@ -3319,6 +3333,12 @@ Source: https://www.plotune.net/research/articles/what-is-agentic-test-developme
 
 # Automate CAN-based ECU testing without losing the engineer in the loop
 
+It is acquire the interface, send only the approved message, watch the gateway or ECU response, capture evidence, and release the bus cleanly. Every one of those steps is usually done by hand, on a laptop, by whoever is free that day.
+
+## Release-gate CAN capture
+
+An example run.
+
 Release-gate CAN capture  Example run
 
 Commanded pressure
@@ -3337,7 +3357,7 @@ Decision
 
 release evidence ready
 
-## The workflow today
+### The workflow today
 
 - Attach the adapter and bring the bus up manually before every run
 
@@ -3347,7 +3367,7 @@ release evidence ready
 
 - Write up what happened afterward, from memory or screenshots
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Acquire the CAN interface as a bounded operation, released when the run ends
 
@@ -3387,6 +3407,10 @@ Source: https://www.plotune.net/solutions/can-ecu-testing
 
 # Run unattended ROS 2 hardware tests without ROS tooling on your side
 
+## Requirement-verdict gate on live telemetry
+
+An example run.
+
 Requirement-verdict gate on live telemetry  Example run
 
 Runs
@@ -3405,7 +3429,7 @@ Flakes
 
 0
 
-## The workflow today
+### The workflow today
 
 - SSH into the robot and run ros2 topic echo / ros2 service call by hand
 
@@ -3415,7 +3439,7 @@ Flakes
 
 - No artifact: the "evidence" is whoever happened to be watching the terminal
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Join the robot's DDS domain over the network, no ROS tooling needed on your side
 
@@ -3455,6 +3479,12 @@ Source: https://www.plotune.net/solutions/ros2-dds-testing
 
 # Why test automation still requires an engineer in the loop
 
+The real bottleneck is upstream: someone still decides which sequence to run, watches it for faults, and re-runs it by hand when a build changes. Automation that still needs a person standing next to it is a faster way to wait, not less waiting.
+
+## Bounded DDS test sequence
+
+An example run.
+
 Bounded DDS test sequence  Example run
 
 Steps
@@ -3473,7 +3503,7 @@ Verdict
 
 pass 1/1
 
-## The workflow today
+### The workflow today
 
 - A person kicks off each test sequence and stays to watch it run
 
@@ -3483,7 +3513,7 @@ pass 1/1
 
 - Overnight or long-running coverage simply does not happen
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Orchestrate multi-step sequences across CAN, UART, DBC, XCP, and DDS as one bounded run
 
@@ -3521,6 +3551,12 @@ Source: https://www.plotune.net/solutions/test-orchestration
 
 # Give AI agents access to real hardware without giving up control of the boundary
 
+Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely.
+
+## Containerized sim on virtual CAN
+
+An example run.
+
 Containerized sim on virtual CAN  Example run
 
 Controller
@@ -3539,7 +3575,7 @@ Boundary proof
 
 captured
 
-## The workflow today
+### The workflow today
 
 - Run the simulator and controller on whichever engineer's machine last set it up
 
@@ -3549,7 +3585,7 @@ captured
 
 - Trust a "looks right" run instead of a boundary you can point to and prove
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Run the controller or simulator as a staged container, not a laptop only one person can restart
 

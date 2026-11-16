@@ -1,13 +1,5 @@
 # Know what happened. Keep the context.
 
-Bring events from your tools, test benches, and scripts into one explorable history. Find the moment, follow the device or session, and see the details that matter.
-
-[Try the demo](https://www.plotune.net/stream/demo)[Open workspace](https://www.plotune.net/stream/workspace)
-
- Explore without an account, or connect your own events.
-
-Small creatures catching signals with a net and passing them down a pipeline of events.
-
 Works with Python, C/C++, CAPL, MATLAB, ROS 2,  Nexus  and HTTP clients. Any system that can send an HTTP request.
 
 ## One event. The whole picture.
@@ -86,7 +78,7 @@ Bring event history into dashboards and saved views you can return to.
 
 ## Part of your workspace.
 
-Stream is switched on per project, next to [RMS](https://www.plotune.net/rms). Create a workspace, add a project, and turn on what the project needs.
+Stream is switched on per project, next to [RMS](https://www.plotune.net/rms).  Create a workspace, add a project, and turn on what the project needs.
 
 [See RMS](https://www.plotune.net/rms)
 

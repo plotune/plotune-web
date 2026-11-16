@@ -1,6 +1,6 @@
 # Legal information
 
-Understanding the terms, licenses, and policies that govern the use of Plotune and its extensions.
+Understanding the terms, licenses, and policies that govern the use of Plotune  and its extensions .
 
 ## Terms of Service
 

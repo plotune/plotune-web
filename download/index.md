@@ -1,8 +1,8 @@
 # Download Plotune Desktop
 
-The desktop app for local visualization and engineering data workflows. Choose your operating system and package.
+The desktop app for local visualization and engineering data workflows.  Choose your operating system and package.
 
-A tiny test lab with a small rig on a bench.
+ A tiny test lab with a small rig on a bench.
 
 - ### Debian/Ubuntu (.deb)
 
@@ -119,6 +119,12 @@ Latest release  v1.0.58.3  Released March 28, 2026 · 2 packages available
 Need help?  Check out our [documentation](https://www.plotune.net/docs) or join our [community Discord](https://discord.gg/plotune) for support. Installer scripts are open source.
 
 Linux is the primary supported platform. Windows builds are provided on a best-effort basis.
+
+## Install and update
+
+The answers below cover requirements, releases, the Linux install and older versions.
+
+ A part taking shape in CAD.
 
 ## Download questions
 

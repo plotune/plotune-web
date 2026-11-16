@@ -1,5 +1,11 @@
 # Give AI agents access to real hardware without giving up control of the boundary
 
+Most HIL setups solve this by keeping AI out entirely. The simulator, the virtual bus, and the real bench stay in a person's hands, because there's no bounded way to let an agent touch any of it safely.
+
+## Containerized sim on virtual CAN
+
+An example run.
+
 Containerized sim on virtual CAN  Example run
 
 Controller
@@ -18,7 +24,7 @@ Boundary proof
 
 captured
 
-## The workflow today
+### The workflow today
 
 - Run the simulator and controller on whichever engineer's machine last set it up
 
@@ -28,7 +34,7 @@ captured
 
 - Trust a "looks right" run instead of a boundary you can point to and prove
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Run the controller or simulator as a staged container, not a laptop only one person can restart
 

@@ -1,8 +1,8 @@
 # Extensions
 
-Extensions add data sources, processing and export to the Plotune desktop app. Search the catalog and install what your work needs.
+Extensions add data sources, processing and export to the Plotune desktop app.  Search the catalog and install what your work needs.
 
-A workshop where ribbons are cut and tied into bows.
+ A workshop where ribbons are cut and tied into bows.
 
 Showing 7 of 7 extensions
 

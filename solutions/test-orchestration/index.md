@@ -1,5 +1,11 @@
 # Why test automation still requires an engineer in the loop
 
+The real bottleneck is upstream: someone still decides which sequence to run, watches it for faults, and re-runs it by hand when a build changes. Automation that still needs a person standing next to it is a faster way to wait, not less waiting.
+
+## Bounded DDS test sequence
+
+An example run.
+
 Bounded DDS test sequence  Example run
 
 Steps
@@ -18,7 +24,7 @@ Verdict
 
 pass 1/1
 
-## The workflow today
+### The workflow today
 
 - A person kicks off each test sequence and stays to watch it run
 
@@ -28,7 +34,7 @@ pass 1/1
 
 - Overnight or long-running coverage simply does not happen
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Orchestrate multi-step sequences across CAN, UART, DBC, XCP, and DDS as one bounded run
 

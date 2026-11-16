@@ -1,5 +1,9 @@
 # Run unattended ROS 2 hardware tests without ROS tooling on your side
 
+## Requirement-verdict gate on live telemetry
+
+An example run.
+
 Requirement-verdict gate on live telemetry  Example run
 
 Runs
@@ -18,7 +22,7 @@ Flakes
 
 0
 
-## The workflow today
+### The workflow today
 
 - SSH into the robot and run ros2 topic echo / ros2 service call by hand
 
@@ -28,7 +32,7 @@ Flakes
 
 - No artifact: the "evidence" is whoever happened to be watching the terminal
 
-## With Plotune Nexus
+### With Plotune Nexus
 
 - Join the robot's DDS domain over the network, no ROS tooling needed on your side
 

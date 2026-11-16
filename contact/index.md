@@ -12,6 +12,8 @@ See how AI-ready your test bench is first: 4 questions, about 30 seconds, no sig
 
 [Check your test bench](https://www.plotune.net/ai-readiness?entry_source=direct)
 
+Prefer email?contact@plotune.net
+
 ## What happens next
 
 - 1
@@ -32,9 +34,7 @@ You get a straight answer
 
 Whether it fits, and what getting started would actually take.
 
-Two characters toss a ball across a bridge.
-
-Prefer email?contact@plotune.net
+ Two characters toss a ball across a bridge.
 
 ## Other ways to reach us
 

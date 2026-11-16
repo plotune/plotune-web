@@ -1,8 +1,8 @@
 # Questions about Plotune
 
-How the workspace and its tools fit together, and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware while keeping their data local.
+How the workspace and its tools fit together , and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware while keeping their data local .
 
-A doubtful reviewer holds a puzzle piece that does not quite fit.
+ A doubtful reviewer holds a puzzle piece that does not quite fit.
 
 ## About Plotune
 
@@ -23,6 +23,12 @@ MCP (Model Context Protocol) is a standard way for AI agents to call defined too
 Put a narrow, bounded control layer in front of the hardware. Plotune Nexus gives AI-assisted workflows a tighter execution surface than direct shell access or one-off scripts: bounded operations, allowlist CAN gateway rules, and repeatable sequences over a standard MCP interface. Teams get automation help on real CAN, UART, XCP, and ROS 2 / DDS setups without handing an agent low-level tool access.
 
 The alternative to accumulating one-off scripts is a standard, bounded control surface. Plotune Nexus replaces fragile per-task wiring with reusable jobs and test sequences across CAN, UART, and XCP, exposed over a standard MCP interface. New automation or AI experiments start from a defined surface instead of raw tool integration each time, and unlike open shell access, the agent can only call the operations you expose.
+
+## More answers
+
+Trust and data control, and connecting to real systems, come next.
+
+ A small crew sends a drone on a mission.
 
 ## Trust, safety, and data control
 

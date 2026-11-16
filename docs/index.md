@@ -1,10 +1,10 @@
 # Plotune documentation
 
-Components, calculations, extensions and the SDK of the desktop app, and the guides for Nexus.
+Components, calculations, extensions and the SDK of the desktop app , and the guides for Nexus .
 
 [Nexus documentation](https://www.plotune.net/docs/nexus)[Browse extensions →](https://www.plotune.net/extensions)
 
-A designer works on a part drawing.
+ A designer works on a part drawing.
 
 ## Plotune Overview
 
@@ -123,5 +123,13 @@ Distributed stream processing
 Advanced plugin store with auto-deployment
 
 Last updated: November 2025 — Plotune Core v1.0.0
+
+## Nexus guides
+
+The Nexus guides live in their own documentation.
+
+[Nexus documentation](https://www.plotune.net/docs/nexus)
+
+ A designer sketches a piston.
 
 Source: https://www.plotune.net/docs
