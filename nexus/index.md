@@ -1,6 +1,6 @@
 # Real hardware.Controlled operations.
 
-Nexus lets AI agents run tests on your real hardware through MCP. You decide what they can touch, and every run is recorded on the appliance.
+Nexus lets AI agents run tests on your real hardware through MCP.  You decide what they can touch, and every run is recorded on the appliance.
 
 [Check Your AI Readiness ↗](https://www.plotune.net/ai-readiness?entry_source=direct)
 
@@ -88,7 +88,7 @@ Return status, metadata and retrieval paths for locally recorded logs, traces an
 
 ## Know the boundary.
 
-Local-first operation is documented alongside cloud dependencies, hardware compatibility and current constraints. Start with the architecture and security model.
+Local-first operation is documented alongside cloud dependencies, hardware compatibility and current constraints.  Start with the architecture and security model.
 
 [Security model ↗](https://www.plotune.net/docs/nexus/security-model)[Data handling ↗](https://www.plotune.net/docs/nexus/data-handling)[Protocols ↗](https://www.plotune.net/docs/nexus/protocols)
 
@@ -96,7 +96,7 @@ Local-first operation is documented alongside cloud dependencies, hardware compa
 
 ## Rent it for a project.Or keep it.
 
-Monthly rental or one-time purchase, with full functionality either way. See the options and what they cost for your project.
+Monthly rental or one-time purchase, with full functionality either way.  See the options and what they cost for your project.
 
 [See rent & buy options](https://www.plotune.net/nexus/pricing?entry_source=direct&from=nexus_pricing_band)
 
