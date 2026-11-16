@@ -1,9 +1,5 @@
 # Real hardware.Controlled operations.
 
-Plotune Nexus · local-first appliance 
-
-
-
 Nexus lets AI agents run tests on your real hardware through MCP. You decide what they can touch, and every run is recorded on the appliance.
 
 [Check Your AI Readiness ↗](https://www.plotune.net/ai-readiness?entry_source=direct)
@@ -76,21 +72,15 @@ Join an existing DDS domain, discover topics and record evidence.
 
 A bounded workflow, from requirement to evidence.
 
-- Step 1 
-
-### Inspect the system
+- ### Inspect the system
 
 Discover the available interfaces and current state before requesting an operation.
 
-- Step 2 
-
-### Run a bounded operation
+- ### Run a bounded operation
 
 Use the relevant MCP tools and job controls within the configured access and execution limits.
 
-- Step 3 
-
-### Keep the evidence
+- ### Keep the evidence
 
 Return status, metadata and retrieval paths for locally recorded logs, traces and artifacts.
 

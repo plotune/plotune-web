@@ -1,9 +1,5 @@
 # Use Cases
 
-Plotune Nexus
-
-
-
 Switch between Claude and Codex, follow the full runtime on Plotune Nexus, and read the artifacts that come out of each case. Then jump to the scenarios built for your industry.
 
 Illustrative, prerecorded scenarios. No live hardware is connected to this page.
@@ -22,8 +18,6 @@ Terminal: claude
 
  Operational flow
 
-Artifacts
-
 ## Outputs from the active flow
 
 Operational cases
@@ -34,8 +28,6 @@ Operational cases
 | Gateway regression | +0.1 ms | Baseline clean |
 | BMS field triage | 820 ms | Root cause found |
 | Multi-ECU handshake | 4 ECUs | Sign-off ready |
-
-Scenarios by industry
 
 ## See how Plotune Nexus works in your world
 

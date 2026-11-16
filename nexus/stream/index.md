@@ -4,27 +4,19 @@
 
 [Stream overview ↗](https://www.plotune.net/stream)
 
-- Step 1 
-
-### Generate
+- ### Generate
 
 Nexus or your own application produces an event with the engineering context it knows.
 
-- Step 2 
-
-### Send
+- ### Send
 
 A source that can make HTTP requests can send event data; Nexus is one possible source.
 
-- Step 3 
-
-### Inspect
+- ### Inspect
 
 Use the demo experience to explore event history, filters and the complete JSON payload.
 
-- Step 4 
-
-### Investigate
+- ### Investigate
 
 Follow a device or session across events. Keep the distinction between event history and raw measurements clear.
 

@@ -1,5 +1,23 @@
 # Why test automation still requires an engineer in the loop
 
+Bounded DDS test sequence  Example run
+
+Steps
+
+join → record → wait → leave
+
+scan_min
+
+1.748 m
+
+Rate check
+
+6.47 Hz PASS
+
+Verdict
+
+pass 1/1
+
 ## The workflow today
 
 - A person kicks off each test sequence and stays to watch it run

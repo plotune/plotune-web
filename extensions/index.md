@@ -1,10 +1,8 @@
-# Extensions Marketplace
+# Extensions
 
-Plotune / Extensions  Plotune Core
+Extensions add data sources, processing and export to the Plotune desktop app. Search the catalog and install what your work needs.
 
-
-
-Enhance your Plotune experience with powerful extensions. Add new capabilities, connect to more data sources, and customize your workflow.
+A workshop where ribbons are cut and tied into bows.
 
 Showing 7 of 7 extensions
 

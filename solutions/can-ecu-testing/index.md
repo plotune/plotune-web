@@ -1,5 +1,23 @@
 # Automate CAN-based ECU testing without losing the engineer in the loop
 
+Release-gate CAN capture  Example run
+
+Commanded pressure
+
+38.2 bar
+
+Measured pressure
+
+37.9 bar
+
+Gateway dropouts
+
+0
+
+Decision
+
+release evidence ready
+
 ## The workflow today
 
 - Attach the adapter and bring the bus up manually before every run

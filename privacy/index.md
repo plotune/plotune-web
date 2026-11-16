@@ -1,8 +1,4 @@
-# Privacy Policy
-
-Plotune / Privacy  GDPR · KVKK
-
-
+# Privacy policy
 
 Plotune is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
 

@@ -1,9 +1,5 @@
 # Tell us about your setup.
 
-Contact
-
-
-
 We reply with the right next step for what you are building or testing.
 
 Work emailHow can we help?
@@ -36,9 +32,11 @@ You get a straight answer
 
 Whether it fits, and what getting started would actually take.
 
+Two characters toss a ball across a bridge.
+
 Prefer email?contact@plotune.net
 
-Other ways to reach us
+## Other ways to reach us
 
 [Aydınlı Mah., 34485 Tuzla/İstanbulMon - Fri: 9AM - 6PM](https://maps.google.com/?q=Ayd%C4%B1nl%C4%B1+Mahallesi,+34485+Tuzla+%C4%B0stanbul)[DiscordJoin our Discord server](https://discord.gg/plotune)
 

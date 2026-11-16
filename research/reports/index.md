@@ -2,8 +2,6 @@
 
 TopicSort
 
-Library 
-
 ## Published reports
 
  12 reports

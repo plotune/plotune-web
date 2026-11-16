@@ -1,7 +1,7 @@
 {
   "short_name": "Plotune",
-  "name": "Plotune: DataOps Platform and AI-Ready Test Systems",
-  "description": "Plotune is a DataOps platform for orchestrating and governing data, plus Nexus, a local-first appliance that brings controlled, AI-ready workflows to real test hardware.",
+  "name": "Plotune: One Workspace for Engineering Work",
+  "description": "Plotune is one engineering workspace in the cloud. Add RMS for requirements and Stream for event history to each project, and connect Nexus and Bridge hardware.",
   "icons": [
     {
       "src": "favicon.ico",

@@ -1,14 +1,10 @@
-# Download Plotune
+# Download Plotune Desktop
 
-Plotune / Desktop  Windows · Linux
+The desktop app for local visualization and engineering data workflows. Choose your operating system and package.
 
+A tiny test lab with a small rig on a bench.
 
-
-Get started with Plotune today. Choose your operating system and version to download the software that fits your needs.
-
-- 01 / deb 
-
-### Debian/Ubuntu (.deb)
+- ### Debian/Ubuntu (.deb)
 
 Recommended for Debian-based distributions. Easy installation with APT package manager.
 
@@ -36,9 +32,7 @@ Installation steps
 
 [Download Now](https://github.com/plotune/plotune-dl/releases/download/v1.0.58.3/plotune-linux-x86_64.deb)[View Install Script ↗](https://plotune.net/install.sh)
 
-- 02 / aur 
-
-### Arch Linux (AUR)
+- ### Arch Linux (AUR)
 
 For Arch and Arch-based distributions. Install via AUR helper with automatic updates.
 
@@ -66,9 +60,7 @@ Installation steps
 
 [Download Now](https://aur.archlinux.org/packages/plotune-bin)[AUR Help ↗](https://wiki.archlinux.org/title/Arch_User_Repository)
 
-- 03 / snap 
-
-### Snap Package
+- ### Snap Package
 
 Universal package for most Linux distributions. Sandboxed and auto-updating.
 
@@ -92,9 +84,7 @@ Installation steps
 
 [Download Now](https://snapcraft.io/plotune)[Snap Guide ↗](https://snapcraft.io/docs)
 
-- 04 / binary 
-
-### Standalone Binary
+- ### Standalone Binary
 
 Generic Linux binary. No installation needed - download and run directly.
 
@@ -130,8 +120,6 @@ Need help?  Check out our [documentation](https://www.plotune.net/docs) or join 
 
 Linux is the primary supported platform. Windows builds are provided on a best-effort basis.
 
-Download / Questions  4 answers
-
-## Download FAQs
+## Download questions
 
 Source: https://www.plotune.net/download

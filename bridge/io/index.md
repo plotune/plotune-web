@@ -1,8 +1,6 @@
 # Control and Monitor the Physical World.
 
-[Plotune Bridge](https://www.plotune.net/bridge) / Bridge I/O  USB-C · Wi-Fi · Nexus-ready
-
-Plotune Bridge I/O
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge I/O
 
 
 
@@ -34,9 +32,9 @@ Control of test fixtures from anywhere
 
 [BridgeECU test fixturesSwitch digital outputs and read inputs of a test fixture from anywhere.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)[BridgeSensor simulationDrive a 0-10 V signal to stand in for a sensor while a test sequence runs.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)[BridgeAutomated functional testingRun a sequence that drives outputs, reads inputs and checks the result.See Bridge I/O →](https://www.plotune.net/bridge/io?entry_source=direct)
 
-How it connects  Bridge I/O
+## How it connects
 
-Why it's different  Bridge I/O
+## Why it's different
 
 - Digital and analog I/O in one device
 
@@ -48,7 +46,7 @@ Why it's different  Bridge I/O
 
 - Fewer separate modules
 
-Built for  Applications
+## Built for
 
 - ECU test fixtures
 
@@ -86,7 +84,9 @@ Full specifications
 
 Still to be determined.  Digital output current capacity, analog output accuracy, isolation and protection ratings are still to be determined.
 
-The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+## The rest of the family
+
+[All Bridge products ↗](https://www.plotune.net/bridge)
 
 [Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249](https://www.plotune.net/bridge/daq?entry_source=direct)
 

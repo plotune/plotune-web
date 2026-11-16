@@ -1,14 +1,16 @@
-# Questions about Plotune and Nexus.
+# Questions about Plotune
 
-Plotune / Frequently asked questions  16 answers
+How the workspace and its tools fit together, and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware while keeping their data local.
 
-
-
-How teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware, keep their data local, and orchestrate data operations with the Plotune platform.
+A doubtful reviewer holds a puzzle piece that does not quite fit.
 
 ## About Plotune
 
-A DataOps platform gives teams one repeatable, auditable way to move, process, and govern data across their tools, instead of stitching together one-off scripts. Plotune is a DataOps platform (Core, Stream, and Cloud) for orchestrating, processing, and governing data, and it extends the same controlled, AI-ready approach to real test hardware through its Plotune Nexus appliance.
+The workspace is the place where an engineering team keeps its work in Plotune. You create a workspace, add projects to it, invite people with roles, and switch on the tools each project needs. RMS (requirements) and Stream (event history) are available today. Nexus and Bridge are hardware products of their own for now; adding them to a workspace the same way is coming.
+
+RMS is the requirements tool in a Plotune workspace. It keeps requirements with revisions, review and approval, traceability links, test cases with recorded evidence, and baselines, and it exchanges requirement sets as ReqIF. AI agents can work in it through MCP, with roles and an audit trail. RMS makes no claim of compliance with any standard.
+
+Open the project in your workspace and switch on the tool it needs, for example RMS or Stream. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view. Nexus and Bridge are not added this way yet.
 
 A local-first acquisition appliance captures and stores data next to the hardware by default, rather than streaming it into a vendor cloud first. Plotune Nexus is a managed local-first appliance on Plotune-defined hardware: captures and artifacts stay on the device, and the team chooses where outputs go, whether local files, SFTP, Google Drive, or OneDrive and SharePoint.
 
@@ -46,17 +48,23 @@ Use signal-wait conditions as verdict gates. Plotune Nexus supports decoded-sign
 
 Move recurring capture and stimulation steps out of one-off scripts and into reusable jobs and test sequences. Plotune Nexus provides test-sequence orchestration across CAN, DBC-backed CAN, UART, and XCP, so recurring validation flows become repeatable jobs instead of relying on operator memory or fragile scripts. Artifacts are captured locally and handed off cleanly for review.
 
-Not covered here
-
 ## Still have a question?
 
-Talk to the team about your bench, your data path, and how a bounded, AI-ready workflow would fit your setup.
+Talk to the team about your project, your bench and your data path.
 
-[Contact Us](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
+[Contact us](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
 
-## What is a DataOps platform?
+## What is the Plotune workspace?
 
-A DataOps platform gives teams one repeatable, auditable way to move, process, and govern data across their tools, instead of stitching together one-off scripts. Plotune is a DataOps platform (Core, Stream, and Cloud) for orchestrating, processing, and governing data, and it extends the same controlled, AI-ready approach to real test hardware through its Plotune Nexus appliance.
+The workspace is the place where an engineering team keeps its work in Plotune. You create a workspace, add projects to it, invite people with roles, and switch on the tools each project needs. RMS (requirements) and Stream (event history) are available today. Nexus and Bridge are hardware products of their own for now; adding them to a workspace the same way is coming.
+
+## What is RMS?
+
+RMS is the requirements tool in a Plotune workspace. It keeps requirements with revisions, review and approval, traceability links, test cases with recorded evidence, and baselines, and it exchanges requirement sets as ReqIF. AI agents can work in it through MCP, with roles and an audit trail. RMS makes no claim of compliance with any standard.
+
+## How are tools added to a project?
+
+Open the project in your workspace and switch on the tool it needs, for example RMS or Stream. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view. Nexus and Bridge are not added this way yet.
 
 ## What is a local-first data acquisition appliance?
 

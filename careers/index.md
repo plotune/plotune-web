@@ -1,19 +1,13 @@
 # Careers at Plotune
 
-Plotune / Careers  No open roles
+We are not hiring for a specific role right now, but we are always glad to hear from engineers who want to help build the workspace. Check back for new openings.
 
+Linked arms and joints move one another.
 
+## Join the talent pool.
 
-We’re not actively hiring at the moment, but we’re always on the lookout for passionate individuals to help shape the future of real-time data visualization. Check back soon for new opportunities!
+Tell us what you work on and we will get in touch when an opening matches your expertise. We keep your profile on file for matching roles.
 
-Talent pool
-
-## Be part of the work.
-
-Interested in shaping the future of data streaming with Plotune? Join our talent pool to get notified about opportunities matching your expertise.
-
-Express Interest [or use the contact form →](https://www.plotune.net/contact)
-
-We'll review your profile and keep it on file for matching roles.
+Express interest[or use the contact form →](https://www.plotune.net/contact)
 
 Source: https://www.plotune.net/careers

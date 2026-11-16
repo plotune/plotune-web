@@ -1,5 +1,23 @@
 # Run unattended ROS 2 hardware tests without ROS tooling on your side
 
+Requirement-verdict gate on live telemetry  Example run
+
+Runs
+
+15 / 15 PASS
+
+Gate evaluations
+
+30 / 30 matched
+
+Match latency
+
+0.26 – 0.37 s
+
+Flakes
+
+0
+
 ## The workflow today
 
 - SSH into the robot and run ros2 topic echo / ros2 service call by hand

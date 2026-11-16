@@ -1,12 +1,12 @@
-# Plotune Documentation
+# Plotune documentation
 
-Plotune / Documentation  Desktop · Extensions · SDK
+Components, calculations, extensions and the SDK of the desktop app, and the guides for Nexus.
 
+[Nexus documentation](https://www.plotune.net/docs/nexus)[Browse extensions →](https://www.plotune.net/extensions)
 
+A designer works on a part drawing.
 
-Explore components, calculations, extensions and the SDK.
-
-# Plotune Overview
+## Plotune Overview
 
 A modular, high-performance data visualization and signal analysis platform built for researchers, engineers, and students.
 

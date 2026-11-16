@@ -1,5 +1,23 @@
 # Give AI agents access to real hardware without giving up control of the boundary
 
+Containerized sim on virtual CAN  Example run
+
+Controller
+
+staged container
+
+Bus
+
+virtual CAN
+
+Gateway
+
+approved frames only
+
+Boundary proof
+
+captured
+
 ## The workflow today
 
 - Run the simulator and controller on whichever engineer's machine last set it up

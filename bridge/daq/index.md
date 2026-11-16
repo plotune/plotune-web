@@ -1,8 +1,6 @@
 # Capture Real-World Signals with Confidence.
 
-[Plotune Bridge](https://www.plotune.net/bridge) / Bridge DAQ  USB-C · Wi-Fi · Nexus-ready
-
-Plotune Bridge DAQ
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge DAQ
 
 
 
@@ -36,9 +34,9 @@ Measurements inside automated test workflows
 
 [BridgeSensor monitoringWatch sensor voltages live in the browser, record the measurement and export the data.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)[BridgeECU signal validationCheck analog signals during a test and keep the measurement inside the automated workflow.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)[BridgeLaboratory experimentsRecord up to 7 voltage channels during an experiment and export the data.See Bridge DAQ →](https://www.plotune.net/bridge/daq?entry_source=direct)
 
-How it connects  Bridge DAQ
+## How it connects
 
-Why it's different  Bridge DAQ
+## Why it's different
 
 - Seven analog channels, compact
 
@@ -48,7 +46,7 @@ Why it's different  Bridge DAQ
 
 - Browser access, no desktop DAQ application
 
-Built for  Applications
+## Built for
 
 - Sensor monitoring
 
@@ -84,7 +82,9 @@ Full specifications
 
 Still to be determined.  Sampling rate, accuracy, noise performance and isolation are still to be determined. ADC resolution on its own does not establish measurement accuracy.
 
-The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+## The rest of the family
+
+[All Bridge products ↗](https://www.plotune.net/bridge)
 
 [Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge SerialSerial · 2 channels$129](https://www.plotune.net/bridge/serial?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259](https://www.plotune.net/bridge/io?entry_source=direct)
 

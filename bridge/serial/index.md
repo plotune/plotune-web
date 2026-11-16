@@ -1,8 +1,6 @@
 # Industrial Serial Communication Made Accessible.
 
-[Plotune Bridge](https://www.plotune.net/bridge) / Bridge Serial  USB-C · Wi-Fi · Nexus-ready
-
-Plotune Bridge Serial
+[Plotune Bridge](https://www.plotune.net/bridge) / Bridge Serial
 
 
 
@@ -36,9 +34,9 @@ Automated serial testing with Nexus
 
 [BridgeEmbedded firmware debuggingWatch the console of a device on the bench from anywhere, send commands and keep a log.See Bridge Serial →](https://www.plotune.net/bridge/serial?entry_source=direct)[BridgeIndustrial equipment diagnosticsReach industrial equipment over RS-232, RS-422 or RS-485, send commands and log the responses without a site visit.See Bridge Serial →](https://www.plotune.net/bridge/serial?entry_source=direct)[BridgeSerial protocol validationSend bytes and watch the replies to check a protocol before it ships.See Bridge Serial →](https://www.plotune.net/bridge/serial?entry_source=direct)
 
-How it connects  Bridge Serial
+## How it connects
 
-Why it's different  Bridge Serial
+## Why it's different
 
 - Remote serial debugging
 
@@ -48,7 +46,7 @@ Why it's different  Bridge Serial
 
 - Test automation, not basic serial conversion
 
-Built for  Applications
+## Built for
 
 - Embedded firmware debugging
 
@@ -80,7 +78,9 @@ Full specifications
 
 - Plotune Nexus integration and AI-agent-ready serial testing
 
-The rest of the family [All Bridge products ↗](https://www.plotune.net/bridge)
+## The rest of the family
+
+[All Bridge products ↗](https://www.plotune.net/bridge)
 
 [Bridge CANCAN · 2 channels$199](https://www.plotune.net/bridge/can?entry_source=direct)[Bridge DAQAnalog · 7 inputs$249](https://www.plotune.net/bridge/daq?entry_source=direct)[Bridge I/ODigital + analog · 12 I/O$259](https://www.plotune.net/bridge/io?entry_source=direct)
 

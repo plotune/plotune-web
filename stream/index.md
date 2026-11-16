@@ -1,8 +1,4 @@
-# Know what happened.Keep the context.
-
-Plotune Stream  / Event history for engineering systems
-
-
+# Know what happened. Keep the context.
 
 Bring events from your tools, test benches, and scripts into one explorable history. Find the moment, follow the device or session, and see the details that matter.
 
@@ -10,48 +6,15 @@ Bring events from your tools, test benches, and scripts into one explorable hist
 
  Explore without an account, or connect your own events.
 
-Choose a source  Follow its event
+Small creatures catching signals with a net and passing them down a pipeline of events.
 
-Plotune Stream Events, with their context.
+Works with Python, C/C++, CAPL, MATLAB, ROS 2,  Nexus  and HTTP clients. Any system that can send an HTTP request.
 
- HTTP
+## One event. The whole picture.
 
-Event history  Device · session · properties
+Choose a workflow and see the context that travels with each event.
 
-motor-003 / test-run-817 motor.sample
-
-Temperature
-
-72.4 °C
-
-Speed
-
-1,840 rpm
-
-State
-
-Running
-
-test.completed  device.connected
-
-Python: motor.sample, from motor-003, session test-run-817.
-
-Different systems. One place to understand them.
-
-Works with the tools you use 
-
-Python  C/C++  CAPL  MATLAB  ROS 2  Nexus  HTTP clients
-
- Any system that can send an HTTP request.
-
-Interactive demo 
-
-## One event.The whole picture.
-
-Choose an engineering workflow. 
-See the context that travels with each event.
-
-A motor test bench 
+A motor test bench
 
 ### Motor sample
 
@@ -91,9 +54,7 @@ state
 
 running
 
- Keep exploring 
-
-### From one eventto the bigger picture.
+### From one event to the bigger picture.
 
 Search event history, filter by device or session, and explore dashboards in the full demo.
 
@@ -105,40 +66,32 @@ Search event history, filter by device or session, and explore dashboards in the
 
 [Try the demo](https://www.plotune.net/stream/demo)[Open workspace](https://www.plotune.net/stream/workspace)
 
- Ready to connect your systems? Open your workspace.
-
 Motor sample selected
 
-Built for your next investigation 
-
-## Less searching.More understanding.
+## Less searching. More understanding.
 
 From a single device to a shared test session, keep the event and its context together.
-
-01
 
 ### Find the moment.
 
 Search and filter event history to narrow an investigation to the events that matter.
 
-02
-
 ### Keep the details.
 
 Inspect device and session identifiers alongside the properties your application provides.
-
-03
 
 ### Explore the pattern.
 
 Bring event history into dashboards and saved views you can return to.
 
-Choose your next step 
+## Part of your workspace.
 
-## Explore Stream.Or bring your own events.
+Stream is switched on per project, next to [RMS](https://www.plotune.net/rms). Create a workspace, add a project, and turn on what the project needs.
 
-Get a feel for Stream in the demo, or open your workspace to connect your systems.
+[See RMS](https://www.plotune.net/rms)
 
-[New to Stream?See what youcan discover.Explore event history, filters, and dashboards. Get a feel for the workspace before connecting your tools.Try the demo](https://www.plotune.net/stream/demo)[Ready to connect?Bring yourown events.Open your projects and start capturing events from your engineering systems with your Plotune account.Open workspace](https://www.plotune.net/stream/workspace)
+ECU bench    Stream    RMS
+
+Battery rig    Stream    RMS
 
 Source: https://www.plotune.net/stream
