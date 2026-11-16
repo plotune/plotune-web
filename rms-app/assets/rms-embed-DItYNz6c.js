@@ -20440,9 +20440,9 @@ function Ga({ api: e, session: t, onDisconnect: n, chrome: r = "standalone", swi
 								})]
 							}, e.view))
 						}),
-						/* @__PURE__ */ (0, H.jsxs)("div", {
+						/* @__PURE__ */ (0, H.jsx)("div", {
 							className: "sidebar-foot",
-							children: [/* @__PURE__ */ (0, H.jsx)("nav", {
+							children: /* @__PURE__ */ (0, H.jsx)("nav", {
 								"aria-label": "Settings",
 								className: "nav",
 								children: /* @__PURE__ */ (0, H.jsxs)("a", {
@@ -20459,59 +20459,7 @@ function Ga({ api: e, session: t, onDisconnect: n, chrome: r = "standalone", swi
 										}), /* @__PURE__ */ (0, H.jsx)("small", { children: "Agents, exchange, data model" })]
 									})]
 								})
-							}), /* @__PURE__ */ (0, H.jsx)(zt, {
-								className: "me-menu",
-								label: "Account",
-								name: pe,
-								button: /* @__PURE__ */ (0, H.jsx)("span", {
-									className: "avatar",
-									"aria-hidden": "true",
-									children: pe.slice(0, 1).toUpperCase()
-								}),
-								children: (e) => /* @__PURE__ */ (0, H.jsxs)(H.Fragment, { children: [
-									/* @__PURE__ */ (0, H.jsxs)("div", {
-										className: "me",
-										children: [/* @__PURE__ */ (0, H.jsx)("strong", { children: pe }), /* @__PURE__ */ (0, H.jsx)("small", { children: Ze[t.role] ?? t.role })]
-									}),
-									a?.links ? a.links.map((e) => /* @__PURE__ */ (0, H.jsx)("a", {
-										role: "menuitem",
-										href: e.href,
-										children: e.label
-									}, e.href + e.label)) : i && /* @__PURE__ */ (0, H.jsxs)(H.Fragment, { children: [
-										/* @__PURE__ */ (0, H.jsx)("a", {
-											role: "menuitem",
-											href: "/profile",
-											children: "Profile"
-										}),
-										/* @__PURE__ */ (0, H.jsx)("a", {
-											role: "menuitem",
-											href: "/workspaces",
-											children: "All workspaces"
-										}),
-										/* @__PURE__ */ (0, H.jsx)("a", {
-											role: "menuitem",
-											href: "/dashboard",
-											children: "Dashboard"
-										})
-									] }),
-									a?.onSignOut && /* @__PURE__ */ (0, H.jsx)("button", {
-										type: "button",
-										role: "menuitem",
-										onClick: () => {
-											e(), a.onSignOut?.();
-										},
-										children: "Log out"
-									}),
-									n && /* @__PURE__ */ (0, H.jsx)("button", {
-										type: "button",
-										role: "menuitem",
-										onClick: () => {
-											e(), n();
-										},
-										children: "Sign out"
-									})
-								] })
-							})]
+							})
 						})
 					]
 				}), /* @__PURE__ */ (0, H.jsxs)("div", {
@@ -20621,34 +20569,90 @@ function Ga({ api: e, session: t, onDisconnect: n, chrome: r = "standalone", swi
 							}),
 							/* @__PURE__ */ (0, H.jsxs)("div", {
 								className: "topbar-end",
-								children: [/* @__PURE__ */ (0, H.jsxs)("button", {
-									type: "button",
-									className: "search-trigger",
-									"aria-label": "Search",
-									onClick: () => y(!0),
-									children: [
-										/* @__PURE__ */ (0, H.jsxs)(Ra, { children: [/* @__PURE__ */ (0, H.jsx)("circle", {
-											cx: "11",
-											cy: "11",
-											r: "7"
-										}), /* @__PURE__ */ (0, H.jsx)("path", { d: "m20 20-3.5-3.5" })] }),
-										/* @__PURE__ */ (0, H.jsx)("span", { children: "Search" }),
-										/* @__PURE__ */ (0, H.jsx)("kbd", { children: "Ctrl K" })
-									]
-								}), l.products.length > 0 && L && /* @__PURE__ */ (0, H.jsxs)(U, {
-									className: "primary new-req",
-									title: L.label,
-									disabledReason: L.reason,
-									onClick: () => oe.open(L.dialog),
-									children: [/* @__PURE__ */ (0, H.jsx)("span", {
-										className: "plus",
-										"aria-hidden": "true",
-										children: "+"
-									}), /* @__PURE__ */ (0, H.jsx)("span", {
-										className: "new-req-label",
-										children: L.label
-									})]
-								})]
+								children: [
+									/* @__PURE__ */ (0, H.jsxs)("button", {
+										type: "button",
+										className: "search-trigger",
+										"aria-label": "Search",
+										onClick: () => y(!0),
+										children: [
+											/* @__PURE__ */ (0, H.jsxs)(Ra, { children: [/* @__PURE__ */ (0, H.jsx)("circle", {
+												cx: "11",
+												cy: "11",
+												r: "7"
+											}), /* @__PURE__ */ (0, H.jsx)("path", { d: "m20 20-3.5-3.5" })] }),
+											/* @__PURE__ */ (0, H.jsx)("span", { children: "Search" }),
+											/* @__PURE__ */ (0, H.jsx)("kbd", { children: "Ctrl K" })
+										]
+									}),
+									l.products.length > 0 && L && /* @__PURE__ */ (0, H.jsxs)(U, {
+										className: "primary new-req",
+										title: L.label,
+										disabledReason: L.reason,
+										onClick: () => oe.open(L.dialog),
+										children: [/* @__PURE__ */ (0, H.jsx)("span", {
+											className: "plus",
+											"aria-hidden": "true",
+											children: "+"
+										}), /* @__PURE__ */ (0, H.jsx)("span", {
+											className: "new-req-label",
+											children: L.label
+										})]
+									}),
+									/* @__PURE__ */ (0, H.jsx)(zt, {
+										className: "me-menu",
+										label: "Account",
+										name: pe,
+										button: /* @__PURE__ */ (0, H.jsx)("span", {
+											className: "avatar",
+											"aria-hidden": "true",
+											children: pe.slice(0, 1).toUpperCase()
+										}),
+										children: (e) => /* @__PURE__ */ (0, H.jsxs)(H.Fragment, { children: [
+											/* @__PURE__ */ (0, H.jsxs)("div", {
+												className: "me",
+												children: [/* @__PURE__ */ (0, H.jsx)("strong", { children: pe }), /* @__PURE__ */ (0, H.jsx)("small", { children: Ze[t.role] ?? t.role })]
+											}),
+											a?.links ? a.links.map((e) => /* @__PURE__ */ (0, H.jsx)("a", {
+												role: "menuitem",
+												href: e.href,
+												children: e.label
+											}, e.href + e.label)) : i && /* @__PURE__ */ (0, H.jsxs)(H.Fragment, { children: [
+												/* @__PURE__ */ (0, H.jsx)("a", {
+													role: "menuitem",
+													href: "/profile",
+													children: "Profile"
+												}),
+												/* @__PURE__ */ (0, H.jsx)("a", {
+													role: "menuitem",
+													href: "/workspaces",
+													children: "All workspaces"
+												}),
+												/* @__PURE__ */ (0, H.jsx)("a", {
+													role: "menuitem",
+													href: "/dashboard",
+													children: "Dashboard"
+												})
+											] }),
+											a?.onSignOut && /* @__PURE__ */ (0, H.jsx)("button", {
+												type: "button",
+												role: "menuitem",
+												onClick: () => {
+													e(), a.onSignOut?.();
+												},
+												children: "Log out"
+											}),
+											n && /* @__PURE__ */ (0, H.jsx)("button", {
+												type: "button",
+												role: "menuitem",
+												onClick: () => {
+													e(), n();
+												},
+												children: "Sign out"
+											})
+										] })
+									})
+								]
 							})
 						]
 					}), /* @__PURE__ */ (0, H.jsx)("main", {
