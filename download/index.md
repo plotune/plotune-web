@@ -10,11 +10,7 @@ Recommended for Debian-based distributions. Easy installation with APT package m
 
 Version
 
-v1.0.58.3
-
-Size
-
-8.5 MB
+Latest
 
 ```
 $ curl -fsSL https://plotune.net/install.sh | bash
@@ -30,7 +26,7 @@ Installation steps
 
 - Fix dependencies: sudo apt-get install -f
 
-[Download Now](https://github.com/plotune/plotune-dl/releases/download/v1.0.58.3/plotune-linux-x86_64.deb)[View Install Script ↗](https://plotune.net/install.sh)
+[Download Now](https://github.com/plotune/plotune-dl/releases/latest)[View Install Script ↗](https://plotune.net/install.sh)
 
 - ### Arch Linux (AUR)
 
@@ -38,7 +34,7 @@ For Arch and Arch-based distributions. Install via AUR helper with automatic upd
 
 Version
 
-v1.0.58.3
+Latest
 
 Size
 
@@ -58,7 +54,7 @@ Installation steps
 
 - Run: plotune
 
-[Download Now](https://aur.archlinux.org/packages/plotune-bin)[AUR Help ↗](https://wiki.archlinux.org/title/Arch_User_Repository)
+[Download Now](https://github.com/plotune/plotune-dl/releases/latest)[AUR Help ↗](https://wiki.archlinux.org/title/Arch_User_Repository)
 
 - ### Snap Package
 
@@ -66,7 +62,7 @@ Universal package for most Linux distributions. Sandboxed and auto-updating.
 
 Version
 
-v1.0.58.3
+Latest
 
 ```
 $ sudo snap install plotune
@@ -82,7 +78,7 @@ Installation steps
 
 - Launch from applications menu
 
-[Download Now](https://snapcraft.io/plotune)[Snap Guide ↗](https://snapcraft.io/docs)
+[Download Now](https://github.com/plotune/plotune-dl/releases/latest)[Snap Guide ↗](https://snapcraft.io/docs)
 
 - ### Standalone Binary
 
@@ -90,11 +86,7 @@ Generic Linux binary. No installation needed - download and run directly.
 
 Version
 
-v1.0.58.3
-
-Size
-
-8.5 MB
+Latest
 
 ```
 $ ./plotune
@@ -111,10 +103,6 @@ Installation steps
 - Run: chmod +x plotune && ./plotune
 
 [Download Now](https://github.com/plotune/plotune-dl/releases/latest/download/plotune-linux-x86_64.tar.gz)
-
-Latest release  v1.0.58.3  Released March 28, 2026 · 2 packages available
-
-[View Release Notes ↗](https://github.com/plotune/plotune-dl/releases/tag/v1.0.58.3)[All Releases on GitHub ↗](https://github.com/plotune/plotune-dl/releases)
 
 Need help?  Check out our [documentation](https://www.plotune.net/docs) or join our [community Discord](https://discord.gg/plotune) for support. Installer scripts are open source.
 

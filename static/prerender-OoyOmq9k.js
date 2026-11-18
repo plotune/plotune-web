@@ -1,0 +1,1 @@
+var e=()=>typeof window<`u`&&window.__PLOTUNE_PRERENDER__===!0;export{e as t};

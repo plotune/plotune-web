@@ -1,0 +1,1 @@
+import{p as e,t}from"./components-B24T9HU1.js";import{t as n}from"./jsx-runtime-LKYXHABd.js";var r=n(),i=()=>{let n=e();return(0,r.jsx)(t,{to:`/research${n.search}`,replace:!0})};export{i as default};
