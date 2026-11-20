@@ -1,12 +1,12 @@
 {
   "src/embed.tsx": {
-    "file": "assets/rms-embed-DYC33Qjt.js",
+    "file": "assets/rms-embed-csJUpC87.js",
     "name": "embed",
     "src": "src/embed.tsx",
     "isEntry": true
   },
   "style.css": {
-    "file": "assets/rms-embed-BGaVCaX9.css",
+    "file": "assets/rms-embed-BfG9RCbq.css",
     "src": "style.css"
   }
 }
