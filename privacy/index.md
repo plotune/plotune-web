@@ -42,7 +42,7 @@ Where we rely on consent you can withdraw it at any time; this does not affect w
 
 ## Cookies and analytics
 
-The banner asks about two kinds of optional storage, separately. Nothing optional is stored before you choose, and you can change your choice at any time: .
+The banner asks about two kinds of optional storage, separately. Nothing optional is stored before you choose, your choice is remembered (if you refuse everything, we ask once more after six months), and you can change it at any time: .
 
 - Necessary, always on.  A sign-in cookie (`auth_token`) while you are logged in, your cookie choice, and interface preferences such as the selected workspace, kept in your browser's storage. During a visit we also keep which link or advertisement brought you, in session storage that is cleared when you close the tab.
 
