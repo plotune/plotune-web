@@ -6,8 +6,8 @@ Technical documentation describes implementation status and limitations. Researc
 
 ## Product and workflows
 
-- [One workspace for engineering work.Add what each project needs.](https://www.plotune.net/index.md): Create a Plotune workspace, add projects, and switch on what each project needs: RMS for requirements and test evidence, Stream for event history. Nexus and Bridge hardware connect to the same work.
-- [Requirements you can review, trace and verify, in the same workspace as your projects.](https://www.plotune.net/rms/index.md): Plotune RMS keeps requirements with revisions, review and approval, traceability, test evidence and baselines in the same workspace as your projects. AI agents work through MCP, and ReqIF moves data to partner tools.
+- [Prove your hardware does what it should.](https://www.plotune.net/index.md): Plotune links every requirement to the test that checks it and the bench data behind it, for teams that build and test electronics and hardware. It works with the AI assistant your company already uses, such as Microsoft Copilot, ChatGPT or Claude; you review and approve.
+- [Know which test proves each requirement.](https://www.plotune.net/rms/index.md): Plotune RMS is for teams whose requirements must be reviewed, traced to tests and verified: revisions, review and approval, traceability, test evidence and baselines. It works with the AI assistant your company already uses, such as Microsoft Copilot, ChatGPT or Claude, with every change recorded, and ReqIF moves data to partner tools.
 - [Real hardware.Controlled operations.](https://www.plotune.net/nexus/index.md): Plotune Nexus is a managed, local-first appliance that connects to real test systems and runs bounded, AI-ready workflows over a standard MCP surface, with data that stays yours.
 - [One connection point for your entire test environment.](https://www.plotune.net/nexus/connectivity/index.md): Connect Plotune Nexus to the test systems your team already uses: CAN, UART, XCP on CAN and Ethernet, ROS 2 / DDS over CycloneDDS, and raw UDS and DoIP.
 - [From the bench. Into the event history.](https://www.plotune.net/nexus/stream/index.md): Explore the Nexus and Stream integration model for engineering events, with a hands-on demo experience and a future-product reference.
@@ -52,7 +52,7 @@ Technical documentation describes implementation status and limitations. Researc
 ## Optional
 
 - [Questions about Plotune](https://www.plotune.net/faq/index.md): Answers to common questions about the Plotune workspace and RMS, and about Plotune Nexus: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation.
-- [Know what happened. Keep the context.](https://www.plotune.net/stream/index.md): Understand events from your engineering systems in one explorable history. Try the Plotune Stream demo or open your workspace to connect your tools, test benches, and scripts.
+- [See what happened on your test bench.](https://www.plotune.net/stream/index.md): Send test results, sensor samples and device state over HTTP from your test benches, scripts and tools, and explore them as one event history. Try the Plotune Stream demo or create a workspace.
 - [Connect your hardware.Access it anywhere.Automate with AI.](https://www.plotune.net/bridge/index.md): Plotune Bridge is a family of compact hardware interfaces for CAN, serial, data acquisition and I/O. USB-C and Wi-Fi connectivity, browser-based operation and native Plotune Nexus integration for AI-powered test automation.
 - [Tell us about your setup.](https://www.plotune.net/contact/index.md): Tell us about your setup and we'll point you to the right Plotune product and walk you through the next steps.
 - [One engineering workspace, in the cloud.](https://www.plotune.net/about/index.md): Plotune is an engineering workspace in the cloud with RMS for requirements and Stream for event history, plus Nexus and Bridge for real test hardware.
@@ -60,7 +60,7 @@ Technical documentation describes implementation status and limitations. Researc
 - [Download Plotune Desktop](https://www.plotune.net/download/index.md): Download the Plotune desktop app for Windows and Linux and use it for local visualization and engineering data workflows.
 - [Extensions](https://www.plotune.net/extensions/index.md): Extend Plotune with a growing marketplace of integrations and tools for data sources, processing, and export.
 - [Legal information](https://www.plotune.net/legal/index.md): Published page content.
-- [Privacy policy](https://www.plotune.net/privacy/index.md): Published page content.
+- [Privacy policy](https://www.plotune.net/privacy/index.md): What personal data Plotune collects, why, who receives it, how long it is kept and how to use your rights under GDPR and KVKK.
 - [Dual-Channel CAN Communication, Anywhere.](https://www.plotune.net/bridge/can/index.md): A compact, dual-channel Classical CAN interface for connected automotive and embedded-system testing. A connected CAN test interface that combines affordable hardware with remote access and test automation.
 - [Industrial Serial Communication Made Accessible.](https://www.plotune.net/bridge/serial/index.md): A compact, dual-channel serial communication interface for connected debugging, diagnostics and automation. An accessible serial interface combining connectivity, remote debugging and automated testing.
 - [Capture Real-World Signals with Confidence.](https://www.plotune.net/bridge/daq/index.md): A compact, seven-channel analog data acquisition device for connected engineering measurements and automated validation. An accessible, connected DAQ solution combining analog measurement with remote monitoring and test automation.

@@ -1,37 +1,53 @@
-# Requirements you can review, trace and verify, in the same workspace as your projects.
+# Know which test proves each requirement.
 
-## Review and approval
+- Review, approval and revisions for every requirement
+
+- Exchange with partner tools as ReqIF files
+
+- Works with Microsoft Copilot, ChatGPT and Claude
+
+## Nothing counts until someone approves it
 
 Requirements move from Draft to In review to Approved, and each change to the wording is a new revision.  The person who decides sees the statement and approves or rejects it.
 
- An engineer holds up a puzzle piece that does not fit while a tall reviewer leans in to look at the gap.
+## Your AI assistant does the tracing, on the record
 
-## Traceability
+Connect the assistant your company already uses. It works with the access you approve, and every change it makes is recorded with a reason.  Exchange requirements and test cases with partner tools as ReqIF files.
+
+Works with
+
+- Microsoft Copilot
+
+- ChatGPT
+
+- Claude
+
+Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+
+## See which requirements have no test yet
 
 Link requirements to the requirements they refine, to test cases and to use cases.  The gaps are listed: requirements without a test case, failing tests, links to re-check.
 
-## Verification
+## Verified means the tests passed
 
-Test cases have recorded results with evidence.  A requirement counts as verified only when its tests pass at the level you set as the target.
-
-## Baselines
-
-Freeze the approved requirements as a reference, then compare it with the live specification later.  You see what changed.
-
-## AI agents and partner tools
-
-AI agents work in RMS through MCP, with the access you approve, and every change they make is recorded with a reason.  Exchange requirements and test cases with partner tools as ReqIF files.
+Test cases have recorded results with evidence. A requirement counts as verified only when its tests pass at the level you set as the target.  Freeze the approved requirements as a reference, then compare it with the live specification later. You see what changed.
 
 ## Part of your workspace
 
-RMS is switched on per project in a workspace, next to Stream.  Turn it on for the projects that need it, turn it off when they do not.
+RMS is switched on per project in a workspace, next to Stream, which keeps the event history from your bench.  Turn it on for the projects that need it.
 
-[See Stream](https://www.plotune.net/stream)
+[See bench event history in Stream](https://www.plotune.net/stream)
+
+- Pump controller    RMS  on    Stream  on
+
+- Test bench    RMS  off    Stream  on
 
 ## Start with a workspace.
 
 Create one, add a project and switch RMS on for it.
 
-[Create a workspace](https://www.plotune.net/register)[Read the docs](https://www.plotune.net/docs)[Talk to us](https://www.plotune.net/contact)
+[Create a workspace](https://www.plotune.net/register)[Read the docs](https://www.plotune.net/docs)[Talk to us](https://www.plotune.net/contact?entry_source=direct)
+
+Free to start. No credit card needed.
 
 Source: https://www.plotune.net/rms

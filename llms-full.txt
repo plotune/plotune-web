@@ -6,61 +6,87 @@ Technical documentation describes implementation status and limitations. Researc
 
 ---
 
-# One workspace for engineering work.Add what each project needs.
+# Prove your hardware does what it should.
+
+## Requirements, tests and bench data, linked
+
+Two tools in the cloud. Switch them on for the projects that need them.
+
+Requirements and test evidence  · Plotune RMS
+
+### Know which test proves each requirement
+
+Write requirements, get them reviewed and approved, and link each one to its test cases and the recorded evidence.
+
+[See requirements in RMS](https://www.plotune.net/rms)
+
+Bench event history  · Plotune Stream
+
+### See what happened on your bench
+
+Test results and sensor readings from your scripts and tools, in one history you can search by device and test run.
+
+[See event history in Stream](https://www.plotune.net/stream)
+
+Both work with the AI assistant your company already uses
+
+- Microsoft Copilot
+
+- ChatGPT
+
+- Claude
+
+Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+
+## Let AI agents work on real hardware
+
+Hardware for your bench, available today. You decide what an agent can touch.
+
+AI access to your bench  · Plotune Nexus
+
+### Let an AI agent run the test
+
+An appliance on your bench. AI agents run tests on your real hardware, within the limits you set, and every run is recorded.
+
+- [Use cases](https://www.plotune.net/nexus/use-cases)
+
+- [Connectivity](https://www.plotune.net/nexus/connectivity)
+
+- [Pricing](https://www.plotune.net/nexus/pricing)
+
+- [Docs](https://www.plotune.net/docs/nexus)
+
+[See Nexus](https://www.plotune.net/nexus?entry_source=direct)
+
+Wireless bench interfaces  · Plotune Bridge
+
+### Reach your bench from anywhere
+
+Wireless interfaces for CAN, serial, analog and digital I/O, managed from the browser.
+
+- [CAN](https://www.plotune.net/bridge/can)
+
+- [Serial](https://www.plotune.net/bridge/serial)
+
+- [DAQ](https://www.plotune.net/bridge/daq)
+
+- [I/O](https://www.plotune.net/bridge/io)
+
+[See Bridge](https://www.plotune.net/bridge?entry_source=direct)
 
 ## How it works
 
-### Projects 2
+### Projects2
 
 - ECU bench    RMS  on    Stream  on
 
 - Brake rig    RMS  on    Stream  off
 
-- Nexus  Coming
-
-- Bridge  Coming
-
-- GPU compute  Coming
-
-- Other sources  Coming
-
 - Create a workspace Invite the people you work with and give each a role.
 
-- Add a project One project per product, bench or programme.
+- Add a project One project per product, bench or program.
 
-- Switch on its tools RMS and Stream today. Nexus, Bridge, GPU compute and other sources are next.
-
-## In the cloud
-
-Available today, switched on per project.
-
-### RMS
-
-Requirements with review, traceability links, test cases and recorded evidence.
-
-[Explore RMS](https://www.plotune.net/rms)
-
-### Stream
-
-One explorable event history from your tools, test benches and scripts.
-
-[Explore Stream](https://www.plotune.net/stream)
-
-## On the bench
-
-Hardware products that work on their own today.
-
-### Nexus
-
-Connects AI agents to physical engineering and test systems through MCP.
-
-[Explore Nexus](https://www.plotune.net/nexus?entry_source=direct)
-
-### Bridge
-
-CAN, Serial, DAQ and I/O. Wireless, managed from the browser.
-
-[Explore Bridge](https://www.plotune.net/bridge?entry_source=direct)
+- Switch on what it needs Requirements and test evidence (RMS), bench event history (Stream), or both.
 
 ## Engineering needs evidence.
 
@@ -68,11 +94,13 @@ Technical studies, benchmark data and the methods behind agentic test and valida
 
 [Technical reportsStudies on agentic test and validation workflows](https://www.plotune.net/research/reports)[Model resultsComparisons and benchmark data](https://www.plotune.net/research)[MethodologyHow the evaluations are run](https://www.plotune.net/research/methodology)
 
-## Not sure where to start?
+## Start with a workspace.
 
-Tell us what you work on and we will point you to the right place to begin.
+Create one, add a project and switch on what it needs. Or tell us what you work on and we will help you begin.
 
-[Talk to us](https://www.plotune.net/contact?entry_source=direct)[Read the docs](https://www.plotune.net/docs)
+[Create a workspace](https://www.plotune.net/register)[Talk to us](https://www.plotune.net/contact?entry_source=direct)[Read the docs](https://www.plotune.net/docs)
+
+Free to start. No credit card needed.
 
 Source: https://www.plotune.net/
 
@@ -328,27 +356,29 @@ Source: https://www.plotune.net/faq
 
 ---
 
-# Know what happened. Keep the context.
+# See what happened on your test bench.
 
 Works with Python, C/C++, CAPL, MATLAB, ROS 2,  Nexus  and HTTP clients. Any system that can send an HTTP request.
 
+Ask about your events from the AI assistant your company already uses
+
+- Microsoft Copilot
+
+- ChatGPT
+
+- Claude
+
+Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+
 ## One event. The whole picture.
 
-Choose a workflow and see the context that travels with each event.
+Three examples of what your bench can send, and what is kept with each one.
 
 A motor test bench
 
 ### Motor sample
 
 A reading becomes an event with the device, test session, and values kept together.
-
-From source to inspection
-
-Your systemSupplies the event
-
-HTTP capturePreserves its context
-
-Event inspectionMakes it explorable
 
 Event name
 
@@ -380,81 +410,83 @@ running
 
 Search event history, filter by device or session, and explore dashboards in the full demo.
 
-- Find the events that matter.
-
-- Follow context across your systems.
-
-- Build a view of your event history.
-
-[Try the demo](https://www.plotune.net/stream/demo)[Open workspace](https://www.plotune.net/stream/workspace)
+[Try the demo](https://www.plotune.net/stream/demo)
 
 Motor sample selected
 
-## Less searching. More understanding.
-
-From a single device to a shared test session, keep the event and its context together.
-
-### Find the moment.
-
-Search and filter event history to narrow an investigation to the events that matter.
-
-### Keep the details.
-
-Inspect device and session identifiers alongside the properties your application provides.
-
-### Explore the pattern.
-
-Bring event history into dashboards and saved views you can return to.
-
 ## Part of your workspace.
 
-Stream is switched on per project, next to [RMS](https://www.plotune.net/rms).  Create a workspace, add a project, and turn on what the project needs.
+Stream is switched on per project, next to  RMS , which links requirements to their tests and evidence.  Turn on what the project needs.
 
-[See RMS](https://www.plotune.net/rms)
+[See requirements in RMS](https://www.plotune.net/rms)
 
-ECU bench    Stream    RMS
+- ECU bench    RMS  on    Stream  on
 
-Battery rig    Stream    RMS
+- Battery rig    RMS  off    Stream  on
+
+## See your own events.
+
+Explore a sample project in the demo, then create a workspace and send events from your bench. The demo needs no account.
+
+[Try the demo](https://www.plotune.net/stream/demo)[Create a workspace](https://www.plotune.net/register)[Talk to us](https://www.plotune.net/contact?entry_source=direct)
+
+Free to start. No credit card needed.
 
 Source: https://www.plotune.net/stream
 
 ---
 
-# Requirements you can review, trace and verify, in the same workspace as your projects.
+# Know which test proves each requirement.
 
-## Review and approval
+- Review, approval and revisions for every requirement
+
+- Exchange with partner tools as ReqIF files
+
+- Works with Microsoft Copilot, ChatGPT and Claude
+
+## Nothing counts until someone approves it
 
 Requirements move from Draft to In review to Approved, and each change to the wording is a new revision.  The person who decides sees the statement and approves or rejects it.
 
- An engineer holds up a puzzle piece that does not fit while a tall reviewer leans in to look at the gap.
+## Your AI assistant does the tracing, on the record
 
-## Traceability
+Connect the assistant your company already uses. It works with the access you approve, and every change it makes is recorded with a reason.  Exchange requirements and test cases with partner tools as ReqIF files.
+
+Works with
+
+- Microsoft Copilot
+
+- ChatGPT
+
+- Claude
+
+Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+
+## See which requirements have no test yet
 
 Link requirements to the requirements they refine, to test cases and to use cases.  The gaps are listed: requirements without a test case, failing tests, links to re-check.
 
-## Verification
+## Verified means the tests passed
 
-Test cases have recorded results with evidence.  A requirement counts as verified only when its tests pass at the level you set as the target.
-
-## Baselines
-
-Freeze the approved requirements as a reference, then compare it with the live specification later.  You see what changed.
-
-## AI agents and partner tools
-
-AI agents work in RMS through MCP, with the access you approve, and every change they make is recorded with a reason.  Exchange requirements and test cases with partner tools as ReqIF files.
+Test cases have recorded results with evidence. A requirement counts as verified only when its tests pass at the level you set as the target.  Freeze the approved requirements as a reference, then compare it with the live specification later. You see what changed.
 
 ## Part of your workspace
 
-RMS is switched on per project in a workspace, next to Stream.  Turn it on for the projects that need it, turn it off when they do not.
+RMS is switched on per project in a workspace, next to Stream, which keeps the event history from your bench.  Turn it on for the projects that need it.
 
-[See Stream](https://www.plotune.net/stream)
+[See bench event history in Stream](https://www.plotune.net/stream)
+
+- Pump controller    RMS  on    Stream  on
+
+- Test bench    RMS  off    Stream  on
 
 ## Start with a workspace.
 
 Create one, add a project and switch RMS on for it.
 
-[Create a workspace](https://www.plotune.net/register)[Read the docs](https://www.plotune.net/docs)[Talk to us](https://www.plotune.net/contact)
+[Create a workspace](https://www.plotune.net/register)[Read the docs](https://www.plotune.net/docs)[Talk to us](https://www.plotune.net/contact?entry_source=direct)
+
+Free to start. No credit card needed.
 
 Source: https://www.plotune.net/rms
 
@@ -981,7 +1013,7 @@ Create a workspace, add projects, and add what each project needs.  RMS for requ
 
 ## What a workspace holds
 
-RMS and Stream are available today and are added to a project with a switch.  Nexus and Bridge are products of their own. Coming: adding Nexus, Bridge, GPU compute and other sources to a workspace the same way.
+RMS and Stream are available today and are added to a project with a switch.  Nexus and Bridge are hardware products of their own, available today.
 
 [Cloud toolRMSRequirements with revisions, review and approval, traceability, test evidence and baselines.Explore →](https://www.plotune.net/rms)[Cloud toolStreamOne explorable history for events from your tools, benches and scripts.Explore →](https://www.plotune.net/stream)[HardwareNexusThe local-first appliance that connects AI agents to real test hardware.Explore →](https://www.plotune.net/nexus)[HardwareBridgeCAN, Serial, DAQ and I/O devices managed from the browser.Explore →](https://www.plotune.net/bridge)[Desktop appDesktopLocal visualization and engineering data workflows.Explore →](https://www.plotune.net/download)[PublicationResearchStudies and benchmark data on agentic test and validation.Explore →](https://www.plotune.net/research)
 
@@ -1327,11 +1359,11 @@ Understanding the terms, licenses, and policies that govern the use of Plotune  
 
 ## Terms of Service
 
-These Terms of Service ("Terms") govern your access to and use of Plotune software, services, and extensions. By accessing or using Plotune, you agree to be bound by these Terms.
+These Terms of Service ("Terms") govern your access to and use of plotune.net, the Plotune cloud workspace and its tools (RMS and Stream), and Plotune software and extensions. By creating an account or using Plotune, you agree to these Terms. Hardware (Nexus and Bridge) is supplied under the terms of the order you place with us; these Terms apply to the software and services you use with it.
 
 ### Acceptance of Terms
 
-By installing, accessing, or using Plotune software, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not use Plotune.
+By creating an account, or by installing, accessing or using Plotune, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not use Plotune.
 
 ### Account Registration
 
@@ -1351,17 +1383,27 @@ You agree not to:
 
 - Interfere with or disrupt the integrity or performance of Plotune
 
-Important:  Plotune reserves the right to modify or terminate the service for any reason, without notice at any time.
+### Your content
+
+What you and your team put into a workspace (requirements, test records, events and files) remains yours. We use it only to provide the service to you, as described in the Privacy Policy.
+
+### Plans and credits
+
+Creating a workspace is free. Use of the cloud tools is measured in credits; the credits included in your plan and the current rates are shown in the workspace under Usage. Paid plans and hardware are agreed separately.
+
+### Changes to the service
+
+We may change or withdraw features. If a change materially affects how you use Plotune, or if we close a service, we tell you beforehand by email or in the service where we reasonably can. We may suspend an account that breaks these Terms.
 
 ## Privacy Policy
 
-Plotune is committed to protecting your privacy. For details on what information we collect, how we use it, and your rights, please read our full Privacy Policy.
+The Privacy Policy explains what personal data we collect, why, who receives it, and how to use your rights under GDPR and KVKK.
 
 [Read the full Privacy Policy](https://www.plotune.net/privacy)
 
 ## Software License
 
-Plotune is proprietary software provided under the following license terms:
+Plotune software that you download and install (the desktop application, extensions and device software) is proprietary and is provided under the following license terms:
 
 ### License Grant
 
@@ -1385,21 +1427,7 @@ You may not:
 
 - Remove, circumvent, or disable any copyright notices or protections
 
-### Subscription Plans
-
-Plotune offers different licensing options:
-
-#### Lite Edition
-
-Free for personal and non-commercial use. Includes basic functionality with limited features.
-
-#### Pro Edition
-
-Subscription-based license for individual professionals. Includes all features and priority support.
-
-#### Enterprise Edition
-
-Custom licensing for organizations. Includes team management, advanced security, and dedicated support.
+Last updated:  November 21, 2026
 
 Source: https://www.plotune.net/legal
 
@@ -1407,115 +1435,125 @@ Source: https://www.plotune.net/legal
 
 # Privacy policy
 
-Plotune is committed to protecting your privacy.  This Privacy Policy explains how we collect, use, and safeguard your information.
+What we collect, why, and what you can do about it.  This notice covers plotune.net and the Plotune services, under the EU General Data Protection Regulation (GDPR) and the Turkish Law on the Protection of Personal Data (KVKK, no. 6698).
 
-## Overview
+## Who we are
 
-At Plotune, we prioritize your privacy. This Privacy Policy outlines how we collect, use, store, and protect your information when you use our software, services, and website. This policy applies to all users, including those using the Lite, Pro, or Enterprise editions of Plotune.
+The data controller is Plotune, Aydınlı Mah., 34485 Tuzla/İstanbul, Türkiye. For anything about your personal data, write to contact@plotune.net.
 
-We are committed to compliance with applicable data protection laws, including the General Data Protection Regulation (GDPR) and the Kişisel Verilerin Korunması Kanunu (KVKK) in Turkey.
+This notice applies to visitors of plotune.net and to people who create an account or send us a form. When your organisation puts its own data into a Plotune workspace (requirements, test records, events from your systems), your organisation decides what that data is and why it is processed; we process it on its behalf to provide the service.
 
-## Data We Collect
+## Data we collect
 
-We collect the following types of information:
+- Account data.  Email address, a username, your password (stored only as a hash), sector and country, and that you accepted the terms. Your name and company if you add them. If you sign in with Google or GitHub, the profile details that provider sends us, such as your email address and name.
 
-- Account Information:  Name, email address, username, and other details you provide during registration.
+- Workspace content.  What you and your team put into a workspace: projects, requirements, test records, events and the people you invite.
 
-- Payment Information:  Billing details for Pro and Enterprise licenses, processed securely by our payment partners.
+- Forms.  What you enter when you contact us, request or order hardware, apply as a partner or take the AI readiness assessment: typically your name, email address, company and message or answers.
 
-- Usage Data:  Anonymous telemetry data about how you interact with Plotune to improve performance and functionality.
+- Technical data.  IP address, browser and device type, and the pages requested, which our hosting provider logs to deliver and protect the site.
 
-- Support Communications:  Information you provide when contacting our support team.
+- Analytics and advertising data.  Described under [Cookies and analytics](https://www.plotune.net/privacy#cookies).
 
-- Device Information:  IP address, browser type, operating system, and other technical details for analytics and security.
+We do not ask for special categories of personal data, and the services are not intended for children. We do not make decisions about you by automated means alone.
 
-## Cookies & Tracking Technologies
+You give us most of this data yourself. Creating an account needs the account data marked above; without it we cannot open one. Everything else is optional.
 
-Our website uses cookies and similar tracking technologies from the following third-party providers to understand site usage and measure marketing performance:
+## Why we use it, and on what legal basis
 
-- PostHog:  a web analytics platform we use to understand how visitors use plotune.net, including page views and on-site behavior.
+| Purpose | Data | Legal basis |
+| --- | --- | --- |
+| Create and run your account and workspaces | Account data, workspace content | Performance of a contract (GDPR 6(1)(b); KVKK 5/2-c) |
+| Send account email: verification, password reset, service notices | Email address | Performance of a contract (GDPR 6(1)(b); KVKK 5/2-c) |
+| Answer contact, order, partner and assessment requests | What you enter in the form | Steps taken at your request before a contract; our legitimate interest in answering (GDPR 6(1)(b), (f); KVKK 5/2-c, 5/2-f) |
+| Keep the service secure and prevent abuse | IP address, technical logs | Legitimate interest (GDPR 6(1)(f); KVKK 5/2-f) |
+| Count page views without cookies | Page address, referrer, browser type, approximate location from the IP address | Legitimate interest (GDPR 6(1)(f); KVKK 5/2-f) |
+| Analytics with identifiers and session replay | Analytics data, see below | Your consent (GDPR 6(1)(a); KVKK 5/1) |
+| Measure our advertising | Advertising identifiers, see below | Your consent (GDPR 6(1)(a); KVKK 5/1) |
+| Newsletter and product updates | Email address | Your consent (GDPR 6(1)(a); KVKK 5/1) |
+| Meet legal obligations | What the law requires in each case | Legal obligation (GDPR 6(1)(c); KVKK 5/2-ç) |
 
-- LinkedIn Insight Tag:  used to measure the performance of our LinkedIn advertising campaigns and build remarketing audiences. If you are a LinkedIn member, this may be linked to your LinkedIn account in accordance with LinkedIn's own privacy policy.
+Where we rely on consent you can withdraw it at any time; this does not affect what was done before. Where we rely on legitimate interest you can object, see [Your rights](https://www.plotune.net/privacy#user-rights).
 
-You can control or disable cookies through your browser settings. LinkedIn members can also manage ad-related data use through their LinkedIn account settings.
+## Cookies and analytics
 
-## How We Use Your Data
+The banner asks about two kinds of optional storage, separately. Nothing optional is stored before you choose, and you can change your choice at any time: .
 
-We use your information to:
+- Necessary, always on.  A sign-in cookie (`auth_token`) while you are logged in, your cookie choice, and interface preferences such as the selected workspace, kept in your browser's storage. During a visit we also keep which link or advertisement brought you, in session storage that is cleared when you close the tab.
 
-- Provide and maintain Plotune services, including account management and extension functionality.
+- Analytics, only with your consent.  PostHog stores an identifier on your device so that visits can be told apart, records clicks and scrolling, and records session replays: a reconstruction of what happened on the page, in which the fields you type into are masked.
 
-- Process payments and send transactional communications.
+- Advertising, only with your consent.  The Google tag stores advertising cookies to measure whether a visit that started from an advertisement led to a message or a sign-up. The LinkedIn Insight Tag is loaded and does the same for LinkedIn campaigns; if you are a LinkedIn member, LinkedIn may link this to your account under its own privacy policy.
 
-- Respond to support requests and inquiries.
+Without your consent,  one thing still happens: each page view is counted. PostHog receives the page address, the referring page, your browser type and your IP address, from which it derives an approximate location. No identifier is stored on your device, so page views are not linked into a visit or to you, and clicks and session replays are not recorded. The Google tag stays in its consent-denied mode, where it sets no cookies and sends Google only cookieless signals; the LinkedIn tag is not loaded.
 
-- Analyze anonymous usage patterns to enhance user experience and software performance.
+You can also block or delete cookies in your browser settings.
 
-- Send newsletters or updates if you opt-in (you can unsubscribe at any time).
+## Who receives your data
 
-- Ensure security and prevent fraud.
+We do not sell personal data. We use the following providers to run the website and the services; each receives only what its task needs.
 
-## Telemetry Data
+| Provider | What for | Data |
+| --- | --- | --- |
+| Cloudflare | Hosting, databases and network security for the website and services | Account data, workspace content, technical logs |
+| Google | Sending account email; storing form submissions; Google sign-in if you choose it; advertising measurement if you allow it | Email address, form content, sign-in profile, advertising identifiers |
+| PostHog | Website analytics, on its United States cloud | Page views; with consent, identifiers, clicks and session replays |
+| LinkedIn | Advertising measurement, only if you allow it | Advertising identifiers |
+| GitHub | Sign-in, if you choose it | Sign-in profile |
 
-Plotune collects anonymous telemetry data to understand how our software is used and to identify areas for improvement. This data includes metrics like feature usage, performance statistics, and error reports, but does not include personally identifiable information.
+We also disclose data when the law requires it, for example to a court or authority with a lawful request, and to the people in your own workspace, who can see your name and email address there.
 
-You can opt-out of telemetry data collection through your account settings. Disabling telemetry does not affect your ability to use Plotune.
+## Transfers abroad
 
-Note:  Telemetry data is anonymized and cannot be linked to individual users.
+The providers above operate internationally, mainly from the United States and the European Union, so your data is processed outside Türkiye and may be processed outside the European Economic Area. Analytics and advertising data is sent abroad only if you allow those categories in the cookie banner, apart from the cookieless page view described above. For the rest, the transfer is needed to provide the service you asked for. You can ask us which safeguards apply to a particular transfer.
 
-## Data Sharing
+## How long we keep it
 
-Plotune does not share or sell your personal information with third parties, except in the following cases:
+- Account data and workspace content:  for as long as the account or workspace exists. When you ask us to delete your account we delete or anonymise it, except what the law obliges us to keep.
 
-- With your explicit consent.
+- Form submissions:  for as long as we need to answer and follow up the request, and afterwards only while a legal claim could arise from it.
 
-- With trusted service providers (e.g., payment processors) who operate under strict confidentiality agreements.
+- Analytics and advertising data:  for the periods set by the provider, or until you withdraw consent, whichever comes first for data stored on your device.
 
-- To comply with legal obligations, such as responding to lawful requests from authorities.
+- Technical logs:  for a short period needed for security and troubleshooting.
 
-- To protect Plotune’s rights, property, or safety, or that of our users.
+## Your rights
 
-Anonymous telemetry data is not shared with third parties and is used solely by Plotune for internal analysis.
+Under GDPR (Articles 15 to 22) and KVKK (Article 11) you can:
 
-## Your Rights
+- learn whether we process your personal data, and ask for a copy and for information about it;
 
-Under GDPR, KVKK, and other applicable laws, you have the following rights regarding your personal data:
+- learn why it is processed, whether it is used for that purpose, and to whom it is transferred in Türkiye or abroad;
 
-- Access:  Request a copy of the personal data we hold about you.
+- have inaccurate or incomplete data corrected;
 
-- Rectification:  Correct inaccurate or incomplete data.
+- have your data deleted, destroyed or anonymised when the reason for processing no longer exists, and have this passed on to those who received it;
 
-- Deletion:  Request deletion of your data, subject to legal obligations.
+- restrict processing, or object to processing based on legitimate interest and to direct marketing;
 
-- Restriction:  Limit how we process your data in certain circumstances.
+- receive the data you gave us in a machine-readable format;
 
-- Portability:  Receive your data in a structured, machine-readable format.
+- object to a result against you that arises from processing by automated means alone;
 
-- Objection:  Object to processing for direct marketing or other purposes.
+- withdraw a consent you gave;
 
-To exercise these rights, contact us at contact@plotune.net.
+- claim compensation if you suffer damage because of unlawful processing.
 
-## Data Security
+To use a right, write to contact@plotune.net from the email address of your account, or by post to the address above. We answer free of charge within 30 days.
 
-We implement industry-standard security measures to protect your data, including encryption, secure servers, and regular security audits. However, no system is completely secure, and we cannot guarantee absolute security.
+If you are not satisfied with our answer you can complain to the Personal Data Protection Board in Türkiye (Kişisel Verileri Koruma Kurulu, kvkk.gov.tr) or, in the European Union, to the data protection authority of the country where you live or work.
 
-In the event of a data breach, we will notify affected users promptly as required by law and take immediate steps to mitigate harm.
+## Security
 
-## Compliance
+Connections to the website and services are encrypted in transit, passwords are stored only as hashes, and access to personal data is limited to the people who need it for their work. No system is completely secure. If a breach affects your data, we notify the authorities and you as the law requires.
 
-Plotune complies with GDPR, KVKK, and other applicable data protection regulations. We ensure that our data practices align with these standards, including obtaining explicit consent for data processing where required.
+## Contact and changes
 
-For users in the EU or Turkey, we provide clear options to manage your data preferences, including opting out of non-essential data collection like telemetry.
+Plotune, Aydınlı Mah., 34485 Tuzla/İstanbul, Türkiye. Email: contact@plotune.net
 
-## Contact Us
+When we change this notice we publish the new version here with its date. If a change affects how we use data you already gave us, we tell you by email or in the service.
 
-If you have questions about this Privacy Policy or our data practices, please contact us at:
-
-Email: contact@plotune.net
-
-Last updated: August 25, 2025
-
-Effective Date:  August 25, 2025
+Last updated:  November 21, 2026
 
 Source: https://www.plotune.net/privacy
 

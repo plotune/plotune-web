@@ -8,7 +8,7 @@ Create a workspace, add projects, and add what each project needs.  RMS for requ
 
 ## What a workspace holds
 
-RMS and Stream are available today and are added to a project with a switch.  Nexus and Bridge are products of their own. Coming: adding Nexus, Bridge, GPU compute and other sources to a workspace the same way.
+RMS and Stream are available today and are added to a project with a switch.  Nexus and Bridge are hardware products of their own, available today.
 
 [Cloud toolRMSRequirements with revisions, review and approval, traceability, test evidence and baselines.Explore →](https://www.plotune.net/rms)[Cloud toolStreamOne explorable history for events from your tools, benches and scripts.Explore →](https://www.plotune.net/stream)[HardwareNexusThe local-first appliance that connects AI agents to real test hardware.Explore →](https://www.plotune.net/nexus)[HardwareBridgeCAN, Serial, DAQ and I/O devices managed from the browser.Explore →](https://www.plotune.net/bridge)[Desktop appDesktopLocal visualization and engineering data workflows.Explore →](https://www.plotune.net/download)[PublicationResearchStudies and benchmark data on agentic test and validation.Explore →](https://www.plotune.net/research)
 

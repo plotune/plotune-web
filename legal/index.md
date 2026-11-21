@@ -4,11 +4,11 @@ Understanding the terms, licenses, and policies that govern the use of Plotune  
 
 ## Terms of Service
 
-These Terms of Service ("Terms") govern your access to and use of Plotune software, services, and extensions. By accessing or using Plotune, you agree to be bound by these Terms.
+These Terms of Service ("Terms") govern your access to and use of plotune.net, the Plotune cloud workspace and its tools (RMS and Stream), and Plotune software and extensions. By creating an account or using Plotune, you agree to these Terms. Hardware (Nexus and Bridge) is supplied under the terms of the order you place with us; these Terms apply to the software and services you use with it.
 
 ### Acceptance of Terms
 
-By installing, accessing, or using Plotune software, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not use Plotune.
+By creating an account, or by installing, accessing or using Plotune, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not use Plotune.
 
 ### Account Registration
 
@@ -28,17 +28,27 @@ You agree not to:
 
 - Interfere with or disrupt the integrity or performance of Plotune
 
-Important:  Plotune reserves the right to modify or terminate the service for any reason, without notice at any time.
+### Your content
+
+What you and your team put into a workspace (requirements, test records, events and files) remains yours. We use it only to provide the service to you, as described in the Privacy Policy.
+
+### Plans and credits
+
+Creating a workspace is free. Use of the cloud tools is measured in credits; the credits included in your plan and the current rates are shown in the workspace under Usage. Paid plans and hardware are agreed separately.
+
+### Changes to the service
+
+We may change or withdraw features. If a change materially affects how you use Plotune, or if we close a service, we tell you beforehand by email or in the service where we reasonably can. We may suspend an account that breaks these Terms.
 
 ## Privacy Policy
 
-Plotune is committed to protecting your privacy. For details on what information we collect, how we use it, and your rights, please read our full Privacy Policy.
+The Privacy Policy explains what personal data we collect, why, who receives it, and how to use your rights under GDPR and KVKK.
 
 [Read the full Privacy Policy](https://www.plotune.net/privacy)
 
 ## Software License
 
-Plotune is proprietary software provided under the following license terms:
+Plotune software that you download and install (the desktop application, extensions and device software) is proprietary and is provided under the following license terms:
 
 ### License Grant
 
@@ -62,20 +72,6 @@ You may not:
 
 - Remove, circumvent, or disable any copyright notices or protections
 
-### Subscription Plans
-
-Plotune offers different licensing options:
-
-#### Lite Edition
-
-Free for personal and non-commercial use. Includes basic functionality with limited features.
-
-#### Pro Edition
-
-Subscription-based license for individual professionals. Includes all features and priority support.
-
-#### Enterprise Edition
-
-Custom licensing for organizations. Includes team management, advanced security, and dedicated support.
+Last updated:  November 21, 2026
 
 Source: https://www.plotune.net/legal
