@@ -18,7 +18,7 @@ This notice applies to visitors of plotune.net and to people who create an accou
 
 - Technical data.  IP address, browser and device type, and the pages requested, which our hosting provider logs to deliver and protect the site.
 
-- Analytics and advertising data.  Described under [Cookies and analytics](https://www.plotune.net/privacy#cookies).
+- Analytics and advertising data.  Described under [Cookies and analytics](https://www.plotune.net/privacy/#cookies).
 
 We do not ask for special categories of personal data, and the services are not intended for children. We do not make decisions about you by automated means alone.
 
@@ -38,7 +38,7 @@ You give us most of this data yourself. Creating an account needs the account da
 | Newsletter and product updates | Email address | Your consent (GDPR 6(1)(a); KVKK 5/1) |
 | Meet legal obligations | What the law requires in each case | Legal obligation (GDPR 6(1)(c); KVKK 5/2-ç) |
 
-Where we rely on consent you can withdraw it at any time; this does not affect what was done before. Where we rely on legitimate interest you can object, see [Your rights](https://www.plotune.net/privacy#user-rights).
+Where we rely on consent you can withdraw it at any time; this does not affect what was done before. Where we rely on legitimate interest you can object, see [Your rights](https://www.plotune.net/privacy/#user-rights).
 
 ## Cookies and analytics
 

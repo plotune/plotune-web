@@ -6,7 +6,7 @@ Illustrative, prerecorded scenarios. No live hardware is connected to this page.
 
 Contact Us
 
-[Runtime](https://www.plotune.net/nexus/use-cases#runtime)[Artifacts](https://www.plotune.net/nexus/use-cases#artifacts)[By industry](https://www.plotune.net/nexus/use-cases#industries)
+[Runtime](https://www.plotune.net/nexus/use-cases/#runtime)[Artifacts](https://www.plotune.net/nexus/use-cases/#artifacts)[By industry](https://www.plotune.net/nexus/use-cases/#industries)
 
 Terminal: claude
 

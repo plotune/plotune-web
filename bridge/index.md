@@ -1,6 +1,6 @@
 # Connect your hardware.Access it anywhere.Automate with AI.
 
-[Choose Your Bridge ↓](https://www.plotune.net/bridge#bridge-products)
+[Choose Your Bridge ↓](https://www.plotune.net/bridge/#bridge-products)
 
 ### Bridge CAN
 
@@ -64,6 +64,6 @@ No payment on this site
 
 ## Plotune Bridge connects your devices.Plotune Nexus makes them intelligent.
 
-[Choose Your Bridge ↑](https://www.plotune.net/bridge#bridge-products)[Not sure which one? Talk to us →](https://www.plotune.net/contact?entry_source=direct&product=bridge)[See Plotune Nexus →](https://www.plotune.net/nexus)
+[Choose Your Bridge ↑](https://www.plotune.net/bridge/#bridge-products)[Not sure which one? Talk to us →](https://www.plotune.net/contact?entry_source=direct&product=bridge)[See Plotune Nexus →](https://www.plotune.net/nexus)
 
 Source: https://www.plotune.net/bridge
