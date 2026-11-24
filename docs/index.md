@@ -2,7 +2,7 @@
 
 Components, calculations, extensions and the SDK of the desktop app , and the guides for Nexus .
 
-[Nexus documentation](https://www.plotune.net/docs/nexus)[Browse extensions →](https://www.plotune.net/extensions)
+[Nexus documentation](https://www.plotune.net/docs/nexus)[Connect an AI app (MCP) →](https://www.plotune.net/docs/mcp)[Browse extensions →](https://www.plotune.net/extensions)
 
  A designer works on a part drawing.
 

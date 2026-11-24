@@ -14,9 +14,13 @@ This notice applies to visitors of plotune.net and to people who create an accou
 
 - Workspace content.  What you and your team put into a workspace: projects, requirements, test records, events and the people you invite.
 
+- Payments.  We do not collect or store payment card details. You pay on the page of our payment provider (PayTR or Stripe), which processes your payment details under its own privacy policy.
+
 - Forms.  What you enter when you contact us, request or order hardware, apply as a partner or take the AI readiness assessment: typically your name, email address, company and message or answers.
 
 - Technical data.  IP address, browser and device type, and the pages requested, which our hosting provider logs to deliver and protect the site.
+
+- Connections from AI apps.  When you connect an AI app to Plotune: which app, what you allowed it and a log of its sign-ins. Described under [Connections from AI apps](https://www.plotune.net/privacy/#ai-apps).
 
 - Analytics and advertising data.  Described under [Cookies and analytics](https://www.plotune.net/privacy/#cookies).
 
@@ -29,6 +33,7 @@ You give us most of this data yourself. Creating an account needs the account da
 | Purpose | Data | Legal basis |
 | --- | --- | --- |
 | Create and run your account and workspaces | Account data, workspace content | Performance of a contract (GDPR 6(1)(b); KVKK 5/2-c) |
+| Connect the AI apps you authorise (MCP connectors) and run their tool calls as you | Connection records, workspace content the calls read or change, see below | Performance of a contract (GDPR 6(1)(b); KVKK 5/2-c) |
 | Send account email: verification, password reset, service notices | Email address | Performance of a contract (GDPR 6(1)(b); KVKK 5/2-c) |
 | Answer contact, order, partner and assessment requests | What you enter in the form | Steps taken at your request before a contract; our legitimate interest in answering (GDPR 6(1)(b), (f); KVKK 5/2-c, 5/2-f) |
 | Keep the service secure and prevent abuse | IP address, technical logs | Legitimate interest (GDPR 6(1)(f); KVKK 5/2-f) |
@@ -54,23 +59,68 @@ Without your consent,  one thing still happens: each page view is counted. PostH
 
 You can also block or delete cookies in your browser settings.
 
+## Connections from AI apps
+
+You can connect an AI app such as Claude or ChatGPT to Plotune through our MCP server (`mcp.plotune.net`, see the [connector documentation](https://www.plotune.net/docs/mcp)) or through the endpoints of each product (`rms.plotune.net`, `stream.plotune.net`, `nexus.plotune.net`). Nothing is connected unless you sign in and approve it.
+
+### What we store for a connection
+
+| Record | Contents | Kept |
+| --- | --- | --- |
+| The app | The name the app gives itself and the addresses it returns you to after sign-in. An app that identifies itself by a web address is stored under a code derived from that address. | While a connection uses it; an app nobody approved, 24 hours |
+| App registrations | How many apps were registered from one network address that day, with the address stored only as a one-way digest | Until the day ends |
+| Sign-in code | A one-time code, stored only as a digest, with your account, the app and what you approved | 2 minutes, or until used |
+| The connection | Your account, the app, the workspace or "all workspaces", the products, Read only or Full access, the permissions granted, its status and dates | 90 days from approval, also after you revoke it |
+| Refresh tokens | Stored only as digests, so we cannot read them | 14 days if unused, at most 90 days; deleted when you revoke |
+| Connection log | Time and kind of event: approved or refused, signed in, token renewed, access changed, revoked. No tokens and no call contents. | 90 days, and at most the last 50 entries of each connection |
+
+A daily job deletes records whose period has ended, so a deletion happens within a day after the period ends. Access tokens are signed and not stored; they carry your account number and email address, and the app holds them. Our MCP server stores nothing on disk: it reuses your verified sign-in, your list of workspaces and projects and short-lived product tokens from memory for at most 15 minutes, and its logs record only the kind of an error, never what a call contained.
+
+### What a tool call does
+
+- The product (RMS, Stream or Nexus) runs the call as you, with your current role in that workspace, and sends the result back to the app. A read-only connection cannot change anything.
+
+- What a call creates or changes is workspace content. In RMS, each change is recorded in the audit trail as an agent action on your behalf, with the connection and app that made it and, if the app reports one, the name of its AI model, which we do not verify.
+
+- Work a call starts that we meter, such as Nexus session time, is recorded in the workspace's usage records with you and the connection as its cause. Tool calls themselves are not charged.
+
+- To apply rate limits, calls are counted per workspace in memory; the log lines this produces contain the plan, the kind of call and a random key, not your identity or your workspace.
+
+### Who receives it
+
+The AI app you connect, and the company that provides it, receive the results of the tool calls it makes: whatever your role and the connection allow it to read, including names and email addresses of people in your workspaces where a tool returns them. What that company does with it is governed by its own terms and privacy policy, not this one; it may process the data outside Türkiye and the European Economic Area. Cloudflare hosts the servers and databases involved, as for the rest of the service.
+
+### Your controls
+
+- Read only or Full access  when you approve. Read only is preselected. Either way your workspace role limits every call.
+
+- Connected apps , on any of your workspace pages: revoke a connection, or make a connection to all your workspaces read-only and allow changes again. A revoked connection stops working within moments; switching to read-only takes effect within 15 minutes.
+
+- A workspace Owner or Admin who removes you from a workspace also ends every connection's access to it; deleting a workspace revokes the connections made for it.
+
+- A connection ends on its own after 90 days. To have your account and its connection records deleted, write to contact@plotune.net.
+
 ## Who receives your data
 
 We do not sell personal data. We use the following providers to run the website and the services; each receives only what its task needs.
 
 | Provider | What for | Data |
 | --- | --- | --- |
-| Cloudflare | Hosting, databases and network security for the website and services | Account data, workspace content, technical logs |
+| Cloudflare | Hosting, databases and network security for the website and services | Account data, workspace content, connection records, technical logs |
+| Hostingdünyam | Our servers in Türkiye: password checks at sign-in, Stream event processing, Nexus cloud test sessions and file downloads | Passwords while they are checked (never stored in readable form), workspace content, technical logs |
 | Google | Sending account email; storing form submissions; Google sign-in if you choose it; advertising measurement if you allow it | Email address, form content, sign-in profile, advertising identifiers |
 | PostHog | Website analytics, on its United States cloud | Page views; with consent, identifiers, clicks and session replays |
 | LinkedIn | Advertising measurement, only if you allow it | Advertising identifiers |
 | GitHub | Sign-in, if you choose it | Sign-in profile |
+| PayTR and Stripe | Payment processing when you pay us | The payment details you enter on their payment page |
+
+When you connect an AI app, that app and its provider receive what its tool calls return, as described under [Connections from AI apps](https://www.plotune.net/privacy/#ai-apps). You choose that recipient; it is not our provider.
 
 We also disclose data when the law requires it, for example to a court or authority with a lawful request, and to the people in your own workspace, who can see your name and email address there.
 
 ## Transfers abroad
 
-The providers above operate internationally, mainly from the United States and the European Union, so your data is processed outside Türkiye and may be processed outside the European Economic Area. Analytics and advertising data is sent abroad only if you allow those categories in the cookie banner, apart from the cookieless page view described above. For the rest, the transfer is needed to provide the service you asked for. You can ask us which safeguards apply to a particular transfer.
+Our own servers are in Türkiye, with Hostingdünyam. The other providers above operate internationally, mainly from the United States and the European Union, so your data is also processed outside Türkiye and may be processed outside the European Economic Area. Analytics and advertising data is sent abroad only if you allow those categories in the cookie banner, apart from the cookieless page view described above. For the rest, the transfer is needed to provide the service you asked for. You can ask us which safeguards apply to a particular transfer.
 
 ## How long we keep it
 
@@ -79,6 +129,8 @@ The providers above operate internationally, mainly from the United States and t
 - Form submissions:  for as long as we need to answer and follow up the request, and afterwards only while a legal claim could arise from it.
 
 - Analytics and advertising data:  for the periods set by the provider, or until you withdraw consent, whichever comes first for data stored on your device.
+
+- Connections from AI apps:  as listed under [Connections from AI apps](https://www.plotune.net/privacy/#ai-apps); a connection lasts at most 90 days.
 
 - Technical logs:  for a short period needed for security and troubleshooting.
 
@@ -118,6 +170,6 @@ Plotune, Aydınlı Mah., 34485 Tuzla/İstanbul, Türkiye. Email: contact@plotune
 
 When we change this notice we publish the new version here with its date. If a change affects how we use data you already gave us, we tell you by email or in the service.
 
-Last updated:  November 21, 2026
+Last updated:  November 24, 2026
 
 Source: https://www.plotune.net/privacy

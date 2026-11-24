@@ -22,6 +22,7 @@ Technical documentation describes implementation status and limitations. Researc
 ## Technical documentation
 
 - [Plotune documentation](https://www.plotune.net/docs/index.md): Documentation for the Plotune desktop app and Plotune Nexus: components, extensions, calculations, and workflows.
+- [Plotune MCP connector](https://www.plotune.net/docs/mcp/index.md): Connect Claude, ChatGPT or another MCP client to Plotune RMS, Stream and Nexus through one server, https://mcp.plotune.net/mcp: sign-in, access, projects, safety, limits and troubleshooting.
 - [Plotune Nexus Documentation](https://www.plotune.net/docs/nexus/index.md): Technical reference documentation for Plotune Nexus: security model, hardware and protocol compatibility, the MCP tool surface, system architecture, and deployment.
 - [Security & Trust Model](https://www.plotune.net/docs/nexus/security-model/index.md): How device ownership, key custody, and access boundaries work: what stays on the device, what a compromised session can and cannot do, and what is still being hardened.
 - [Hardware & Protocol Compatibility](https://www.plotune.net/docs/nexus/hardware-compatibility/index.md): Which CAN, UART, XCP, and DoIP hardware families run natively on Nexus today, which need a container, and which are not yet supported, stated without inflating the claim.
