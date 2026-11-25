@@ -12,6 +12,8 @@ Plotune Nexus appliance on a lab bench in front of a hardware test rack
 
 Plotune-defined hardware. Pre-integrated software. Managed lifecycle.
 
+[Want something smaller? See Nexus Edge](https://www.plotune.net/nexus/edge)
+
 ## What teams do with Nexus.
 
 Four workflows, from a single CAN bus to AI agents on real hardware.
@@ -42,31 +44,11 @@ Conceptual workflow. No hardware is connected.
 
 Conceptual flow. Available operations depend on transport, connected hardware, access and configuration.
 
-## Speak the languageof your system.
+## Does it fit my bench?
 
-Use the supported transports on your bench, rig or vehicle. [Compatibility matrix ↗](https://www.plotune.net/docs/nexus/hardware-compatibility)
+Bus, serial or network? It fits. Your own scripts run too.
 
-- ### CAN / CAN FD
-
-Linux CAN transports for bus interaction and capture.
-
-- ### UART
-
-Serial interfaces, including RS-485 and modem-control lines.
-
-- ### XCP
-
-CAN and Ethernet transports with different supported operations.
-
-- ### UDS / DoIP
-
-Diagnostics through reachable network and CAN transports.
-
-- ### ROS 2 / DDS
-
-Join an existing DDS domain, discover topics and record evidence.
-
-[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
+[Ask about your bench](https://www.plotune.net/contact?entry_source=direct&product=nexus)[Compatibility matrix](https://www.plotune.net/docs/nexus/hardware-compatibility)[How it connects](https://www.plotune.net/nexus/connectivity)
 
 ## Discover. Execute.Record what happened.
 

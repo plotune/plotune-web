@@ -48,6 +48,8 @@ AI access to your bench  · Plotune Nexus
 
 AI agents run tests on your real hardware, within the limits you set, and every run is recorded. As an appliance that works locally on your bench, or as the small Nexus Edge with sessions that run in the cloud.
 
+- [Nexus Edge](https://www.plotune.net/nexus/edge)
+
 - [Use cases](https://www.plotune.net/nexus/use-cases)
 
 - [Connectivity](https://www.plotune.net/nexus/connectivity)
@@ -244,7 +246,7 @@ Microsoft Copilot, ChatGPT and Claude. Microsoft Copilot connects through Copilo
 
 Open your workspace and choose Invite under People. Enter the person's email address and a role: an Admin manages projects, tools and people, a Member works in the projects, and a Viewer can only read. Plotune does not send an invitation email, so tell them: they join as soon as they sign in, or sign up, with that address. The Owner role moves only by transferring ownership.
 
-What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On Nexus, captures stay on the device by default. What we store and who receives it is described in the privacy policy.
+What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On the Nexus appliance, captures stay on the device by default; in a Nexus Edge session they are kept in the cloud workspace of that session. What we store and who receives it is described in the privacy policy.
 
 [Read the privacy policy](https://www.plotune.net/privacy)
 
@@ -256,7 +258,9 @@ RMS is the requirements tool in a Plotune workspace. It keeps requirements with 
 
 Open the project in your workspace and switch on the tool it needs: RMS, Stream or Nexus. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view.
 
-Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device that reaches your hardware over USB, Ethernet, Wi-Fi and Bluetooth while the session itself runs in the cloud, started and stopped from your workspace. The choice is mostly whether you spend on the device or on cloud use.
+Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device on your bench: it shares the USB devices plugged into it and, if you choose, the bench network, with a session that runs in the cloud. You pair the Edge and choose what it shares in your workspace; your AI assistant starts and stops the sessions. The choice is mostly whether you spend on the device or on cloud use.
+
+[See Nexus Edge](https://www.plotune.net/nexus/edge)
 
 A local-first acquisition appliance captures and stores data next to the hardware by default, rather than streaming it into a vendor cloud first. Plotune Nexus is a managed local-first appliance on Plotune-defined hardware: captures and artifacts stay on the device, and the team chooses where outputs go, whether local files, SFTP, Google Drive, or OneDrive and SharePoint.
 
@@ -326,7 +330,7 @@ Open your workspace and choose Invite under People. Enter the person's email add
 
 ## Where is my data and who can see it?
 
-What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On Nexus, captures stay on the device by default. What we store and who receives it is described in the privacy policy.
+What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On the Nexus appliance, captures stay on the device by default; in a Nexus Edge session they are kept in the cloud workspace of that session. What we store and who receives it is described in the privacy policy.
 
 ## What is the Plotune workspace?
 
@@ -342,7 +346,7 @@ Open the project in your workspace and switch on the tool it needs: RMS, Stream 
 
 ## What is the difference between the Nexus appliance and Nexus Edge?
 
-Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device that reaches your hardware over USB, Ethernet, Wi-Fi and Bluetooth while the session itself runs in the cloud, started and stopped from your workspace. The choice is mostly whether you spend on the device or on cloud use.
+Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device on your bench: it shares the USB devices plugged into it and, if you choose, the bench network, with a session that runs in the cloud. You pair the Edge and choose what it shares in your workspace; your AI assistant starts and stops the sessions. The choice is mostly whether you spend on the device or on cloud use.
 
 ## What is a local-first data acquisition appliance?
 
@@ -558,6 +562,8 @@ Plotune Nexus appliance on a lab bench in front of a hardware test rack
 
 Plotune-defined hardware. Pre-integrated software. Managed lifecycle.
 
+[Want something smaller? See Nexus Edge](https://www.plotune.net/nexus/edge)
+
 ## What teams do with Nexus.
 
 Four workflows, from a single CAN bus to AI agents on real hardware.
@@ -588,31 +594,11 @@ Conceptual workflow. No hardware is connected.
 
 Conceptual flow. Available operations depend on transport, connected hardware, access and configuration.
 
-## Speak the languageof your system.
+## Does it fit my bench?
 
-Use the supported transports on your bench, rig or vehicle. [Compatibility matrix ↗](https://www.plotune.net/docs/nexus/hardware-compatibility)
+Bus, serial or network? It fits. Your own scripts run too.
 
-- ### CAN / CAN FD
-
-Linux CAN transports for bus interaction and capture.
-
-- ### UART
-
-Serial interfaces, including RS-485 and modem-control lines.
-
-- ### XCP
-
-CAN and Ethernet transports with different supported operations.
-
-- ### UDS / DoIP
-
-Diagnostics through reachable network and CAN transports.
-
-- ### ROS 2 / DDS
-
-Join an existing DDS domain, discover topics and record evidence.
-
-[Explore connectivity →](https://www.plotune.net/nexus/connectivity)
+[Ask about your bench](https://www.plotune.net/contact?entry_source=direct&product=nexus)[Compatibility matrix](https://www.plotune.net/docs/nexus/hardware-compatibility)[How it connects](https://www.plotune.net/nexus/connectivity)
 
 ## Discover. Execute.Record what happened.
 
@@ -892,6 +878,81 @@ Prices in USD, excluding VAT / sales tax and shipping: the exact tax, shipping a
 Questions first? [Talk to us](https://www.plotune.net/contact)
 
 Source: https://www.plotune.net/nexus/pricing
+
+---
+
+# Put your test bench within reach of your AI assistant.
+
+- ## Start with one bench
+
+A small device, then pay per session.
+
+- ## Set up in minutes
+
+Plug in, pair with a code, choose what to share.
+
+- ## You stay in control
+
+Nothing is shared until you share it.
+
+## The Edge stays on your bench. The work happens in the cloud.
+
+Plug in once. Your assistant does the rest.
+
+- Your bench USB devices and the bench network
+
+- Nexus Edge Shares what you choose
+
+- Session in the cloud The test tools run here
+
+- Your AI assistant Runs the test and reports back
+
+Works with the AI assistant your company already uses
+
+- Microsoft Copilot
+
+- ChatGPT
+
+- Claude
+
+Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+
+## Ask for the test. Get the result.
+
+- Run the regression sequence on the bench and tell me what failed.
+
+- Record the bus while I reproduce the fault, then show me the moment it goes wrong.
+
+- Check that the controller still answers after the firmware update.
+
+- Log the result against the requirement it proves.
+
+## Does it fit my bench?
+
+USB or bench network? It fits. Your own scripts run too.
+
+[Ask about your bench](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)
+
+## Edge or appliance
+
+|  | Nexus Edge | Nexus appliance |
+| --- | --- | --- |
+| Where the work runs | In the cloud | On your bench |
+| Recordings are kept | In the cloud workspace of the session | On the appliance by default |
+| Internet | Needed while a session runs | Not needed to run a test |
+| What you pay for | A small device, then cloud use | The appliance |
+
+[See the Nexus appliance](https://www.plotune.net/nexus?entry_source=direct)
+
+## Ask for a Nexus Edge.
+
+Tell us what is on your bench and we send you a quote.
+
+[Request a Nexus Edge](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)[Read the connector guide](https://www.plotune.net/docs/mcp)
+
+Sold on request. Built to order: delivery takes about four weeks.
+
+Source: https://www.plotune.net/nexus/edge
 
 ---
 
@@ -1695,7 +1756,7 @@ AI access to your bench  · Plotune Nexus
 
 ### Let an AI agent run tests on your hardware
 
-Reference for the appliance: what it supports, how access is bounded, the tools an agent calls, and a quick start.
+Reference for the appliance: what it supports, how access is bounded, the tools an agent calls, and a quick start. For the smaller [Nexus Edge](https://www.plotune.net/nexus/edge), sessions are run through the connector guide below.
 
 - [Quick Start](https://www.plotune.net/docs/nexus/quick-start)
 

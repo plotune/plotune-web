@@ -40,6 +40,8 @@ AI access to your bench  · Plotune Nexus
 
 AI agents run tests on your real hardware, within the limits you set, and every run is recorded. As an appliance that works locally on your bench, or as the small Nexus Edge with sessions that run in the cloud.
 
+- [Nexus Edge](https://www.plotune.net/nexus/edge)
+
 - [Use cases](https://www.plotune.net/nexus/use-cases)
 
 - [Connectivity](https://www.plotune.net/nexus/connectivity)

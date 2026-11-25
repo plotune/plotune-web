@@ -24,7 +24,7 @@ Microsoft Copilot, ChatGPT and Claude. Microsoft Copilot connects through Copilo
 
 Open your workspace and choose Invite under People. Enter the person's email address and a role: an Admin manages projects, tools and people, a Member works in the projects, and a Viewer can only read. Plotune does not send an invitation email, so tell them: they join as soon as they sign in, or sign up, with that address. The Owner role moves only by transferring ownership.
 
-What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On Nexus, captures stay on the device by default. What we store and who receives it is described in the privacy policy.
+What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On the Nexus appliance, captures stay on the device by default; in a Nexus Edge session they are kept in the cloud workspace of that session. What we store and who receives it is described in the privacy policy.
 
 [Read the privacy policy](https://www.plotune.net/privacy)
 
@@ -36,7 +36,9 @@ RMS is the requirements tool in a Plotune workspace. It keeps requirements with 
 
 Open the project in your workspace and switch on the tool it needs: RMS, Stream or Nexus. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view.
 
-Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device that reaches your hardware over USB, Ethernet, Wi-Fi and Bluetooth while the session itself runs in the cloud, started and stopped from your workspace. The choice is mostly whether you spend on the device or on cloud use.
+Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device on your bench: it shares the USB devices plugged into it and, if you choose, the bench network, with a session that runs in the cloud. You pair the Edge and choose what it shares in your workspace; your AI assistant starts and stops the sessions. The choice is mostly whether you spend on the device or on cloud use.
+
+[See Nexus Edge](https://www.plotune.net/nexus/edge)
 
 A local-first acquisition appliance captures and stores data next to the hardware by default, rather than streaming it into a vendor cloud first. Plotune Nexus is a managed local-first appliance on Plotune-defined hardware: captures and artifacts stay on the device, and the team chooses where outputs go, whether local files, SFTP, Google Drive, or OneDrive and SharePoint.
 
@@ -106,7 +108,7 @@ Open your workspace and choose Invite under People. Enter the person's email add
 
 ## Where is my data and who can see it?
 
-What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On Nexus, captures stay on the device by default. What we store and who receives it is described in the privacy policy.
+What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On the Nexus appliance, captures stay on the device by default; in a Nexus Edge session they are kept in the cloud workspace of that session. What we store and who receives it is described in the privacy policy.
 
 ## What is the Plotune workspace?
 
@@ -122,7 +124,7 @@ Open the project in your workspace and switch on the tool it needs: RMS, Stream 
 
 ## What is the difference between the Nexus appliance and Nexus Edge?
 
-Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device that reaches your hardware over USB, Ethernet, Wi-Fi and Bluetooth while the session itself runs in the cloud, started and stopped from your workspace. The choice is mostly whether you spend on the device or on cloud use.
+Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device on your bench: it shares the USB devices plugged into it and, if you choose, the bench network, with a session that runs in the cloud. You pair the Edge and choose what it shares in your workspace; your AI assistant starts and stops the sessions. The choice is mostly whether you spend on the device or on cloud use.
 
 ## What is a local-first data acquisition appliance?
 

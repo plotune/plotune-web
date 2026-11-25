@@ -30,7 +30,7 @@ AI access to your bench  · Plotune Nexus
 
 ### Let an AI agent run tests on your hardware
 
-Reference for the appliance: what it supports, how access is bounded, the tools an agent calls, and a quick start.
+Reference for the appliance: what it supports, how access is bounded, the tools an agent calls, and a quick start. For the smaller [Nexus Edge](https://www.plotune.net/nexus/edge), sessions are run through the connector guide below.
 
 - [Quick Start](https://www.plotune.net/docs/nexus/quick-start)
 
