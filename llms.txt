@@ -21,7 +21,7 @@ Technical documentation describes implementation status and limitations. Researc
 
 ## Technical documentation
 
-- [Plotune documentation](https://www.plotune.net/docs/index.md): Documentation for the Plotune desktop app and Plotune Nexus: components, extensions, calculations, and workflows.
+- [Plotune documentation](https://www.plotune.net/docs/index.md): Plotune documentation: connect your AI assistant to Plotune, send events to Stream, the Plotune Nexus reference, the Bridge modules, and the documentation of the Plotune desktop application.
 - [Plotune MCP connector](https://www.plotune.net/docs/mcp/index.md): Connect Claude, ChatGPT or another MCP client to Plotune RMS, Stream and Nexus through one server, https://mcp.plotune.net/mcp: sign-in, access, projects, safety, limits and troubleshooting.
 - [Plotune Nexus Documentation](https://www.plotune.net/docs/nexus/index.md): Technical reference documentation for Plotune Nexus: security model, hardware and protocol compatibility, the MCP tool surface, system architecture, and deployment.
 - [Security & Trust Model](https://www.plotune.net/docs/nexus/security-model/index.md): How device ownership, key custody, and access boundaries work: what stays on the device, what a compromised session can and cannot do, and what is still being hardened.
@@ -52,7 +52,7 @@ Technical documentation describes implementation status and limitations. Researc
 
 ## Optional
 
-- [Questions about Plotune](https://www.plotune.net/faq/index.md): Answers to common questions about the Plotune workspace and RMS, and about Plotune Nexus: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation.
+- [Questions about Plotune](https://www.plotune.net/faq/index.md): Answers to common questions about Plotune: how to start, which AI assistants it works with, adding your team and who sees your data; the workspace and RMS; and Plotune Nexus: bounded AI on real hardware, CAN, XCP, ROS 2 / DDS, local-first data, and safe, approvable test automation.
 - [See what happened on your test bench.](https://www.plotune.net/stream/index.md): Send test results, sensor samples and device state over HTTP from your test benches, scripts and tools, and explore them as one event history. Try the Plotune Stream demo or create a workspace.
 - [Connect your hardware.Access it anywhere.Automate with AI.](https://www.plotune.net/bridge/index.md): Plotune Bridge is a family of compact hardware interfaces for CAN, serial, data acquisition and I/O. USB-C and Wi-Fi connectivity, browser-based operation and native Plotune Nexus integration for AI-powered test automation.
 - [Tell us about your setup.](https://www.plotune.net/contact/index.md): Tell us about your setup and we'll point you to the right Plotune product and walk you through the next steps.

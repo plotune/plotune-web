@@ -1,18 +1,48 @@
 # Questions about Plotune
 
-How the workspace and its tools fit together , and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware while keeping their data local .
+How to start, what you need and who can see your data.  Then how the workspace fits together, and how teams use Plotune Nexus to run bounded, AI-ready workflows on real test hardware.
 
  A doubtful reviewer holds a puzzle piece that does not quite fit.
 
+## Getting started
+
+Yes. Creating a workspace is free and needs no credit card. A free account includes 300 credits that renew every month and all the core features. Use of the cloud tools is measured in credits: your workspace shows what is left and the current rates under Usage.
+
+[Create a workspace](https://www.plotune.net/register)
+
+No. Requirements (RMS) and bench event history (Stream) run in the cloud and need no hardware from Plotune. Stream records events that something sends to it, which can be any script or tool that makes an HTTP request. To look around first, the Stream demo opens a sample project and needs no account.
+
+[Open the Stream demo](https://www.plotune.net/stream/demo)
+
+Not for requirements: RMS is used in the browser. Stream keeps the events that your scripts, test tools and devices send over HTTP, so someone on the team adds that call; the set-up steps include ready examples for curl, Python, C/C++, MATLAB and more. Nexus and Bridge are hardware for your test bench: Nexus is an appliance where AI agents run tests on your real hardware within the limits you set, and Bridge interfaces are managed from the browser.
+
+[See the set-up examples in the demo](https://www.plotune.net/stream/demo?view=api)
+
+Microsoft Copilot, ChatGPT and Claude. Microsoft Copilot connects through Copilot Studio, and your IT team may need to approve the connection. Other assistants that support MCP (Model Context Protocol), the standard way for an AI assistant to use outside tools, connect the same way. The assistant works with your own account and your role in the workspace, and you choose read-only or full access when you connect.
+
+[How to connect your assistant](https://www.plotune.net/docs/mcp)
+
+Open your workspace and choose Invite under People. Enter the person's email address and a role: an Admin manages projects, tools and people, a Member works in the projects, and a Viewer can only read. Plotune does not send an invitation email, so tell them: they join as soon as they sign in, or sign up, with that address. The Owner role moves only by transferring ownership.
+
+What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On Nexus, captures stay on the device by default. What we store and who receives it is described in the privacy policy.
+
+[Read the privacy policy](https://www.plotune.net/privacy)
+
 ## About Plotune
 
-The workspace is the place where an engineering team keeps its work in Plotune. You create a workspace, add projects to it, invite people with roles, and switch on the tools each project needs. RMS (requirements) and Stream (event history) are available today. Nexus and Bridge are hardware products of their own for now; adding them to a workspace the same way is coming.
+The workspace is the place where an engineering team keeps its work in Plotune. You create a workspace, add projects to it, invite people with roles, and switch on the tools each project needs. RMS (requirements), Stream (event history) and Nexus (cloud test sessions through a Nexus Edge on your bench) are switched on per project. The Nexus appliance and Bridge are hardware products of their own.
 
 RMS is the requirements tool in a Plotune workspace. It keeps requirements with revisions, review and approval, traceability links, test cases with recorded evidence, and baselines, and it exchanges requirement sets as ReqIF. AI agents can work in it through MCP, with roles and an audit trail. RMS makes no claim of compliance with any standard.
 
-Open the project in your workspace and switch on the tool it needs, for example RMS or Stream. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view. Nexus and Bridge are not added this way yet.
+Open the project in your workspace and switch on the tool it needs: RMS, Stream or Nexus. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view.
+
+Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device that reaches your hardware over USB, Ethernet, Wi-Fi and Bluetooth while the session itself runs in the cloud, started and stopped from your workspace. The choice is mostly whether you spend on the device or on cloud use.
 
 A local-first acquisition appliance captures and stores data next to the hardware by default, rather than streaming it into a vendor cloud first. Plotune Nexus is a managed local-first appliance on Plotune-defined hardware: captures and artifacts stay on the device, and the team chooses where outputs go, whether local files, SFTP, Google Drive, or OneDrive and SharePoint.
+
+## AI agents on real test hardware
+
+The answers from here on are about Plotune Nexus, the appliance where AI agents run tests on your real hardware within the limits you set.
 
 ## AI-assisted work on real hardware
 
@@ -23,12 +53,6 @@ MCP (Model Context Protocol) is a standard way for AI agents to call defined too
 Put a narrow, bounded control layer in front of the hardware. Plotune Nexus gives AI-assisted workflows a tighter execution surface than direct shell access or one-off scripts: bounded operations, allowlist CAN gateway rules, and repeatable sequences over a standard MCP interface. Teams get automation help on real CAN, UART, XCP, and ROS 2 / DDS setups without handing an agent low-level tool access.
 
 The alternative to accumulating one-off scripts is a standard, bounded control surface. Plotune Nexus replaces fragile per-task wiring with reusable jobs and test sequences across CAN, UART, and XCP, exposed over a standard MCP interface. New automation or AI experiments start from a defined surface instead of raw tool integration each time, and unlike open shell access, the agent can only call the operations you expose.
-
-## More answers
-
-Trust and data control, and connecting to real systems, come next.
-
- A small crew sends a drone on a mission.
 
 ## Trust, safety, and data control
 
@@ -54,15 +78,39 @@ Use signal-wait conditions as verdict gates. Plotune Nexus supports decoded-sign
 
 Move recurring capture and stimulation steps out of one-off scripts and into reusable jobs and test sequences. Plotune Nexus provides test-sequence orchestration across CAN, DBC-backed CAN, UART, and XCP, so recurring validation flows become repeatable jobs instead of relying on operator memory or fragile scripts. Artifacts are captured locally and handed off cleanly for review.
 
-## Still have a question?
+## Ask the team
 
 Talk to the team about your project, your bench and your data path.
 
-[Contact us](https://www.plotune.net/contact)[Explore Nexus →](https://www.plotune.net/nexus)
+[Talk to us](https://www.plotune.net/contact)[Create a workspace](https://www.plotune.net/register)
+
+## Is it free to start?
+
+Yes. Creating a workspace is free and needs no credit card. A free account includes 300 credits that renew every month and all the core features. Use of the cloud tools is measured in credits: your workspace shows what is left and the current rates under Usage.
+
+## Do I need hardware to start?
+
+No. Requirements (RMS) and bench event history (Stream) run in the cloud and need no hardware from Plotune. Stream records events that something sends to it, which can be any script or tool that makes an HTTP request. To look around first, the Stream demo opens a sample project and needs no account.
+
+## Do I need to write code?
+
+Not for requirements: RMS is used in the browser. Stream keeps the events that your scripts, test tools and devices send over HTTP, so someone on the team adds that call; the set-up steps include ready examples for curl, Python, C/C++, MATLAB and more. Nexus and Bridge are hardware for your test bench: Nexus is an appliance where AI agents run tests on your real hardware within the limits you set, and Bridge interfaces are managed from the browser.
+
+## Which AI assistants does it work with?
+
+Microsoft Copilot, ChatGPT and Claude. Microsoft Copilot connects through Copilot Studio, and your IT team may need to approve the connection. Other assistants that support MCP (Model Context Protocol), the standard way for an AI assistant to use outside tools, connect the same way. The assistant works with your own account and your role in the workspace, and you choose read-only or full access when you connect.
+
+## How do I add my team?
+
+Open your workspace and choose Invite under People. Enter the person's email address and a role: an Admin manages projects, tools and people, a Member works in the projects, and a Viewer can only read. Plotune does not send an invitation email, so tell them: they join as soon as they sign in, or sign up, with that address. The Owner role moves only by transferring ownership.
+
+## Where is my data and who can see it?
+
+What you and your team put into a workspace stays yours. People you add to the workspace work in its projects within their role. An AI assistant you connect works with your account and role, and you can make the connection read-only or revoke it under Connected apps. On Nexus, captures stay on the device by default. What we store and who receives it is described in the privacy policy.
 
 ## What is the Plotune workspace?
 
-The workspace is the place where an engineering team keeps its work in Plotune. You create a workspace, add projects to it, invite people with roles, and switch on the tools each project needs. RMS (requirements) and Stream (event history) are available today. Nexus and Bridge are hardware products of their own for now; adding them to a workspace the same way is coming.
+The workspace is the place where an engineering team keeps its work in Plotune. You create a workspace, add projects to it, invite people with roles, and switch on the tools each project needs. RMS (requirements), Stream (event history) and Nexus (cloud test sessions through a Nexus Edge on your bench) are switched on per project. The Nexus appliance and Bridge are hardware products of their own.
 
 ## What is RMS?
 
@@ -70,7 +118,11 @@ RMS is the requirements tool in a Plotune workspace. It keeps requirements with 
 
 ## How are tools added to a project?
 
-Open the project in your workspace and switch on the tool it needs, for example RMS or Stream. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view. Nexus and Bridge are not added this way yet.
+Open the project in your workspace and switch on the tool it needs: RMS, Stream or Nexus. The tool then appears inside that project, and only the people who have access to the project see it. Switching a tool off again removes it from the project view.
+
+## What is the difference between the Nexus appliance and Nexus Edge?
+
+Both give AI agents the same tools on your real test hardware; they differ in where the work runs. The Nexus appliance sits on your bench and processes and stores data locally. Nexus Edge is a much smaller device that reaches your hardware over USB, Ethernet, Wi-Fi and Bluetooth while the session itself runs in the cloud, started and stopped from your workspace. The choice is mostly whether you spend on the device or on cloud use.
 
 ## What is a local-first data acquisition appliance?
 

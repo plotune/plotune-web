@@ -112,7 +112,7 @@ Linux is the primary supported platform. Windows builds are provided on a best-e
 
 The answers below cover requirements, releases, the Linux install and older versions.
 
- A part taking shape in CAD.
+ A part arrives in an open box.
 
 ## Download questions
 

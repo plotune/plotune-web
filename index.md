@@ -38,7 +38,7 @@ AI access to your bench  · Plotune Nexus
 
 ### Let an AI agent run the test
 
-An appliance on your bench. AI agents run tests on your real hardware, within the limits you set, and every run is recorded.
+AI agents run tests on your real hardware, within the limits you set, and every run is recorded. As an appliance that works locally on your bench, or as the small Nexus Edge with sessions that run in the cloud.
 
 - [Use cases](https://www.plotune.net/nexus/use-cases)
 
@@ -78,7 +78,7 @@ Wireless interfaces for CAN, serial, analog and digital I/O, managed from the br
 
 - Add a project One project per product, bench or program.
 
-- Switch on what it needs Requirements and test evidence (RMS), bench event history (Stream), or both.
+- Switch on what it needs Requirements and test evidence (RMS), bench event history (Stream), cloud test sessions on your bench (Nexus).
 
 ## Engineering needs evidence.
 

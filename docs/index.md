@@ -1,135 +1,105 @@
 # Plotune documentation
 
-Components, calculations, extensions and the SDK of the desktop app , and the guides for Nexus .
-
-[Nexus documentation](https://www.plotune.net/docs/nexus)[Connect an AI app (MCP) →](https://www.plotune.net/docs/mcp)[Browse extensions →](https://www.plotune.net/extensions)
+Guides and reference for each part of Plotune, from requirements to AI on your test bench.  Pick what you want to do.
 
  A designer works on a part drawing.
 
-## Plotune Overview
+## Documentation by task
 
-A modular, high-performance data visualization and signal analysis platform built for researchers, engineers, and students.
+Requirements and test evidence  · Plotune RMS
 
-Real-time
+### Write requirements and link them to their tests
 
-Data Visualization
+RMS runs in the browser and guides you as you go: you start by creating the product you are specifying, and requirements, tests and baselines all live under it. Its page shows each screen.
 
-Modular
+[See what RMS does](https://www.plotune.net/rms)
 
-Architecture
+Bench event history  · Plotune Stream
 
-Extensible
+### Send events from your bench and search them
 
-Plugin System
+Set-up steps are shown in the demo, under API setup: one event over HTTP, with examples for curl, Python, C/C++, MATLAB and more. Your own workspace shows the same steps with your capture key.
 
-## Introduction
+- [API setup in the demo](https://www.plotune.net/stream/demo?view=api)
 
-Plotune  enables real-time and offline visualization of streaming data from multiple sources such as UART, CAN, Bluetooth, and file-based logs. Designed for performance and flexibility, it serves researchers, engineers, and students alike.
+- [API setup in your workspace](https://www.plotune.net/stream/workspace?view=api)
 
-## Core Philosophy
+[See what Stream does](https://www.plotune.net/stream)
 
-M
+AI access to your bench  · Plotune Nexus
 
-### Modularity
+### Let an AI agent run tests on your hardware
 
-Every visualization, source, and calculation component is isolated and extendable. Drag, resize, or dock any element within the canvas.
+Reference for the appliance: what it supports, how access is bounded, the tools an agent calls, and a quick start.
 
-E
+- [Quick Start](https://www.plotune.net/docs/nexus/quick-start)
 
-### Extensibility
+- [Hardware & Protocol Compatibility](https://www.plotune.net/docs/nexus/hardware-compatibility)
 
-Through its SDK and API, developers can build custom plugins that integrate seamlessly with the Plotune core ecosystem.
+- [Security & Trust Model](https://www.plotune.net/docs/nexus/security-model)
 
-P
+- [MCP Tools & API Reference](https://www.plotune.net/docs/nexus/mcp-api)
 
-### Performance
+[All Nexus documentation](https://www.plotune.net/docs/nexus)
 
-Redis-powered backend and multi-process Python architecture ensure fast data throughput, even for high-frequency streams.
+Wireless bench interfaces  · Plotune Bridge
 
-## Architecture Overview
+### Reach your bench interfaces from the browser
 
-### Frontend
+Each module's page lists its channels, connectors and features, and you manage your devices in the Bridge workspace.
 
-- Built with  PyQt5  for responsive desktop UI
+- [Bridge CAN](https://www.plotune.net/bridge/can)
 
-- Supports  drag-and-drop  and docking layouts
+- [Bridge Serial](https://www.plotune.net/bridge/serial)
 
-- Component-based views (Oscilloscope, Scatter, Bridge, Statistical)
+- [Bridge DAQ](https://www.plotune.net/bridge/daq)
 
-### Backend
+- [Bridge I/O](https://www.plotune.net/bridge/io)
 
-- Python with plugin-based data acquisition
+- [Bridge workspace](https://bridge.plotune.net/)
 
-- Redis  for fast in-memory streaming
+[See what Bridge does](https://www.plotune.net/bridge)
 
-- Handles source management and live stream distribution
+Your AI assistant  · Plotune MCP connector
 
-## Interface Layout
+### Connect your AI assistant
 
-#### Main Areas
+One address gives your assistant  RMS ,  Stream  and  Nexus , with your own account and role. The guide covers signing in, read-only access, projects, limits and troubleshooting.
 
-- Top Menu:  Home, Configuration, View, Help
+Works with
 
-- Left Sidebar:  File Explorer, Variable Explorer
+- Microsoft Copilot
 
-- Right Sidebar:  Calculation, Plugins, Sources
+- ChatGPT
 
-- Canvas Area:  Central workspace
+- Claude
 
-#### Data Sources
+Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
-UART  CAN Bus  Bluetooth  CSV Files  Network Streams  Simulation
+[Read the connector guide](https://www.plotune.net/docs/mcp)
 
-## Extensibility & Plugins
+## Desktop app
 
-Plotune offers a flexible  Extension SDK  for building plugins that extend both frontend and backend capabilities.
+The documentation of the Plotune desktop application: its components, calculations, extensions and SDK.
 
-#### Plugin Capabilities
+- [General](https://www.plotune.net/docs?page=general)
 
-- New data acquisition methods
+- [Components](https://www.plotune.net/docs?page=components-oscilloscope)
 
-- Custom visualization panels
+- [Calculations](https://www.plotune.net/docs?page=calculations-mathematical)
 
-- Mathematical computation nodes
+- [Extensions](https://www.plotune.net/docs?page=extensions-offline)
 
-- Integration bridges (MATLAB, cloud APIs)
+- [SDK](https://www.plotune.net/docs?page=sdk)
 
-#### Distribution
+- [Download the desktop app](https://www.plotune.net/download)
 
-- Curated internal marketplace
+- [Browse extensions](https://www.plotune.net/extensions)
 
-- Online and offline modes
+## Ask about your set-up
 
-- Secure token-based licensing
+Tell the team what you are trying to set up, and we point you to the right place.
 
-## Typical Use Cases
-
-Real-time sensor data visualization during field testing
-
-Offline log replay and comparative analysis
-
-Custom signal processing and algorithm validation
-
-Educational demonstrations for signal analytics
-
-## Roadmap Highlights
-
-AI-assisted data pattern recognition
-
-Web dashboard for stream management
-
-Distributed stream processing
-
-Advanced plugin store with auto-deployment
-
-Last updated: November 2025 — Plotune Core v1.0.0
-
-## Nexus guides
-
-The Nexus guides live in their own documentation.
-
-[Nexus documentation](https://www.plotune.net/docs/nexus)
-
- A designer sketches a piston.
+[Talk to us](https://www.plotune.net/contact)[Create a workspace](https://www.plotune.net/register)
 
 Source: https://www.plotune.net/docs
