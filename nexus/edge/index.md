@@ -57,16 +57,16 @@ USB or bench network? It fits. Your own scripts run too.
 | Where the work runs | In the cloud | On your bench |
 | Recordings are kept | In the cloud workspace of the session | On the appliance by default |
 | Internet | Needed while a session runs | Not needed to run a test |
-| What you pay for | A small device, then cloud use | The appliance |
+| What you pay for | $249 for the device, then cloud use | The appliance |
 
 [See the Nexus appliance](https://www.plotune.net/nexus?entry_source=direct)
 
 ## Ask for a Nexus Edge.
 
-Tell us what is on your bench and we send you a quote.
+Tell us what is on your bench and we confirm it by email.
 
 [Request a Nexus Edge](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)[Read the connector guide](https://www.plotune.net/docs/mcp)
 
-Sold on request. Built to order: delivery takes about four weeks.
+$249 per unit, excl. tax and shipping. You pay nothing until we confirm your request.
 
 Source: https://www.plotune.net/nexus/edge
