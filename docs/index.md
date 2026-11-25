@@ -74,7 +74,7 @@ Works with
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 [Read the connector guide](https://www.plotune.net/docs/mcp)
 

@@ -10,7 +10,7 @@ Ask about your events from the AI assistant your company already uses
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 ## One event. The whole picture.
 

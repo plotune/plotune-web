@@ -32,7 +32,7 @@ Works with the AI assistant your company already uses
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 ## Ask for the test. Get the result.
 
@@ -65,7 +65,7 @@ USB or bench network? It fits. Your own scripts run too.
 
 Tell us what is on your bench and we confirm it by email.
 
-[Request a Nexus Edge](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)[Read the connector guide](https://www.plotune.net/docs/mcp)
+[Request a Nexus Edge](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)[Connect your assistant](https://www.plotune.net/connect)
 
 $249 per unit, excl. tax and shipping. You pay nothing until we confirm your request.
 

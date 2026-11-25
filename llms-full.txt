@@ -36,7 +36,7 @@ Both work with the AI assistant your company already uses
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 ## Let AI agents work on real hardware
 
@@ -242,7 +242,7 @@ Not for requirements: RMS is used in the browser. Stream keeps the events that y
 
 Microsoft Copilot, ChatGPT and Claude. Microsoft Copilot connects through Copilot Studio, and your IT team may need to approve the connection. Other assistants that support MCP (Model Context Protocol), the standard way for an AI assistant to use outside tools, connect the same way. The assistant works with your own account and your role in the workspace, and you choose read-only or full access when you connect.
 
-[How to connect your assistant](https://www.plotune.net/docs/mcp)
+[Connect your assistant](https://www.plotune.net/connect)
 
 Open your workspace and choose Invite under People. Enter the person's email address and a role: an Admin manages projects, tools and people, a Member works in the projects, and a Viewer can only read. Plotune does not send an invitation email, so tell them: they join as soon as they sign in, or sign up, with that address. The Owner role moves only by transferring ownership.
 
@@ -424,7 +424,7 @@ Ask about your events from the AI assistant your company already uses
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 ## One event. The whole picture.
 
@@ -516,7 +516,7 @@ Works with
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 ## See which requirements have no test yet
 
@@ -915,7 +915,7 @@ Works with the AI assistant your company already uses
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 ## Ask for the test. Get the result.
 
@@ -948,7 +948,7 @@ USB or bench network? It fits. Your own scripts run too.
 
 Tell us what is on your bench and we confirm it by email.
 
-[Request a Nexus Edge](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)[Read the connector guide](https://www.plotune.net/docs/mcp)
+[Request a Nexus Edge](https://www.plotune.net/contact?entry_source=direct&product=nexus&item=edge)[Connect your assistant](https://www.plotune.net/connect)
 
 $249 per unit, excl. tax and shipping. You pay nothing until we confirm your request.
 
@@ -1800,7 +1800,7 @@ Works with
 
 - Claude
 
-Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
+[Connect your assistant](https://www.plotune.net/connect)Your IT team may need to approve the connection. Microsoft Copilot connects through Copilot Studio; other assistants that support MCP (Model Context Protocol) connect the same way.
 
 [Read the connector guide](https://www.plotune.net/docs/mcp)
 
@@ -1925,6 +1925,40 @@ Every other tool takes `project_id`. You may leave it out only when exactly one 
 Write to contact@plotune.net. What the connector stores and who receives it is in the [privacy policy](https://www.plotune.net/privacy#ai-apps).
 
 Source: https://www.plotune.net/docs/mcp
+
+---
+
+# Connect your AI assistant to Plotune.
+
+## Which app do you use?
+
+At work
+
+Developer tools
+
+## Connect Microsoft Copilot
+
+Added once in Copilot Studio, usually by whoever manages your agents.
+
+- In Copilot Studio, open your agent and choose Tools, Add a tool, New tool, Model Context Protocol.
+
+- Paste the address below and choose OAuth 2.0 with dynamic discovery.
+
+- Create the connection, sign in to Plotune and add it to the agent.
+
+`https://mcp.plotune.net/mcp`
+
+[Read the full guide](https://www.plotune.net/docs/mcp)
+
+## No Plotune account yet?
+
+Create a workspace first, then connect your assistant to it.
+
+[Create a workspace](https://www.plotune.net/register)
+
+Free to start. No credit card needed.
+
+Source: https://www.plotune.net/connect
 
 ---
 

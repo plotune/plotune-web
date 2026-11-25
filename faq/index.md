@@ -20,7 +20,7 @@ Not for requirements: RMS is used in the browser. Stream keeps the events that y
 
 Microsoft Copilot, ChatGPT and Claude. Microsoft Copilot connects through Copilot Studio, and your IT team may need to approve the connection. Other assistants that support MCP (Model Context Protocol), the standard way for an AI assistant to use outside tools, connect the same way. The assistant works with your own account and your role in the workspace, and you choose read-only or full access when you connect.
 
-[How to connect your assistant](https://www.plotune.net/docs/mcp)
+[Connect your assistant](https://www.plotune.net/connect)
 
 Open your workspace and choose Invite under People. Enter the person's email address and a role: an Admin manages projects, tools and people, a Member works in the projects, and a Viewer can only read. Plotune does not send an invitation email, so tell them: they join as soon as they sign in, or sign up, with that address. The Owner role moves only by transferring ownership.
 
