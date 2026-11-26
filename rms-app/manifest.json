@@ -1,9 +1,99 @@
 {
+  "_History-C0iIJOtq.js": {
+    "file": "assets/History-C0iIJOtq.js",
+    "name": "History",
+    "imports": [
+      "_ui-DgD90otB.js",
+      "_people-CFx4K_pw.js"
+    ]
+  },
+  "_dialogs-Devurz5N.js": {
+    "file": "assets/dialogs-Devurz5N.js",
+    "name": "dialogs",
+    "imports": [
+      "_ui-DgD90otB.js"
+    ]
+  },
+  "_people-CFx4K_pw.js": {
+    "file": "assets/people-CFx4K_pw.js",
+    "name": "people",
+    "imports": [
+      "_ui-DgD90otB.js"
+    ]
+  },
+  "_ui-DgD90otB.js": {
+    "file": "assets/ui-DgD90otB.js",
+    "name": "ui"
+  },
   "src/embed.tsx": {
-    "file": "assets/rms-embed-BA7bKrCb.js",
+    "file": "assets/rms-embed-CdVqr_nr.js",
     "name": "embed",
     "src": "src/embed.tsx",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_ui-DgD90otB.js",
+      "_dialogs-Devurz5N.js",
+      "_people-CFx4K_pw.js",
+      "_History-C0iIJOtq.js"
+    ],
+    "dynamicImports": [
+      "src/views/DiagramViewer.tsx",
+      "src/views/Agents.tsx",
+      "src/views/DataModel.tsx",
+      "src/views/Exchange.tsx",
+      "src/views/Flow.tsx"
+    ]
+  },
+  "src/views/Agents.tsx": {
+    "file": "assets/Agents-BCEebw1_.js",
+    "name": "Agents",
+    "src": "src/views/Agents.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_ui-DgD90otB.js",
+      "_dialogs-Devurz5N.js",
+      "_people-CFx4K_pw.js",
+      "_History-C0iIJOtq.js"
+    ]
+  },
+  "src/views/DataModel.tsx": {
+    "file": "assets/DataModel-Bz7InsKC.js",
+    "name": "DataModel",
+    "src": "src/views/DataModel.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_ui-DgD90otB.js",
+      "_dialogs-Devurz5N.js"
+    ]
+  },
+  "src/views/DiagramViewer.tsx": {
+    "file": "assets/DiagramViewer-BsrPqqGF.js",
+    "name": "DiagramViewer",
+    "src": "src/views/DiagramViewer.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_ui-DgD90otB.js",
+      "_dialogs-Devurz5N.js",
+      "_people-CFx4K_pw.js"
+    ]
+  },
+  "src/views/Exchange.tsx": {
+    "file": "assets/Exchange-DAwnvMmv.js",
+    "name": "Exchange",
+    "src": "src/views/Exchange.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_ui-DgD90otB.js"
+    ]
+  },
+  "src/views/Flow.tsx": {
+    "file": "assets/Flow-NBnBu6jY.js",
+    "name": "Flow",
+    "src": "src/views/Flow.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_ui-DgD90otB.js"
+    ]
   },
   "style.css": {
     "file": "assets/rms-embed-C1omZECg.css",
